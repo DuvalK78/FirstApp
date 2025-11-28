@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stats Aurelion Sol</title>
+
+    <style>
+
+        body {
+
+            font-family: Verdana, sans-serif;
+
+            text-align: center;
+
+            background-color: #f4f4f4;
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+        h1 {
+
+            color: #2c3e50;
+
+        }
+
+        h2 {
+
+            color: #2c3e50
+
+        }
+
+        img {
+
+            border-radius: 10px;
+
+        }
+
+        table {
+
+            margin: 20px auto;
+
+            border-collapse: collapse;
+
+            width: 50%;
+
+            background: white;
+
+        }
+
+        table th, table td {
+
+            border: 1px solid #ddd;
+
+            padding: 8px;
+
+        }
+
+        table th {
+
+            background-color: #2c3e50;
+
+            color: white;
+
+        }
+
+        table td {
+
+            color: #2c3e50;
+
+        }
+
+        hr {
+
+            margin: 20px 0;
+
+            border: none;
+
+            border-top: 2px solid #ddd;
+
+        }
+
+        /* Style du bouton */
+
+        .back-button {
+
+            position: fixed;
+
+            bottom: 20px;
+
+            left: 20px;
+
+            background-color: #2c3e50;
+
+            color: white;
+
+            border: none;
+
+            padding: 10px 20px;
+
+            border-radius: 5px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        }
+
+        .back-button:hover {
+
+            background-color: #34495e;
+
+        }
+
+        p {
+
+      color: #2c3e50;
+
+      /*border-left: 6px solid #2980b9;
+
+      border-radius: 8px;*/
+
+      margin: 40px auto;
+
+      padding: 20px;
+
+      /*width: 75%;*/
+
+      line-height: 1.6;
+
+      text-align: justify;
+
+      box-shadow: 0 0 15px rgba(41, 128, 185, 0.1);
+
+        }
+
+        strong {
+
+      color: #FFD700;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+
+
+    <h1>Ahri</h1>
+
+    <div>
+
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/AurelionSol_0.jpg" width="30%" alt="Image d'AurelionSol">
+
+    </div>
+
+
+
+    <hr>
+
+
+
+    <h2>Statistiques</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Statistique</th>
+
+                <th>Valeur</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td>Poste</td>
+
+                <td><img src="https://cdn3.emoji.gg/emojis/6934-lol-role-mid.png" width="20" alt="Rôle Mid"><br> Mid </td>
+
+            </tr>
+
+            <tr>
+
+                <td>Niveau</td>
+
+                <td>0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Note la plus élevée</td>
+
+                <td></td>
+
+            </tr>
+
+            <tr>
+
+                <td>Kills</td>
+
+                <td>0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Deaths</td>
+
+                <td>0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Assists</td>
+
+                <td>0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Win</td>
+
+                <td id="wins">0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Lose</td>
+
+                <td id="losses">0</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Parties Totales</td>
+
+                <td id="total-games"></td>
+
+            </tr>
+
+            <tr>
+
+                <td>Win Rate</td>
+
+                <td id="win-rate"></td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <p> <strong>Aubes jumelles</strong><br><br>
+
+Le soleil si familier de cette planète se cache encore sous la ligne d'horizon. En-dessous s'étend un monde brut et primitif. Les montagnes forment des barrières naturelles qui s'étirent telles des doigts tendus sur des terres de broussailles vides. Les palais, ou plutôt, les bâtiments ridicules qui sont ici considérés comme des palais, peinent à s'élever au-dessus de quoi que ce soit, si ce n'est quelques collines basses. La courbure de cette planète épouse le ciel parsemé d'étoiles avec une grâce et une sérénité que peu de ses habitants pourront jamais apprécier. Ils sont éparpillés à travers le globe et tâtonnent aveuglément en quête de compréhension... Il n'y a rien d'étonnant à ce qu'ils aient été conquis et à ce qu'ils soient incapables d'appréhender leur situation.<br><br>
+
+L'éclat de feu que j'ai rassemblé en m'élançant vers ma destination illumine le monde que je survole. Sur cette planète, des poches de vie s'affrontent, se réjouissent ou connaissent la peur... et se répandent dans le moindre recoin fertile qu'elles peuvent trouver. Oh, comme ces créatures m'observent et me pointent du doigt alors que je passe au-dessus d'elles. J'ai entendu tous les termes dont elles se servent pour me désigner : prophète, comète, monstre, dieu, démon... Tant de noms, et pourtant aucun ne me correspond.<br><br>
+
+Dans une vaste étendue désertique, je perçois la pulsion de magie familière qui émane du siège de la civilisation dominante parmi ces sauvages. Voilà qu'ils construisent un immense disque solaire. Ces malheureux esclaves se frappent la tête et déchirent leurs vêtements dans mon sillage. Nul doute que leurs maîtres cruels tournent leur regard vers l'éclair de feu qui traverse leur ciel et voient en moi un bon présage. Mon passage sera inscrit dans leurs pictogrammes primitifs, gravés sur une roche grossière, en hommage à la grande comète, cette bénédiction du dieu céleste qui salua leur travail sacré... et ainsi de suite. Le seul but de ce disque est d'infuser la majesté du soleil dans les réceptacles les plus « illustres » de ces humanoïdes de chair, afin de faire d'eux exactement ce dont cette planète a besoin : encore plus de demi-dieux insupportables. Leur effort va très probablement se retourner contre eux, un jour. Mais je suppose que leur domination pourrait perdurer quelques temps, peut-être un millénaire, avant qu'ils ne s'effondrent et se retrouvent supplantés par d'autres.<br><br>
+
+Le désert que je survole s'efface dans la nuit qui me succède tandis que je poursuis ma route au-dessus de steppes abandonnées, puis au-dessus de petites collines brunes parsemées de verdure. Ce paysage bucolique dissimule un champ de bataille arrosé de sang et couvert de cadavres ou de créatures mourantes. Les survivants se tailladent les uns les autres avec des haches grossières, en poussant des cris de guerre. L'un des camps est en train de se faire décimer. Des crânes de cerfs sont fichés sur des piques plantées dans la terre, à côté de guerriers qui se tortillent sur le sol. Les rares individus encore debout sont encerclés par des soldats chevauchant d'énormes bêtes hirsutes.<br><br>
+
+Ces quelques vaincus, cernés de toutes parts, m'aperçoivent soudain dans le ciel et le courage semble affluer de nouveau dans leurs veines. Les blessés se relèvent et agrippent leurs haches ou leurs arcs dans un dernier baroud d'honneur qui prend leurs adversaires par surprise. Je ne m'attarde pas pour assister à l'issue de cet affrontement, car j'ai déjà vu ce scénario des milliers de fois. Les survivants s'empresseront de graver une image de ma comète sur les murs de leurs grottes. Dans un millénaire, leurs descendants arboreront cette même image sur leurs bannières et se lanceront sans doute à corps perdu dans un conflit tout aussi futile. Malgré tous leurs efforts pour capturer l'instant et archiver l'histoire, il est confondant de voir qu'ils sont incapables d'apprendre de leurs erreurs. C'est une leçon que même moi, j'ai dû retenir dans la douleur.<br><br>
+
+Je les laisse perpétuer leur cycle sordide.<br><br>
+
+Ma trajectoire révèle de nouvelles habitations. Le répertoire collectif de leurs réactions couvre la gamme habituelle : ils me pointent du doigt, s'agenouillent, sacrifient des vierges sur leurs autels de pierre. Ils lèvent les yeux et voient une comète, mais ils ne se demandent jamais ce qui se cache sous cette façade brillante. Les quelques rares formes de vie plus évoluées, et ce terme est pour le moins vague, m'observent dans le ciel et copient mes coordonnées dans des almanachs scientifiques au lieu de voir en moi un simple présage. Cette vision est quelque peu rafraîchissante, mais même leurs notions bourgeonnantes d'intellect semblent indiquer que je suis un phénomène céleste régulier dont l'orbite est prévisible. Oh, les exploits qu'ils pourraient accomplir si seulement... Enfin, il est inutile de s'appesantir sur le potentiel gâché des ces êtres terrestres si simples d'esprit. Ce n'est pas entièrement leur faute. L'évolution semble effectivement peiner à exercer sa traction sur ce monde.<br><br>
+
+Mais hélas, ces facéties infantiles n'ont plus l'attrait de la nouveauté. Les énergies contraignantes de mes liens magiques m'ont traîné d'un monde insignifiant à l'autre pendant des siècles. Et voilà que ce sortilège m'a ramené sur ce caillou familier et si déplaisant. L'étoile qui inonde sa surface de lumière était l'une de mes toutes premières créations, un astre forgé avec amour et qui brille d'une lueur pure. Ah, cet instant béni où elle prit vie dans un éclat de feu, rayonnant de couleurs que moi seul, son créateur, pouvait voir. Comme cette sensation me manque ! L'énergie nouvelle d'une étoile qui naît entre mes doigts et qui réchauffe mon visage... Chacune diffuse une énergie unique, précieuse, qui reflète l'âme de son forgeron. Elles sont comme des flocons de neige cosmiques qui brûlent dans l'espace comme pour défier les ténèbres infinies.<br><br>
+
+Malheureusement, ces souvenirs dans lesquels j'aimerais tant me perdre sont entachés par la trahison. Oui, c'est ici que les habitants du Mont Targon m'ont piégé et m'ont asservi. Mais l'heure n'est pas aux regrets sur les erreurs du passé. Ces maudites Manifestations veulent que je scelle une autre brèche... en leur nom, bien évidemment.<br><br>
+
+C'est alors que je l'aperçois, elle. La Manifestation guerrière de ce monde se tient seule au sommet d'un des pics, brandissant une lance faite de gemmes stellaires. Elle m'observe à travers le voile de chair qui lui sert de réceptacle, une simple étincelle qui se fait passer pour un éclair. Une épaisse tresse de cheveux auburn cascade par dessus son épaule, sur une armure d'or qui couvre sa peau laiteuse parsemée de taches de rousseur. Ses yeux, la seule partie de son visage qui ne soit pas protégée par son heaume, luisent d'un étonnant éclat rouge.<br><br>
+
+La Manifestation se fait appeler Pantheon, la fureur guerrière incarnée du Mont Targon. Elle n'est pas la première de ce monde à porter ce titre. Et elle ne sera pas la dernière.<br><br>
+
+Sa cape brillante flotte derrière elle tandis qu'elle lève son bras musclé et effectue un geste dans les airs, comme si elle essayait de tirer sur une immense chaîne. Elle exerce une traction sur les liens grossiers de l'enchantement qui me lie, et me force à virer de trajectoire pour me rapprocher de cette montagne sur laquelle elle se tient.<br><br>
+
+Elle hurle d'une voix qui résonne dans ma tête, transmise par cette ignoble couronne de gemmes stellaires. Tous les autres sons s'effacent alors qu'elle envahit mon esprit.<br><br>
+
+« Dragon ! » dit-elle, comme si je n'étais qu'un vulgaire monstre ailé aux maigres flammes oranges, qui pourrait s'estimer heureux s'il parvenait à enflammer un arbre.<br><br>
+
+« Scelle leur portail ! » ordonne-t-elle en désignant le fond d'une crevasse rocheuse avec la pointe de sa lance. Je n'ai pas besoin de regarder la faille violette qui érode la réalité en contrebas. J'ai pu sentir les miasmes purulents qui empoisonnent ce monde avant même d'arriver sur place. Je fixe plutôt mon regard sur Pantheon. Elle s'attend à ce que je lui obéisse immédiatement comme un chien tenu en laisse. Mais aujourd'hui, les choses vont se passer différemment, car j'ai appris ma leçon.<br><br>
+
+« Dragon », dis-je en ronronnant. « Crois-tu qu'il est sage de me donner des ordres en m'affublant d'un nom si médiocre ? »<br><br>
+
+Pantheon relâche sa prise sur sa lance, suffisamment pour que son arme tremble pendant une fraction de seconde. Elle recule légèrement, s'éloignant de moi comme si un simple pas en arrière pouvait la protéger de ma colère.<br><br>
+
+« Scelle leur portail ! », répète-t-elle en criant plus fort, au cas où je ne l'aurais pas entendue la première fois. Elle a beau hurler, elle ne peut masquer une légère hésitation dans sa voix. Elle brandit sa lance vers moi, comme si une arme aussi insignifiante pouvait me transpercer.<br><br>
+
+C'est la première fois que je vois une Manifestation du Mont Targon perdre son sang-froid. Elle n'a pas l'habitude de devoir répéter ses ordres.<br><br>
+
+« Je vais m'occuper de ces horreurs rampantes en temps et en heure, très chère Pantheon. »<br><br>
+
+« Obéis à nos ordres, dragon, ou ce monde est perdu ! », aboie Pantheon.<br><br>
+
+« Ce monde est perdu depuis l'instant où Targon s'est abandonné à l'arrogance. »<br><br>
+
+Je sens la colère de Pantheon se mêler de confusion tandis qu'elle lutte pour resserrer sa prise sur mes rênes immatériels. Elle commence tout juste à percevoir ce dont je suis déjà conscient. Targon est distrait et ne se rend pas compte que sa magie s'efface lentement de mes liens.<br><br>
+
+Pantheon beugle de plus belle et cette fois, je ne peux pas résister. L'enchantement rudimentaire reprend le contrôle de ma volonté. Je dirige mon attention vers la source de la brèche, nichée dans le bassin de cette vallée autrefois verdoyante, et qui déborde aujourd'hui de miasmes violacés. Je sens les formes de vie perverties du Néant se faufiler à travers le firmament de la réalité, générant des vagues d'énergie invisible qui balaient l'éther. En traversant cette faille, ces visiteurs importuns déchirent le voile qui sépare le vide de l'univers matériel.<br><br>
+
+Ces abominations sont attirées vers moi et je sens leurs multiples yeux qui me fixent. Elles voudraient me dévorer, moi, leur plus grande menace. Des confins de mon esprit, je conjure une image des fournaises solaires que j'ai autrefois embrasées avant d'être enchaîné, et qui alimentent le cœur des étoiles. Je lance des rayons du plus pur feu stellaire et j'incinère vague après vague de ces monstruosités affamées, les repoussant dans leur dimension pervertie. Une pluie de coquilles fumantes s'abat depuis le ciel. Je suis un peu surpris qu'elles ne soient pas totalement désintégrées, mais après tout, les créatures du Néant ignorent les lois de cet univers.<br><br>
+
+Une pulsation malsaine imprègne encore l'atmosphère. Depuis le centre de la corruption, je perçois une volonté... affamée, indomptable, bien différente des créatures écervelées que sont habituellement les aberrations peuplant le Néant. Toujours vibrante, la blessure qui déchire la réalité se tord et se replie, déformant et pervertissant tout ce qu'elle touche. Quelle que soit cette chose qui existe de l'autre côté... elle est en train de rire.<br><br>
+
+Pantheon m'aboie de nouveaux ordres, mais j'ignore son intervention. Cette anomalie, cette fissure qui perce mon univers... elle me fascine. Ce n'est pas la première fois que je dois m'occuper de ce genre de faille, mais celle-ci me semble différente et je ne peux m'empêcher d'admirer cette terrifiante manipulation des barrières qui séparent les différents plans. Peu de créatures pourraient appréhender sa complexité, ni même se targuer de posséder le niveau de puissance nécessaire pour déchirer la toile de l'existence. Dans mon for intérieur, je sais qu'une blessure si exquise n'aurait jamais pu être causée par des créatures rampantes. Non. Cette intrusion cache quelque chose de bien plus sinistre. Je frissonne en tentant d'imaginer quel genre d'entité pourrait créer une faille aussi volatile. Je n'ai pas besoin des ordres vociférés par Pantheon pour savoir quoi faire ensuite. De toute façon, l'éventail de ses demandes a toujours cruellement manqué d'originalité. Elle veut que je projette une étoile dans la déchirure, comme si l'on pouvait se contenter de cautériser de telles écorchures inter-dimensionnelles.<br><br>
+
+Quand je pense que ces demi-dieux obtus sont parvenus à m'assujettir, moi !<br><br>
+
+Au moins, ils font preuve d'un début de bon sens. Mes merveilles cosmiques enflammées peuvent effectivement remédier à ce problème. Je veux bien jouer le rôle du serviteur obéissant pendant encore quelques temps.<br><br>
+
+Je prends plaisir à ce que je fais ensuite, en partie parce qu'ils s'en souviendront longtemps, et en partie parce qu'il est agréable de pouvoir enfin déchaîner un peu de mon ancien pouvoir. Mais ce qui me réjouit par-dessus tout, c'est le fait de pouvoir rappeler à l'intelligence qui contrôle cette incursion du Néant, quelle que soit sa nature, que personne ne peut se moquer de moi dans mon plan d'existence.<br><br>
+
+Les molécules élémentaires présentes dans l'atmosphère se rallient à ma cause et s'agrègent en une anomalie plasmique. L'amas grandissant de poussière d'étoile détonne soudain, obéissant à mon ordre silencieux. Je viens de générer une réplique naine de l'une des majestueuses créations qui flamboient aux confins de l'espace.<br><br>
+
+La lumière brillante de cette jeune étoile s'écoule de mes mains. Ce premier astre est rejoint par deux sœurs, qui sont toujours à mes côtés. Elles dansent autour de moi en un radieux ballet et leur cœur en fusion dévore les nuages de poussière et de matière que j'attire vers moi. Nous devenons une tempête d'étoiles, le ciel nocturne incarné, une folle spirale de feu stellaire. Je conjure des tornades de poussière d'étoile brûlante, exhalant une chaleur si pure et si intense qu'elle en affecte très légèrement l'aura de ce monde, altérant pour toujours la courbure de la planète. Des filaments de flammes stellaires irradient et tourbillonnent au centre de la faille. La gravité se distord en de multiples vagues de couleurs, que la plupart des yeux ne seront jamais capables de percevoir. Mes étoiles font fondre la matière elle-même à mesure que davantage de carburant vient alimenter leur cœur. Leur lumière se fait plus brillante et leur chaleur devient plus intense. Ce spectacle est à couper le souffle : une danse fluide de lumière aveuglante et de chaleur infernale, si puissante que pendant un court instant, de nouveaux spectres de couleurs prennent vie sous mes yeux. Un frisson parcourt ma colonne vertébrale, tant la sensation est agréable.<br><br>
+
+Des arbres éclatent. Des rivières s'évaporent. Les parois des montagnes, dans la vallée, s'effondrent dans un éboulis fumant. Les travailleurs infatigables qui érigent leur disque solaire, les soldats qui reprennent leur colline, les astronomes, les adorateurs, les terrifiés, les prophètes de l'apocalypse, les désespérés, les souverains qui s'affirment... tous ceux qui ont observé ma comète de leurs yeux égoïstes contemplent désormais ma supernova et croient y voir l'aube nouvelle. Quelles chimères vont-ils invoquer cette fois-ci pour tenter d'expliquer ce phénomène ?<br><br>
+
+Mes maîtres Targoniens eux-mêmes ont rarement assisté à un tel déchaînement de mon pouvoir. Nul doute qu'aucun monde terrestre n'a jamais porté une cicatrice aussi profonde que celle que je vais laisser dans cette vallée autrefois fertile. Une fois mon œuvre accomplie, il ne reste plus rien.<br><br>
+
+Pas même cette incarnation de Pantheon. J'avoue que je ne regretterai pas le moins du monde ses vociférations stupides.<br><br>
+
+Suite à ce cataclysme miniature, ce qu'il reste des montagnes s'effondre avec fracas et rejoint les débris en fusion qui cascadent à travers la vallée. Telle est la cicatrice que j'ai laissée sur cette planète. Une violente douleur transperce soudain mon corps, diffusée par cette maudite couronne. Je suis sur le point de payer.<br><br>
+
+Mon esprit est pris dans un étau et mes yeux subissent la vision amère d'une étoile qui s'éteint. Mes cœurs se serrent dans ma poitrine. J'ai la tête qui tourne. Je suis submergé par un sentiment de désespoir qui se répercute jusque dans mon âme, suscité par la tristesse immédiate et profonde qui accompagne cette soudaine prise de conscience : j'ai perdu quelque chose qui m'était précieux, et c'est entièrement ma faute.<br><br>
+
+Des formes de vie curieuses que j'ai rencontrées il y a fort longtemps m'ont un jour demandé comment il était possible que je me souvienne de chaque étoile que j'avais créée. Si ces créatures pouvaient seulement imaginer la sensation qui me parcourt lorsque je donne vie à une seule étoile, elles comprendraient à quel point leur question est absurde. C'est pour cela que je suis capable de percevoir lorsqu'une de mes créations adorées s'éteint soudain, expulsant de puissants rayons d'énergie et, avec eux, la substance même de mon esprit. J'entends le glas de cette étoile retentir dans les cieux. Elle brille une dernière fois, intensément, dans une déflagration qui noie temporairement l'éclat de ses frères et sœurs. Mon cœur se brise tandis que le firmament est mutilé en guise de vengeance brutale pour avoir osé utiliser mon pouvoir contre une Manifestation de Targon.<br><br>
+
+Un soleil est le prix à payer pour un seul Pantheon. Tel est le tribut de ma colère incontrôlée. Tel est le genre de sorcellerie rudimentaire dont je suis l'esclave.<br><br>
+
+En l'espace de quelques secondes, ils ont repris le contrôle de mes rênes et m'ordonnent d'accomplir une nouvelle tâche. Je n'ai jamais exprimé un tel degré de liberté, aussi fugace soit-il, sur aucun des mondes que j'ai visités. Et qui plus est... j'ai appris de leurs erreurs. À présent, une partie de moi est à nouveau libre. En temps voulu, je reviendrai sur cette planète pour puiser dans cette mystérieuse source d'énergie et briser le reste de mes liens.<br><br>
+
+Je suis connecté à cette incarnation de la guerre, qui se tord et se contorsionne dans des réceptacles de chair, éparpillés à travers le cosmos. Elle est furieuse d'avoir perdu son avatar mortel sur ce monde. Déjà, un nouvel hôte maudit a été désigné pour accueillir la prochaine incarnation de Pantheon, un soldat de la tribu Rakkor, une peuplade qui s'accroche au pied du Mont Targon pour en siphonner le pouvoir comme des parasites. Un jour, je rencontrerai ce nouveau Pantheon. Peut-être choisira-t-il de se servir d'une nouvelle arme et d'abandonner cette lance ridicule. Je peux sentir le peuple céleste de Pantheon, éparpillé à travers le cosmos. En un instant, toute leur attention est concentrée sur ce monde, où l'une de leurs Manifestations terrestres a été vaporisée par leur propre arme. Leur confusion est mêlée d'un sentiment grandissant de désespoir tandis qu'ils se disputent pour regagner leur contrôle sur moi. Comme je souhaiterais voir leur visage...<br><br>
+
+Alors que je m'extirpe de la gravité de cette planète, Runeterra, je perçois une émotion que je n'ai jamais ressentie chez le peuple de Targon.<br><br>
+
+La peur.<br><br>
+
+Aurelion Sol<br>
+
+Runeterra<br><br>
+
+        
+
+    </p>
+
+
+
+    <!-- Bouton pour revenir à l'index -->
+
+    <a href="IndexLol.html" class="back-button">Retour à l'index</a>
+
+
+
+    <script>
+
+        // Variables pour le nombre de victoires et de défaites
+
+        const wins = 0;  // Modifie cette valeur si nécessaire
+
+        const losses = 0;  // Modifie cette valeur si nécessaire
+
+
+
+        // Calcul du total des parties et du win rate
+
+        const totalGames = wins + losses;
+
+        const winRate = totalGames > 0 ? (wins / totalGames * 100).toFixed(2) + '%' : '0%';
+
+
+
+        // Mise à jour des valeurs dans le tableau
+
+        document.getElementById('total-games').textContent = totalGames;
+
+        document.getElementById('win-rate').textContent = winRate;
+
+    </script>
+
+
+
+</body>
+
+</html>
