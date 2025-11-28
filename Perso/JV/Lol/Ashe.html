@@ -71,16 +71,87 @@
       text-align: justify;
       box-shadow: 0 0 15px rgba(41, 128, 185, 0.1);
         }
+                .character-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+                .carousel-container {
+            position: relative;
+            width: 486px;
+            height: 287px;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: fit-content;
+        }
+
+        .carousel img {
+            width: 486px;
+            height: 287px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+                .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.3s;
+            z-index: 10;
+        }
+
+        .prev:hover, .next:hover {
+            background: rgba(44, 62, 80, 0.8);
+        }
+
+        .prev {
+            left: 15px; 
+        }
+
+        .next {
+            right: 15px;
+        }
+
         strong {
       color: #FFD700;
     }
+    @media (max-width: 768px) {
+    .carousel-container {
+        width: 100%;
+    }
+    .carousel img {
+        width: 100%;
+        height: auto;
+    }
+}
+
   </style>
 </head>
 <body>
 
+    <div class="character-container">
     <h1>Ashe</h1>
-    <div>
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg" width="30%" alt="Image d'Ashe">
+        <div class="carousel-container">
+            <button class="prev" onclick="prevSlide()">&#10094;</button>
+            <div class="carousel" id="carousel">
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg" alt="Image d'Ashe">
+        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_52.jpg" alt="Image d'Ashe Impératrice lunaire">
+            </div>
+            <button class="next" onclick="nextSlide()">&#10095;</button>
+        </div>
+
     </div>
 
     <hr>
@@ -228,24 +299,26 @@ Freljord<br>
         // Mise à jour des valeurs dans le tableau
         document.getElementById('total-games').textContent = totalGames;
         document.getElementById('win-rate').textContent = winRate;
+
+                let index = 0;
+        const images = document.querySelectorAll(".carousel img");
+        const totalImages = images.length;
+
+        function showSlide() {
+            const carousel = document.getElementById("carousel");
+            carousel.style.transform = `translateX(${-index * 486}px)`;
+        }
+
+        function nextSlide() {
+            index = (index + 1) % totalImages;
+            showSlide();
+        }
+
+        function prevSlide() {
+            index = (index - 1 + totalImages) % totalImages;
+            showSlide();
+        }
     </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
