@@ -1,8 +1,20 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Sun, Moon } from "lucide-react";
 
 export default function ChampionsGallery() {
   const [champs, setChamps] = useState([]);
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("All");
+  const [dark, setDark] = useState(true);
+
+  const roles = {
+    Top: ["Garen", "Darius", "Camille", "Fiora", "Shen", "Malphite", "Aatrox"],
+    Jungle: ["LeeSin", "KhaZix", "Gragas", "MasterYi", "Wukong", "Elise"],
+    Mid: ["Ahri", "Zed", "Yasuo", "Katarina", "Lux", "Vex", "Viktor"],
+    ADC: ["Ashe", "Caitlyn", "Jinx", "Ezreal", "Lucian", "Draven"],
+    Support: ["Leona", "Thresh", "Nami", "Lulu", "Rakan", "Braum"],
+  };
 
   useEffect(() => {
     fetch("https://ddragon.leagueoflegends.com/cdn/14.21.1/data/fr_FR/champion.json")
@@ -10,11 +22,46 @@ export default function ChampionsGallery() {
       .then((data) => setChamps(Object.keys(data.data)));
   }, []);
 
+  const filtered = champs.filter((c) => {
+    const matchesSearch = c.toLowerCase().includes(search.toLowerCase());
+    if (roleFilter === "All") return matchesSearch;
+    return matchesSearch && roles[roleFilter]?.includes(c);
+  });
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-10">
-      <h1 className="text-4xl font-bold mb-10 text-center">Champions League of Legends (172)</h1>
+    <div className={dark ? "min-h-screen bg-gray-900 text-white p-10" : "min-h-screen bg-gray-200 text-gray-900 p-10"}>
+      <div className="flex justify-between items-center mb-10">
+        <h1 className="text-4xl font-bold">Champions League of Legends (172)</h1>
+        <button onClick={() => setDark(!dark)} className="p-3 rounded-xl bg-gray-700 hover:bg-gray-600">
+          {dark ? <Sun /> : <Moon />}
+        </button>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <input
+          type="text"
+          placeholder="Rechercher un champion..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="p-3 rounded-xl w-full md:w-1/3 text-black"
+        />
+
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="p-3 rounded-xl text-black w-full md:w-1/4"
+        >
+          <option value="All">Tous les rôles</option>
+          <option value="Top">Top</option>
+          <option value="Jungle">Jungle</option>
+          <option value="Mid">Mid</option>
+          <option value="ADC">ADC</option>
+          <option value="Support">Support</option>
+        </select>
+      </div>
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-        {champs.map((champ) => (
+        {filtered.map((champ) => (
           <motion.div
             key={champ}
             whileHover={{ scale: 1.08 }}
