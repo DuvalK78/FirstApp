@@ -1,83 +1,353 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Champions LoL – Galerie Premium</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Champions League of Legends - Galerie Ultimate</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    .champ-card { transition: transform 0.2s ease; }
-    .champ-card:hover { transform: scale(1.07); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    /* Accordion Gallery Styles */
+    .accordion-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      min-height: 500px;
+      gap: 8px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .accordion-item {
+      flex: 0 0 80px;
+      border-radius: 12px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .accordion-item:hover {
+      flex: 0 0 200px;
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.4);
+    }
+
+    .accordion-item.expanded {
+      flex: 0 0 400px !important;
+      box-shadow: 0 16px 64px rgba(255, 215, 0, 0.6);
+    }
+
+    .champion-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .accordion-item:hover .champion-info,
+    .accordion-item.expanded .champion-info {
+      opacity: 1;
+    }
+
+    .champion-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    /* Grid View Styles */
+    .grid-item {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 16px 48px rgba(255, 215, 0, 0.4);
+    }
+
+    /* View Toggle Buttons */
+    .view-btn {
+      transition: all 0.2s ease;
+    }
+
+    .view-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transform: scale(1.05);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+    }
+
+    /* Loading Animation */
+    .loader {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: #FFD700;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-6" id="appRoot">
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white min-h-screen">
+  
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/80 border-b border-gray-800 shadow-2xl">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h1 class="text-4xl font-bold bg-gradient-to-r from-yellow-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            Champions League of Legends
+          </h1>
+          <p class="text-gray-400 mt-1">Explorez les <span id="totalChamps" class="text-yellow-400 font-semibold">0</span> champions</p>
+        </div>
+        
+        <div class="flex gap-3">
+          <!-- View Toggle -->
+          <button id="viewAccordion" class="view-btn active p-3 rounded-xl bg-gray-700 hover:bg-gray-600">
+            <i data-feather="layout"></i>
+          </button>
+          <button id="viewGrid" class="view-btn p-3 rounded-xl bg-gray-700 hover:bg-gray-600">
+            <i data-feather="grid"></i>
+          </button>
+          
+          <!-- Dark Mode Toggle -->
+          <button id="themeToggle" class="p-3 rounded-xl bg-gray-700 hover:bg-gray-600">
+            <i data-feather="sun"></i>
+          </button>
+        </div>
+      </div>
 
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-4xl font-bold">Champions League of Legends (172)</h1>
+      <!-- Search & Filters -->
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="relative flex-1">
+          <i data-feather="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+          <input id="searchInput" type="text" placeholder="Rechercher un champion (ex: Ahri, Yasuo...)"
+            class="pl-12 pr-4 py-3 rounded-xl w-full bg-gray-800/50 border border-gray-700 focus:border-purple-500 focus:outline-none transition-all text-white placeholder-gray-500" />
+        </div>
 
-    <!-- Dark mode toggle -->
-    <button id="themeToggle" class="p-3 rounded-xl bg-gray-700 hover:bg-gray-600">
-      <i data-feather="sun"></i>
-    </button>
-  </div>
+        <select id="roleSelect" class="px-4 py-3 rounded-xl bg-gray-800/50 border border-gray-700 focus:border-purple-500 focus:outline-none transition-all text-white">
+          <option value="All">🎮 Tous les rôles</option>
+          <option value="Top">⚔️ Top Lane</option>
+          <option value="Jungle">🌲 Jungle</option>
+          <option value="Mid">✨ Mid Lane</option>
+          <option value="ADC">🎯 ADC</option>
+          <option value="Support">🛡️ Support</option>
+        </select>
 
-  <!-- Search & Filters -->
-  <div class="flex flex-col md:flex-row gap-4 mb-6">
-    <input id="searchInput" type="text" placeholder="Rechercher un champion..."
-      class="p-3 rounded-xl w-full md:w-1/3 text-black" />
+        <button id="resetBtn" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 font-semibold transition-all">
+          <i data-feather="refresh-cw" class="inline-block mr-2"></i>Réinitialiser
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <select id="roleSelect" class="p-3 rounded-xl text-black w-full md:w-1/4">
-      <option value="All">Tous les rôles</option>
-      <option value="Top">Top</option>
-      <option value="Jungle">Jungle</option>
-      <option value="Mid">Mid</option>
-      <option value="ADC">ADC</option>
-      <option value="Support">Support</option>
-    </select>
-  </div>
+  <!-- Main Content -->
+  <main class="container mx-auto px-6 py-8">
+    <!-- Loading State -->
+    <div id="loading" class="flex justify-center items-center py-20">
+      <div class="loader"></div>
+    </div>
 
-  <!-- Champions grid -->
-  <div id="champGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+    <!-- Accordion View -->
+    <div id="accordionView" class="accordion-container hidden"></div>
+
+    <!-- Grid View -->
+    <div id="gridView" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 hidden"></div>
+
+    <!-- No Results -->
+    <div id="noResults" class="hidden text-center py-20">
+      <i data-feather="search" class="mx-auto mb-4 text-gray-600" style="width: 64px; height: 64px;"></i>
+      <h3 class="text-2xl font-bold text-gray-400 mb-2">Aucun champion trouvé</h3>
+      <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 text-gray-500 border-t border-gray-800 mt-12">
+    <p>🎮 Données fournies par <a href="https://ddragon.leagueoflegends.com/" target="_blank" class="text-purple-400 hover:text-purple-300">Riot Games API</a></p>
+    <p class="mt-2 text-sm">League of Legends © Riot Games</p>
+  </footer>
 
   <script>
     feather.replace();
 
+    // Role mapping (approximatif, peut être enrichi)
     const roles = {
-      Top: ["Garen", "Darius", "Camille", "Fiora", "Shen", "Malphite", "Aatrox"],
-      Jungle: ["LeeSin", "KhaZix", "Gragas", "MasterYi", "Wukong", "Elise"],
-      Mid: ["Ahri", "Zed", "Yasuo", "Katarina", "Lux", "Vex", "Viktor"],
-      ADC: ["Ashe", "Caitlyn", "Jinx", "Ezreal", "Lucian", "Draven"],
-      Support: ["Leona", "Thresh", "Nami", "Lulu", "Rakan", "Braum"],
+      Top: ["Garen", "Darius", "Camille", "Fiora", "Shen", "Malphite", "Aatrox", "Jax", "Irelia", "Riven", "Renekton", "Sett", "Mordekaiser", "Nasus", "Ornn", "Pantheon"],
+      Jungle: ["LeeSin", "KhaZix", "Gragas", "MasterYi", "Elise", "Hecarim", "Kayn", "Graves", "Kindred", "Ekko", "RekSai", "Nocturne", "Ivern", "Jarvan", "Fiddlesticks"],
+      Mid: ["Ahri", "Zed", "Yasuo", "Katarina", "Lux", "Viktor", "Syndra", "Orianna", "Akali", "Leblanc", "Cassiopeia", "Vex", "Veigar", "Annie", "Malzahar", "Azir"],
+      ADC: ["Ashe", "Caitlyn", "Jinx", "Ezreal", "Lucian", "Draven", "Vayne", "Jhin", "Kaisa", "Aphelios", "Xayah", "Samira", "Tristana", "Sivir", "MissFortune"],
+      Support: ["Leona", "Thresh", "Nami", "Lulu", "Rakan", "Braum", "Morgana", "Janna", "Soraka", "Yuumi", "Sona", "Blitzcrank", "Nautilus", "Pyke", "Bard", "Alistar"]
     };
 
-    const champGrid = document.getElementById("champGrid");
-    const searchInput = document.getElementById("searchInput");
-    const roleSelect = document.getElementById("roleSelect");
-    const themeToggle = document.getElementById("themeToggle");
-    const appRoot = document.getElementById("appRoot");
-    let champions = [];
+    const elements = {
+      accordionView: document.getElementById("accordionView"),
+      gridView: document.getElementById("gridView"),
+      searchInput: document.getElementById("searchInput"),
+      roleSelect: document.getElementById("roleSelect"),
+      themeToggle: document.getElementById("themeToggle"),
+      viewAccordion: document.getElementById("viewAccordion"),
+      viewGrid: document.getElementById("viewGrid"),
+      resetBtn: document.getElementById("resetBtn"),
+      loading: document.getElementById("loading"),
+      noResults: document.getElementById("noResults"),
+      totalChamps: document.getElementById("totalChamps")
+    };
 
-    // Fetch champions
+    let champions = [];
+    let currentView = "accordion";
+    let expandedChampion = null;
+
+    // Fetch champions from API
     fetch("https://ddragon.leagueoflegends.com/cdn/14.21.1/data/fr_FR/champion.json")
       .then(res => res.json())
       .then(data => {
         champions = Object.keys(data.data);
+        elements.totalChamps.textContent = champions.length;
+        elements.loading.classList.add("hidden");
         renderChampions(champions);
+      })
+      .catch(err => {
+        elements.loading.innerHTML = `
+          <div class="text-center">
+            <p class="text-red-400 text-xl">❌ Erreur de chargement</p>
+            <p class="text-gray-500 mt-2">Impossible de charger les champions</p>
+          </div>
+        `;
       });
 
+    // Render champions based on current view
     function renderChampions(list) {
-      champGrid.innerHTML = list.map(champ => `
-        <div class='champ-card rounded-2xl overflow-hidden shadow-xl bg-gray-800 cursor-pointer'>
-          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champ}_0.jpg"
-               alt="${champ}" class="w-full h-40 object-cover" />
-          <div class="p-3 text-center font-semibold">${champ}</div>
-        </div>`).join('');
+      if (list.length === 0) {
+        elements.accordionView.classList.add("hidden");
+        elements.gridView.classList.add("hidden");
+        elements.noResults.classList.remove("hidden");
+        return;
+      }
+
+      elements.noResults.classList.add("hidden");
+
+      if (currentView === "accordion") {
+        renderAccordion(list);
+      } else {
+        renderGrid(list);
+      }
+
+      feather.replace();
     }
 
+    // Render Accordion View
+    function renderAccordion(list) {
+      elements.accordionView.classList.remove("hidden");
+      elements.gridView.classList.add("hidden");
+      
+      elements.accordionView.innerHTML = list.map(champ => `
+        <div class="accordion-item fade-in" 
+             style="background-image: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champ}_0.jpg')"
+             data-champion="${champ}">
+          <div class="champion-info">
+            <div class="champion-name">${champ}</div>
+            <div class="text-xs text-gray-300 mt-1">${getRoleForChampion(champ)}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add click handlers for accordion
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const champName = item.dataset.champion;
+          
+          if (expandedChampion === champName) {
+            item.classList.remove('expanded');
+            expandedChampion = null;
+          } else {
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('expanded'));
+            item.classList.add('expanded');
+            expandedChampion = champName;
+          }
+        });
+      });
+    }
+
+    // Render Grid View
+    function renderGrid(list) {
+      elements.gridView.classList.remove("hidden");
+      elements.accordionView.classList.add("hidden");
+
+      elements.gridView.innerHTML = list.map(champ => `
+        <div class='grid-item rounded-2xl overflow-hidden shadow-2xl bg-gray-800 border border-gray-700 hover:border-purple-500 fade-in'>
+          <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champ}_0.jpg"
+               alt="${champ}" class="w-full h-48 object-cover" />
+          <div class="p-4">
+            <div class="font-bold text-lg text-yellow-400">${champ}</div>
+            <div class="text-xs text-gray-400 mt-1">${getRoleForChampion(champ)}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Get role for champion
+    function getRoleForChampion(champ) {
+      for (const [role, champs] of Object.entries(roles)) {
+        if (champs.includes(champ)) {
+          return `🎯 ${role}`;
+        }
+      }
+      return "🎮 Multi-rôle";
+    }
+
+    // Filter champions
     function filterChampions() {
-      const search = searchInput.value.toLowerCase();
-      const role = roleSelect.value;
+      const search = elements.searchInput.value.toLowerCase();
+      const role = elements.roleSelect.value;
 
       const filtered = champions.filter(c => {
         const matchSearch = c.toLowerCase().includes(search);
@@ -88,21 +358,52 @@
       renderChampions(filtered);
     }
 
-    searchInput.addEventListener("input", filterChampions);
-    roleSelect.addEventListener("change", filterChampions);
+    // Event Listeners
+    elements.searchInput.addEventListener("input", filterChampions);
+    elements.roleSelect.addEventListener("change", filterChampions);
 
-    // Dark mode toggle
-    themeToggle.addEventListener("click", () => {
-      const isDark = appRoot.classList.contains("bg-gray-900");
+    elements.resetBtn.addEventListener("click", () => {
+      elements.searchInput.value = "";
+      elements.roleSelect.value = "All";
+      renderChampions(champions);
+    });
+
+    // View Toggle
+    elements.viewAccordion.addEventListener("click", () => {
+      currentView = "accordion";
+      elements.viewAccordion.classList.add("active");
+      elements.viewGrid.classList.remove("active");
+      renderChampions(filterCurrentList());
+    });
+
+    elements.viewGrid.addEventListener("click", () => {
+      currentView = "grid";
+      elements.viewGrid.classList.add("active");
+      elements.viewAccordion.classList.remove("active");
+      renderChampions(filterCurrentList());
+    });
+
+    function filterCurrentList() {
+      const search = elements.searchInput.value.toLowerCase();
+      const role = elements.roleSelect.value;
+      return champions.filter(c => {
+        const matchSearch = c.toLowerCase().includes(search);
+        if (role === "All") return matchSearch;
+        return matchSearch && roles[role]?.includes(c);
+      });
+    }
+
+    // Dark Mode Toggle
+    elements.themeToggle.addEventListener("click", () => {
+      const body = document.body;
+      const isDark = body.classList.contains("bg-gradient-to-br");
 
       if (isDark) {
-        appRoot.classList.remove("bg-gray-900", "text-white");
-        appRoot.classList.add("bg-gray-200", "text-gray-900");
-        themeToggle.innerHTML = '<i data-feather="moon"></i>';
+        body.className = "bg-gradient-to-br from-gray-100 via-purple-100 to-gray-100 text-gray-900 min-h-screen";
+        elements.themeToggle.innerHTML = '<i data-feather="moon"></i>';
       } else {
-        appRoot.classList.add("bg-gray-900", "text-white");
-        appRoot.classList.remove("bg-gray-200", "text-gray-900");
-        themeToggle.innerHTML = '<i data-feather="sun"></i>';
+        body.className = "bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white min-h-screen";
+        elements.themeToggle.innerHTML = '<i data-feather="sun"></i>';
       }
 
       feather.replace();
