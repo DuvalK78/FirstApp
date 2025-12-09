@@ -3,348 +3,514 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stats Ashe</title>
+    <title>Ashe - La Flèche de Glace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+
         body {
-            font-family: Verdana, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        h2 {
-            color: #2c3e50
-        }
-        img {
-            border-radius: 10px;
-        }
-        table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 50%;
-            background: white;
-        }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        table th {
-            background-color: #2c3e50;
-            color: white;
-        }
-        table td {
-            color: #2c3e50;
-        }
-        hr {
-            margin: 20px 0;
-            border: none;
-            border-top: 2px solid #ddd;
-        }
-        /* Style du bouton */
-        .back-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .back-button:hover {
-            background-color: #34495e;
-        }
-        p {
-      color: #2c3e50;
-      /*border-left: 6px solid #2980b9;
-      border-radius: 8px;*/
-      margin: 40px auto;
-      padding: 20px;
-      /*width: 75%;*/
-      line-height: 1.6;
-      text-align: justify;
-      box-shadow: 0 0 15px rgba(41, 128, 185, 0.1);
-        }
-                .character-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 5px;
-        }
-                .carousel-container {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             position: relative;
-            width: 486px;
-            height: 287px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a5f3fc 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(96, 165, 250, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5)); }
+            50% { filter: drop-shadow(0 0 25px rgba(165, 243, 252, 0.8)); }
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            margin: 0 auto;
             overflow: hidden;
-            perspective: 1000px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
         }
 
         .carousel {
             display: flex;
-            transition: transform 0.5s ease-in-out;
-            width: fit-content;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
         }
 
         .carousel img {
-            width: 486px;
-            height: 287px;
+            min-width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 15px;
         }
-                .prev, .next {
+
+        .carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
             color: white;
-            border: none;
-            padding: 10px;
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 20px;
-            transition: background 0.3s;
+            transition: all 0.3s;
             z-index: 10;
         }
 
-        .prev:hover, .next:hover {
-            background: rgba(44, 62, 80, 0.8);
+        .carousel-btn:hover {
+            background: rgba(96, 165, 250, 0.9);
+            border-color: #60a5fa;
+            transform: translateY(-50%) scale(1.1);
         }
 
-        .prev {
-            left: 15px; 
+        .carousel-btn.prev { left: 20px; }
+        .carousel-btn.next { right: 20px; }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
         }
 
-        .next {
-            right: 15px;
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        strong {
-      color: #FFD700;
-    }
-    @media (max-width: 365px) {
-    /*.carousel-container {
-        width: 486px;
-        height: 287px;
-        overflow: hidden;
-        perspective: 1000px;
-    }
-    .carousel img {
-        width: 486px;
-        height: 287px;
-        object-fit: cover;
-        border-radius: 15px;
-    }*/
-}
+        .indicator.active {
+            width: 32px;
+            border-radius: 6px;
+            background: #60a5fa;
+        }
 
-  </style>
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(96, 165, 250, 0.3);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            transform: translateX(-5px);
+            box-shadow: 0 15px 40px rgba(96, 165, 250, 0.5);
+        }
+
+        .lore-section {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .lore-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #a5f3fc;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .lore-text {
+            color: #cbd5e1;
+            line-height: 1.9;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
+
+        .lore-text strong {
+            color: #60a5fa;
+            font-weight: 700;
+        }
+
+        .winrate-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#60a5fa 0% var(--percentage), rgba(96, 165, 250, 0.2) var(--percentage) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .winrate-inner {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .carousel-container {
+                height: 300px;
+            }
+            .lore-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-
-    <div class="character-container">
-    <h1>Ashe</h1>
-        <div class="carousel-container">
-            <button class="prev" onclick="prevSlide()">&#10094;</button>
-            <div class="carousel" id="carousel">
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg" alt="Image d'Ashe">
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_52.jpg" alt="Image d'Ashe Impératrice lunaire">
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_32.jpg" alt="Image d'Ashe de l'assemblée">
+    <div class="content-wrapper min-h-screen py-10 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Hero Section -->
+            <div class="text-center mb-16 fade-in">
+                <h1 class="hero-title mb-4">Ashe</h1>
+                <p class="text-xl text-cyan-200 font-light italic">La Flèche de Glace</p>
+                <div class="mt-6">
+                    <span class="role-badge">
+                        <img src="https://cdn3.emoji.gg/emojis/9366-lol-role-bot.png" width="24" alt="ADC">
+                        ADC / Bot Lane
+                    </span>
+                </div>
             </div>
-            <button class="next" onclick="nextSlide()">&#10095;</button>
-        </div>
 
+            <!-- Carousel -->
+            <div class="carousel-container fade-in mb-16">
+                <div class="carousel" id="carousel">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_0.jpg" alt="Ashe classique" loading="lazy">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_52.jpg" alt="Ashe Impératrice lunaire" loading="lazy">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ashe_32.jpg" alt="Ashe de l'assemblée" loading="lazy">
+                </div>
+                <button class="carousel-btn prev" onclick="prevSlide()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" onclick="nextSlide()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <div class="carousel-indicators" id="indicators"></div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-center mb-10 text-cyan-200" style="font-family: 'Cinzel', serif;">Statistiques</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">NIVEAU</div>
+                        <div class="stat-value">7</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">MEILLEURE NOTE</div>
+                        <div class="stat-value">S</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">K/D/A</div>
+                        <div class="stat-value text-2xl">244/362/296</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">PARTIES</div>
+                        <div class="stat-value" id="totalGames">54</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Win Rate Circle -->
+                    <div class="stat-card">
+                        <h3 class="text-xl font-bold text-center mb-6 text-cyan-200">Taux de Victoire</h3>
+                        <div class="winrate-circle" id="winrateCircle" style="--percentage: 46.3%">
+                            <div class="winrate-inner">
+                                <div class="text-5xl font-bold text-cyan-400" id="winrateValue">46.3%</div>
+                                <div class="text-sm text-gray-400 mt-2">Win Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- W/L Stats -->
+                    <div class="stat-card">
+                        <h3 class="text-xl font-bold text-center mb-6 text-cyan-200">Victoires / Défaites</h3>
+                        <div class="space-y-6 mt-8">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Victoires</div>
+                                        <div class="text-3xl font-bold text-green-400" id="winsDisplay">25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Défaites</div>
+                                        <div class="text-3xl font-bold text-red-400" id="lossesDisplay">29</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lore Section -->
+            <div class="lore-section fade-in">
+                <h2 class="lore-title">La voie la plus difficile</h2>
+                <div class="lore-text">
+                    <p class="mb-6">
+                        <strong>Le colossal brasier s'embrasa.</strong> Dans le passé, les tribus rassemblées marquaient ainsi le début de la fête.
+                    </p>
+                    <p class="mb-6">
+                        Les moissons avaient toujours donné lieu aux plus grandes festivités de l'année pour les tribus, et c'était l'une des dernières avant l'hiver. Des cris de joie auraient dû se répercuter sur les pentes glacées de la montagne, appelant la bénédiction des Trois sœurs. Pourtant, les Avarosans rassemblés restaient silencieux, dos au feu, tournés vers l'estrade sur laquelle se trouvait Ashe.
+                    </p>
+                    <p class="mb-6">
+                        Elle les regarda. Aucune fête n'avait jamais rassemblé tant de gens, et tous étaient là pour la voir.
+                    </p>
+                    <p class="mb-6">
+                        Elle prit son arc et la morsure perçante de la glace pure fit courir un frisson dans son corps. Le froid était douloureux, même après tant de temps passé avec l'arme, mais elle l'accueillait et s'en servait pour se concentrer et éloigner les distractions. Elle porta le regard sur les flammes et elle aspira de l'air en tendant la corde. Tous les autres sons de la fête cessèrent.
+                    </p>
+                    <p class="mb-6">
+                        Une flèche de cristal se forma, faite de froid pur, contenue par la magie qui courait dans l'arc. Ashe la laissa continuer de canaliser la magie dans ses bras. La température chuta sur l'estrade, le givre se forma sous ses pieds.
+                    </p>
+                    <p class="mb-6">
+                        Quand elle fut sur le point d'être submergée par le froid, elle lâcha la corde et laissa filer la flèche. Elle passa au-dessus de la foule et frappa sa cible dans un bruit assourdissant. En un instant, le brasier fut éteint par la glace. Le soleil couchant brillait sous les flammes cristallisées. La foule éclata enfin en hurlements de joie. La foule invoqua la bénédiction des Trois : Lissandra, Serylda et Avarosa réincarnée en Ashe.
+                    </p>
+                    <p class="mb-6">
+                        Son discours fut bref. « Avarosans ! Nous n'avons jamais été si nombreux à la fête des moissons. Festoyez avec vos frères et sœurs. Nous ne sommes qu'un. Buvez et mangez ! »
+                    </p>
+                    <p class="mb-6">
+                        Elle sourit tandis que la foule l'acclamait. Elle leva haut son arc et les hourras se décuplèrent. Intérieurement, Ashe grimaça. Une fois de plus, elle se demanda si c'était son commandement qui les unissait, ou son arme.
+                    </p>
+                    <p class="mb-6">
+                        <strong>Ashe remplirait tous ces rôles si elle le pouvait.</strong>
+                    </p>
+                    <p class="text-right italic text-cyan-300 mt-8">
+                        — Ashe, Freljord
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <hr>
-
-    <h2>Statistiques</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Statistique</th>
-                <th>Valeur</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Poste</td>
-                <td><img src="https://cdn3.emoji.gg/emojis/9366-lol-role-bot.png" width="20" alt="Rôle Bot"><br> Bot</td>
-            </tr>
-            <tr>
-                <td>Niveau</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <td>Note la plus élevée</td>
-                <td>S</td>
-            </tr>
-            <tr>
-                <td>Kills</td>
-                <td>244</td>
-            </tr>
-            <tr>
-                <td>Deaths</td>
-                <td>362</td>
-            </tr>
-            <tr>
-                <td>Assists</td>
-                <td>296</td>
-            </tr>
-            <tr>
-                <td>Win</td>
-                <td id="wins">25</td>
-            </tr>
-            <tr>
-                <td>Lose</td>
-                <td id="losses">29</td>
-            </tr>
-            <tr>
-                <td>Parties Totales</td>
-                <td id="total-games"></td>
-            </tr>
-            <tr>
-                <td>Win Rate</td>
-                <td id="win-rate"></td>
-            </tr>
-        </tbody>
-    </table>
-    <p> <strong>La voie la plus difficile</strong><br><br>
-        
-Le colossal brasier s'embrasa. Dans le passé, les tribus rassemblées marquaient ainsi le début de la fête.<br><br>
-
-Les moissons avaient toujours donné lieu aux plus grandes festivités de l'année pour les tribus, et c'était l'une des dernières avant l'hiver. Des cris de joie auraient dû se répercuter sur les pentes glacées de la montagne, appelant la bénédiction des Trois sœurs. Pourtant, les Avarosans rassemblés restaient silencieux, dos au feu, tournés vers l'estrade sur laquelle se trouvait Ashe.<br><br>
-
-Elle les regarda. Aucune fête n'avait jamais rassemblé tant de gens, et tous étaient là pour la voir.<br><br>
-
-Elle prit son arc et la morsure perçante de la glace pure fit courir un frisson dans son corps. Le froid était douloureux, même après tant de temps passé avec l'arme, mais elle l'accueillait et s'en servait pour se concentrer et éloigner les distractions. Elle porta le regard sur les flammes et elle aspira de l'air en tendant la corde. Tous les autres sons de la fête cessèrent.<br><br>
-
-Une flèche de cristal se forma, faite de froid pur, contenue par la magie qui courait dans l'arc. Ashe la laissa continuer de canaliser la magie dans ses bras. La température chuta sur l'estrade, le givre se forma sous ses pieds.<br><br>
-
-Quand elle fut sur le point d'être submergée par le froid, elle lâcha la corde et laissa filer la flèche.<br><br>
-
-Elle passa au-dessus de la foule et frappa sa cible dans un bruit assourdissant. En un instant, le brasier fut éteint par la glace. Le soleil couchant brillait sous les flammes cristallisées. La foule éclata enfin en hurlements de joie. La foule invoqua la bénédiction des Trois : Lissandra, Serylda et Avarosa réincarnée en Ashe.<br><br>
-
-Son discours fut bref.<br><br>
-
-« Avarosans ! Nous n'avons jamais été si nombreux à la fête des moissons. Festoyez avec vos frères et sœurs. Nous ne sommes qu'un. Buvez et mangez ! »<br><br>
-
-Elle sourit tandis que la foule l'acclamait. Elle leva haut son arc et les hourras se décuplèrent.<br><br>
-
-Intérieurement, Ashe grimaça. Une fois de plus, elle se demanda si c'était son commandement qui les unissait, ou son arme. C'était le symbole d'Avarosa et beaucoup pensaient à Freljord que sa propriétaire était Avarosa revenue à la vie. Ashe chassa cette pensée. Peu importait pourquoi ils étaient là. Ce qu'ils étaient devenus comptait bien plus. Elle sauta de l'estrade et se mêla à la foule qui gagnait les tables du festin.<br><br>
-
-Les tribus se mélangeaient, partageant la nourriture, la boisson et les vieilles histoires de chasse. Les Pics de Pierre décrivaient les montagnes chaudes mais dangereuses du sud. Ashe s'enthousiasma avec les autres quand les Neiges Rouges racontèrent la défaite des armées noxiennes s'efforçant de pénétrer dans le continent depuis la côte. Un guerrier des Veines de Glace donna une bourrade à Ashe en passant. Un étrange frisson la parcourut.<br><br>
-
-Tous avaient répondu à son appel à célébrer ensemble. Tous avaient juré allégeance aux Avarosans et chaque tribu voulait d'elle quelque chose de différent. Elle devait être une prophétesse, un sauveur, une médiatrice. Une chef de guerre.<br><br>
-
-Ashe remplirait tous ces rôles si elle le pouvait.<br><br>
-
-Elle arrivait aux confins de la foule quand elle s'immobilisa. À la dernière table, sombres et séparés, se tenaient des Sublimés qu'elle ne connaissait que trop bien. Les Neigés, des fanatiques qui avaient exterminé naguère toute une tribu.<br><br>
-
-Une tribu dont le seule crime avait été de rejoindre les Avarosans.<br><br>
-
-Une femme qui semblait leur chef se leva. « Chef de guerre Ashe, élue d'Avarosa, porteuse de l'arc divin. Je m'appelle Hildhur Svarhem, Porteuse de vérité et chef de guerre des Neigés. »<br><br>
-
-Ashe imagina de nouveau les huttes brulées et rasées, les gens agonisant dans la souffrance, et sa rage s'enflamma. La foule se tut autour d'eux tandis qu'Hildhur parlait. Tous les gens présents savaient ce que les Neigés avaient fait.<br><br>
-
-« Nous avons juré qu'aucun traître à la foi ne suivrait jamais celles qui prétendent être la réincarnation d'Avarosa. Tes guerriers ont combattu bravement, mais mal. » Elle prit dans son dos une grande hache de guerre recouverte de glace pure. Vraie Sublimée, elle subit sans frémir ce contact.<br><br>
-
-Ashe compta les pas qui la séparaient de la femme. Il y avait du sang séché sur l'armure d'Hildhur ; du sang avarosan ? Ashe tendit tous ses muscles et se prépara à agir. Elle était prête contre toute attaque.<br><br>
-
-Mais la chef de guerre s'agenouilla en baissant la tête et lui offrit sa hache.<br><br>
-
-« Pardonne-nous. Je ne savais pas ce que je sais. J'étais venue te défier, te démasquer devant tes disciples. Mais ta magie dépasse tout ce que j'ai vu. Nul ne peut douter qu'Avarosa parle à travers toi. Je t'offre ma hache et ma tête. Épargne mon peuple, qu'il puisse prouver son utilité en chassant, en récoltant et en mourant en ton nom. »<br><br>
-
-Les Neigés suivirent l'exemple de leur chef de guerre et s'agenouillèrent.<br><br>
-
-La foule réclama vengeance. « À mort ! »<br><br>
-
-Quand Ashe était arrivée, le village n'était qu'une ruine fumante. Les quelques guerriers avaient été facilement identifiés, car leurs corps avaient été épargnés par le feu mais violemment tailladés et laissés aux corbeaux. Le reste de la tribu s'était caché dans les maisons, implorant.<br><br>
-
-Mais il n'avait pas été épargné…<br><br>
-
-Les yeux remplis de rage, Ashe tendit la main vers la hache. Elle allait prendre la tête d'Hildhur, en avertissement.<br><br>
-
-Elle posa la main sur la hache et, tandis que la piqûre familière de la glace pure meurtrissait son bras, elle sentit son arc irradier dans son dos. Une douce pulsation, comme une brise d'hiver.<br><br>
-
-Elle se calma.<br><br>
-
-« Lève-toi, Hildhur », dit-elle en regardant la hache.<br><br>
-
-Hildhur se mit debout, décontenancée. Ashe soutint son regard.<br><br>
-
-« Les Neigés ont versé le sang de ma tribu et sont mes ennemis. Mais vous avez fait preuve d'humilité et de remords, ici et maintenant. Vous n'êtes plus les Neigés. À compter de ce jour, vous êtes Avarosans, notre famille. Tu n'as rien à craindre de moi. »<br><br>
-
-Ashe remit la hache entre les mains de la chef de guerre et la tension s'évanouit. La fête reprit, dans une atmosphère de pardon et de pitié. Ashe alla accueillir chaque personne assise à la table.<br><br>
-
-En repartant, elle prit soin de garder sa colère sous contrôle. Son cœur brûlait toujours, mais son peuple avait besoin d'autre chose que de vengeance. La jeune femme fit courir ses doigts sur la corde de son arc, cherchant du réconfort dans la morsure du froid.<br><br>
-
-Elle serait meilleure que les autres. Elle le devait.<br><br>
-
-Ashe<br>
-Freljord<br><br>
-        
-    </p>
-
-    <!-- Bouton pour revenir à l'index -->
-    <a href="IndexLol.html" class="back-button">Retour à l'index</a>
+    <!-- Back Button -->
+    <a href="IndexLol.html" class="back-button">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Retour à l'index
+    </a>
 
     <script>
-        // Variables pour le nombre de victoires et de défaites
-        const wins = 25;  // Modifie cette valeur si nécessaire
-        const losses = 29;  // Modifie cette valeur si nécessaire
-
-        // Calcul du total des parties et du win rate
+        // Stats calculation
+        const wins = 25;
+        const losses = 29;
         const totalGames = wins + losses;
-        const winRate = totalGames > 0 ? (wins / totalGames * 100).toFixed(2) + '%' : '0%';
+        const winRate = ((wins / totalGames) * 100).toFixed(1);
 
-        // Mise à jour des valeurs dans le tableau
-        document.getElementById('total-games').textContent = totalGames;
-        document.getElementById('win-rate').textContent = winRate;
+        document.getElementById('totalGames').textContent = totalGames;
+        document.getElementById('winrateValue').textContent = winRate + '%';
+        document.getElementById('winrateCircle').style.setProperty('--percentage', winRate + '%');
+        document.getElementById('winsDisplay').textContent = wins;
+        document.getElementById('lossesDisplay').textContent = losses;
 
-                let index = 0;
-        const images = document.querySelectorAll(".carousel img");
+        // Carousel functionality
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.carousel img');
         const totalImages = images.length;
+        const carousel = document.getElementById('carousel');
+        const indicatorsContainer = document.getElementById('indicators');
 
-        function showSlide() {
-            const carousel = document.getElementById("carousel");
-            carousel.style.transform = `translateX(${-index * 486}px)`;
+        // Create indicators
+        for (let i = 0; i < totalImages; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+            indicator.onclick = () => goToSlide(i);
+            indicatorsContainer.appendChild(indicator);
+        }
+
+        function updateCarousel() {
+            const width = carousel.parentElement.offsetWidth;
+            carousel.style.transform = `translateX(-${currentIndex * width}px)`;
+            
+            // Update indicators
+            document.querySelectorAll('.indicator').forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentIndex);
+            });
         }
 
         function nextSlide() {
-            index = (index + 1) % totalImages;
-            showSlide();
+            currentIndex = (currentIndex + 1) % totalImages;
+            updateCarousel();
         }
 
         function prevSlide() {
-            index = (index - 1 + totalImages) % totalImages;
-            showSlide();
+            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+            updateCarousel();
         }
-    </script>
 
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        // Auto-play carousel
+        let autoPlayInterval = setInterval(nextSlide, 5000);
+
+        // Pause on hover
+        carousel.parentElement.addEventListener('mouseenter', () => {
+            clearInterval(autoPlayInterval);
+        });
+
+        carousel.parentElement.addEventListener('mouseleave', () => {
+            autoPlayInterval = setInterval(nextSlide, 5000);
+        });
+
+        // Responsive carousel
+        window.addEventListener('resize', updateCarousel);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Fade-in animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
