@@ -1,465 +1,515 @@
 <!DOCTYPE html>
-
 <html lang="fr">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Stats Ahri</title>
-
+    <title>Ahri - Renarde à neuf queues</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
 
         body {
-
-            font-family: Verdana, sans-serif;
-
-            text-align: center;
-
-            background-color: #f4f4f4;
-
-            margin: 0;
-
-            padding: 0;
-
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            position: relative;
+            overflow-x: hidden;
         }
 
-        h1 {
-
-            color: #2c3e50;
-
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        h2 {
-
-            color: #2c3e50
-
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
         }
 
-        img {
-
-            border-radius: 10px;
-
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            background: linear-gradient(135deg, #60a5fa 0%, #a5f3fc 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(96, 165, 250, 0.5);
+            animation: glow 3s ease-in-out infinite;
         }
 
-        table {
-
-            margin: 20px auto;
-
-            border-collapse: collapse;
-
-            width: 50%;
-
-            background: white;
-
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(96, 165, 250, 0.5)); }
+            50% { filter: drop-shadow(0 0 25px rgba(165, 243, 252, 0.8)); }
         }
 
-        table th, table td {
-
-            border: 1px solid #ddd;
-
-            padding: 8px;
-
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
         }
 
-        table th {
+        .carousel {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
 
-            background-color: #2c3e50;
+        .carousel img {
+            min-width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
             color: white;
-
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
         }
 
-        table td {
-
-            color: #2c3e50;
-
+        .carousel-btn:hover {
+            background: rgba(96, 165, 250, 0.9);
+            border-color: #60a5fa;
+            transform: translateY(-50%) scale(1.1);
         }
 
-        hr {
+        .carousel-btn.prev { left: 20px; }
+        .carousel-btn.next { right: 20px; }
 
-            margin: 20px 0;
-
-            border: none;
-
-            border-top: 2px solid #ddd;
-
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
         }
 
-        /* Style du bouton */
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            width: 32px;
+            border-radius: 6px;
+            background: #60a5fa;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(96, 165, 250, 0.3);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+        }
 
         .back-button {
-
             position: fixed;
-
-            bottom: 20px;
-
-            left: 20px;
-
-            background-color: #2c3e50;
-
+            bottom: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #1e293b, #334155);
             color: white;
-
-            border: none;
-
-            padding: 10px 20px;
-
-            border-radius: 5px;
-
+            padding: 15px 30px;
+            border-radius: 50px;
             text-decoration: none;
-
-            font-size: 14px;
-
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(96, 165, 250, 0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .back-button:hover {
-
-            background-color: #34495e;
-
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            transform: translateX(-5px);
+            box-shadow: 0 15px 40px rgba(96, 165, 250, 0.5);
         }
 
-        p {
-
-      color: #2c3e50;
-
-      /*border-left: 6px solid #2980b9;
-
-      border-radius: 8px;*/
-
-      margin: 40px auto;
-
-      padding: 20px;
-
-      /*width: 75%;*/
-
-      line-height: 1.6;
-
-      text-align: justify;
-
-      box-shadow: 0 0 15px rgba(41, 128, 185, 0.1);
-
+        .lore-section {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
-        strong {
+        .lore-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #a5f3fc;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
 
-      color: #FFD700;
+        .lore-text {
+            color: #cbd5e1;
+            line-height: 1.9;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
 
-    }
+        .lore-text strong {
+            color: #60a5fa;
+            font-weight: 700;
+        }
 
-  </style>
+        .winrate-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(#60a5fa 0% var(--percentage), rgba(96, 165, 250, 0.2) var(--percentage) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+        }
 
+        .winrate-inner {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .carousel-container {
+                height: 300px;
+            }
+            .lore-section {
+                padding: 1.5rem;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="content-wrapper min-h-screen py-10 px-4 md:px-8">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Hero Section -->
+            <div class="text-center mb-16 fade-in">
+                <h1 class="hero-title mb-4">Ahri</h1>
+                <p class="text-xl text-cyan-200 font-light italic">Renarde à neuf queues</p>
+                <div class="mt-6">
+                    <span class="role-badge">
+                        <img src="https://cdn3.emoji.gg/emojis/9366-lol-role-mid.png" width="24" alt="MID">
+                        MID
+                    </span>
+                </div>
+            </div>
 
+            <!-- Carousel -->
+            <div class="carousel-container fade-in mb-16">
+                <div class="carousel" id="carousel">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg" alt="Ahri classique" loading="lazy">
+                </div>
+                <button class="carousel-btn prev" onclick="prevSlide()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <button class="carousel-btn next" onclick="nextSlide()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <div class="carousel-indicators" id="indicators"></div>
+            </div>
 
+            <!-- Stats Grid -->
+            <div class="mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-center mb-10 text-cyan-200" style="font-family: 'Cinzel', serif;">Statistiques</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">NIVEAU</div>
+                        <div class="stat-value">2</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">MEILLEURE NOTE</div>
+                        <div class="stat-value">A-</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">K/D/A</div>
+                        <div class="stat-value text-2xl">16/37/33</div>
+                    </div>
+                    <div class="stat-card text-center">
+                        <div class="text-cyan-300 text-sm font-semibold mb-2">PARTIES</div>
+                        <div class="stat-value" id="totalGames">5</div>
+                    </div>
+                </div>
 
-    <h1>Ahri</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Win Rate Circle -->
+                    <div class="stat-card">
+                        <h3 class="text-xl font-bold text-center mb-6 text-cyan-200">Taux de Victoire</h3>
+                        <div class="winrate-circle" id="winrateCircle" style="--percentage: 40%">
+                            <div class="winrate-inner">
+                                <div class="text-5xl font-bold text-cyan-400" id="winrateValue">40%</div>
+                                <div class="text-sm text-gray-400 mt-2">Win Rate</div>
+                            </div>
+                        </div>
+                    </div>
 
-    <div>
+                    <!-- W/L Stats -->
+                    <div class="stat-card">
+                        <h3 class="text-xl font-bold text-center mb-6 text-cyan-200">Victoires / Défaites</h3>
+                        <div class="space-y-6 mt-8">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Victoires</div>
+                                        <div class="text-3xl font-bold text-green-400" id="winsDisplay">2</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-gray-400">Défaites</div>
+                                        <div class="text-3xl font-bold text-red-400" id="lossesDisplay">3</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg" width="30%" alt="Image d'Ahri">
+            <!-- Lore Section -->
+            <div class="lore-section fade-in">
+                <h2 class="lore-title">Un échange équitable</h2>
+                <div class="lore-text">
+                    <p class="mb-6">
+                        <strong>Le marché embaumait l'encens et les légumes pourrissant.</strong> Ahri resserra son manteau autour de ses neuf queues et joua avec ses deux pierres solaires pour ne plus penser à la puanteur, les faisant rouler entre ses doigts et cliqueter l'une contre l'autre. Chacune d'elles avait la forme d'une flamme, mais elles étaient gravées de telle manière que les angles les plus rudes s'imbriquaient pour en faire un orbe lisse. Ses pierres d'or l'accompagnaient depuis aussi longtemps qu'elle pouvait s'en souvenir, même si leur origine lui était inconnue.
+                    </p>
+                    <p class="mb-6">
+                        Ahri était dans un nouvel environnement, mais la magie latente qui bourdonnait autour d'elle la rassurait. Elle longea un étal dont les paniers tressés étaient intégralement remplis de rocs polis, de coquillages gravés de légendes par une tribu des mers, de dés taillés dans des os et d'autres objets étranges. Rien n'était dans le style des pierres sculptées d'Ahri.
+                    </p>
+                    <p class="mb-6">
+                        « Vous voulez une gemme aussi bleue que l'azur des cieux ? » lui demanda le marchand à barbe grise. « Pour vous, je me séparerais d'un verre céruléen pour le prix d'une simple plume de corbeau hurleur, ou peut-être d'une graine d'arbre de jubji. Je suis ouvert à la discussion. »
+                    </p>
+                    <p class="mb-6">
+                        Ahri lui sourit, mais secoua la tête et continua de remonter le marché, ses pierres solaires en main. Elle dépassa un étal couvert de légumes orange piquetés de pointes, un enfant dont les fruits changeaient de couleur selon le temps et au moins trois bonimenteurs qui agitaient des encensoirs, chacun affirmant avoir découvert la forme la plus profonde de méditation.
+                    </p>
+                    <p class="mb-6">
+                        « L'avenir ! Faites-vous prédire l'avenir ! » héla une jeune femme aux yeux lavande et au visage ovale. « Découvrez qui sera l'amour de votre vie, ou évitez le malheur avec une pincée de racines de bardane. Si vous préférez laisser aux dieux le champ de l'avenir, je vous répondrai sur votre passé. Mais je vous recommande tout de même d'apprendre si vous risquez la mort par empoisonnement. »
+                    </p>
+                    <p class="mb-6">
+                        Un grand Vastaya aux oreilles félines était sur le point de mordre dans une pâtisserie aux épices. Il s'immobilisa et regarda la diseuse de bonne aventure d'un air affolé.
+                    </p>
+                    <p class="mb-6">
+                        « La réponse est non. Échantillon gratuit », dit la jeune femme en lui faisant une révérence, avant de se tourner vers Ahri. « Vous, vous avez l'air d'avoir un passé sombre et mystérieux. Ou du moins des contes dignes d'être partagés. Aucune question ne vous tourmente, madame ? »
+                    </p>
+                    <p class="mb-6">
+                        Sous d'épaisses couches d'encens, Ahri sentit une odeur de fourrure mouillée et de cuir au cou de la femme.
+                    </p>
+                    <p class="mb-6">
+                        <strong>Ashe remplirait tous ces rôles si elle le pouvait.</strong>
+                    </p>
+                    <p class="text-right italic text-cyan-300 mt-8">
+                        — Ahri, Iona
+                    </p>
+                </div>
+            </div>
 
+        </div>
     </div>
 
-
-
-    <hr>
-
-
-
-    <h2>Statistiques</h2>
-
-    <table>
-
-        <thead>
-
-            <tr>
-
-                <th>Statistique</th>
-
-                <th>Valeur</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            <tr>
-
-                <td>Poste</td>
-
-                <td><img src="https://cdn3.emoji.gg/emojis/6934-lol-role-mid.png" width="20" alt="Rôle Mid"><br> Mid </td>
-
-            </tr>
-
-            <tr>
-
-                <td>Niveau</td>
-
-                <td>2</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Note la plus élevée</td>
-
-                <td>A-</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Kills</td>
-
-                <td>16</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Deaths</td>
-
-                <td>37</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Assists</td>
-
-                <td>33</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Win</td>
-
-                <td id="wins">2</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Lose</td>
-
-                <td id="losses">3</td>
-
-            </tr>
-
-            <tr>
-
-                <td>Parties Totales</td>
-
-                <td id="total-games"></td>
-
-            </tr>
-
-            <tr>
-
-                <td>Win Rate</td>
-
-                <td id="win-rate"></td>
-
-            </tr>
-
-        </tbody>
-
-    </table>
-
-    <p> <strong>Un échange équitable</strong><br><br>
-
-Le marché embaumait l'encens et les légumes pourrissant.<br><br>
-
-Ahri resserra son manteau autour de ses neuf queues et joua avec ses deux pierres solaires pour ne plus penser à la puanteur, les faisant rouler entre ses doigts et cliqueter l'une contre l'autre. Chacune d'elles avait la forme d'une flamme, mais elles étaient gravées de telle manière que les angles les plus rudes s'imbriquaient pour en faire un orbe lisse. Ses pierres d'or l'accompagnaient depuis aussi longtemps qu'elle pouvait s'en souvenir, même si leur origine lui était inconnue.<br><br>
-
-Ahri était dans un nouvel environnement, mais la magie latente qui bourdonnait autour d'elle la rassurait. Elle longea un étal dont les paniers tressés étaient intégralement remplis de rocs polis, de coquillages gravés de légendes par une tribu des mers, de dés taillés dans des os et d'autres objets étranges. Rien n'était dans le style des pierres sculptées d'Ahri.<br><br>
-
-« Vous voulez une gemme aussi bleue que l'azur des cieux ? » lui demanda le marchand à barbe grise. « Pour vous, je me séparerais d'un verre céruléen pour le prix d'une simple plume de corbeau hurleur, ou peut-être d'une graine d'arbre de jubji. Je suis ouvert à la discussion. »<br><br>
-
-Ahri lui sourit, mais secoua la tête et continua de remonter le marché, ses pierres solaires en main. Elle dépassa un étal couvert de légumes orange piquetés de pointes, un enfant dont les fruits changeaient de couleur selon le temps et au moins trois bonimenteurs qui agitaient des encensoirs, chacun affirmant avoir découvert la forme la plus profonde de méditation.<br><br>
-
-
-« L'avenir ! Faites-vous prédire l'avenir ! » héla une jeune femme aux yeux lavande et au visage ovale. « Découvrez qui sera l'amour de votre vie, ou évitez le malheur avec une pincée de racines de bardane. Si vous préférez laisser aux dieux le champ de l'avenir, je vous répondrai sur votre passé. Mais je vous recommande tout de même d'apprendre si vous risquez la mort par empoisonnement. »<br><br>
-
-Un grand Vastaya aux oreilles félines était sur le point de mordre dans une pâtisserie aux épices. Il s'immobilisa et regarda la diseuse de bonne aventure d'un air affolé.<br><br>
-
-« La réponse est non. Échantillon gratuit », dit la jeune femme en lui faisant une révérence, avant de se tourner vers Ahri. « Vous, vous avez l'air d'avoir un passé sombre et mystérieux. Ou du moins des contes dignes d'être partagés. Aucune question ne vous tourmente, madame ? »<br><br>
-
-Sous d'épaisses couches d'encens, Ahri sentit une odeur de fourrure mouillée et de cuir au cou de la femme.<br><br>
-
-« Aucune, merci. Je ne fais que jeter un coup d'œil. »<br><br>
-
-« Vous ne trouverez pas d'autres pierres d'Ymelo sur ce marché, j'en ai peur », dit la femme en désignant du menton la main d'Ahri. « Comme celles que vous avez là. »<br><br>
-
-Les cheveux se dressèrent sur la nuque d'Ahri et elle approcha. Mais elle ne laissa pas l'enthousiasme s'emparer d'elle. « Vous les reconnaissez ? D'où viennent-elles ? »<br><br>
-
-La femme regarda Ahri.<br><br>
-
-« Je crois qu'elles sont d'Ymelo », répondit-elle. « Je n'en ai jamais vu en personne. Il n'en a sculpté qu'un petit nombre et la plupart des ensembles ont été dispersés pendant la guerre. Ils sont extrêmement rares. »<br><br>
-
-Ahri se penchait un peu plus à chaque mot.<br><br>
-
-« Je m'appelle Hirin, à propos », dit la femme.<br><br>
-
-« Vous savez où je peux trouver cet artisan ? » demanda Ahri.<br><br>
-
-Hirin eut un petit rire. « Aucune idée. Mais si vous entrez, je vous dirai ce que je sais. »<br><br>
-
-Ahri resserra son manteau autour de ses épaules et suivit la diseuse de bonne aventure jusque dans une caravane dont tous les murs étaient recouverts de peaux d'animaux.<br><br>
-
-« Vous voulez du thé ? demanda Hirin. « Je l'ai préparé ce matin. »<br><br>
-
-Elle versa deux tasses d'un liquide qui avait la couleur d'un jus de prune. Le thé avait un goût d'écorce de chêne, à peine masqué par une noix de miel. Hirin tendit la main pour demander les pierres, mais Ahri ne bougea pas.<br><br>
-
-« J'ai l'impression qu'elles sont spéciales pour vous, n'est-ce pas ? Mais ne vous en faites pas, je ne fais pas dans la contrebande de pierres solaires volées. C'est mauvais pour la réputation. »<br><br>
-
-« Pouvez-vous me dire d'où elles viennent ? » demanda Ahri en les lui transmettant précautionneusement.<br><br>
-
-Hirin les leva à la lumière.<br><br>
-
-« Elles sont très belles », dit-elle. « C'est incroyable comme elles se complètent bien. Je n'en ai jamais vu de pareilles. »<br><br>
-
-Ahri ne dit rien. Elle restait pétrifiée de curiosité et ne quittait pas la femme des yeux.<br><br>
-
-« D'après la légende, l'artiste connu sous le nom d'Ymelo collecta des œufs de lézard fossilisés des milliers d'années plus tôt, et les sculpta de formes complexes. Ces lézards vivaient bien avant que la Mer morte de Ghetu ne s'assèche pour devenir un désert, ne laissant que de la poussière et des os pétrifiés. »<br><br>
-
-Hirin toussa et Ahri détecta de l'amertume dans son souffle, comme si elle avait bu du vinaigre.<br><br>
-
-« Les pierres d'Ymelo sont conçues comme les éléments d'une sculpture plus grande », continua-t-elle.<br><br>
-
-La femme fit miroiter les pierres dorées devant le visage d'Ahri.<br><br>
-
-« Tout comme votre passé a des trous, ces pierres sont peut-être liées à d'innombrables pièces qui, une fois combinées, créent une forme totalement différente. Qui sait ce que vous deviendrez quand vous exhumerez votre histoire personnelle. Avec les morceaux qui manquent, vous risquez d'en apprendre plus que vous ne le voudriez. »<br><br>
-
-« De bien belles paroles », murmura Ahri en fixant la femme.<br><br>
-
-Après un moment de silence, Hirin ricana. « Des bribes d'inventions mêlées à des bribes de vérités. Les raccords d'une diseuse de bonne aventure doivent être invisibles. »<br><br>
-
-La femme prit dans un tiroir un couteau de chasse.<br><br>
-
-« J'injecte juste la dose suffisante de choses que vous voulez entendre pour vous donner envie de rester », dit-elle. « Jusqu'à ce que le thé engourdisse vos muscles, en tout cas. »<br><br>
-
-Un grognement passa les lèvres d'Ahri. Elle allait éviscérer cette femme. Elle essaya de bondir, mais ses jambes ne lui obéirent pas. Elle était clouée sur place.<br><br>
-
-« Oh, inutile de s'énerver. Je n'ai besoin que d'une seule queue. C'est utile dans toutes sortes de potions et ça vaut très cher. Enfin, je crois. Je n'avais encore jamais vu de Vastaya à queues de renard. Rassurez-vous, le thé vous immobilise, mais il anesthésie aussi la douleur. »<br><br>
-
-Hirin enroula un bandage autour d'une queue d'Ahri. Cette dernière essaya de résister, mais elle ne pouvait toujours pas bouger.<br><br>
-
-« Vous vous réveillerez demain, fraîche comme un gardon ! Avec une queue en moins, bien sûr. Il vous en faut vraiment neuf ? »<br><br>
-
-Ahri ferma les yeux et lança son esprit vers la magie qui l'entourait. L'environnement en était riche, mais elle était trop affaiblie pour puiser ce dont elle avait besoin. Elle dirigea alors son esprit vers celui d'Hirin, qui était bien plus malléable, et elle poussa.<br><br>
-
-Ahri ouvrit les yeux et regarda intensément ceux d'Hirin. Ils s'assombrirent, passant de la lavande au violet.<br><br>
-
-« Hirin », dit-elle. « Approche. Je veux voir le visage de celle qui m'a trompée. »<br><br>
-
-« Bien sûr, madame », répondit la tireuse de cartes hébétée. La voix de la femme semblait lointaine, comme si elle provenait du fond d'un puits.<br><br>
-
-Elle se pencha jusqu'à ce que son visage ne soit plus qu'à quelques pouces. Ahri inspira, siphonnant les essences vitales de la femme dans son souffle.<br><br>
-
-...Hirin était une jeune fille qui se cachait, affamée et effrayée, derrière les étals d'un marché. Deux hommes se disputaient à un pas, et c'était elle qu'ils cherchaient. Une journée de travail, et elle n'avait rien trouvé que des coffres vides...<br><br>
-
-Ahri continua à drainer la vie d'Hirin, un souvenir d'émotion brute après l'autre. Ils avaient un goût capiteux dans sa bouche et elle goûtait avec ravissement à chaque parfum d'émotion.<br><br>
-
-...Hirin prédisait l'avenir à un chaman recouvert de voiles et recevait une pièce de cuivre en paiement. Elle utilisait la pièce pour acheter un quignon de pain qu'elle dévorait en quelques secondes…<br><br>
-
-...Dans une taverne borgne, un groupe douteux jouait aux cartes. Un homme aux sourcils épais misait une pierre d'Ymelo, observé par Hirin depuis un recoin obscur…<br><br>
-
-...Hirin pistait Ahri alors qu'elle remontait le marché. Une de ses queues de renard dépassait sous le rebord de son manteau. Elle attirait la Vastaya dans sa caravane...<br><br>
-
-Assez.<br><br>
-
-Ahri stoppa, sa tête chaude de vigueur retrouvée. À chaque souvenir volé à Hirin, elle avait senti l'énergie revenir dans ses muscles affaiblis, nettoyant toute trace du poison.<br><br>
-
-De nouveau forte, elle remua ses membres un à un et les poils de ses queues ondulèrent dans un frisson. Des picotements les tiraillaient toujours.<br><br>
-
-Hirin ne bougeait pas, les yeux vagues et écarquillés, mais bien vivante. C'est elle qui se réveillerait le lendemain, fraîche comme un gardon, mais délestée de quelques souvenirs qui ne lui manqueraient sans doute pas.<br><br>
-
-Sachant ce que la femme avait vécu, Ahri avait perdu toute colère. Elle caressa la joue de la diseuse de bonne aventure d'un revers de main, puis resserra son manteau sur ses épaules et sortit au plein jour sur le marché.<br><br>
-
-Hirin ne se souviendrait ni d'elle, ni de leur rencontre. Mais dans cet échange, Ahri avait appris un nom : Ymelo, et l'image de l'homme aux sourcils épais s'était gravée dans son esprit.<br><br>
-
-Ahri<br>
-
-Iona<br>
-
-        
-
-    </p>
-
-
-
-    <!-- Bouton pour revenir à l'index -->
-
-    <a href="IndexLol.html" class="back-button">Retour à l'index</a>
-
-
+    <!-- Back Button -->
+    <a href="IndexLol.html" class="back-button">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Retour à l'index
+    </a>
 
     <script>
-
-        // Variables pour le nombre de victoires et de défaites
-
-        const wins = 2;  // Modifie cette valeur si nécessaire
-
-        const losses = 3;  // Modifie cette valeur si nécessaire
-
-
-
-        // Calcul du total des parties et du win rate
-
+        // Stats calculation
+        const wins = 2;
+        const losses = 3;
         const totalGames = wins + losses;
+        const winRate = ((wins / totalGames) * 100).toFixed(1);
 
-        const winRate = totalGames > 0 ? (wins / totalGames * 100).toFixed(2) + '%' : '0%';
+        document.getElementById('totalGames').textContent = totalGames;
+        document.getElementById('winrateValue').textContent = winRate + '%';
+        document.getElementById('winrateCircle').style.setProperty('--percentage', winRate + '%');
+        document.getElementById('winsDisplay').textContent = wins;
+        document.getElementById('lossesDisplay').textContent = losses;
 
+        // Carousel functionality
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.carousel img');
+        const totalImages = images.length;
+        const carousel = document.getElementById('carousel');
+        const indicatorsContainer = document.getElementById('indicators');
 
+        // Create indicators
+        for (let i = 0; i < totalImages; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+            indicator.onclick = () => goToSlide(i);
+            indicatorsContainer.appendChild(indicator);
+        }
 
-        // Mise à jour des valeurs dans le tableau
+        function updateCarousel() {
+            const width = carousel.parentElement.offsetWidth;
+            carousel.style.transform = `translateX(-${currentIndex * width}px)`;
+            
+            // Update indicators
+            document.querySelectorAll('.indicator').forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentIndex);
+            });
+        }
 
-        document.getElementById('total-games').textContent = totalGames;
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalImages;
+            updateCarousel();
+        }
 
-        document.getElementById('win-rate').textContent = winRate;
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+            updateCarousel();
+        }
 
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        // Auto-play carousel
+        let autoPlayInterval = setInterval(nextSlide, 5000);
+
+        // Pause on hover
+        carousel.parentElement.addEventListener('mouseenter', () => {
+            clearInterval(autoPlayInterval);
+        });
+
+        carousel.parentElement.addEventListener('mouseleave', () => {
+            autoPlayInterval = setInterval(nextSlide, 5000);
+        });
+
+        // Responsive carousel
+        window.addEventListener('resize', updateCarousel);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Fade-in animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
     </script>
-
-
-
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
