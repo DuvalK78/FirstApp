@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Séismes Significatifs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+        
+        .map-container {
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 400px;
+        }
+        
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .legend {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.875rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-dot {
+            border-radius: 50%;
+        }
+        
+        .eq-list {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .eq-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .eq-item:hover {
+            border-color: #64748b;
+        }
+        
+        .eq-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+        
+        .magnitude {
+            font-size: 1.125rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .date {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        
+        .place {
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+        
+        .depth {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        
+        .tooltip {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            pointer-events: none;
+        }
+        
+        .tooltip-title {
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 8px;
+        }
+        
+        .tooltip-info {
+            font-size: 0.875rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 1.25rem;
+        }
+        
+        circle {
+            transition: transform 0.2s;
+        }
+        
+        circle:hover {
+            transform: scale(1.1);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="loading">Chargement des données...</div>
+    </div>
+
+    <script>
+        const app = document.getElementById('app');
+        let earthquakes = [];
+        let selectedEq = null;
+
+        function getMagnitudeColor(mag) {
+            const m = parseFloat(mag);
+            if (m >= 7) return '#dc2626';
+            if (m >= 6) return '#ea580c';
+            if (m >= 5) return '#f59e0b';
+            if (m >= 4) return '#eab308';
+            return '#84cc16';
+        }
+
+        function getMagnitudeSize(mag) {
+            const m = parseFloat(mag);
+            return Math.max(8, Math.min(40, m * 5));
+        }
+
+        function showTooltip(eq) {
+            selectedEq = eq;
+            const tooltip = document.getElementById('tooltip');
+            if (tooltip) {
+                tooltip.innerHTML = `
+                    <div class="tooltip-title">${eq.place}</div>
+                    <div class="tooltip-info">
+                        <div>⚡ Magnitude: ${eq.mag}</div>
+                        <div>📍 ${parseFloat(eq.latitude).toFixed(2)}°, ${parseFloat(eq.longitude).toFixed(2)}°</div>
+                    </div>
+                `;
+                tooltip.style.display = 'block';
+            }
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            if (tooltip) {
+                tooltip.style.display = 'none';
+            }
+        }
+
+        function render() {
+            app.innerHTML = `
+                <div class="container">
+                    <header>
+                        <h1>
+                            <span style="color: #ef4444;">⚡</span>
+                            Séismes Significatifs du Mois
+                        </h1>
+                        <div class="subtitle">
+                            ${earthquakes.length} séisme${earthquakes.length > 1 ? 's' : ''} enregistré${earthquakes.length > 1 ? 's' : ''} par l'USGS
+                        </div>
+                    </header>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h2>Carte Mondiale</h2>
+                            <div class="map-container" style="position: relative;">
+                                <svg viewBox="0 0 800 400">
+                                    <defs>
+                                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1"/>
+                                        </pattern>
+                                    </defs>
+                                    <rect width="800" height="400" fill="url(#grid)" />
+                                    <line x1="0" y1="200" x2="800" y2="200" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" stroke-dasharray="5,5" />
+                                    <line x1="400" y1="0" x2="400" y2="400" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1" stroke-dasharray="5,5" />
+                                    
+                                    ${earthquakes.map((eq, idx) => {
+                                        const x = ((parseFloat(eq.longitude) + 180) / 360) * 800;
+                                        const y = ((90 - parseFloat(eq.latitude)) / 180) * 400;
+                                        const size = getMagnitudeSize(eq.mag);
+                                        const color = getMagnitudeColor(eq.mag);
+                                        
+                                        return `
+                                            <g onmouseenter="showTooltip(earthquakes[${idx}])" 
+                                               onmouseleave="hideTooltip()"
+                                               style="cursor: pointer;">
+                                                <circle cx="${x}" cy="${y}" r="${size}" 
+                                                        fill="${color}" opacity="0.3" class="pulse" />
+                                                <circle cx="${x}" cy="${y}" r="${size * 0.6}" 
+                                                        fill="${color}" opacity="0.8" />
+                                            </g>
+                                        `;
+                                    }).join('')}
+                                </svg>
+                                <div id="tooltip" class="tooltip" style="display: none;"></div>
+                            </div>
+                            
+                            <div class="legend">
+                                <span style="color: #94a3b8;">Magnitude:</span>
+                                ${[4, 5, 6, 7].map(mag => `
+                                    <div class="legend-item">
+                                        <div class="legend-dot" style="width: ${mag * 3}px; height: ${mag * 3}px; background-color: ${getMagnitudeColor(mag)};"></div>
+                                        <span>${mag}+</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>Liste des Événements</h2>
+                            <div class="eq-list">
+                                ${earthquakes.map((eq, idx) => `
+                                    <div class="eq-item" 
+                                         onmouseenter="showTooltip(earthquakes[${idx}])" 
+                                         onmouseleave="hideTooltip()">
+                                        <div class="eq-header">
+                                            <span class="magnitude" style="background-color: ${getMagnitudeColor(eq.mag)}40;">
+                                                M ${eq.mag}
+                                            </span>
+                                            <span class="date">
+                                                ${new Date(eq.time).toLocaleDateString('fr-FR')}
+                                            </span>
+                                        </div>
+                                        <div class="place">${eq.place}</div>
+                                        <div class="depth">Profondeur: ${eq.depth} km</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Charger les données
+        Papa.parse('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.csv', {
+            download: true,
+            header: true,
+            complete: function(results) {
+                earthquakes = results.data.filter(eq => eq.latitude && eq.longitude && eq.mag);
+                render();
+            },
+            error: function(error) {
+                app.innerHTML = `<div class="loading" style="color: #f87171;">Erreur: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
