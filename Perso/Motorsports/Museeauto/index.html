@@ -197,6 +197,202 @@
             z-index: -1;
         }
 
+        .return-card {
+            background: rgba(0, 230, 255, 0.05);
+            border-color: rgba(0, 230, 255, 0.3);
+        }
+
+        .return-card:hover {
+            background: rgba(0, 230, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Musée Automobile Numérique</h1>
+            <p class="subtitle">L'Excellence Automobile Réinventée</p>
+        </div>
+    </section>
+
+    <section class="collections">
+        <h2 class="section-title">Collections</h2>
+        
+        <div class="categories-grid">
+            <div class="category-card" onclick="window.location.href='Sportauto.html'">
+                <div class="category-icon">🏁</div>
+                <h3 class="category-title">Sport Automobile</h3>
+                <p class="category-description">Les légendes de la compétition qui ont marqué l'histoire des circuits et des rallyes</p>
+                <span class="vehicle-count">3 véhicules</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Japonaises.html'">
+                <div class="category-icon">🇯🇵</div>
+                <h3 class="category-title">Mythes Japonaises</h3>
+                <p class="category-description">Les bolides qui repoussent les limites de la performance et du design, tout droit venu du pays du soleil levant</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Francaises.html'">
+                <div class="category-icon">🇫🇷</div>
+                <h3 class="category-title">Légendes Françaises</h3>
+                <p class="category-description">L'héritage prestigieux de l'automobile française à travers les décennies</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Americaines.html'">
+                <div class="category-icon">🇺🇸</div>
+                <h3 class="category-title">Icônes Américaines</h3>
+                <p class="category-description">Les véhicules qui ont révolutionné l'industrie automobile américaine</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Allemandes.html'">
+                <div class="category-icon">🇩🇪</div>
+                <h3 class="category-title">Excellence Allemande</h3>
+                <p class="category-description">Ingénierie de précision et performance pure</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Italiennes.html'">
+                <div class="category-icon">🇮🇹</div>
+                <h3 class="category-title">Passion Italienne</h3>
+                <p class="category-description">Le design et l'émotion au cœur de l'automobile</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Britanniques.html'">
+                <div class="category-icon">🇬🇧</div>
+                <h3 class="category-title">Élégance Britannique</h3>
+                <p class="category-description">Tradition et sportivité réunies</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card" onclick="window.location.href='Concept-cars.html'">
+                <div class="category-icon">🌟</div>
+                <h3 class="category-title">Concept Cars</h3>
+                <p class="category-description">Les visions futuristes qui ont inspiré les automobiles de demain</p>
+                <span class="vehicle-count">Bientôt disponible</span>
+            </div>
+
+            <div class="category-card return-card" onclick="window.location.href='../../../index.html'">
+                <div class="category-icon">🔙</div>
+                <h3 class="category-title">Retour</h3>
+                <p class="category-description">Revenir à la page principale</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .category-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 230, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 230, 255, 0.1), rgba(0, 153, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: #00e6ff;
+            box-shadow: 0 20px 60px rgba(0, 230, 255, 0.3);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(0, 230, 255, 0.5));
+        }
+
+        .category-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #00e6ff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-description {
+            color: #b0b0b0;
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vehicle-count {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(0, 230, 255, 0.1);
+            border: 1px solid rgba(0, 230, 255, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #00e6ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 230, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 230, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 3rem;
