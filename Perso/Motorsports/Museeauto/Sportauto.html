@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sport Automobile - Musée Automobile Numérique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 230, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 230, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .header {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(0, 230, 255, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(0, 230, 255, 0.2);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(0, 230, 255, 0.1);
+            border: 1px solid rgba(0, 230, 255, 0.3);
+            color: #00e6ff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 230, 255, 0.2);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0, 230, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00e6ff, #0099ff, #00e6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .category-description {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .vehicles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .vehicle-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 230, 255, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .vehicle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 230, 255, 0.1), rgba(0, 153, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-10px);
+            border-color: #00e6ff;
+            box-shadow: 0 20px 60px rgba(0, 230, 255, 0.4);
+        }
+
+        .vehicle-card:hover::before {
+            opacity: 1;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            border-bottom: 1px solid rgba(0, 230, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vehicle-image::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 230, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .vehicle-info {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vehicle-name {
+            font-size: 1.8rem;
+            color: #00e6ff;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .vehicle-subtitle {
+            font-size: 1rem;
+            color: #b0b0b0;
+            margin-bottom: 1.5rem;
+        }
+
+        .specs-preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-item {
+            background: rgba(0, 230, 255, 0.05);
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 230, 255, 0.1);
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            color: #00e6ff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .spec-value {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .view-details {
+            display: inline-block;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 230, 255, 0.1);
+            border: 1px solid rgba(0, 230, 255, 0.3);
+            color: #00e6ff;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .view-details:hover {
+            background: rgba(0, 230, 255, 0.2);
+            box-shadow: 0 5px 20px rgba(0, 230, 255, 0.3);
+        }
+
+        .trophy-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+            z-index: 3;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .vehicles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                position: static;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+    
+    <div class="header">
+        <a href="index.html" class="back-button">← Retour aux collections</a>
+        <h1>🏁 Sport Automobile</h1>
+        <p class="category-description">Les légendes de la compétition qui ont marqué l'histoire des circuits et des rallyes</p>
+    </div>
+
+    <section class="gallery">
+        <div class="vehicles-grid">
+            
+            <!-- Peugeot 908 HDi FAP -->
+            <div class="vehicle-card" onclick="window.location.href='peugeot-908.html'">
+                <div class="trophy-icon">🏆</div>
+                <div class="vehicle-image">
+                    🏎️
+                </div>
+                <div class="vehicle-info">
+                    <h2 class="vehicle-name">Peugeot 908 HDi FAP</h2>
+                    <p class="vehicle-subtitle">Prototype LMP1 - Le Mans 2009</p>
+                    
+                    <div class="specs-preview">
+                        <div class="spec-item">
+                            <div class="spec-label">Année</div>
+                            <div class="spec-value">2011</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Moteur</div>
+                            <div class="spec-value">V12 Diesel</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Puissance</div>
+                            <div class="spec-value">700 ch</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Palmarès</div>
+                            <div class="spec-value">Le Mans 2009</div>
+                        </div>
+                    </div>
+                    
+                    <a href="peugeot-908.html" class="view-details">Voir la fiche complète →</a>
+                </div>
+            </div>
+
+            <!-- Citroën DS3 WRC -->
+            <div class="vehicle-card" onclick="window.location.href='citroen-ds3-wrc.html'">
+                <div class="trophy-icon">🏆</div>
+                <div class="vehicle-image">
+                    🚗
+                </div>
+                <div class="vehicle-info">
+                    <h2 class="vehicle-name">Citroën DS3 WRC</h2>
+                    <p class="vehicle-subtitle">S. Loeb / D. Elena - Championnat du Monde 2013</p>
+                    
+                    <div class="specs-preview">
+                        <div class="spec-item">
+                            <div class="spec-label">Année</div>
+                            <div class="spec-value">2013</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Moteur</div>
+                            <div class="spec-value">1.6L Turbo</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Puissance</div>
+                            <div class="spec-value">315 ch</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pilotes</div>
+                            <div class="spec-value">Loeb/Elena</div>
+                        </div>
+                    </div>
+                    
+                    <a href="citroen-ds3-wrc.html" class="view-details">Voir la fiche complète →</a>
+                </div>
+            </div>
+
+            <!-- Volkswagen Polo R WRC -->
+            <div class="vehicle-card" onclick="window.location.href='vw-polo-wrc.html'">
+                <div class="trophy-icon">🏆</div>
+                <div class="vehicle-image">
+                    🚙
+                </div>
+                <div class="vehicle-info">
+                    <h2 class="vehicle-name">Volkswagen Polo R WRC</h2>
+                    <p class="vehicle-subtitle">S. Ogier / J. Ingrassia - Championnat du Monde 2013</p>
+                    
+                    <div class="specs-preview">
+                        <div class="spec-item">
+                            <div class="spec-label">Année</div>
+                            <div class="spec-value">2013</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Moteur</div>
+                            <div class="spec-value">1.6L Turbo</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Puissance</div>
+                            <div class="spec-value">315 ch</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Pilotes</div>
+                            <div class="spec-value">Ogier/Ingrassia</div>
+                        </div>
+                    </div>
+                    
+                    <a href="vw-polo-wrc.html" class="view-details">Voir la fiche complète →</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>
