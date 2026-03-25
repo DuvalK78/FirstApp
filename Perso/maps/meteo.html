@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Météo Mondiale</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sky-deep: #020b18;
+      --sky-mid: #0a1f35;
+      --sky-horizon: #0d3157;
+      --accent-cold: #38b6f5;
+      --accent-warm: #f5a638;
+      --accent-hot: #f55c38;
+      --text-primary: #e8f4fd;
+      --text-muted: #6a9dbf;
+      --glass: rgba(10, 31, 53, 0.82);
+      --glass-border: rgba(56, 182, 245, 0.18);
+      --panel-w: 340px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--sky-deep);
+      color: var(--text-primary);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(2, 11, 24, 0.9);
+      border-bottom: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent-cold);
+      box-shadow: 0 0 12px var(--accent-cold);
+      animation: pulse-dot 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .header-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* LAYOUT */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* MAP */
+    #map {
+      flex: 1;
+      cursor: crosshair !important;
+    }
+
+    .leaflet-container {
+      background: #020b18 !important;
+    }
+
+    /* PANEL */
+    .side-panel {
+      width: var(--panel-w);
+      background: var(--glass);
+      border-left: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      position: relative;
+      z-index: 500;
+    }
+
+    .panel-idle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 16px;
+      padding: 32px;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+
+    .panel-idle.hidden { opacity: 0; pointer-events: none; display: none; }
+
+    .idle-icon {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 20px rgba(56, 182, 245, 0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .idle-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .idle-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* WEATHER CARD */
+    .weather-card {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .weather-card.visible { display: flex; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .card-header {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .location-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .location-coords {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* TEMPERATURE HERO */
+    .temp-hero {
+      padding: 28px 24px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .temp-main {
+      font-family: 'Syne', sans-serif;
+      font-size: 4.5rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -3px;
+      transition: color 0.5s;
+    }
+
+    .temp-unit {
+      font-size: 1.8rem;
+      font-weight: 400;
+      vertical-align: super;
+      letter-spacing: 0;
+    }
+
+    .temp-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .weather-emoji {
+      font-size: 2.8rem;
+      filter: drop-shadow(0 0 10px rgba(56,182,245,0.3));
+    }
+
+    .temp-feels {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .temp-feels strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--glass-border);
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .stat-item {
+      background: rgba(10, 31, 53, 0.6);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stat-sub {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    /* WIND COMPASS */
+    .wind-compass-wrap {
+      padding: 20px 24px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .compass {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid var(--glass-border);
+      background: rgba(2, 11, 24, 0.8);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .compass-arrow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 2px; height: 26px;
+      background: linear-gradient(to bottom, var(--accent-cold), transparent);
+      transform-origin: bottom center;
+      transform: translateX(-50%) translateY(-100%);
+      transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 2px 2px 0 0;
+    }
+
+    .compass-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cold);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px var(--accent-cold);
+    }
+
+    .compass-labels span {
+      position: absolute;
+      font-size: 0.5rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .compass-labels .n { top: 3px; left: 50%; transform: translateX(-50%); }
+    .compass-labels .s { bottom: 3px; left: 50%; transform: translateX(-50%); }
+    .compass-labels .e { right: 4px; top: 50%; transform: translateY(-50%); }
+    .compass-labels .o { left: 4px; top: 50%; transform: translateY(-50%); }
+
+    .wind-info {
+      flex: 1;
+    }
+
+    .wind-info .stat-label { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 6px; }
+    .wind-speed { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 700; }
+    .wind-dir-text { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* TIMESTAMP */
+    .update-time {
+      padding: 12px 24px;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--glass-border);
+      letter-spacing: 0.05em;
+    }
+
+    /* LOADING */
+    .loading-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      z-index: 600;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .loading-overlay.active { display: flex; }
+
+    .loader-ring {
+      width: 48px; height: 48px;
+      border: 2px solid var(--glass-border);
+      border-top-color: var(--accent-cold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loader-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* MAP MARKER CUSTOM */
+    .weather-pin {
+      width: 16px; height: 16px;
+      background: var(--accent-cold);
+      border: 2px solid white;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: 0 0 12px var(--accent-cold);
+    }
+
+    /* SCROLLBAR */
+    .side-panel::-webkit-scrollbar { width: 4px; }
+    .side-panel::-webkit-scrollbar-track { background: transparent; }
+    .side-panel::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Météo Mondiale
+  </div>
+  <span class="header-hint">Cliquez n'importe où sur la carte</span>
+</header>
+
+<div class="main-layout">
+  <div id="map"></div>
+
+  <div class="side-panel" id="sidePanel">
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader-ring"></div>
+      <div class="loader-text">Récupération des données…</div>
+    </div>
+
+    <!-- IDLE STATE -->
+    <div class="panel-idle" id="panelIdle">
+      <div class="idle-icon">🌍</div>
+      <div class="idle-title">Explorez la météo mondiale</div>
+      <div class="idle-sub">Cliquez sur n'importe quel point de la carte — continent, mer ou océan — pour afficher les conditions météorologiques en temps réel.</div>
+    </div>
+
+    <!-- WEATHER CARD -->
+    <div class="weather-card" id="weatherCard">
+      <div class="card-header">
+        <div class="location-name" id="locationName">—</div>
+        <div class="location-coords" id="locationCoords">—</div>
+      </div>
+
+      <div class="temp-hero">
+        <div>
+          <div class="temp-main" id="tempMain">—<span class="temp-unit">°C</span></div>
+        </div>
+        <div class="temp-right">
+          <div class="weather-emoji" id="weatherEmoji">—</div>
+          <div class="temp-feels">Ressenti <strong id="tempFeels">—</strong></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Humidité</div>
+          <div class="stat-value" id="humidity">—</div>
+          <div class="stat-sub">%</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Temp. max / min</div>
+          <div class="stat-value" id="tempMaxMin">— / —</div>
+          <div class="stat-sub">°C aujourd'hui</div>
+        </div>
+      </div>
+
+      <div class="wind-compass-wrap">
+        <div class="compass">
+          <div class="compass-labels">
+            <span class="n">N</span>
+            <span class="s">S</span>
+            <span class="e">E</span>
+            <span class="o">O</span>
+          </div>
+          <div class="compass-arrow" id="compassArrow"></div>
+          <div class="compass-center"></div>
+        </div>
+        <div class="wind-info">
+          <div class="stat-label">Vent</div>
+          <div class="wind-speed" id="windSpeed">— <span style="font-size:0.9rem;font-weight:400">km/h</span></div>
+          <div class="wind-dir-text" id="windDirText">—</div>
+        </div>
+      </div>
+
+      <div class="update-time" id="updateTime">—</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  // --- MAP INIT ---
+  const map = L.map('map', {
+    center: [20, 10],
+    zoom: 3,
+    zoomControl: true,
+    attributionControl: true
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  // --- STATE ---
+  let currentMarker = null;
+
+  // --- ELEMENTS ---
+  const panelIdle = document.getElementById('panelIdle');
+  const weatherCard = document.getElementById('weatherCard');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  // --- WIND DIRECTION ---
+  const windDirs = [
+    { min: 0,   max: 22.5,  label: 'Nord' },
+    { min: 22.5, max: 67.5, label: 'Nord-Est' },
+    { min: 67.5, max: 112.5,label: 'Est' },
+    { min: 112.5,max: 157.5,label: 'Sud-Est' },
+    { min: 157.5,max: 202.5,label: 'Sud' },
+    { min: 202.5,max: 247.5,label: 'Sud-Ouest' },
+    { min: 247.5,max: 292.5,label: 'Ouest' },
+    { min: 292.5,max: 337.5,label: 'Nord-Ouest' },
+    { min: 337.5,max: 360,  label: 'Nord' },
+  ];
+
+  function getWindDir(deg) {
+    return windDirs.find(d => deg >= d.min && deg < d.max)?.label || '—';
+  }
+
+  // --- WEATHER CODE → EMOJI ---
+  function weatherEmoji(code) {
+    if (code === 0) return '☀️';
+    if (code <= 2) return '⛅';
+    if (code === 3) return '☁️';
+    if (code <= 49) return '🌫️';
+    if (code <= 59) return '🌦️';
+    if (code <= 69) return '🌧️';
+    if (code <= 79) return '❄️';
+    if (code <= 84) return '🌨️';
+    if (code <= 94) return '⛈️';
+    return '🌩️';
+  }
+
+  // --- TEMPERATURE COLOR ---
+  function tempColor(t) {
+    if (t <= 0) return '#38b6f5';
+    if (t <= 10) return '#5bc4f0';
+    if (t <= 20) return '#e8f4fd';
+    if (t <= 30) return '#f5a638';
+    return '#f55c38';
+  }
+
+  // --- REVERSE GEOCODE ---
+  async function getLocationName(lat, lon) {
+    try {
+      const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=fr`);
+      const d = await r.json();
+      if (d.address) {
+        const city = d.address.city || d.address.town || d.address.village || d.address.county || d.address.state || '';
+        const country = d.address.country || '';
+        if (city && country) return `${city}, ${country}`;
+        if (country) return country;
+      }
+      return 'Zone maritime';
+    } catch {
+      return 'Position inconnue';
+    }
+  }
+
+  // --- FETCH WEATHER ---
+  async function fetchWeather(lat, lon) {
+    loadingOverlay.classList.add('active');
+    panelIdle.classList.add('hidden');
+
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1`;
+      const [weatherRes, locationName] = await Promise.all([
+        fetch(url),
+        getLocationName(lat, lon)
+      ]);
+
+      const data = await weatherRes.json();
+      const c = data.current;
+
+      // Update UI
+      document.getElementById('locationName').textContent = locationName;
+      document.getElementById('locationCoords').textContent =
+        `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'} / ${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'O'}`;
+
+      const temp = Math.round(c.temperature_2m);
+      const tempEl = document.getElementById('tempMain');
+      tempEl.innerHTML = `${temp}<span class="temp-unit">°C</span>`;
+      tempEl.style.color = tempColor(temp);
+
+      document.getElementById('tempFeels').textContent = `${Math.round(c.apparent_temperature)}°C`;
+      document.getElementById('weatherEmoji').textContent = weatherEmoji(c.weather_code);
+      document.getElementById('humidity').textContent = c.relative_humidity_2m;
+
+      const tmax = Math.round(data.daily.temperature_2m_max[0]);
+      const tmin = Math.round(data.daily.temperature_2m_min[0]);
+      document.getElementById('tempMaxMin').textContent = `${tmax} / ${tmin}`;
+
+      document.getElementById('windSpeed').innerHTML =
+        `${Math.round(c.wind_speed_10m)} <span style="font-size:0.9rem;font-weight:400">km/h</span>`;
+      document.getElementById('windDirText').textContent = getWindDir(c.wind_direction_10m);
+
+      // Compass: rotate arrow. Arrow points FROM where wind comes, so we add 180°
+      const arrowDeg = c.wind_direction_10m;
+      document.getElementById('compassArrow').style.transform =
+        `translateX(-50%) translateY(-100%) rotate(${arrowDeg}deg)`;
+
+      const now = new Date();
+      document.getElementById('updateTime').textContent =
+        `Mis à jour le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}`;
+
+      weatherCard.classList.add('visible');
+      weatherCard.style.display = 'flex';
+
+    } catch (e) {
+      alert('Impossible de récupérer les données météo. Vérifiez votre connexion.');
+    } finally {
+      loadingOverlay.classList.remove('active');
+    }
+  }
+
+  // --- MAP CLICK ---
+  const pinIcon = L.divIcon({
+    className: '',
+    html: '<div class="weather-pin"></div>',
+    iconSize: [16, 16],
+    iconAnchor: [8, 16]
+  });
+
+  map.on('click', function(e) {
+    const { lat, lng } = e.latlng;
+
+    if (currentMarker) map.removeLayer(currentMarker);
+    currentMarker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+
+    fetchWeather(lat.toFixed(6), lng.toFixed(6));
+  });
+</script>
+</body>
+</html>
