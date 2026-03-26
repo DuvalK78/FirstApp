@@ -347,6 +347,55 @@
 
     .stat-sub { font-size: 0.6rem; color: var(--text-muted); }
 
+    /* ── UV BAR ── */
+    .uv-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .uv-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(to right, #4caf50, #ffeb3b, #ff9800, #f44336, #9c27b0);
+      transition: width 0.6s ease;
+    }
+
+    /* ── SUN / MOON ── */
+    .sun-moon-wrap {
+      display: flex;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      background: var(--bg-panel-alt);
+    }
+
+    .sun-moon-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+
+    .sun-moon-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    .sun-moon-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .sun-moon-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .sun-moon-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
     /* ── WIND ── */
     .wind-compass-wrap {
       padding: 16px 20px;
@@ -654,6 +703,42 @@
           <div class="stat-value" id="precip">—</div>
           <div class="stat-sub">mm aujourd'hui</div>
         </div>
+        <div class="stat-item">
+          <div class="stat-label">Indice UV</div>
+          <div class="stat-value" id="uvIndex">—</div>
+          <div class="stat-sub" id="uvLabel">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Visibilité</div>
+          <div class="stat-value" id="visibility">—</div>
+          <div class="stat-sub">km</div>
+        </div>
+      </div>
+
+      <div class="sun-moon-wrap">
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon">🌅</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Lever</div>
+            <div class="sun-moon-val" id="sunrise">—</div>
+          </div>
+        </div>
+        <div class="sun-moon-divider"></div>
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon">🌇</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Coucher</div>
+            <div class="sun-moon-val" id="sunset">—</div>
+          </div>
+        </div>
+        <div class="sun-moon-divider"></div>
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon" id="moonEmoji">🌕</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Lune</div>
+            <div class="sun-moon-val" id="moonPhase">—</div>
+          </div>
+        </div>
       </div>
 
       <div class="wind-compass-wrap">
@@ -808,8 +893,10 @@ async function fetchWeather(lat, lon) {
     const url = `https://api.open-meteo.com/v1/forecast`
       + `?latitude=${lat}&longitude=${lon}`
       + `&current=temperature_2m,apparent_temperature,relative_humidity_2m,`
-      + `wind_speed_10m,wind_direction_10m,weather_code,surface_pressure,precipitation`
-      + `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum`
+      + `wind_speed_10m,wind_direction_10m,weather_code,surface_pressure,precipitation,`
+      + `uv_index,visibility`
+      + `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum,`
+      + `sunrise,sunset,uv_index_max,moon_phase`
       + `&timezone=auto&forecast_days=7`;
 
     const [weatherRes, locInfo] = await Promise.all([
@@ -846,6 +933,50 @@ async function fetchWeather(lat, lon) {
     document.getElementById('humidity').textContent   = c.relative_humidity_2m;
     document.getElementById('pressure').textContent   = Math.round(c.surface_pressure);
     document.getElementById('precip').textContent     = c.precipitation?.toFixed(1) ?? '0.0';
+
+    // UV Index
+    const uv = c.uv_index ?? d.uv_index_max?.[0] ?? 0;
+    const uvRounded = Math.round(uv * 10) / 10;
+    document.getElementById('uvIndex').textContent = uvRounded;
+    const uvLabels = [
+      {max:3,  label:'Faible',    color:'#4caf50'},
+      {max:6,  label:'Modéré',    color:'#ffeb3b'},
+      {max:8,  label:'Élevé',     color:'#ff9800'},
+      {max:11, label:'Très élevé',color:'#f44336'},
+      {max:99, label:'Extrême',   color:'#9c27b0'},
+    ];
+    const uvInfo = uvLabels.find(l => uv < l.max) || uvLabels[uvLabels.length-1];
+    document.getElementById('uvLabel').textContent = uvInfo.label;
+    document.getElementById('uvLabel').style.color = uvInfo.color;
+
+    // Visibilité (en mètres → km)
+    const visKm = c.visibility != null ? (c.visibility / 1000).toFixed(1) : '—';
+    document.getElementById('visibility').textContent = visKm;
+
+    // Lever / Coucher de soleil
+    function fmtTime(iso, tz) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleTimeString('fr-FR', { timeZone: tz, hour:'2-digit', minute:'2-digit' });
+    }
+    document.getElementById('sunrise').textContent = fmtTime(d.sunrise?.[0], tz);
+    document.getElementById('sunset').textContent  = fmtTime(d.sunset?.[0],  tz);
+
+    // Phase de lune (0 = nouvelle lune, 0.25 = premier quartier, 0.5 = pleine lune, 0.75 = dernier quartier)
+    const moonVal = d.moon_phase?.[0] ?? 0;
+    const moonPhases = [
+      {max:0.0625, emoji:'🌑', label:'Nouvelle lune'},
+      {max:0.1875, emoji:'🌒', label:'Croissant croissant'},
+      {max:0.3125, emoji:'🌓', label:'Premier quartier'},
+      {max:0.4375, emoji:'🌔', label:'Gibbeuse croissante'},
+      {max:0.5625, emoji:'🌕', label:'Pleine lune'},
+      {max:0.6875, emoji:'🌖', label:'Gibbeuse décroissante'},
+      {max:0.8125, emoji:'🌗', label:'Dernier quartier'},
+      {max:0.9375, emoji:'🌘', label:'Croissant décroissant'},
+      {max:1.0001, emoji:'🌑', label:'Nouvelle lune'},
+    ];
+    const moon = moonPhases.find(m => moonVal < m.max) || moonPhases[0];
+    document.getElementById('moonEmoji').textContent = moon.emoji;
+    document.getElementById('moonPhase').textContent = moon.label;
 
     const tmax = Math.round(d.temperature_2m_max[0]);
     const tmin = Math.round(d.temperature_2m_min[0]);
