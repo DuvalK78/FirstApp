@@ -897,7 +897,7 @@ async function fetchWeather(lat, lon) {
       + `&hourly=uv_index,visibility`
       + `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum,`
       + `sunrise,sunset,uv_index_max,moon_phase`
-      + `&timezone=auto&forecast_days=7&forecast_hours=1`;
+      + `&timezone=auto&forecast_days=7`;
 
     const [weatherRes, locInfo] = await Promise.all([
       fetch(url),
@@ -905,9 +905,13 @@ async function fetchWeather(lat, lon) {
     ]);
 
     const data = await weatherRes.json();
+
+    // Vérification erreur API Open-Meteo
+    if (data.error) throw new Error(`API Open-Meteo : ${data.reason || 'erreur inconnue'}`);
+
     const c    = data.current;
     const d    = data.daily;
-    const h    = data.hourly; // uv_index + visibility sont en hourly
+    const h    = data.hourly;
 
     // Location
     document.getElementById('locationFlag').textContent = locInfo.flag;
@@ -956,12 +960,14 @@ async function fetchWeather(lat, lon) {
     document.getElementById('visibility').textContent = visKm;
 
     // Lever / Coucher de soleil
-    function fmtTime(iso, zone) {
+    // Open-Meteo retourne "2026-03-26T07:14" — on extrait juste HH:MM directement
+    function fmtTime(iso) {
       if (!iso) return '—';
-      return new Date(iso).toLocaleTimeString('fr-FR', { timeZone: zone, hour:'2-digit', minute:'2-digit' });
+      const parts = iso.split('T');
+      return parts[1] ? parts[1].substring(0, 5) : '—';
     }
-    document.getElementById('sunrise').textContent = fmtTime(d.sunrise?.[0], tz);
-    document.getElementById('sunset').textContent  = fmtTime(d.sunset?.[0],  tz);
+    document.getElementById('sunrise').textContent = fmtTime(d.sunrise?.[0]);
+    document.getElementById('sunset').textContent  = fmtTime(d.sunset?.[0]);
 
     // Phase de lune (0 = nouvelle lune, 0.25 = premier quartier, 0.5 = pleine lune, 0.75 = dernier quartier)
     const moonVal = d.moon_phase?.[0] ?? 0;
@@ -1036,8 +1042,8 @@ async function fetchWeather(lat, lon) {
     }
 
   } catch (e) {
-    console.error(e);
-    alert('Impossible de récupérer les données météo.');
+    console.error('Erreur météo :', e);
+    alert(`Impossible de récupérer les données météo.\n\nDétail : ${e.message}`);
   } finally {
     document.getElementById('loadingOverlay').classList.remove('active');
   }
