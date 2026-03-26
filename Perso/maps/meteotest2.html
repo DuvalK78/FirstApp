@@ -896,7 +896,7 @@ async function fetchWeather(lat, lon) {
       + `wind_speed_10m,wind_direction_10m,weather_code,surface_pressure,precipitation`
       + `&hourly=uv_index,visibility`
       + `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum,`
-      + `sunrise,sunset,uv_index_max,moon_phase`
+      + `sunrise,sunset,uv_index_max`
       + `&timezone=auto&forecast_days=7`;
 
     const [weatherRes, locInfo] = await Promise.all([
@@ -969,20 +969,27 @@ async function fetchWeather(lat, lon) {
     document.getElementById('sunrise').textContent = fmtTime(d.sunrise?.[0]);
     document.getElementById('sunset').textContent  = fmtTime(d.sunset?.[0]);
 
-    // Phase de lune (0 = nouvelle lune, 0.25 = premier quartier, 0.5 = pleine lune, 0.75 = dernier quartier)
-    const moonVal = d.moon_phase?.[0] ?? 0;
-    const moonPhases = [
-      {max:0.0625, emoji:'🌑', label:'Nouvelle lune'},
-      {max:0.1875, emoji:'🌒', label:'Croissant croissant'},
-      {max:0.3125, emoji:'🌓', label:'Premier quartier'},
-      {max:0.4375, emoji:'🌔', label:'Gibbeuse croissante'},
-      {max:0.5625, emoji:'🌕', label:'Pleine lune'},
-      {max:0.6875, emoji:'🌖', label:'Gibbeuse décroissante'},
-      {max:0.8125, emoji:'🌗', label:'Dernier quartier'},
-      {max:0.9375, emoji:'🌘', label:'Croissant décroissant'},
-      {max:1.0001, emoji:'🌑', label:'Nouvelle lune'},
-    ];
-    const moon = moonPhases.find(m => moonVal < m.max) || moonPhases[0];
+    // Phase de lune — calcul astronomique JS (pas besoin d'API)
+    function getMoonPhase(date) {
+      const known = new Date(2000, 0, 6); // nouvelle lune connue le 6 jan 2000
+      const diff = (date - known) / (1000 * 60 * 60 * 24);
+      const cycle = 29.53058867;
+      const phase = ((diff % cycle) + cycle) % cycle;
+      const ratio = phase / cycle;
+      const moonPhases = [
+        {max:0.0625, emoji:'🌑', label:'Nouvelle lune'},
+        {max:0.1875, emoji:'🌒', label:'Croissant croissant'},
+        {max:0.3125, emoji:'🌓', label:'Premier quartier'},
+        {max:0.4375, emoji:'🌔', label:'Gibbeuse croissante'},
+        {max:0.5625, emoji:'🌕', label:'Pleine lune'},
+        {max:0.6875, emoji:'🌖', label:'Gibbeuse décroissante'},
+        {max:0.8125, emoji:'🌗', label:'Dernier quartier'},
+        {max:0.9375, emoji:'🌘', label:'Croissant décroissant'},
+        {max:1.0001, emoji:'🌑', label:'Nouvelle lune'},
+      ];
+      return moonPhases.find(m => ratio < m.max) || moonPhases[0];
+    }
+    const moon = getMoonPhase(new Date());
     document.getElementById('moonEmoji').textContent = moon.emoji;
     document.getElementById('moonPhase').textContent = moon.label;
 
