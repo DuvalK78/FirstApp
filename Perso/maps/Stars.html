@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Céleste</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --void: #00000f;
+  --deep: #04061a;
+  --gold: #f0c060;
+  --gold-dim: rgba(240,192,96,0.5);
+  --silver: #c8d8f0;
+  --silver-dim: rgba(200,216,240,0.4);
+  --cyan: #60c8f0;
+  --text: #e8e0d0;
+  --muted: rgba(232,224,208,0.45);
+  --border: rgba(240,192,96,0.2);
+}
+
+html, body { width:100%; height:100%; overflow:hidden; background:var(--void); }
+
+/* ── HEADER ── */
+header {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 24px;
+  background:linear-gradient(to bottom, rgba(0,0,15,0.95), transparent);
+  pointer-events:none;
+}
+
+.logo {
+  font-family:'Cinzel', serif;
+  font-size:1.1rem; font-weight:700;
+  color:var(--gold);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  pointer-events:auto;
+}
+
+.logo span { color:var(--silver); font-weight:400; }
+
+.controls {
+  display:flex; align-items:center; gap:16px;
+  pointer-events:auto;
+}
+
+/* ── VIEW SWITCH ── */
+.view-switch {
+  display:flex; align-items:center;
+  background:rgba(4,6,26,0.8);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:3px;
+  gap:2px;
+}
+
+.view-btn {
+  font-family:'Cinzel', serif;
+  font-size:0.62rem; font-weight:600;
+  letter-spacing:0.1em;
+  padding:5px 14px;
+  border:none; border-radius:16px;
+  cursor:pointer;
+  transition:all 0.3s;
+  color:var(--muted);
+  background:transparent;
+}
+
+.view-btn.active {
+  background:rgba(240,192,96,0.15);
+  color:var(--gold);
+  box-shadow:0 0 12px rgba(240,192,96,0.15);
+}
+
+/* ── INFO PANEL ── */
+.info-panel {
+  position:fixed; bottom:24px; left:24px; z-index:100;
+  background:rgba(4,6,26,0.88);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 18px;
+  max-width:240px;
+  backdrop-filter:blur(12px);
+  transform:translateY(100px);
+  opacity:0;
+  transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;
+}
+
+.info-panel.visible {
+  transform:translateY(0);
+  opacity:1;
+}
+
+.info-name {
+  font-family:'Cinzel', serif;
+  font-size:0.9rem; font-weight:600;
+  color:var(--gold);
+  margin-bottom:3px;
+}
+
+.info-const {
+  font-family:'Crimson Pro', serif;
+  font-style:italic;
+  font-size:0.82rem;
+  color:var(--silver);
+  margin-bottom:6px;
+}
+
+.info-detail {
+  font-family:'Crimson Pro', serif;
+  font-size:0.75rem;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+/* ── LEGEND ── */
+.legend {
+  position:fixed; bottom:24px; right:24px; z-index:100;
+  background:rgba(4,6,26,0.75);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px 16px;
+  backdrop-filter:blur(10px);
+}
+
+.legend-title {
+  font-family:'Cinzel', serif;
+  font-size:0.55rem; font-weight:600;
+  letter-spacing:0.15em;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.legend-item {
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:5px;
+  font-family:'Crimson Pro', serif;
+  font-size:0.72rem;
+  color:var(--muted);
+}
+
+.legend-star {
+  border-radius:50%;
+  flex-shrink:0;
+  background:var(--gold);
+  box-shadow:0 0 6px var(--gold-dim);
+}
+
+/* ── CANVAS ── */
+canvas {
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  cursor:grab;
+}
+
+canvas:active { cursor:grabbing; }
+
+/* ── HINT ── */
+.hint {
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-family:'Crimson Pro', serif;
+  font-style:italic;
+  color:var(--muted);
+  font-size:0.85rem;
+  letter-spacing:0.05em;
+  pointer-events:none;
+  animation:fadeHint 4s ease forwards;
+}
+
+@keyframes fadeHint {
+  0%{opacity:0} 20%{opacity:1} 70%{opacity:1} 100%{opacity:0}
+}
+
+/* ── 3D HINT ── */
+.view3d-hint {
+  position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+  font-family:'Crimson Pro', serif;
+  font-style:italic;
+  font-size:0.72rem;
+  color:var(--muted);
+  pointer-events:none;
+  display:none;
+  text-align:center;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Carta <span>Caelestis</span></div>
+  <div class="controls">
+    <div class="view-switch">
+      <button class="view-btn active" id="btn2d">2D</button>
+      <button class="view-btn" id="btn3d">3D</button>
+    </div>
+  </div>
+</header>
+
+<canvas id="sky"></canvas>
+
+<div class="info-panel" id="infoPanel">
+  <div class="info-name" id="infoName">—</div>
+  <div class="info-const" id="infoConst">—</div>
+  <div class="info-detail" id="infoDetail">—</div>
+</div>
+
+<div class="legend">
+  <div class="legend-title">Magnitude</div>
+  <div class="legend-item"><div class="legend-star" style="width:10px;height:10px"></div> Très brillante</div>
+  <div class="legend-item"><div class="legend-star" style="width:6px;height:6px;opacity:0.85"></div> Brillante</div>
+  <div class="legend-item"><div class="legend-star" style="width:3.5px;height:3.5px;opacity:0.6"></div> Visible</div>
+</div>
+
+<div class="view3d-hint" id="hint3d">Cliquez et faites glisser pour faire tourner le globe · Molette pour zoomer</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DONNÉES : étoiles principales + constellations
+// ═══════════════════════════════════════════
+
+const STARS = [
+  // [nom, RA(h), Dec(°), magnitude, constellation]
+  ["Sirius",      6.75,  -16.72,  -1.46, "Grand Chien"],
+  ["Canopus",     6.40,  -52.70,  -0.72, "Carène"],
+  ["Arcturus",   14.26,   19.18,  -0.04, "Bouvier"],
+  ["Véga",       18.62,   38.78,   0.03, "Lyre"],
+  ["Capella",     5.28,   46.00,   0.08, "Cocher"],
+  ["Rigel",       5.24,   -8.20,   0.13, "Orion"],
+  ["Procyon",     7.65,    5.22,   0.34, "Petit Chien"],
+  ["Achernar",    1.63,  -57.24,   0.46, "Éridan"],
+  ["Bételgeuse",  5.92,    7.41,   0.50, "Orion"],
+  ["Altaïr",     19.85,    8.87,   0.77, "Aigle"],
+  ["Aldébaran",   4.60,   16.51,   0.85, "Taureau"],
+  ["Antarès",    16.49,  -26.43,   1.09, "Scorpion"],
+  ["Pollux",      7.75,   28.03,   1.14, "Gémeaux"],
+  ["Fomalhaut",  22.96,  -29.62,   1.16, "Poisson austral"],
+  ["Déneb",      20.69,   45.28,   1.25, "Cygne"],
+  ["Régulus",    10.14,   11.97,   1.35, "Lion"],
+  ["Castor",      7.58,   31.89,   1.57, "Gémeaux"],
+  ["Bellatrix",   5.42,    6.35,   1.64, "Orion"],
+  ["Elnath",      5.44,   28.61,   1.65, "Taureau"],
+  ["Alnilam",     5.60,   -1.20,   1.70, "Orion"],
+  ["Alnitak",     5.68,   -1.94,   1.74, "Orion"],
+  ["Mintaka",     5.53,   -0.30,   2.20, "Orion"],
+  ["Spica",      13.42,  -11.16,   0.97, "Vierge"],
+  ["Hadar",      14.06,  -60.37,   0.61, "Centaure"],
+  ["Acrux",      12.44,  -63.10,   0.77, "Croix du Sud"],
+  ["Gacrux",     12.52,  -57.11,   1.59, "Croix du Sud"],
+  ["Mimosa",     12.80,  -59.69,   1.25, "Croix du Sud"],
+  ["Rigil Kent.", 14.66, -60.83,  -0.01, "Centaure"],
+  ["Dubhe",      11.06,   61.75,   1.79, "Grande Ourse"],
+  ["Mérak",      11.03,   56.38,   2.37, "Grande Ourse"],
+  ["Phecda",     11.90,   53.69,   2.44, "Grande Ourse"],
+  ["Alioth",     12.90,   55.96,   1.76, "Grande Ourse"],
+  ["Mizar",      13.40,   54.93,   2.23, "Grande Ourse"],
+  ["Alkaid",     13.79,   49.31,   1.85, "Grande Ourse"],
+  ["Polaris",     2.53,   89.26,   1.97, "Petite Ourse"],
+  ["Kochab",     14.85,   74.16,   2.07, "Petite Ourse"],
+  ["Pherkad",    15.35,   71.83,   3.05, "Petite Ourse"],
+  ["Deneb Kaïtos",0.73,  -17.98,   2.04, "Baleine"],
+  ["Schedar",     0.67,   56.54,   2.24, "Cassiopée"],
+  ["Caph",        0.15,   59.15,   2.27, "Cassiopée"],
+  ["Gamma Cas",   0.95,   60.72,   2.47, "Cassiopée"],
+  ["Ruchbah",     1.43,   60.24,   2.68, "Cassiopée"],
+  ["Segin",       1.91,   63.67,   3.34, "Cassiopée"],
+  ["Mirfak",      3.41,   49.86,   1.79, "Persée"],
+  ["Algol",       3.13,   40.96,   2.12, "Persée"],
+  ["Enif",       21.74,    9.88,   2.38, "Pégase"],
+  ["Scheat",     23.06,   28.08,   2.42, "Pégase"],
+  ["Markab",     23.08,   15.21,   2.49, "Pégase"],
+  ["Algenib",     0.22,   15.18,   2.83, "Pégase"],
+  ["Alpheratz",   0.14,   29.09,   2.06, "Andromède"],
+  ["Mirach",      1.16,   35.62,   2.05, "Andromède"],
+  ["Almach",      2.07,   42.33,   2.10, "Andromède"],
+  ["Hamal",       2.12,   23.46,   2.00, "Bélier"],
+  ["Sheratan",    1.91,   20.81,   2.65, "Bélier"],
+  ["Eltanin",    17.94,   51.49,   2.24, "Dragon"],
+  ["Rastaban",   17.51,   52.30,   2.79, "Dragon"],
+  ["Grumium",    17.89,   56.87,   3.75, "Dragon"],
+  ["Alrakis",    17.15,   60.72,   4.92, "Dragon"],
+  ["Kuma",       17.32,   55.18,   4.87, "Dragon"],
+  ["Giausar",    11.52,   69.33,   3.82, "Dragon"],
+  ["Thuban",     14.07,   64.37,   3.67, "Dragon"],
+  ["Edasich",    15.42,   58.97,   3.29, "Dragon"],
+  ["Aldhibah",   17.15,   65.71,   3.17, "Dragon"],
+  ["Nodus I",    16.40,   61.51,   3.07, "Dragon"],
+  ["Graffias",   16.09,  -19.81,   2.62, "Scorpion"],
+  ["Dschubba",   16.00,  -22.62,   2.29, "Scorpion"],
+  ["Sargas",     17.62,  -42.99,   1.86, "Scorpion"],
+  ["Shaula",     17.56,  -37.10,   1.62, "Scorpion"],
+  ["Lesath",     17.53,  -37.30,   2.69, "Scorpion"],
+  ["Girtab",     17.79,  -39.02,   2.41, "Scorpion"],
+  ["Deneb Algedi",21.78, -16.13,   2.85, "Capricorne"],
+  ["Dabih",      20.35,  -14.78,   3.05, "Capricorne"],
+  ["Sadalsuud",  21.53,   -5.57,   2.87, "Verseau"],
+  ["Sadalmelik", 22.10,   -0.32,   2.95, "Verseau"],
+  ["Alrescha",    2.04,    2.76,   3.79, "Poissons"],
+  ["Eta Psc",     1.52,   15.35,   3.62, "Poissons"],
+  ["Kaus Australis",18.40,-34.38,  1.79, "Sagittaire"],
+  ["Kaus Media", 18.35,  -29.83,   2.70, "Sagittaire"],
+  ["Kaus Borealis",18.35,-25.42,   2.81, "Sagittaire"],
+  ["Nunki",      18.92,  -26.30,   2.05, "Sagittaire"],
+  ["Ascella",    19.04,  -29.88,   2.59, "Sagittaire"],
+  ["Denebola",   11.82,   14.57,   2.14, "Lion"],
+  ["Zosma",      11.24,   20.52,   2.56, "Lion"],
+  ["Algieba",    10.33,   19.84,   2.01, "Lion"],
+  ["Adhafera",   10.12,   23.42,   3.43, "Lion"],
+  ["Ras Elased", 9.76,   23.77,   3.12, "Lion"],
+  ["Murzim",      6.38,  -17.96,   1.98, "Grand Chien"],
+  ["Adhara",      6.98,  -28.97,   1.50, "Grand Chien"],
+  ["Wezen",       7.14,  -26.39,   1.83, "Grand Chien"],
+  ["Mirzam",      6.38,  -17.96,   1.98, "Grand Chien"],
+  ["Gomeisa",     7.45,    8.29,   2.89, "Petit Chien"],
+];
+
+// Constellations : [nom, [indices étoiles dans STARS à relier par paires]]
+const CONSTELLATIONS = [
+  { name:"Orion",        lines:[[5,8],[8,18],[18,19],[19,20],[20,21],[21,5],[19,5]] },
+  { name:"Grande Ourse", lines:[[28,29],[29,30],[30,31],[31,32],[32,33],[33,31]] },
+  { name:"Cassiopée",    lines:[[38,39],[39,40],[40,41],[41,42]] },
+  { name:"Croix du Sud", lines:[[24,26],[26,25],[24,27]] },
+  { name:"Scorpion",     lines:[[12,62],[62,63],[63,64],[64,65],[65,66]] },
+  { name:"Sagittaire",   lines:[[72,73],[73,74],[74,75],[75,76]] },
+  { name:"Pégase",       lines:[[45,46],[46,47],[47,48],[48,49]] },
+  { name:"Lion",         lines:[[15,79],[79,80],[80,81],[81,15],[15,77]] },
+  { name:"Lyre",         lines:[[3,3]] },
+  { name:"Cygne",        lines:[[14,14]] },
+  { name:"Petite Ourse", lines:[[34,35],[35,36]] },
+  { name:"Gémeaux",      lines:[[12,16]] },
+];
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+function raDecToXY(ra, dec, w, h, zoom, offX, offY) {
+  // Projection équirectangulaire
+  const x = ((ra / 24) * w * zoom + offX + w * 100) % (w * zoom);
+  const y = h/2 - (dec / 90) * (h/2 * zoom) + offY;
+  return [x, y];
+}
+
+function magToRadius(mag) {
+  // Plus la magnitude est basse, plus l'étoile est grande
+  return Math.max(1, (3.5 - mag * 0.45));
+}
+
+function magToAlpha(mag) {
+  return Math.max(0.25, Math.min(1, 1 - mag * 0.1));
+}
+
+function magToColor(mag) {
+  if (mag < 0.5) return '#fff8e0';  // très brillante → blanc chaud
+  if (mag < 1.5) return '#f0e8d0';  // brillante → crème
+  if (mag < 2.5) return '#d0d8f0';  // visible → bleu pâle
+  return '#b0c0e0';                  // faible → bleu gris
+}
+
+// ═══════════════════════════════════════════
+// ÉTAT
+// ═══════════════════════════════════════════
+let mode = '2d'; // '2d' | '3d'
+const canvas = document.getElementById('sky');
+const ctx = canvas.getContext('2d');
+
+// 2D state
+let zoom2d = 1.4;
+let offX2d = 0, offY2d = 0;
+let drag2d = false, lastX2d = 0, lastY2d = 0;
+
+// 3D state
+let rotX = 0.3, rotY = 0;
+let drag3d = false, lastX3d = 0, lastY3d = 0;
+let zoom3d = 1.0;
+
+// ═══════════════════════════════════════════
+// RESIZE
+// ═══════════════════════════════════════════
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  draw();
+}
+window.addEventListener('resize', resize);
+
+// ═══════════════════════════════════════════
+// FOND ÉTOILÉ ALÉATOIRE
+// ═══════════════════════════════════════════
+let bgStars = [];
+function genBgStars(n=800) {
+  bgStars = [];
+  for (let i=0; i<n; i++) {
+    bgStars.push({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 0.8 + 0.2,
+      a: Math.random() * 0.5 + 0.1,
+    });
+  }
+}
+genBgStars();
+
+function drawBg() {
+  const W = canvas.width, H = canvas.height;
+  // Fond dégradé
+  const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.7);
+  grad.addColorStop(0, '#07091e');
+  grad.addColorStop(1, '#00000f');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,H);
+
+  // Voie lactée subtile
+  const mlk = ctx.createLinearGradient(0, H*0.2, W, H*0.8);
+  mlk.addColorStop(0, 'rgba(100,120,200,0)');
+  mlk.addColorStop(0.4, 'rgba(100,120,200,0.04)');
+  mlk.addColorStop(0.5, 'rgba(120,140,220,0.07)');
+  mlk.addColorStop(0.6, 'rgba(100,120,200,0.04)');
+  mlk.addColorStop(1, 'rgba(100,120,200,0)');
+  ctx.fillStyle = mlk;
+  ctx.fillRect(0,0,W,H);
+
+  // Étoiles de fond
+  for (const s of bgStars) {
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(200,215,240,${s.a})`;
+    ctx.fill();
+  }
+}
+
+// ═══════════════════════════════════════════
+// DRAW 2D
+// ═══════════════════════════════════════════
+function draw2D() {
+  const W = canvas.width, H = canvas.height;
+  drawBg();
+
+  // Grille RA/Dec subtile
+  ctx.strokeStyle = 'rgba(240,192,96,0.05)';
+  ctx.lineWidth = 1;
+  for (let ra=0; ra<=24; ra+=2) {
+    const [x] = raDecToXY(ra, 0, W, H, zoom2d, offX2d, offY2d);
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, H);
+    ctx.stroke();
+  }
+  for (let dec=-80; dec<=80; dec+=20) {
+    const [,y] = raDecToXY(0, dec, W, H, zoom2d, offX2d, offY2d);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(W, y);
+    ctx.stroke();
+  }
+
+  // Équateur céleste
+  ctx.strokeStyle = 'rgba(96,200,240,0.12)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6,8]);
+  const [,yeq] = raDecToXY(0, 0, W, H, zoom2d, offX2d, offY2d);
+  ctx.beginPath();
+  ctx.moveTo(0, yeq);
+  ctx.lineTo(W, yeq);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Tracé des constellations
+  for (const c of CONSTELLATIONS) {
+    ctx.strokeStyle = 'rgba(240,192,96,0.22)';
+    ctx.lineWidth = 0.8;
+    ctx.setLineDash([3,5]);
+    for (const [a,b] of c.lines) {
+      if (a === b || !STARS[a] || !STARS[b]) continue;
+      const [x1,y1] = raDecToXY(STARS[a][1], STARS[a][2], W, H, zoom2d, offX2d, offY2d);
+      const [x2,y2] = raDecToXY(STARS[b][1], STARS[b][2], W, H, zoom2d, offX2d, offY2d);
+      if (Math.abs(x2-x1) > W*0.5) continue; // éviter les lignes qui traversent
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
+
+  // Noms des constellations (centroïdes)
+  ctx.font = '600 0.6rem Cinzel, serif';
+  ctx.letterSpacing = '0.12em';
+  const constCenters = {};
+  for (const s of STARS) {
+    const cn = s[4];
+    if (!constCenters[cn]) constCenters[cn] = {ra:0,dec:0,n:0};
+    constCenters[cn].ra  += s[1];
+    constCenters[cn].dec += s[2];
+    constCenters[cn].n   += 1;
+  }
+  for (const [cn, c] of Object.entries(constCenters)) {
+    if (c.n < 2) continue;
+    const [cx,cy] = raDecToXY(c.ra/c.n, c.dec/c.n, W, H, zoom2d, offX2d, offY2d);
+    if (cx < -20 || cx > W+20 || cy < -20 || cy > H+20) continue;
+    ctx.fillStyle = 'rgba(240,192,96,0.45)';
+    ctx.textAlign = 'center';
+    ctx.fillText(cn.toUpperCase(), cx, cy - 18);
+  }
+
+  // Étoiles
+  for (let i=0; i<STARS.length; i++) {
+    const [name, ra, dec, mag, cname] = STARS[i];
+    const [x,y] = raDecToXY(ra, dec, W, H, zoom2d, offX2d, offY2d);
+    if (x < -10 || x > W+10 || y < -10 || y > H+10) continue;
+
+    const r = magToRadius(mag);
+    const color = magToColor(mag);
+    const alpha = magToAlpha(mag);
+
+    // Halo
+    if (mag < 2) {
+      const grd = ctx.createRadialGradient(x,y,0,x,y,r*5);
+      grd.addColorStop(0, color.replace(')', `,${alpha*0.4})`).replace('rgb','rgba').replace('#','rgba(').replace(/(\w\w)(\w\w)(\w\w)/,'$1,$2,$3,'));
+      grd.addColorStop(0, `rgba(240,232,200,${alpha*0.3})`);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(x,y,r*5,0,Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+
+    // Corps de l'étoile
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Nom de l'étoile (seulement les brillantes)
+    if (mag < 1.5) {
+      ctx.font = 'italic 300 0.65rem "Crimson Pro", serif';
+      ctx.fillStyle = `rgba(200,216,240,0.7)`;
+      ctx.textAlign = 'left';
+      ctx.fillText(name, x + r + 5, y + 4);
+    }
+  }
+
+  // Légende équateur
+  ctx.font = '0.55rem Cinzel, serif';
+  ctx.fillStyle = 'rgba(96,200,240,0.4)';
+  ctx.textAlign = 'left';
+  ctx.fillText('ÉQUATEUR CÉLESTE', 12, yeq - 5);
+}
+
+// ═══════════════════════════════════════════
+// DRAW 3D (projection sphérique)
+// ═══════════════════════════════════════════
+function raDecToSphere(ra, dec) {
+  const phi   = (ra / 24) * Math.PI * 2;
+  const theta = (dec / 180) * Math.PI;
+  return [
+    Math.cos(theta) * Math.cos(phi),
+    Math.sin(theta),
+    Math.cos(theta) * Math.sin(phi),
+  ];
+}
+
+function rotateY(x,y,z,a) {
+  return [x*Math.cos(a)+z*Math.sin(a), y, -x*Math.sin(a)+z*Math.cos(a)];
+}
+
+function rotateX(x,y,z,a) {
+  return [x, y*Math.cos(a)-z*Math.sin(a), y*Math.sin(a)+z*Math.cos(a)];
+}
+
+function project3D(x,y,z, W,H) {
+  const fov = zoom3d * Math.min(W,H) * 0.42;
+  const scale = fov / (z + 2.2);
+  return [W/2 + x*scale, H/2 - y*scale, z, scale];
+}
+
+function draw3D() {
+  const W = canvas.width, H = canvas.height;
+  drawBg();
+
+  // Grille sphérique (méridiens + parallèles)
+  ctx.strokeStyle = 'rgba(240,192,96,0.06)';
+  ctx.lineWidth = 0.8;
+
+  // Méridiens
+  for (let ra=0; ra<24; ra+=2) {
+    ctx.beginPath();
+    let first = true;
+    for (let dec=-90; dec<=90; dec+=5) {
+      let [x,y,z] = raDecToSphere(ra,dec);
+      [x,y,z] = rotateY(x,y,z,rotY);
+      [x,y,z] = rotateX(x,y,z,rotX);
+      if (z < -0.5) { first=true; continue; }
+      const [px,py] = project3D(x,y,z,W,H);
+      if (first) { ctx.moveTo(px,py); first=false; }
+      else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  }
+
+  // Parallèles
+  for (let dec=-60; dec<=60; dec+=30) {
+    ctx.beginPath();
+    let first = true;
+    for (let ra=0; ra<=24; ra+=0.5) {
+      let [x,y,z] = raDecToSphere(ra,dec);
+      [x,y,z] = rotateY(x,y,z,rotY);
+      [x,y,z] = rotateX(x,y,z,rotX);
+      if (z < -0.5) { first=true; continue; }
+      const [px,py] = project3D(x,y,z,W,H);
+      if (first) { ctx.moveTo(px,py); first=false; }
+      else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  }
+
+  // Équateur 3D
+  ctx.strokeStyle = 'rgba(96,200,240,0.18)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  let firstEq = true;
+  for (let ra=0; ra<=24; ra+=0.3) {
+    let [x,y,z] = raDecToSphere(ra,0);
+    [x,y,z] = rotateY(x,y,z,rotY);
+    [x,y,z] = rotateX(x,y,z,rotX);
+    if (z < -0.3) { firstEq=true; continue; }
+    const [px,py] = project3D(x,y,z,W,H);
+    if (firstEq) { ctx.moveTo(px,py); firstEq=false; }
+    else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+
+  // Lignes constellations 3D
+  ctx.setLineDash([3,5]);
+  ctx.lineWidth = 0.8;
+  for (const c of CONSTELLATIONS) {
+    for (const [a,b] of c.lines) {
+      if (a===b || !STARS[a] || !STARS[b]) continue;
+      let [x1,y1,z1] = raDecToSphere(STARS[a][1], STARS[a][2]);
+      let [x2,y2,z2] = raDecToSphere(STARS[b][1], STARS[b][2]);
+      [x1,y1,z1] = rotateY(x1,y1,z1,rotY); [x1,y1,z1] = rotateX(x1,y1,z1,rotX);
+      [x2,y2,z2] = rotateY(x2,y2,z2,rotY); [x2,y2,z2] = rotateX(x2,y2,z2,rotX);
+      if (z1 < 0 || z2 < 0) continue;
+      const [px1,py1] = project3D(x1,y1,z1,W,H);
+      const [px2,py2] = project3D(x2,y2,z2,W,H);
+      ctx.strokeStyle = 'rgba(240,192,96,0.3)';
+      ctx.beginPath(); ctx.moveTo(px1,py1); ctx.lineTo(px2,py2); ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+
+  // Étoiles 3D + noms
+  for (let i=0; i<STARS.length; i++) {
+    const [name, ra, dec, mag] = STARS[i];
+    let [x,y,z] = raDecToSphere(ra,dec);
+    [x,y,z] = rotateY(x,y,z,rotY);
+    [x,y,z] = rotateX(x,y,z,rotX);
+    if (z < 0) continue;
+
+    const [px,py,,scale] = project3D(x,y,z,W,H);
+    if (px < 0 || px > W || py < 0 || py > H) continue;
+
+    const r = Math.max(1, magToRadius(mag) * Math.min(scale * 0.4, 1.8));
+    const color = magToColor(mag);
+    const alpha = magToAlpha(mag);
+
+    // Halo étoile brillante
+    if (mag < 1.5) {
+      const grd = ctx.createRadialGradient(px,py,0,px,py,r*6);
+      grd.addColorStop(0, `rgba(240,232,200,${alpha*0.35})`);
+      grd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(px,py,r*6,0,Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(px,py,r,0,Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (mag < 1.5 && scale > 0.3) {
+      ctx.font = 'italic 300 0.65rem "Crimson Pro", serif';
+      ctx.fillStyle = 'rgba(200,216,240,0.75)';
+      ctx.textAlign = 'left';
+      ctx.fillText(name, px + r + 5, py + 4);
+    }
+  }
+
+  // Noms constellations 3D
+  const constCenters3d = {};
+  for (const s of STARS) {
+    const cn = s[4];
+    if (!constCenters3d[cn]) constCenters3d[cn] = {ra:0,dec:0,n:0};
+    constCenters3d[cn].ra  += s[1];
+    constCenters3d[cn].dec += s[2];
+    constCenters3d[cn].n   += 1;
+  }
+  ctx.font = '600 0.58rem Cinzel, serif';
+  for (const [cn, c] of Object.entries(constCenters3d)) {
+    if (c.n < 2) continue;
+    let [x,y,z] = raDecToSphere(c.ra/c.n, c.dec/c.n);
+    [x,y,z] = rotateY(x,y,z,rotY); [x,y,z] = rotateX(x,y,z,rotX);
+    if (z < 0.1) continue;
+    const [px,py] = project3D(x,y,z,W,H);
+    ctx.fillStyle = 'rgba(240,192,96,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText(cn.toUpperCase(), px, py - 14);
+  }
+}
+
+// ═══════════════════════════════════════════
+// DRAW PRINCIPAL
+// ═══════════════════════════════════════════
+function draw() {
+  if (mode === '2d') draw2D();
+  else draw3D();
+}
+
+// ═══════════════════════════════════════════
+// INTERACTIONS 2D
+// ═══════════════════════════════════════════
+canvas.addEventListener('mousedown', e => {
+  if (mode === '2d') { drag2d=true; lastX2d=e.clientX; lastY2d=e.clientY; }
+  else               { drag3d=true; lastX3d=e.clientX; lastY3d=e.clientY; }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (mode === '2d' && drag2d) {
+    offX2d += e.clientX - lastX2d;
+    offY2d += e.clientY - lastY2d;
+    lastX2d=e.clientX; lastY2d=e.clientY;
+    draw();
+  }
+  if (mode === '3d' && drag3d) {
+    rotY += (e.clientX - lastX3d) * 0.005;
+    rotX += (e.clientY - lastY3d) * 0.005;
+    rotX = Math.max(-Math.PI/2, Math.min(Math.PI/2, rotX));
+    lastX3d=e.clientX; lastY3d=e.clientY;
+    draw();
+  }
+
+  // Hover étoile
+  if (!drag2d && !drag3d) checkHover(e.clientX, e.clientY);
+});
+
+canvas.addEventListener('mouseup',   () => { drag2d=false; drag3d=false; });
+canvas.addEventListener('mouseleave',() => { drag2d=false; drag3d=false; });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (mode === '2d') {
+    zoom2d = Math.max(0.6, Math.min(4, zoom2d - e.deltaY * 0.001));
+  } else {
+    zoom3d = Math.max(0.5, Math.min(3, zoom3d - e.deltaY * 0.001));
+  }
+  draw();
+}, {passive:false});
+
+// Touch
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    if (mode==='2d') { drag2d=true; lastX2d=e.touches[0].clientX; lastY2d=e.touches[0].clientY; }
+    else             { drag3d=true; lastX3d=e.touches[0].clientX; lastY3d=e.touches[0].clientY; }
+  }
+}, {passive:true});
+
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length === 1) {
+    const tx=e.touches[0].clientX, ty=e.touches[0].clientY;
+    if (mode==='2d' && drag2d) { offX2d+=tx-lastX2d; offY2d+=ty-lastY2d; lastX2d=tx; lastY2d=ty; }
+    if (mode==='3d' && drag3d) {
+      rotY+=(tx-lastX3d)*0.005; rotX+=(ty-lastY3d)*0.005;
+      rotX=Math.max(-Math.PI/2,Math.min(Math.PI/2,rotX));
+      lastX3d=tx; lastY3d=ty;
+    }
+    draw();
+  }
+}, {passive:true});
+
+canvas.addEventListener('touchend', () => { drag2d=false; drag3d=false; });
+
+// ═══════════════════════════════════════════
+// HOVER INFO
+// ═══════════════════════════════════════════
+const infoPanel = document.getElementById('infoPanel');
+let hoverTimeout = null;
+
+function checkHover(mx, my) {
+  const W = canvas.width, H = canvas.height;
+  let found = null;
+  let bestDist = 18;
+
+  for (let i=0; i<STARS.length; i++) {
+    const [name, ra, dec, mag, cname] = STARS[i];
+    let px, py;
+
+    if (mode === '2d') {
+      [px,py] = raDecToXY(ra, dec, W, H, zoom2d, offX2d, offY2d);
+    } else {
+      let [x,y,z] = raDecToSphere(ra,dec);
+      [x,y,z] = rotateY(x,y,z,rotY);
+      [x,y,z] = rotateX(x,y,z,rotX);
+      if (z < 0) continue;
+      [px,py] = project3D(x,y,z,W,H);
+    }
+
+    const dist = Math.hypot(mx-px, my-py);
+    if (dist < bestDist) { bestDist=dist; found={name,mag,cname,i}; }
+  }
+
+  if (found) {
+    document.getElementById('infoName').textContent = found.name;
+    document.getElementById('infoConst').textContent = found.cname;
+    const magStr = found.mag < 0 ? found.mag.toFixed(2) : `+${found.mag.toFixed(2)}`;
+    document.getElementById('infoDetail').textContent = `Magnitude apparente : ${magStr}`;
+    infoPanel.classList.add('visible');
+    clearTimeout(hoverTimeout);
+  } else {
+    clearTimeout(hoverTimeout);
+    hoverTimeout = setTimeout(() => infoPanel.classList.remove('visible'), 600);
+  }
+}
+
+// ═══════════════════════════════════════════
+// SWITCH 2D / 3D
+// ═══════════════════════════════════════════
+document.getElementById('btn2d').addEventListener('click', () => {
+  mode='2d';
+  document.getElementById('btn2d').classList.add('active');
+  document.getElementById('btn3d').classList.remove('active');
+  document.getElementById('hint3d').style.display='none';
+  draw();
+});
+
+document.getElementById('btn3d').addEventListener('click', () => {
+  mode='3d';
+  document.getElementById('btn3d').classList.add('active');
+  document.getElementById('btn2d').classList.remove('active');
+  document.getElementById('hint3d').style.display='block';
+  draw();
+});
+
+// ═══════════════════════════════════════════
+// ANIMATION SCINTILLEMENT
+// ═══════════════════════════════════════════
+let lastTwinkle = 0;
+function animate(ts) {
+  if (ts - lastTwinkle > 80) {
+    // Légère variation des étoiles de fond
+    for (const s of bgStars) {
+      s.a += (Math.random()-0.5)*0.04;
+      s.a = Math.max(0.05, Math.min(0.6, s.a));
+    }
+    draw();
+    lastTwinkle = ts;
+  }
+  requestAnimationFrame(animate);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+resize();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
