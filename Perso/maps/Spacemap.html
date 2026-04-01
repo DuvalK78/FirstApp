@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Map</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#020408; --deep:#040d1a; --panel:#070f1e;
+  --border:rgba(0,200,255,0.12); --border2:rgba(0,200,255,0.25);
+  --accent:#00c8ff; --accent2:#00ff88; --warn:#ff6030; --gold:#f0c060;
+  --text:#d0e8ff; --muted:rgba(208,232,255,0.45);
+  --iss:#00ff88; --asteroid:#ff6030; --launch:#f0c060;
+  --debris:#8888aa; --planet:#c080ff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);font-family:'Exo 2',sans-serif;color:var(--text);}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  padding:10px 18px;
+  background:rgba(2,4,8,0.92);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);
+}
+.logo{
+  font-family:'Orbitron',monospace;font-size:1.05rem;font-weight:700;
+  color:var(--accent);letter-spacing:0.2em;
+  text-shadow:0 0 20px rgba(0,200,255,0.5);
+  display:flex;align-items:center;gap:8px;
+}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+.header-center{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* SWITCH */
+.view-switch{display:flex;background:rgba(0,200,255,0.05);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.vbtn{
+  font-family:'Orbitron',monospace;font-size:0.55rem;font-weight:600;letter-spacing:0.1em;
+  padding:6px 14px;border:none;cursor:pointer;transition:all 0.25s;
+  color:var(--muted);background:transparent;
+}
+.vbtn.active{background:rgba(0,200,255,0.15);color:var(--accent);box-shadow:inset 0 0 12px rgba(0,200,255,0.1);}
+
+/* FILTERS */
+.filters{display:flex;gap:6px;flex-wrap:wrap;}
+.fbtn{
+  font-family:'Exo 2',sans-serif;font-size:0.62rem;font-weight:500;
+  padding:4px 10px;border-radius:20px;border:1px solid;cursor:pointer;
+  transition:all 0.2s;background:transparent;
+}
+.fbtn.iss{border-color:var(--iss);color:var(--iss);}
+.fbtn.asteroid{border-color:var(--asteroid);color:var(--asteroid);}
+.fbtn.launch{border-color:var(--launch);color:var(--launch);}
+.fbtn.planet{border-color:var(--planet);color:var(--planet);}
+.fbtn.active{opacity:1;}
+.fbtn:not(.active){opacity:0.35;}
+.fbtn.iss.active{background:rgba(0,255,136,0.1);}
+.fbtn.asteroid.active{background:rgba(255,96,48,0.1);}
+.fbtn.launch.active{background:rgba(240,192,96,0.1);}
+.fbtn.planet.active{background:rgba(192,128,255,0.1);}
+
+/* CLOCK */
+.clock{font-family:'Orbitron',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;}
+
+/* ── MAP ── */
+#map{position:fixed;inset:0;top:52px;}
+.leaflet-container{background:#000 !important;}
+
+/* ── CANVAS 3D ── */
+#canvas3d{position:fixed;inset:0;top:52px;display:none;cursor:grab;background:#000;}
+#canvas3d:active{cursor:grabbing;}
+
+/* ── SIDE PANEL ── */
+.side-panel{
+  position:fixed;right:0;top:52px;bottom:0;width:310px;
+  background:rgba(4,13,26,0.94);
+  border-left:1px solid var(--border);
+  backdrop-filter:blur(16px);
+  display:flex;flex-direction:column;
+  z-index:500;overflow:hidden;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.side-panel.collapsed{transform:translateX(100%);}
+
+.panel-toggle{
+  position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:501;
+  width:22px;height:60px;
+  background:rgba(0,200,255,0.12);
+  border:1px solid var(--border);border-right:none;
+  border-radius:6px 0 0 6px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;color:var(--accent);
+  transition:right 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.panel-toggle:hover{background:rgba(0,200,255,0.2);}
+
+.panel-tabs{display:flex;border-bottom:1px solid var(--border);}
+.ptab{
+  flex:1;padding:10px;font-family:'Orbitron',monospace;font-size:0.5rem;
+  letter-spacing:0.1em;text-align:center;cursor:pointer;
+  color:var(--muted);border-bottom:2px solid transparent;
+  transition:all 0.2s;background:transparent;border-top:none;border-left:none;border-right:none;
+}
+.ptab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.panel-body{flex:1;overflow-y:auto;padding:12px;}
+.panel-body::-webkit-scrollbar{width:3px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* CARDS PANEL */
+.pcard{
+  background:rgba(0,200,255,0.04);
+  border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;margin-bottom:8px;
+  cursor:pointer;transition:all 0.2s;
+}
+.pcard:hover{border-color:var(--border2);background:rgba(0,200,255,0.08);}
+.pcard-title{font-family:'Orbitron',monospace;font-size:0.62rem;font-weight:600;letter-spacing:0.08em;margin-bottom:4px;}
+.pcard-sub{font-size:0.68rem;color:var(--muted);line-height:1.5;}
+.pcard-badge{display:inline-block;font-size:0.52rem;padding:2px 7px;border-radius:10px;margin-bottom:5px;font-weight:500;}
+.badge-iss{background:rgba(0,255,136,0.15);color:var(--iss);border:1px solid rgba(0,255,136,0.3);}
+.badge-asteroid{background:rgba(255,96,48,0.15);color:var(--asteroid);border:1px solid rgba(255,96,48,0.3);}
+.badge-hazard{background:rgba(255,0,0,0.2);color:#ff4040;border:1px solid rgba(255,0,0,0.4);}
+.badge-launch{background:rgba(240,192,96,0.15);color:var(--launch);border:1px solid rgba(240,192,96,0.3);}
+.badge-planet{background:rgba(192,128,255,0.15);color:var(--planet);border:1px solid rgba(192,128,255,0.3);}
+
+.section-sep{font-family:'Orbitron',monospace;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);margin:10px 0 6px;text-transform:uppercase;}
+
+/* POPUP CUSTOM */
+.leaflet-popup-content-wrapper{
+  background:rgba(4,13,26,0.96)!important;
+  border:1px solid var(--border2)!important;
+  border-radius:10px!important;
+  backdrop-filter:blur(16px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.6)!important;
+}
+.leaflet-popup-tip-container{display:none;}
+.leaflet-popup-content{margin:12px 14px!important;color:var(--text)!important;}
+.popup-title{font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:600;color:var(--accent);margin-bottom:6px;letter-spacing:0.08em;}
+.popup-row{font-size:0.7rem;color:var(--muted);margin-bottom:3px;display:flex;gap:6px;}
+.popup-row span{color:var(--text);}
+
+/* LOADING */
+.loader{
+  position:fixed;inset:0;top:52px;z-index:800;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+  background:rgba(2,4,8,0.85);backdrop-filter:blur(8px);
+}
+.loader.hidden{display:none;}
+.loader-ring{
+  width:48px;height:48px;border:2px solid rgba(0,200,255,0.2);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-text{font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;animation:blink 1.2s ease-in-out infinite;}
+
+/* LEGEND */
+.legend-box{
+  position:fixed;left:12px;bottom:12px;z-index:600;
+  background:rgba(4,13,26,0.9);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;backdrop-filter:blur(12px);
+}
+.legend-title{font-family:'Orbitron',monospace;font-size:0.48rem;letter-spacing:0.15em;color:var(--muted);margin-bottom:7px;}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:0.65rem;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ISS MARKER */
+.iss-marker{
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  filter:drop-shadow(0 0 8px var(--iss));
+  animation:orbit-pulse 2s ease-in-out infinite;
+}
+@keyframes orbit-pulse{0%,100%{filter:drop-shadow(0 0 8px var(--iss));}50%{filter:drop-shadow(0 0 18px var(--iss));}}
+
+/* MOBILE */
+@media(max-width:700px){
+  .side-panel{width:100%;top:auto;bottom:0;height:50vh;border-left:none;border-top:1px solid var(--border);}
+  .panel-toggle{top:auto;bottom:52%;right:12px;transform:none;border-radius:6px;width:40px;height:22px;writing-mode:horizontal-tb;}
+  #map,#canvas3d{right:0!important;}
+  .filters .fbtn{font-size:0.55rem;padding:3px 8px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><div class="logo-dot"></div>SPACE MAP</div>
+  <div class="header-center">
+    <div class="view-switch">
+      <button class="vbtn active" id="btn2d">2D MAP</button>
+      <button class="vbtn" id="btn3d">3D GLOBE</button>
+    </div>
+    <div class="filters">
+      <button class="fbtn iss active"      id="f-iss">🛸 ISS</button>
+      <button class="fbtn asteroid active" id="f-asteroid">☄️ NEO</button>
+      <button class="fbtn launch active"   id="f-launch">🚀 Lancements</button>
+      <button class="fbtn planet active"   id="f-planet">🪐 Planètes</button>
+    </div>
+  </div>
+  <div class="clock" id="clock">—</div>
+</header>
+
+<div id="map"></div>
+<canvas id="canvas3d"></canvas>
+
+<div class="loader" id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">CHARGEMENT DES DONNÉES SPATIALES…</div>
+</div>
+
+<!-- PANEL -->
+<div class="side-panel" id="sidePanel">
+  <div class="panel-tabs">
+    <button class="ptab active" data-tab="iss">ISS</button>
+    <button class="ptab" data-tab="neo">NEO</button>
+    <button class="ptab" data-tab="launches">FUSÉES</button>
+    <button class="ptab" data-tab="planets">PLANÈTES</button>
+  </div>
+  <div class="panel-body" id="panelBody">
+    <div class="loader-text" style="text-align:center;margin-top:40px">Chargement…</div>
+  </div>
+</div>
+<div class="panel-toggle" id="panelToggle">◀</div>
+
+<div class="legend-box">
+  <div class="legend-title">LÉGENDE</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--iss);box-shadow:0 0 6px var(--iss)"></div>ISS (temps réel)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--asteroid)"></div>Astéroïde / Comète NEO</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff2020"></div>NEO potentiellement dangereux</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--launch)"></div>Site de lancement</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--planet)"></div>Position planète (écliptique)</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// MAP INIT
+// ═══════════════════════════════════════
+const map = L.map('map', {center:[20,0],zoom:2,zoomControl:true,attributionControl:true});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
+}).addTo(map);
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let mode='2d';
+let panelOpen=true;
+let activeTab='iss';
+let filters={iss:true,asteroid:true,launch:true,planet:true};
+const layers={iss:null,asteroids:[],launches:[],planets:[]};
+let issData=null, neoData=[], launchData=[], issInterval=null;
+
+// ═══════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    n.toUTCString().replace('GMT','UTC').replace(/:\d\d /,' ');
+}
+setInterval(updateClock,1000); updateClock();
+
+// ═══════════════════════════════════════
+// ISS MARKER
+// ═══════════════════════════════════════
+const issIcon = L.divIcon({
+  className:'',
+  html:'<div class="iss-marker">🛸</div>',
+  iconSize:[28,28],iconAnchor:[14,14]
+});
+
+let issMarker=null, issTrail=[], issPolyline=null;
+
+async function fetchISS(){
+  try{
+    const r=await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+    const d=await r.json();
+    if(!d.latitude) return;
+    issData=d;
+    const lat=d.latitude, lon=d.longitude;
+
+    if(!issMarker){
+      issMarker=L.marker([lat,lon],{icon:issIcon,zIndexOffset:1000}).addTo(map);
+      issMarker.bindPopup(makeISSPopup(d));
+    } else {
+      issMarker.setLatLng([lat,lon]);
+      issMarker.setPopupContent(makeISSPopup(d));
+    }
+
+    // Traîne orbitale
+    issTrail.push([lat,lon]);
+    if(issTrail.length>80) issTrail.shift();
+    if(issPolyline) map.removeLayer(issPolyline);
+    issPolyline=L.polyline(issTrail,{
+      color:'rgba(0,255,136,0.35)',weight:1.5,dashArray:'4,6'
+    }).addTo(map);
+
+    if(activeTab==='iss') renderISSPanel(d);
+  } catch(e){ console.warn('ISS fetch error',e); }
+}
+
+function makeISSPopup(d){
+  return `<div class="popup-title">🛸 Station Spatiale Internationale</div>
+    <div class="popup-row">Latitude <span>${parseFloat(d.latitude).toFixed(4)}°</span></div>
+    <div class="popup-row">Longitude <span>${parseFloat(d.longitude).toFixed(4)}°</span></div>
+    <div class="popup-row">Altitude <span>${parseFloat(d.altitude).toFixed(1)} km</span></div>
+    <div class="popup-row">Vitesse <span>${parseFloat(d.velocity).toFixed(0)} km/h</span></div>
+    <div class="popup-row">Visibilité <span>${d.visibility==='daylight'?'☀️ Côté jour':'🌑 Côté nuit'}</span></div>`;
+}
+
+async function fetchAstronauts(){
+  try{
+    const r=await fetch('https://corsproxy.io/?url=http://api.open-notify.org/astros.json');
+    return await r.json();
+  } catch(e){
+    return {number:0,people:[]};
+  }
+}
+
+function renderISSPanel(d){
+  fetchAstronauts().then(astros=>{
+    const crew=astros.people?.filter(p=>p.craft==='ISS')||[];
+    document.getElementById('panelBody').innerHTML=`
+      <div class="pcard" onclick="if(issMarker){map.setView(issMarker.getLatLng(),4);issMarker.openPopup();}">
+        <div class="pcard-badge badge-iss">TEMPS RÉEL</div>
+        <div class="pcard-title">ISS — Station Spatiale</div>
+        <div class="pcard-sub">
+          📍 ${parseFloat(d.latitude).toFixed(3)}°, ${parseFloat(d.longitude).toFixed(3)}°<br>
+          🛸 Altitude : ${parseFloat(d.altitude).toFixed(1)} km<br>
+          ⚡ Vitesse : ${parseFloat(d.velocity).toFixed(0)} km/h<br>
+          ${d.visibility==='daylight'?'☀️ Côté jour':'🌑 Côté nuit'}
+        </div>
+      </div>
+      <div class="section-sep">ÉQUIPAGE À BORD (${crew.length} personnes)</div>
+      ${crew.map(p=>`<div class="pcard"><div class="pcard-title">👨‍🚀 ${p.name}</div></div>`).join('')||
+        '<div class="pcard"><div class="pcard-sub">Données équipage indisponibles</div></div>'}
+      <div class="section-sep">ORBITE</div>
+      <div class="pcard">
+        <div class="pcard-sub">
+          🌍 Altitude : ~408 km<br>
+          🔄 Période orbitale : ~92 min<br>
+          🌐 Inclinaison : 51.6°<br>
+          📡 NORAD ID : 25544
+        </div>
+      </div>`;
+  });
+}
+
+// ═══════════════════════════════════════
+// NEO — ASTÉROÏDES & COMÈTES
+// ═══════════════════════════════════════
+async function fetchNEO(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const end=new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+    const url=`https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${end}&api_key=DEMO_KEY`;
+    const r=await fetch(url);
+    const d=await r.json();
+    const all=[];
+    for(const day of Object.values(d.near_earth_objects||{})){
+      for(const neo of day) all.push(neo);
+    }
+    neoData=all.sort((a,b)=>
+      a.close_approach_data[0]?.miss_distance?.kilometers -
+      b.close_approach_data[0]?.miss_distance?.kilometers
+    ).slice(0,40);
+
+    // Placer sur la carte à la longitude d'approche (approx via RA de l'éphéméride)
+    layers.asteroids.forEach(m=>map.removeLayer(m)); layers.asteroids=[];
+    for(const neo of neoData){
+      const ca=neo.close_approach_data[0];
+      if(!ca) continue;
+      // Position approximative basée sur heure d'approche → longitude
+      const t=new Date(ca.epoch_date_close_approach||Date.now());
+      const lon=((t.getUTCHours()/24)*360-180);
+      const lat=(Math.random()-0.5)*60;
+      const hazard=neo.is_potentially_hazardous_asteroid;
+      const diam=neo.estimated_diameter?.kilometers;
+      const diamStr=diam?`${diam.estimated_diameter_min.toFixed(3)}–${diam.estimated_diameter_max.toFixed(3)} km`:'—';
+
+      const icon=L.divIcon({
+        className:'',
+        html:`<div style="width:${hazard?14:10}px;height:${hazard?14:10}px;border-radius:50%;
+          background:${hazard?'#ff2020':'#ff6030'};
+          box-shadow:0 0 ${hazard?10:6}px ${hazard?'#ff2020':'rgba(255,96,48,0.7)'};
+          opacity:0.9;"></div>`,
+        iconSize:[14,14],iconAnchor:[7,7]
+      });
+
+      const m=L.marker([lat,lon],{icon}).addTo(map);
+      m.bindPopup(`<div class="popup-title">☄️ ${neo.name}</div>
+        ${hazard?'<div class="popup-row"><span style="color:#ff2020">⚠️ Potentiellement dangereux</span></div>':''}
+        <div class="popup-row">Approche <span>${new Date(ca.epoch_date_close_approach).toLocaleDateString('fr-FR')}</span></div>
+        <div class="popup-row">Distance <span>${parseFloat(ca.miss_distance.kilometers).toLocaleString('fr-FR',{maximumFractionDigits:0})} km</span></div>
+        <div class="popup-row">Vitesse <span>${parseFloat(ca.relative_velocity.kilometers_per_hour).toLocaleString('fr-FR',{maximumFractionDigits:0})} km/h</span></div>
+        <div class="popup-row">Diamètre <span>${diamStr}</span></div>
+        <div class="popup-row">Magnitude <span>${neo.absolute_magnitude_h}</span></div>`);
+      layers.asteroids.push(m);
+      if(!filters.asteroid) map.removeLayer(m);
+    }
+    if(activeTab==='neo') renderNEOPanel();
+  } catch(e){ console.warn('NEO error',e); }
+}
+
+function renderNEOPanel(){
+  if(!neoData.length){document.getElementById('panelBody').innerHTML='<div class="pcard-sub" style="text-align:center;margin-top:40px">Données indisponibles</div>';return;}
+  const hazards=neoData.filter(n=>n.is_potentially_hazardous_asteroid);
+  document.getElementById('panelBody').innerHTML=`
+    <div class="pcard" style="border-color:rgba(255,32,32,0.3)">
+      <div class="pcard-badge badge-hazard">⚠️ ATTENTION</div>
+      <div class="pcard-title">NEO des 7 prochains jours</div>
+      <div class="pcard-sub">${neoData.length} objets détectés · <span style="color:#ff4040">${hazards.length} potentiellement dangereux</span></div>
+    </div>
+    ${neoData.slice(0,20).map(n=>{
+      const ca=n.close_approach_data[0];
+      const dist=ca?parseFloat(ca.miss_distance.kilometers).toLocaleString('fr-FR',{maximumFractionDigits:0}):'—';
+      const spd=ca?parseFloat(ca.relative_velocity.kilometers_per_hour).toLocaleString('fr-FR',{maximumFractionDigits:0}):'—';
+      const hazard=n.is_potentially_hazardous_asteroid;
+      return `<div class="pcard">
+        <div class="pcard-badge ${hazard?'badge-hazard':'badge-asteroid'}">${hazard?'⚠️ DANGEREUX':'☄️ NEO'}</div>
+        <div class="pcard-title">${n.name}</div>
+        <div class="pcard-sub">
+          📏 ${dist} km de la Terre<br>
+          ⚡ ${spd} km/h<br>
+          🔭 Mag. ${n.absolute_magnitude_h}
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══════════════════════════════════════
+// LANCEMENTS
+// ═══════════════════════════════════════
+async function fetchLaunches(){
+  try{
+    const r=await fetch('https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=20&format=json');
+    const d=await r.json();
+    launchData=d.results||[];
+    layers.launches.forEach(m=>map.removeLayer(m)); layers.launches=[];
+
+    for(const launch of launchData){
+      const lat=parseFloat(launch.pad?.latitude);
+      const lon=parseFloat(launch.pad?.longitude);
+      if(isNaN(lat)||isNaN(lon)) continue;
+
+      const icon=L.divIcon({
+        className:'',
+        html:`<div style="font-size:1.3rem;filter:drop-shadow(0 0 8px rgba(240,192,96,0.8));">🚀</div>`,
+        iconSize:[24,24],iconAnchor:[12,12]
+      });
+
+      const net=new Date(launch.net);
+      const m=L.marker([lat,lon],{icon}).addTo(map);
+      m.bindPopup(`<div class="popup-title">🚀 ${launch.name}</div>
+        <div class="popup-row">Date <span>${net.toLocaleDateString('fr-FR')} ${net.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})} UTC</span></div>
+        <div class="popup-row">Site <span>${launch.pad?.name||'—'}</span></div>
+        <div class="popup-row">Agence <span>${launch.launch_service_provider?.name||'—'}</span></div>
+        <div class="popup-row">Statut <span>${launch.status?.name||'—'}</span></div>
+        ${launch.mission?.description?`<div class="popup-row" style="flex-direction:column;gap:2px">Mission<span style="font-size:0.65rem;margin-top:2px">${launch.mission.description.slice(0,120)}…</span></div>`:''}`);
+      layers.launches.push(m);
+      if(!filters.launch) map.removeLayer(m);
+    }
+    if(activeTab==='launches') renderLaunchPanel();
+  } catch(e){ console.warn('Launches error',e); }
+}
+
+function renderLaunchPanel(){
+  if(!launchData.length){document.getElementById('panelBody').innerHTML='<div class="pcard-sub" style="text-align:center;margin-top:40px">Données indisponibles</div>';return;}
+  document.getElementById('panelBody').innerHTML=launchData.map(l=>{
+    const net=new Date(l.net);
+    const diff=Math.max(0,net-Date.now());
+    const days=Math.floor(diff/86400000);
+    const hours=Math.floor((diff%86400000)/3600000);
+    const countdown=diff>0?`T-${days}j ${hours}h`:'Passé / En cours';
+    return `<div class="pcard">
+      <div class="pcard-badge badge-launch">🚀 ${l.status?.abbrev||'GO'}</div>
+      <div class="pcard-title">${l.name}</div>
+      <div class="pcard-sub">
+        📅 ${net.toLocaleDateString('fr-FR')} ${net.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}<br>
+        ⏳ ${countdown}<br>
+        📍 ${l.pad?.location?.name||l.pad?.name||'—'}<br>
+        🏢 ${l.launch_service_provider?.name||'—'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// PLANÈTES (positions approx. écliptique)
+// ═══════════════════════════════════════
+const PLANETS=[
+  {name:'Mercure',emoji:'⚫',color:'#aaaaaa',period:87.97,a:0.387},
+  {name:'Vénus',emoji:'🟡',color:'#f0c060',period:224.70,a:0.723},
+  {name:'Mars',emoji:'🔴',color:'#cc4422',period:686.97,a:1.524},
+  {name:'Jupiter',emoji:'🟠',color:'#e0a060',period:4332.6,a:5.203},
+  {name:'Saturne',emoji:'💛',color:'#d4b060',period:10759,a:9.537},
+  {name:'Uranus',emoji:'🔵',color:'#60c0d0',period:30685,a:19.19},
+  {name:'Neptune',emoji:'🔵',color:'#4060d0',period:60190,a:30.07},
+];
+
+function getPlanetPos(p){
+  // Approximation : position angulaire par rapport à l'écliptique J2000
+  const j2000=new Date('2000-01-01T12:00:00Z');
+  const days=(Date.now()-j2000)/86400000;
+  const angle=(days/p.period)*360 % 360;
+  const rad=angle*Math.PI/180;
+  // Projection écliptique → équateur (inclinaison ~23.5°)
+  const lon=(angle+180)%360-180; // longitude écliptique approx
+  const lat=Math.sin(rad)*23.5*p.a/30; // latitude très approx
+  return {lat:Math.max(-80,Math.min(80,lat)),lon};
+}
+
+function addPlanets(){
+  layers.planets.forEach(m=>map.removeLayer(m)); layers.planets=[];
+  for(const p of PLANETS){
+    const {lat,lon}=getPlanetPos(p);
+    const icon=L.divIcon({
+      className:'',
+      html:`<div style="font-size:1rem;filter:drop-shadow(0 0 6px ${p.color});cursor:pointer;">${p.emoji}</div>`,
+      iconSize:[18,18],iconAnchor:[9,9]
+    });
+    const m=L.marker([lat,lon],{icon}).addTo(map);
+    const pos=getPlanetPos(p);
+    m.bindPopup(`<div class="popup-title">${p.emoji} ${p.name}</div>
+      <div class="popup-row">Type <span>Planète du système solaire</span></div>
+      <div class="popup-row">Période orbitale <span>${p.period.toFixed(1)} jours</span></div>
+      <div class="popup-row">Demi-grand axe <span>${p.a} UA</span></div>
+      <div class="popup-row" style="font-size:0.62rem;color:var(--muted);margin-top:4px">Position projetée sur l'écliptique (approximation)</div>`);
+    layers.planets.push(m);
+    if(!filters.planet) map.removeLayer(m);
+  }
+}
+
+function renderPlanetPanel(){
+  document.getElementById('panelBody').innerHTML=`
+    <div class="pcard" style="border-color:rgba(192,128,255,0.3)">
+      <div class="pcard-badge badge-planet">ℹ️ NOTE</div>
+      <div class="pcard-sub">Les positions sont projetées sur la carte terrestre à titre indicatif (écliptique → équateur). Pour des éphémérides précises, utilisez JPL Horizons.</div>
+    </div>
+    ${PLANETS.map(p=>{
+      const pos=getPlanetPos(p);
+      return `<div class="pcard">
+        <div class="pcard-badge badge-planet">${p.emoji} PLANÈTE</div>
+        <div class="pcard-title">${p.name}</div>
+        <div class="pcard-sub">
+          🔄 Période : ${p.period<400?p.period.toFixed(1)+' j':(p.period/365.25).toFixed(2)+' ans'}<br>
+          📏 Distance au Soleil : ${p.a} UA<br>
+          🌐 Lon. écliptique : ${((pos.lon+180+360)%360).toFixed(1)}°
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══════════════════════════════════════
+// PANEL TABS
+// ═══════════════════════════════════════
+document.querySelectorAll('.ptab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTab=btn.dataset.tab;
+    renderActiveTab();
+  });
+});
+
+function renderActiveTab(){
+  if(activeTab==='iss') issData?renderISSPanel(issData):fetchISS();
+  else if(activeTab==='neo') renderNEOPanel();
+  else if(activeTab==='launches') renderLaunchPanel();
+  else if(activeTab==='planets') renderPlanetPanel();
+}
+
+// ═══════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════
+function toggleFilter(name,btn){
+  filters[name]=!filters[name];
+  btn.classList.toggle('active',filters[name]);
+  const show=filters[name];
+  if(name==='iss'&&issMarker){ show?map.addLayer(issMarker):map.removeLayer(issMarker); if(issPolyline){show?map.addLayer(issPolyline):map.removeLayer(issPolyline);} }
+  if(name==='asteroid') layers.asteroids.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+  if(name==='launch') layers.launches.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+  if(name==='planet') layers.planets.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+}
+document.getElementById('f-iss').addEventListener('click',e=>toggleFilter('iss',e.currentTarget));
+document.getElementById('f-asteroid').addEventListener('click',e=>toggleFilter('asteroid',e.currentTarget));
+document.getElementById('f-launch').addEventListener('click',e=>toggleFilter('launch',e.currentTarget));
+document.getElementById('f-planet').addEventListener('click',e=>toggleFilter('planet',e.currentTarget));
+
+// ═══════════════════════════════════════
+// PANEL TOGGLE
+// ═══════════════════════════════════════
+const sidePanel=document.getElementById('sidePanel');
+const panelToggle=document.getElementById('panelToggle');
+panelToggle.addEventListener('click',()=>{
+  panelOpen=!panelOpen;
+  sidePanel.classList.toggle('collapsed',!panelOpen);
+  panelToggle.textContent=panelOpen?'▶':'◀';
+});
+
+// ═══════════════════════════════════════
+// VIEW SWITCH 2D / 3D
+// ═══════════════════════════════════════
+const canvas3d=document.getElementById('canvas3d');
+const ctx3d=canvas3d.getContext('2d');
+let rotX3=0.3,rotY3=0,zoom3=1,drag3=false,lx3=0,ly3=0;
+let bgStars3=[];
+function genBg3(n=600){bgStars3=[];for(let i=0;i<n;i++)bgStars3.push({x:Math.random(),y:Math.random(),r:Math.random()*0.9+0.2,a:Math.random()*0.5+0.1});}
+genBg3();
+
+function draw3D(){
+  const W=canvas3d.width,H=canvas3d.height,cx=W/2,cy=H/2;
+  const R=Math.min(W,H)*0.38*zoom3;
+
+  // Fond
+  ctx3d.fillStyle='#000';ctx3d.fillRect(0,0,W,H);
+  const bg=ctx3d.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*0.7);
+  bg.addColorStop(0,'#05090f');bg.addColorStop(1,'#000');
+  ctx3d.fillStyle=bg;ctx3d.fillRect(0,0,W,H);
+  for(const s of bgStars3){ctx3d.beginPath();ctx3d.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);ctx3d.fillStyle=`rgba(180,200,240,${s.a})`;ctx3d.fill();}
+
+  // Globe
+  const earthGrad=ctx3d.createRadialGradient(cx-R*0.2,cy-R*0.2,R*0.1,cx,cy,R);
+  earthGrad.addColorStop(0,'#1a3a5c');earthGrad.addColorStop(0.5,'#0d2040');earthGrad.addColorStop(1,'#050f20');
+  ctx3d.beginPath();ctx3d.arc(cx,cy,R,0,Math.PI*2);ctx3d.fillStyle=earthGrad;ctx3d.fill();
+  ctx3d.strokeStyle='rgba(0,200,255,0.25)';ctx3d.lineWidth=1.5;ctx3d.stroke();
+
+  // Grilles globe
+  function proj3(lat,lon){
+    const la=lat*Math.PI/180, lo=(lon+rotY3*180/Math.PI)*Math.PI/180;
+    const x=Math.cos(la)*Math.cos(lo), y=Math.sin(la), z=Math.cos(la)*Math.sin(lo);
+    const cosRX=Math.cos(rotX3),sinRX=Math.sin(rotX3);
+    const y2=y*cosRX-z*sinRX, z2=y*sinRX+z*cosRX;
+    if(z2<-0.1) return null;
+    const sc=R/(z2+1.5);
+    return [cx+x*sc,cy-y2*sc,z2];
+  }
+
+  // Méridiens
+  ctx3d.strokeStyle='rgba(0,200,255,0.08)';ctx3d.lineWidth=0.7;
+  for(let lo=-180;lo<180;lo+=30){
+    ctx3d.beginPath();let f=true;
+    for(let la=-80;la<=80;la+=5){
+      const p=proj3(la,lo);if(!p){f=true;continue;}
+      f?ctx3d.moveTo(p[0],p[1]):ctx3d.lineTo(p[0],p[1]);f=false;
+    }ctx3d.stroke();
+  }
+  // Parallèles
+  for(let la=-60;la<=60;la+=30){
+    ctx3d.beginPath();let f=true;
+    for(let lo=-180;lo<=180;lo+=5){
+      const p=proj3(la,lo);if(!p){f=true;continue;}
+      f?ctx3d.moveTo(p[0],p[1]):ctx3d.lineTo(p[0],p[1]);f=false;
+    }ctx3d.stroke();
+  }
+
+  // Équateur
+  ctx3d.strokeStyle='rgba(0,200,255,0.2)';ctx3d.lineWidth=1;
+  ctx3d.beginPath();let fe=true;
+  for(let lo=-180;lo<=180;lo+=3){const p=proj3(0,lo);if(!p){fe=true;continue;}fe?ctx3d.moveTo(p[0],p[1]):ctx3d.lineTo(p[0],p[1]);fe=false;}
+  ctx3d.stroke();
+
+  // Terminateur jour/nuit
+  const now=new Date();
+  const sunLon=-((now.getUTCHours()*60+now.getUTCMinutes())/1440*360);
+  ctx3d.strokeStyle='rgba(255,200,50,0.3)';ctx3d.lineWidth=1.5;ctx3d.setLineDash([3,5]);
+  ctx3d.beginPath();fe=true;
+  for(let la=-90;la<=90;la+=3){const p=proj3(la,sunLon+90);if(!p){fe=true;continue;}fe?ctx3d.moveTo(p[0],p[1]):ctx3d.lineTo(p[0],p[1]);fe=false;}
+  ctx3d.stroke();ctx3d.setLineDash([]);
+
+  // ISS
+  if(issData&&filters.iss){
+    const p=proj3(parseFloat(issData.latitude),parseFloat(issData.longitude));
+    if(p){
+      const g=ctx3d.createRadialGradient(p[0],p[1],0,p[0],p[1],14);
+      g.addColorStop(0,'rgba(0,255,136,0.4)');g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx3d.beginPath();ctx3d.arc(p[0],p[1],14,0,Math.PI*2);ctx3d.fillStyle=g;ctx3d.fill();
+      ctx3d.beginPath();ctx3d.arc(p[0],p[1],5,0,Math.PI*2);ctx3d.fillStyle='#00ff88';ctx3d.fill();
+      ctx3d.font='14px serif';ctx3d.fillText('🛸',p[0]-7,p[1]-8);
+    }
+  }
+
+  // NEO
+  if(filters.asteroid){
+    for(const neo of neoData){
+      const ca=neo.close_approach_data[0];if(!ca) continue;
+      const t=new Date(ca.epoch_date_close_approach||Date.now());
+      const lon=((t.getUTCHours()/24)*360+rotY3*180/Math.PI)%360-180;
+      const lat=(Math.sin(neoData.indexOf(neo)*1.3))*40;
+      const p=proj3(lat,lon);if(!p) continue;
+      const hazard=neo.is_potentially_hazardous_asteroid;
+      ctx3d.beginPath();ctx3d.arc(p[0],p[1],hazard?5:3.5,0,Math.PI*2);
+      ctx3d.fillStyle=hazard?'#ff2020':'#ff6030';
+      ctx3d.shadowBlur=hazard?10:6;ctx3d.shadowColor=hazard?'#ff2020':'#ff6030';
+      ctx3d.fill();ctx3d.shadowBlur=0;
+    }
+  }
+
+  // Lancements
+  if(filters.launch){
+    for(const l of launchData){
+      const lat=parseFloat(l.pad?.latitude),lon=parseFloat(l.pad?.longitude);
+      if(isNaN(lat)||isNaN(lon)) continue;
+      const p=proj3(lat,lon);if(!p) continue;
+      ctx3d.font='12px serif';ctx3d.fillText('🚀',p[0]-6,p[1]+6);
+    }
+  }
+
+  // Planètes (orbes autour du globe)
+  for(const pl of PLANETS){
+    const {lat,lon}=getPlanetPos(pl);
+    const p=proj3(lat,lon);
+    if(!p||!filters.planet) continue;
+    ctx3d.font='12px serif';ctx3d.fillText(pl.emoji,p[0]-6,p[1]+6);
+  }
+
+  // Label côté soleil
+  ctx3d.font='0.5rem Orbitron,monospace'; // reset
+  ctx3d.fillStyle='rgba(255,200,50,0.5)';ctx3d.font='10px Exo2,sans-serif';
+  ctx3d.textAlign='center';
+  const sunP=proj3(0,sunLon);
+  if(sunP) ctx3d.fillText('☀️',sunP[0],sunP[1]);
+  ctx3d.textAlign='left';
+}
+
+canvas3d.addEventListener('mousedown',e=>{drag3=true;lx3=e.clientX;ly3=e.clientY;});
+canvas3d.addEventListener('mousemove',e=>{if(!drag3)return;rotY3+=(e.clientX-lx3)*0.006;rotX3+=(e.clientY-ly3)*0.006;rotX3=Math.max(-Math.PI/2,Math.min(Math.PI/2,rotX3));lx3=e.clientX;ly3=e.clientY;});
+canvas3d.addEventListener('mouseup',()=>drag3=false);
+canvas3d.addEventListener('mouseleave',()=>drag3=false);
+canvas3d.addEventListener('wheel',e=>{e.preventDefault();zoom3=Math.max(0.5,Math.min(2.5,zoom3-e.deltaY*0.001));},{passive:false});
+
+// Touch
+canvas3d.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;drag3=true;lx3=e.touches[0].clientX;ly3=e.touches[0].clientY;},{passive:true});
+canvas3d.addEventListener('touchmove',e=>{if(!drag3||e.touches.length!==1)return;rotY3+=(e.touches[0].clientX-lx3)*0.006;rotX3+=(e.touches[0].clientY-ly3)*0.006;rotX3=Math.max(-Math.PI/2,Math.min(Math.PI/2,rotX3));lx3=e.touches[0].clientX;ly3=e.touches[0].clientY;},{passive:true});
+canvas3d.addEventListener('touchend',()=>drag3=false);
+
+document.getElementById('btn2d').addEventListener('click',()=>{
+  mode='2d';
+  document.getElementById('btn2d').classList.add('active');
+  document.getElementById('btn3d').classList.remove('active');
+  document.getElementById('map').style.display='block';
+  canvas3d.style.display='none';
+});
+document.getElementById('btn3d').addEventListener('click',()=>{
+  mode='3d';
+  document.getElementById('btn3d').classList.add('active');
+  document.getElementById('btn2d').classList.remove('active');
+  document.getElementById('map').style.display='none';
+  canvas3d.style.display='block';
+  canvas3d.width=window.innerWidth;
+  canvas3d.height=window.innerHeight-52;
+});
+
+// ═══════════════════════════════════════
+// RESIZE
+// ═══════════════════════════════════════
+window.addEventListener('resize',()=>{
+  if(mode==='3d'){canvas3d.width=window.innerWidth;canvas3d.height=window.innerHeight-52;}
+});
+
+// ═══════════════════════════════════════
+// ANIMATION 3D
+// ═══════════════════════════════════════
+let last3d=0;
+function animate3d(ts){
+  requestAnimationFrame(animate3d);
+  if(mode!=='3d') return;
+  if(ts-last3d>50){
+    for(const s of bgStars3){s.a+=(Math.random()-0.5)*0.03;s.a=Math.max(0.05,Math.min(0.6,s.a));}
+    draw3D();last3d=ts;
+  }
+}
+requestAnimationFrame(animate3d);
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function init(){
+  const loader=document.getElementById('loader');
+  loader.classList.remove('hidden');
+  addPlanets();
+  await Promise.allSettled([fetchISS(), fetchNEO(), fetchLaunches()]);
+  loader.classList.add('hidden');
+  renderISSPanel(issData||{latitude:0,longitude:0,altitude:408,velocity:27600,visibility:'daylight'});
+  // ISS toutes les 5s
+  issInterval=setInterval(fetchISS,5000);
+}
+
+init();
+</script>
+</body>
+</html>
