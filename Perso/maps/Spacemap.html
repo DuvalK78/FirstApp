@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOSMOS-7 // TERMINAL DE MISSION</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --p:      #33ff66;       /* phosphore principal */
+  --p2:     #22cc44;       /* phosphore dim */
+  --p3:     #11ff4488;     /* phosphore glow */
+  --pdim:   rgba(51,255,102,0.35);
+  --pfaint: rgba(51,255,102,0.12);
+  --bg:     #020a03;
+  --bg2:    #030d04;
+  --warn:   #ff9900;
+  --danger: #ff3300;
+  --blue:   #33aaff;
+  --scan:   rgba(0,0,0,0.06);
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes flicker {
+  0%,100%  { opacity: 1; }
+  92%      { opacity: 1; }
+  93%      { opacity: 0.85; }
+  94%      { opacity: 1; }
+  97%      { opacity: 0.9; }
+  98%      { opacity: 1; }
+}
+@keyframes blink {
+  0%,49%  { opacity: 1; }
+  50%,100%{ opacity: 0; }
+}
+@keyframes glow-pulse {
+  0%,100% { text-shadow: 0 0 8px var(--p), 0 0 20px var(--p3); }
+  50%     { text-shadow: 0 0 4px var(--p), 0 0 12px var(--p3); }
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes data-scroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+@keyframes fadeIn {
+  from { opacity:0; } to { opacity:1; }
+}
+@keyframes iss-orbit {
+  0%   { box-shadow: 0 0 6px var(--p), 0 0 14px var(--p); }
+  50%  { box-shadow: 0 0 14px var(--p), 0 0 30px var(--p3); }
+  100% { box-shadow: 0 0 6px var(--p), 0 0 14px var(--p); }
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%; overflow:hidden;
+  background: var(--bg);
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--p);
+  cursor: crosshair;
+}
+
+/* ── CRT OVERLAY ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:9999; pointer-events:none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  animation: flicker 8s infinite;
+}
+body::after {
+  content:'';
+  position:fixed; left:0; top:-100%; width:100%; height:60px;
+  background: linear-gradient(to bottom, transparent, rgba(51,255,102,0.03), transparent);
+  z-index:9998; pointer-events:none;
+  animation: scanline 6s linear infinite;
+}
+
+/* ── VIGNETTE ── */
+.vignette {
+  position:fixed; inset:0; z-index:9997; pointer-events:none;
+  background: radial-gradient(ellipse at center,
+    transparent 50%,
+    rgba(0,0,0,0.5) 100%
+  );
+}
+
+/* ── LAYOUT ── */
+.shell {
+  position:fixed; inset:0;
+  display:grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 320px;
+  gap:0;
+  border: 1px solid var(--pdim);
+  box-shadow: inset 0 0 60px rgba(51,255,102,0.04), 0 0 40px rgba(51,255,102,0.08);
+}
+
+/* ── HEADER ── */
+.header {
+  grid-column: 1 / -1;
+  border-bottom: 1px solid var(--pdim);
+  padding: 8px 16px;
+  display: flex; align-items: center; gap: 20px;
+  background: linear-gradient(to bottom, rgba(51,255,102,0.06), transparent);
+  position:relative; overflow:hidden;
+}
+
+.header::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:1px;
+  background: linear-gradient(to right, transparent, var(--p), transparent);
+  box-shadow: 0 0 8px var(--p);
+}
+
+.terminal-id {
+  font-family: 'VT323', monospace;
+  font-size: 1.6rem;
+  letter-spacing: 0.2em;
+  color: var(--p);
+  text-shadow: 0 0 10px var(--p), 0 0 30px var(--p3);
+  animation: glow-pulse 3s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+.header-status {
+  display:flex; gap:24px; align-items:center; flex:1;
+}
+
+.status-item {
+  font-size:0.62rem; letter-spacing:0.1em;
+  color: var(--pdim);
+  display:flex; gap:6px; align-items:center;
+}
+.status-item .val { color: var(--p); }
+.status-item .dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--p); box-shadow:0 0 6px var(--p);
+  animation: blink 1.2s step-end infinite;
+}
+.status-item .dot.warn { background:var(--warn); box-shadow:0 0 6px var(--warn); }
+
+.clock-main {
+  font-family:'VT323',monospace; font-size:1.4rem;
+  color:var(--p); letter-spacing:0.15em;
+  text-align:right; white-space:nowrap;
+  text-shadow:0 0 8px var(--p);
+}
+
+/* VIEW BTNS */
+.view-btns { display:flex; gap:0; }
+.vbtn {
+  font-family:'Share Tech Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.12em; padding:5px 12px;
+  border:1px solid var(--pdim); background:transparent;
+  color:var(--pdim); cursor:pointer; transition:all 0.15s;
+  text-transform:uppercase;
+}
+.vbtn:first-child { border-right:none; }
+.vbtn.active, .vbtn:hover {
+  background:var(--pfaint); color:var(--p);
+  text-shadow:0 0 8px var(--p);
+  border-color:var(--p);
+}
+
+/* FILTER BTNS */
+.filter-row { display:flex; gap:6px; }
+.fbtn {
+  font-family:'Share Tech Mono',monospace; font-size:0.55rem;
+  letter-spacing:0.1em; padding:3px 9px;
+  border:1px solid; background:transparent;
+  cursor:pointer; transition:all 0.2s; text-transform:uppercase;
+}
+.fbtn.iss     { border-color:var(--p);    color:var(--p); }
+.fbtn.neo     { border-color:var(--warn); color:var(--warn); }
+.fbtn.launch  { border-color:var(--blue); color:var(--blue); }
+.fbtn.planet  { border-color:#cc88ff;     color:#cc88ff; }
+.fbtn:not(.active) { opacity:0.3; }
+.fbtn.active.iss    { background:rgba(51,255,102,0.1); text-shadow:0 0 6px var(--p); }
+.fbtn.active.neo    { background:rgba(255,153,0,0.1);  text-shadow:0 0 6px var(--warn); }
+.fbtn.active.launch { background:rgba(51,170,255,0.1); text-shadow:0 0 6px var(--blue); }
+.fbtn.active.planet { background:rgba(204,136,255,0.1);}
+
+/* ── MAP AREA ── */
+.map-area {
+  position:relative; overflow:hidden;
+  border-right: 1px solid var(--pdim);
+}
+
+#map { position:absolute; inset:0; }
+#canvas3d { position:absolute; inset:0; display:none; cursor:grab; }
+#canvas3d:active { cursor:grabbing; }
+
+.leaflet-container { background:#000 !important; }
+
+/* Map scanline overlay */
+.map-overlay {
+  position:absolute; inset:0; z-index:400; pointer-events:none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+}
+
+/* Crosshair coords */
+.map-coords {
+  position:absolute; bottom:8px; left:8px; z-index:450;
+  font-size:0.58rem; letter-spacing:0.08em; color:var(--pdim);
+  background:rgba(2,10,3,0.7);
+  padding:4px 8px; border:1px solid var(--pfaint);
+  pointer-events:none;
+}
+
+/* ── RIGHT PANEL ── */
+.right-panel {
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  background: var(--bg2);
+}
+
+/* SECTION HEADER */
+.sec-hdr {
+  padding:6px 12px;
+  border-bottom:1px solid var(--pfaint);
+  font-size:0.55rem; letter-spacing:0.2em;
+  color:var(--pdim);
+  display:flex; align-items:center; gap:8px;
+  background:rgba(51,255,102,0.03);
+}
+.sec-hdr::before { content:'//'; color:var(--p2); }
+
+/* TABS */
+.tabs {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--pdim);
+}
+.tab {
+  font-family:'Share Tech Mono',monospace; font-size:0.5rem;
+  letter-spacing:0.1em; padding:7px 4px; text-align:center;
+  border:none; background:transparent; color:var(--pdim);
+  cursor:pointer; transition:all 0.15s; text-transform:uppercase;
+  border-right:1px solid var(--pfaint);
+}
+.tab:last-child { border-right:none; }
+.tab.active { color:var(--p); background:rgba(51,255,102,0.07); text-shadow:0 0 6px var(--p); border-bottom:2px solid var(--p); }
+.tab:hover:not(.active) { color:var(--p2); background:rgba(51,255,102,0.03); }
+
+/* FEED */
+.feed {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:8px 0;
+  scrollbar-width:thin; scrollbar-color:var(--pdim) transparent;
+}
+.feed::-webkit-scrollbar { width:3px; }
+.feed::-webkit-scrollbar-thumb { background:var(--pdim); }
+
+/* FEED ITEMS */
+.feed-item {
+  padding:8px 12px;
+  border-bottom:1px solid rgba(51,255,102,0.06);
+  cursor:pointer; transition:background 0.15s;
+  animation: fadeIn 0.3s ease;
+}
+.feed-item:hover { background:rgba(51,255,102,0.05); }
+
+.fi-tag {
+  font-size:0.48rem; letter-spacing:0.2em;
+  margin-bottom:3px; display:flex; align-items:center; gap:6px;
+}
+.fi-tag .tag-line { flex:1; height:1px; background:currentColor; opacity:0.3; }
+
+.fi-title {
+  font-family:'VT323',monospace; font-size:1.05rem;
+  line-height:1.1; margin-bottom:4px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.fi-data { font-size:0.6rem; color:var(--pdim); line-height:1.7; }
+.fi-data .hi { color:var(--p); }
+.fi-data .warn { color:var(--warn); }
+.fi-data .danger { color:var(--danger); }
+.fi-data .blue { color:var(--blue); }
+
+/* ISS BIG */
+.iss-display {
+  padding:10px 12px;
+  border-bottom:1px solid var(--pdim);
+}
+.iss-radar {
+  width:100%; aspect-ratio:1;
+  max-width:160px; margin:8px auto;
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.radar-ring {
+  position:absolute; border-radius:50%;
+  border:1px solid var(--pfaint);
+}
+.radar-ring:nth-child(1) { width:100%;height:100%;border-color:rgba(51,255,102,0.15); }
+.radar-ring:nth-child(2) { width:66%;height:66%; }
+.radar-ring:nth-child(3) { width:33%;height:33%; }
+.radar-sweep {
+  position:absolute; width:50%; height:1px;
+  background:linear-gradient(to right,transparent,var(--p));
+  transform-origin:left center;
+  left:50%; top:50%;
+  animation:spin-slow 3s linear infinite;
+  box-shadow:0 0 4px var(--p);
+}
+.radar-crosshair-h,.radar-crosshair-v {
+  position:absolute; background:var(--pdim);
+}
+.radar-crosshair-h { width:100%; height:1px; }
+.radar-crosshair-v { width:1px; height:100%; }
+.iss-dot {
+  width:10px;height:10px;border-radius:50%;
+  background:var(--p);
+  box-shadow:0 0 10px var(--p),0 0 24px var(--p3);
+  animation:iss-orbit 2s ease-in-out infinite;
+  position:relative; z-index:2;
+}
+.iss-ring {
+  position:absolute; border-radius:50%; border:1px solid var(--p);
+  animation:spin-slow 4s linear infinite;
+  width:30px;height:30px; opacity:0.4;
+}
+
+/* TICKER */
+.ticker-wrap {
+  border-top:1px solid var(--pdim);
+  padding:5px 12px;
+  background:rgba(51,255,102,0.03);
+  overflow:hidden; height:26px;
+  position:relative;
+}
+.ticker-label {
+  font-size:0.5rem;letter-spacing:0.15em;color:var(--pdim);
+  position:absolute;left:12px;top:7px;z-index:2;
+}
+.ticker-content {
+  font-size:0.58rem; letter-spacing:0.06em;
+  white-space:nowrap;
+  animation:data-scroll 30s linear infinite;
+  padding-left:60px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  grid-column:1/-1;
+  border-top:1px solid var(--pdim);
+  padding:5px 16px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:0.52rem; letter-spacing:0.1em; color:var(--pdim);
+  background:rgba(51,255,102,0.03);
+}
+.footer-cursor::after { content:'█'; animation:blink 1s step-end infinite; color:var(--p); }
+
+/* ── POPUPS ── */
+.leaflet-popup-content-wrapper {
+  background:rgba(2,10,3,0.97)!important;
+  border:1px solid var(--p)!important;
+  border-radius:0!important;
+  box-shadow:0 0 20px rgba(51,255,102,0.3)!important;
+  font-family:'Share Tech Mono',monospace!important;
+}
+.leaflet-popup-tip { background:var(--p)!important; }
+.leaflet-popup-content { color:var(--p)!important; margin:10px 14px!important; }
+.popup-hdr {
+  font-family:'VT323',monospace; font-size:1.1rem;
+  color:var(--p); letter-spacing:0.1em; margin-bottom:6px;
+  text-shadow:0 0 8px var(--p);
+  border-bottom:1px solid var(--pdim); padding-bottom:4px;
+}
+.popup-row { font-size:0.65rem; color:var(--pdim); margin-bottom:3px; }
+.popup-row span { color:var(--p); }
+.popup-row.w { color:var(--warn); }
+.popup-row.d { color:var(--danger); }
+
+/* LOADER */
+.loader {
+  position:fixed; inset:0; z-index:8000;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+  background:var(--bg);
+}
+.loader.hidden { display:none; }
+.loader-text {
+  font-family:'VT323',monospace; font-size:1.4rem;
+  color:var(--p); letter-spacing:0.2em;
+  text-shadow:0 0 12px var(--p);
+  animation:glow-pulse 1.5s ease-in-out infinite;
+}
+.loader-bar {
+  width:280px; height:2px;
+  background:var(--pfaint); border:1px solid var(--pdim);
+  position:relative; overflow:hidden;
+}
+.loader-fill {
+  height:100%; background:var(--p);
+  box-shadow:0 0 8px var(--p);
+  width:0%; transition:width 0.4s;
+}
+.loader-sub { font-size:0.58rem; color:var(--pdim); letter-spacing:0.15em; }
+
+/* MOBILE */
+@media(max-width:700px){
+  .shell { grid-template-columns:1fr; grid-template-rows:auto 1fr 260px auto; }
+  .map-area { border-right:none; border-bottom:1px solid var(--pdim); }
+  .right-panel { grid-row:3; }
+  .header-status { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="vignette"></div>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-text">KOSMOS-7 // INITIALISATION</div>
+  <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+  <div class="loader-sub" id="loaderSub">CONNEXION AUX CAPTEURS ORBITAUX...</div>
+</div>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="terminal-id">KOSMOS-7</div>
+    <div class="header-status">
+      <div class="view-btns">
+        <button class="vbtn active" id="btn2d">2D</button>
+        <button class="vbtn" id="btn3d">3D</button>
+      </div>
+      <div class="filter-row">
+        <button class="fbtn iss active"    id="f-iss">◈ ISS</button>
+        <button class="fbtn neo active"    id="f-neo">⬡ NEO</button>
+        <button class="fbtn launch active" id="f-launch">↑ FUSÉES</button>
+        <button class="fbtn planet active" id="f-planet">◉ PLANÈTES</button>
+      </div>
+      <div class="status-item"><div class="dot"></div> SYS <span class="val">EN LIGNE</span></div>
+      <div class="status-item">ISS <span class="val" id="hIssSpeed">—</span> KM/H</div>
+      <div class="status-item">ALT <span class="val" id="hIssAlt">—</span> KM</div>
+    </div>
+    <div class="clock-main" id="clockMain">00:00:00 UTC</div>
+  </header>
+
+  <!-- MAP -->
+  <div class="map-area">
+    <div id="map"></div>
+    <canvas id="canvas3d"></canvas>
+    <div class="map-overlay"></div>
+    <div class="map-coords" id="mapCoords">LAT — / LON —</div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="sec-hdr">DONNÉES MISSION EN TEMPS RÉEL</div>
+    <div class="tabs">
+      <button class="tab active" data-tab="iss">ISS</button>
+      <button class="tab" data-tab="neo">NEO</button>
+      <button class="tab" data-tab="launches">FUSÉES</button>
+      <button class="tab" data-tab="planets">PLANÈTES</button>
+    </div>
+    <div class="feed" id="feed">
+      <div class="feed-item"><div class="fi-data">Chargement des données…</div></div>
+    </div>
+    <div class="ticker-wrap">
+      <span class="ticker-label">FLUX ›</span>
+      <div class="ticker-content" id="ticker">
+        KOSMOS-7 // TERMINAL DE MISSION SPATIALE &nbsp;&nbsp;░░&nbsp;&nbsp;
+        ISS EN ORBITE À ~408 KM &nbsp;&nbsp;░░&nbsp;&nbsp;
+        NEO SURVEILLANCE ACTIVE &nbsp;&nbsp;░░&nbsp;&nbsp;
+        DONNÉES NASA/JPL EN COURS DE RÉCEPTION &nbsp;&nbsp;░░&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>TERMINAL KOSMOS-7 // v2.4.1 // DONNÉES TEMPS RÉEL</span>
+    <span class="footer-cursor">PRÊT</span>
+    <span id="footerNeo">NEO: — OBJETS DÉTECTÉS</span>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ═══════════════════════════════════
+// MAP
+// ═══════════════════════════════════
+const map = L.map('map',{center:[20,0],zoom:2,zoomControl:false,attributionControl:false});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  subdomains:'abcd',maxZoom:19
+}).addTo(map);
+// Teinte verte sur la carte
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  subdomains:'abcd',maxZoom:19,opacity:0
+}).addTo(map);
+
+// Coords hover
+map.on('mousemove',e=>{
+  document.getElementById('mapCoords').textContent=
+    `LAT ${e.latlng.lat.toFixed(4)}° / LON ${e.latlng.lng.toFixed(4)}°`;
+});
+
+// ═══════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════
+function tick(){
+  const n=new Date();
+  const h=String(n.getUTCHours()).padStart(2,'0');
+  const m=String(n.getUTCMinutes()).padStart(2,'0');
+  const s=String(n.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('clockMain').textContent=`${h}:${m}:${s} UTC`;
+}
+setInterval(tick,1000); tick();
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let mode='2d', activeTab='iss';
+let filters={iss:true,neo:true,launch:true,planet:true};
+const layers={iss:null,trail:null,neo:[],launches:[],planets:[]};
+let issData=null, neoData=[], launchData=[];
+
+// ═══════════════════════════════════
+// ISS
+// ═══════════════════════════════════
+function makeISSIcon(){
+  return L.divIcon({className:'',
+    html:`<div style="position:relative;width:20px;height:20px;">
+      <div style="position:absolute;inset:0;border-radius:50%;border:1px solid #33ff66;opacity:0.4;animation:spin-slow 4s linear infinite;"></div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#33ff66;box-shadow:0 0 10px #33ff66,0 0 24px #11ff44;"></div>
+      <style>@keyframes spin-slow{to{transform:rotate(360deg);}}</style>
+    </div>`,
+    iconSize:[20,20],iconAnchor:[10,10]});
+}
+
+let issTrail=[], issPolyline=null, issMarker=null;
+
+async function fetchISS(){
+  try{
+    const r=await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+    const d=await r.json(); if(!d.latitude) return;
+    issData=d;
+    const lat=parseFloat(d.latitude), lon=parseFloat(d.longitude);
+    document.getElementById('hIssSpeed').textContent=parseFloat(d.velocity).toFixed(0);
+    document.getElementById('hIssAlt').textContent=parseFloat(d.altitude).toFixed(1);
+    if(!issMarker){
+      issMarker=L.marker([lat,lon],{icon:makeISSIcon(),zIndexOffset:1000}).addTo(map);
+      issMarker.bindPopup(issPopup(d));
+    } else { issMarker.setLatLng([lat,lon]); issMarker.setPopupContent(issPopup(d)); }
+    issTrail.push([lat,lon]); if(issTrail.length>100) issTrail.shift();
+    if(issPolyline) map.removeLayer(issPolyline);
+    issPolyline=L.polyline(issTrail,{color:'rgba(51,255,102,0.4)',weight:1.2,dashArray:'3,7'}).addTo(map);
+    if(!filters.iss){ if(issMarker)map.removeLayer(issMarker); if(issPolyline)map.removeLayer(issPolyline); }
+    if(activeTab==='iss') renderISS();
+  }catch(e){}
+}
+
+function issPopup(d){
+  return `<div class="popup-hdr">◈ STATION ISS</div>
+    <div class="popup-row">LAT <span>${parseFloat(d.latitude).toFixed(4)}°</span></div>
+    <div class="popup-row">LON <span>${parseFloat(d.longitude).toFixed(4)}°</span></div>
+    <div class="popup-row">ALT <span>${parseFloat(d.altitude).toFixed(1)} KM</span></div>
+    <div class="popup-row">VITESSE <span>${parseFloat(d.velocity).toFixed(0)} KM/H</span></div>
+    <div class="popup-row">VISIBILITÉ <span>${d.visibility==='daylight'?'CÔTÉ JOUR ☀':'CÔTÉ NUIT ●'}</span></div>`;
+}
+
+async function renderISS(){
+  let crew=[];
+  try{
+    const r=await fetch('https://corsproxy.io/?url=http://api.open-notify.org/astros.json');
+    const d=await r.json(); crew=(d.people||[]).filter(p=>p.craft==='ISS');
+  }catch(e){}
+  const d=issData||{latitude:0,longitude:0,altitude:408,velocity:27600,visibility:'daylight'};
+  document.getElementById('feed').innerHTML=`
+    <div class="iss-display">
+      <div class="fi-tag" style="color:var(--p)">◈ ISS TRACKER <div class="tag-line"></div> TEMPS RÉEL</div>
+      <div class="iss-radar">
+        <div class="radar-ring"></div><div class="radar-ring"></div><div class="radar-ring"></div>
+        <div class="radar-crosshair-h"></div><div class="radar-crosshair-v"></div>
+        <div class="radar-sweep"></div>
+        <div class="iss-dot"><div class="iss-ring"></div></div>
+      </div>
+      <div class="fi-data">
+        LAT <span class="hi">${parseFloat(d.latitude).toFixed(4)}°</span><br>
+        LON <span class="hi">${parseFloat(d.longitude).toFixed(4)}°</span><br>
+        ALT <span class="hi">${parseFloat(d.altitude).toFixed(1)} KM</span><br>
+        VIT <span class="hi">${parseFloat(d.velocity).toFixed(0)} KM/H</span><br>
+        VIS <span class="hi">${d.visibility==='daylight'?'☀ JOUR':'● NUIT'}</span>
+      </div>
+    </div>
+    <div class="feed-item">
+      <div class="fi-tag" style="color:var(--p)">ÉQUIPAGE À BORD <div class="tag-line"></div> ${crew.length} PERS.</div>
+      ${crew.length?crew.map(p=>`<div class="fi-data">▸ <span class="hi">${p.name}</span></div>`).join('')
+        :'<div class="fi-data">Données équipage temporairement indisponibles</div>'}
+    </div>
+    <div class="feed-item">
+      <div class="fi-tag" style="color:var(--p)">PARAMÈTRES ORBITAUX <div class="tag-line"></div></div>
+      <div class="fi-data">
+        PÉRIODE <span class="hi">~92 MIN</span><br>
+        INCLINAISON <span class="hi">51.6°</span><br>
+        NORAD <span class="hi">#25544</span><br>
+        ORBITES/JOUR <span class="hi">~15.5</span>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════
+// NEO
+// ═══════════════════════════════════
+function neoIcon(hazard){
+  const c=hazard?'#ff3300':'#ff9900';
+  return L.divIcon({className:'',
+    html:`<div style="width:${hazard?14:10}px;height:${hazard?14:10}px;
+      background:${c};border-radius:50%;
+      box-shadow:0 0 ${hazard?12:7}px ${c};opacity:0.9;
+      ${hazard?'animation:blink 0.8s step-end infinite;':''}">
+      <style>@keyframes blink{0%,49%{opacity:0.9}50%,100%{opacity:0.4}}</style>
+    </div>`,
+    iconSize:[14,14],iconAnchor:[7,7]});
+}
+
+async function fetchNEO(){
+  try{
+    const today=new Date().toISOString().split('T')[0];
+    const end=new Date(Date.now()+7*864e5).toISOString().split('T')[0];
+    const r=await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${end}&api_key=DEMO_KEY`);
+    const d=await r.json();
+    const all=[];
+    for(const day of Object.values(d.near_earth_objects||{})) for(const n of day) all.push(n);
+    neoData=all.sort((a,b)=>
+      parseFloat(a.close_approach_data[0]?.miss_distance?.kilometers||9e9)-
+      parseFloat(b.close_approach_data[0]?.miss_distance?.kilometers||9e9)
+    ).slice(0,40);
+    document.getElementById('footerNeo').textContent=`NEO: ${neoData.length} OBJETS DÉTECTÉS // ${neoData.filter(n=>n.is_potentially_hazardous_asteroid).length} DANGEREUX`;
+
+    layers.neo.forEach(m=>map.removeLayer(m)); layers.neo=[];
+    for(const n of neoData){
+      const ca=n.close_approach_data[0]; if(!ca) continue;
+      const t=new Date(ca.epoch_date_close_approach||Date.now());
+      const lon=((t.getUTCHours()/24)*360-180);
+      const lat=(Math.sin(neoData.indexOf(n)*1.7)*55);
+      const hazard=n.is_potentially_hazardous_asteroid;
+      const diam=n.estimated_diameter?.kilometers;
+      const m2=L.marker([lat,lon],{icon:neoIcon(hazard)}).addTo(map);
+      m2.bindPopup(`<div class="popup-hdr">${hazard?'⚠ ':''}${n.name}</div>
+        ${hazard?'<div class="popup-row d">⚠ OBJET POTENTIELLEMENT DANGEREUX</div>':''}
+        <div class="popup-row">APPROCHE <span>${new Date(ca.epoch_date_close_approach).toLocaleDateString('fr-FR')}</span></div>
+        <div class="popup-row">DISTANCE <span>${parseFloat(ca.miss_distance.kilometers).toLocaleString()} KM</span></div>
+        <div class="popup-row">VITESSE <span>${parseFloat(ca.relative_velocity.kilometers_per_hour).toFixed(0)} KM/H</span></div>
+        <div class="popup-row">DIAMÈTRE <span>${diam?diam.estimated_diameter_min.toFixed(3)+'-'+diam.estimated_diameter_max.toFixed(3)+' KM':'—'}</span></div>
+        <div class="popup-row">MAGNITUDE <span>${n.absolute_magnitude_h}</span></div>`);
+      layers.neo.push(m2);
+      if(!filters.neo) map.removeLayer(m2);
+    }
+    if(activeTab==='neo') renderNEO();
+    updateTicker();
+  }catch(e){}
+}
+
+function renderNEO(){
+  const hz=neoData.filter(n=>n.is_potentially_hazardous_asteroid);
+  document.getElementById('feed').innerHTML=`
+    <div class="feed-item">
+      <div class="fi-tag" style="color:var(--warn)">⬡ SURVEILLANCE NEO <div class="tag-line"></div> J+7</div>
+      <div class="fi-data">
+        OBJETS DÉTECTÉS <span class="hi">${neoData.length}</span><br>
+        <span class="danger">POTENTIELLEMENT DANGEREUX <span style="color:#ff3300">${hz.length}</span></span>
+      </div>
+    </div>
+    ${neoData.slice(0,25).map(n=>{
+      const ca=n.close_approach_data[0];
+      const dist=ca?parseFloat(ca.miss_distance.kilometers).toLocaleString('fr-FR',{maximumFractionDigits:0}):'—';
+      const spd=ca?parseFloat(ca.relative_velocity.kilometers_per_hour).toFixed(0):'—';
+      const hazard=n.is_potentially_hazardous_asteroid;
+      return `<div class="feed-item">
+        <div class="fi-tag" style="color:${hazard?'var(--danger)':'var(--warn)'}">
+          ${hazard?'⚠ DANGEREUX':'◆ NEO'} <div class="tag-line"></div>
+        </div>
+        <div class="fi-title" style="color:${hazard?'var(--danger)':'var(--warn)'}">${n.name.replace('(','').replace(')','')}</div>
+        <div class="fi-data">
+          DIST <span class="hi">${dist} KM</span><br>
+          VIT <span class="hi">${spd} KM/H</span>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══════════════════════════════════
+// LANCEMENTS
+// ═══════════════════════════════════
+function launchIcon(){
+  return L.divIcon({className:'',
+    html:`<div style="font-size:1rem;filter:drop-shadow(0 0 6px #33aaff);line-height:1;">↑</div>
+      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:1px;height:8px;background:#33aaff;opacity:0.6;"></div>`,
+    iconSize:[16,24],iconAnchor:[8,24]});
+}
+
+async function fetchLaunches(){
+  try{
+    const r=await fetch('https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=20&format=json');
+    const d=await r.json(); launchData=d.results||[];
+    layers.launches.forEach(m=>map.removeLayer(m)); layers.launches=[];
+    for(const l of launchData){
+      const lat=parseFloat(l.pad?.latitude), lon=parseFloat(l.pad?.longitude);
+      if(isNaN(lat)||isNaN(lon)) continue;
+      const net=new Date(l.net);
+      const diff=Math.max(0,net-Date.now());
+      const days=Math.floor(diff/864e5), hrs=Math.floor((diff%864e5)/36e5);
+      const m2=L.marker([lat,lon],{icon:launchIcon()}).addTo(map);
+      m2.bindPopup(`<div class="popup-hdr">↑ ${l.name}</div>
+        <div class="popup-row">T-MOINS <span>${diff>0?days+'J '+hrs+'H':'EN COURS'}</span></div>
+        <div class="popup-row">DATE <span>${net.toLocaleDateString('fr-FR')}</span></div>
+        <div class="popup-row">SITE <span>${l.pad?.name||'—'}</span></div>
+        <div class="popup-row">AGENCE <span>${l.launch_service_provider?.name||'—'}</span></div>
+        <div class="popup-row">STATUT <span>${l.status?.name||'—'}</span></div>`);
+      layers.launches.push(m2);
+      if(!filters.launch) map.removeLayer(m2);
+    }
+    if(activeTab==='launches') renderLaunches();
+    updateTicker();
+  }catch(e){}
+}
+
+function renderLaunches(){
+  document.getElementById('feed').innerHTML=`
+    <div class="feed-item">
+      <div class="fi-tag" style="color:var(--blue)">↑ PROCHAINS LANCEMENTS <div class="tag-line"></div> ${launchData.length}</div>
+    </div>
+    ${launchData.map(l=>{
+      const net=new Date(l.net);
+      const diff=Math.max(0,net-Date.now());
+      const days=Math.floor(diff/864e5), hrs=Math.floor((diff%864e5)/36e5);
+      const cd=diff>0?`T-${days}J ${hrs}H`:'EN COURS';
+      return `<div class="feed-item" onclick="">
+        <div class="fi-tag" style="color:var(--blue)">↑ ${l.status?.abbrev||'GO'} <div class="tag-line"></div> ${cd}</div>
+        <div class="fi-title" style="color:var(--blue);font-size:0.9rem">${l.name}</div>
+        <div class="fi-data">
+          DATE <span class="blue">${net.toLocaleDateString('fr-FR')} ${net.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span><br>
+          SITE <span class="blue">${l.pad?.location?.name||l.pad?.name||'—'}</span><br>
+          AGENCE <span class="blue">${l.launch_service_provider?.name||'—'}</span>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══════════════════════════════════
+// PLANÈTES
+// ═══════════════════════════════════
+const PLANETS=[
+  {name:'MERCURE',sym:'☿',color:'#aaaaaa',period:87.97,a:0.387},
+  {name:'VÉNUS',sym:'♀',color:'#f0c060',period:224.70,a:0.723},
+  {name:'MARS',sym:'♂',color:'#cc4422',period:686.97,a:1.524},
+  {name:'JUPITER',sym:'♃',color:'#e0a060',period:4332.6,a:5.203},
+  {name:'SATURNE',sym:'♄',color:'#d4b060',period:10759,a:9.537},
+  {name:'URANUS',sym:'♅',color:'#60c0d0',period:30685,a:19.19},
+  {name:'NEPTUNE',sym:'♆',color:'#4060d0',period:60190,a:30.07},
+];
+
+function getPPos(p){
+  const j2000=new Date('2000-01-01T12:00:00Z');
+  const days=(Date.now()-j2000)/864e5;
+  const angle=(days/p.period*360)%360;
+  const lon=(angle+180)%360-180;
+  const lat=Math.sin(angle*Math.PI/180)*23.5*(p.a/30);
+  return {lat:Math.max(-80,Math.min(80,lat)),lon};
+}
+
+function addPlanets(){
+  layers.planets.forEach(m=>map.removeLayer(m)); layers.planets=[];
+  for(const p of PLANETS){
+    const {lat,lon}=getPPos(p);
+    const icon=L.divIcon({className:'',
+      html:`<div style="font-family:Share Tech Mono,monospace;font-size:0.9rem;color:${p.color};text-shadow:0 0 8px ${p.color};line-height:1;cursor:pointer;">${p.sym}</div>`,
+      iconSize:[16,16],iconAnchor:[8,8]});
+    const m=L.marker([lat,lon],{icon}).addTo(map);
+    m.bindPopup(`<div class="popup-hdr">◉ ${p.name}</div>
+      <div class="popup-row">SYMBOLE <span>${p.sym}</span></div>
+      <div class="popup-row">PÉRIODE <span>${p.period<400?p.period.toFixed(1)+' JOURS':(p.period/365.25).toFixed(2)+' ANS'}</span></div>
+      <div class="popup-row">AXE SEMI-MAJEUR <span>${p.a} UA</span></div>
+      <div class="popup-row" style="font-size:0.55rem;margin-top:4px;color:rgba(51,255,102,0.4)">POSITION CALCULÉE SUR ÉCLIPTIQUE</div>`);
+    layers.planets.push(m);
+    if(!filters.planet) map.removeLayer(m);
+  }
+}
+
+function renderPlanets(){
+  document.getElementById('feed').innerHTML=`
+    <div class="feed-item">
+      <div class="fi-tag" style="color:#cc88ff">◉ SYSTÈME SOLAIRE <div class="tag-line"></div> ÉPHÉMÉRIDES</div>
+      <div class="fi-data">Positions calculées depuis J2000<br>Projection sur plan écliptique</div>
+    </div>
+    ${PLANETS.map(p=>{
+      const pos=getPPos(p);
+      const angle=((pos.lon+180+360)%360).toFixed(1);
+      return `<div class="feed-item">
+        <div class="fi-tag" style="color:${p.color}">${p.sym} ${p.name} <div class="tag-line"></div></div>
+        <div class="fi-data">
+          PÉRIODE <span class="hi">${p.period<400?p.period.toFixed(1)+' J':(p.period/365.25).toFixed(2)+' ANS'}</span><br>
+          DIST SOLEIL <span class="hi">${p.a} UA</span><br>
+          LON ÉCLIPT <span class="hi">${angle}°</span>
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══════════════════════════════════
+// TICKER
+// ═══════════════════════════════════
+function updateTicker(){
+  const launches=launchData.slice(0,5).map(l=>`↑ ${l.name.toUpperCase()} // T-${Math.max(0,Math.floor((new Date(l.net)-Date.now())/864e5))}J`).join(' &nbsp;░░&nbsp; ');
+  const neos=neoData.slice(0,5).map(n=>`⬡ ${n.name.replace('(','').replace(')','').toUpperCase()}`).join(' &nbsp;░░&nbsp; ');
+  const base=`KOSMOS-7 ACTIF &nbsp;░░&nbsp; ISS À ${issData?parseFloat(issData.altitude).toFixed(0):'408'} KM &nbsp;░░&nbsp; ${neos} &nbsp;░░&nbsp; ${launches} &nbsp;░░&nbsp; `;
+  document.getElementById('ticker').innerHTML=base+base;
+}
+
+// ═══════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════
+function toggleFilter(name,btn){
+  filters[name]=!filters[name];
+  btn.classList.toggle('active',filters[name]);
+  const show=filters[name];
+  if(name==='iss'){ if(issMarker){show?map.addLayer(issMarker):map.removeLayer(issMarker);} if(layers.trail){show?map.addLayer(layers.trail):map.removeLayer(layers.trail);} }
+  if(name==='neo') layers.neo.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+  if(name==='launch') layers.launches.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+  if(name==='planet') layers.planets.forEach(m=>show?map.addLayer(m):map.removeLayer(m));
+}
+['iss','neo','launch','planet'].forEach(n=>{
+  document.getElementById(`f-${n}`).addEventListener('click',e=>toggleFilter(n,e.currentTarget));
+});
+
+// ═══════════════════════════════════
+// TABS
+// ═══════════════════════════════════
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); activeTab=btn.dataset.tab;
+    if(activeTab==='iss') renderISS();
+    else if(activeTab==='neo') renderNEO();
+    else if(activeTab==='launches') renderLaunches();
+    else if(activeTab==='planets') renderPlanets();
+  });
+});
+
+// ═══════════════════════════════════
+// 3D GLOBE
+// ═══════════════════════════════════
+const canvas3d=document.getElementById('canvas3d');
+const ctx3=canvas3d.getContext('2d');
+let rx=0.25,ry=0,zoom3=1,drag3=false,lx3=0,ly3=0;
+
+function draw3(){
+  const W=canvas3d.width,H=canvas3d.height,cx=W/2,cy=H/2;
+  const R=Math.min(W,H)*0.36*zoom3;
+  ctx3.fillStyle='#000';ctx3.fillRect(0,0,W,H);
+  // Étoiles bg
+  if(!draw3.stars){draw3.stars=[];for(let i=0;i<500;i++)draw3.stars.push([Math.random()*W,Math.random()*H,Math.random()*0.8+0.2]);}
+  for(const[x,y,r] of draw3.stars){ctx3.beginPath();ctx3.arc(x,y,r,0,Math.PI*2);ctx3.fillStyle='rgba(100,200,80,0.4)';ctx3.fill();}
+  // Globe
+  const g=ctx3.createRadialGradient(cx-R*.2,cy-R*.2,R*.1,cx,cy,R);
+  g.addColorStop(0,'#0a1f0c');g.addColorStop(0.6,'#051008');g.addColorStop(1,'#010501');
+  ctx3.beginPath();ctx3.arc(cx,cy,R,0,Math.PI*2);ctx3.fillStyle=g;ctx3.fill();
+  ctx3.strokeStyle='rgba(51,255,102,0.5)';ctx3.lineWidth=1.5;ctx3.stroke();
+
+  function proj(la,lo){
+    const lat=la*Math.PI/180,lon=(lo+ry*180/Math.PI)*Math.PI/180;
+    const x=Math.cos(lat)*Math.cos(lon),y=Math.sin(lat),z=Math.cos(lat)*Math.sin(lon);
+    const cosR=Math.cos(rx),sinR=Math.sin(rx);
+    const y2=y*cosR-z*sinR,z2=y*sinR+z*cosR;
+    if(z2<-0.05) return null;
+    const sc=R/(z2+1.6);
+    return [cx+x*sc,cy-y2*sc];
+  }
+
+  // Grid
+  ctx3.strokeStyle='rgba(51,255,102,0.08)';ctx3.lineWidth=0.6;
+  for(let lo=-180;lo<180;lo+=30){ctx3.beginPath();let f=true;for(let la=-80;la<=80;la+=4){const p=proj(la,lo);if(!p){f=true;continue;}f?ctx3.moveTo(p[0],p[1]):ctx3.lineTo(p[0],p[1]);f=false;}ctx3.stroke();}
+  for(let la=-60;la<=60;la+=30){ctx3.beginPath();let f=true;for(let lo=-180;lo<=180;lo+=4){const p=proj(la,lo);if(!p){f=true;continue;}f?ctx3.moveTo(p[0],p[1]):ctx3.lineTo(p[0],p[1]);f=false;}ctx3.stroke();}
+  // Équateur
+  ctx3.strokeStyle='rgba(51,255,102,0.25)';ctx3.lineWidth=1;
+  ctx3.beginPath();let fe=true;
+  for(let lo=-180;lo<=180;lo+=3){const p=proj(0,lo);if(!p){fe=true;continue;}fe?ctx3.moveTo(p[0],p[1]):ctx3.lineTo(p[0],p[1]);fe=false;}ctx3.stroke();
+
+  // Terminateur
+  const now=new Date();
+  const slon=-((now.getUTCHours()*60+now.getUTCMinutes())/1440*360);
+  ctx3.strokeStyle='rgba(255,200,50,0.35)';ctx3.lineWidth=1.5;ctx3.setLineDash([3,6]);
+  ctx3.beginPath();fe=true;
+  for(let la=-90;la<=90;la+=4){const p=proj(la,slon+90);if(!p){fe=true;continue;}fe?ctx3.moveTo(p[0],p[1]):ctx3.lineTo(p[0],p[1]);fe=false;}
+  ctx3.stroke();ctx3.setLineDash([]);
+
+  // ISS
+  if(issData&&filters.iss){
+    const p=proj(parseFloat(issData.latitude),parseFloat(issData.longitude));
+    if(p){
+      const gg=ctx3.createRadialGradient(p[0],p[1],0,p[0],p[1],16);
+      gg.addColorStop(0,'rgba(51,255,102,0.5)');gg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx3.beginPath();ctx3.arc(p[0],p[1],16,0,Math.PI*2);ctx3.fillStyle=gg;ctx3.fill();
+      ctx3.beginPath();ctx3.arc(p[0],p[1],5,0,Math.PI*2);ctx3.fillStyle='#33ff66';ctx3.shadowBlur=14;ctx3.shadowColor='#33ff66';ctx3.fill();ctx3.shadowBlur=0;
+      ctx3.font='9px Share Tech Mono';ctx3.fillStyle='rgba(51,255,102,0.7)';ctx3.fillText('ISS',p[0]+8,p[1]+4);
+    }
+  }
+  // NEO
+  if(filters.neo){
+    neoData.forEach((n,i)=>{
+      const ca=n.close_approach_data[0];if(!ca)return;
+      const t=new Date(ca.epoch_date_close_approach||Date.now());
+      const lo=((t.getUTCHours()/24)*360-180);
+      const la=Math.sin(i*1.7)*50;
+      const p=proj(la,lo);if(!p)return;
+      const hz=n.is_potentially_hazardous_asteroid;
+      ctx3.beginPath();ctx3.arc(p[0],p[1],hz?5:3,0,Math.PI*2);
+      ctx3.fillStyle=hz?'#ff3300':'#ff9900';ctx3.shadowBlur=hz?10:5;ctx3.shadowColor=ctx3.fillStyle;
+      ctx3.fill();ctx3.shadowBlur=0;
+    });
+  }
+  // Lancements
+  if(filters.launch){
+    launchData.forEach(l=>{
+      const la=parseFloat(l.pad?.latitude),lo=parseFloat(l.pad?.longitude);
+      if(isNaN(la)||isNaN(lo))return;
+      const p=proj(la,lo);if(!p)return;
+      ctx3.font='10px serif';ctx3.fillText('↑',p[0]-4,p[1]+5);
+    });
+  }
+  // Planètes
+  if(filters.planet){
+    PLANETS.forEach(pl=>{
+      const {lat,lon}=getPPos(pl);
+      const p=proj(lat,lon);if(!p)return;
+      ctx3.font='11px serif';ctx3.fillStyle=pl.color;
+      ctx3.shadowBlur=8;ctx3.shadowColor=pl.color;
+      ctx3.fillText(pl.sym,p[0]-5,p[1]+5);ctx3.shadowBlur=0;
+    });
+  }
+  // Halo globe
+  const halo=ctx3.createRadialGradient(cx,cy,R,cx,cy,R*1.15);
+  halo.addColorStop(0,'rgba(51,255,102,0.12)');halo.addColorStop(1,'rgba(0,0,0,0)');
+  ctx3.beginPath();ctx3.arc(cx,cy,R*1.15,0,Math.PI*2);ctx3.fillStyle=halo;ctx3.fill();
+}
+
+canvas3d.addEventListener('mousedown',e=>{drag3=true;lx3=e.clientX;ly3=e.clientY;});
+canvas3d.addEventListener('mousemove',e=>{if(!drag3)return;ry+=(e.clientX-lx3)*0.006;rx+=(e.clientY-ly3)*0.006;rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));lx3=e.clientX;ly3=e.clientY;});
+canvas3d.addEventListener('mouseup',()=>drag3=false);
+canvas3d.addEventListener('mouseleave',()=>drag3=false);
+canvas3d.addEventListener('wheel',e=>{e.preventDefault();zoom3=Math.max(0.4,Math.min(2.5,zoom3-e.deltaY*.001));},{passive:false});
+canvas3d.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;drag3=true;lx3=e.touches[0].clientX;ly3=e.touches[0].clientY;},{passive:true});
+canvas3d.addEventListener('touchmove',e=>{if(!drag3||e.touches.length!==1)return;ry+=(e.touches[0].clientX-lx3)*0.006;rx+=(e.touches[0].clientY-ly3)*0.006;rx=Math.max(-Math.PI/2,Math.min(Math.PI/2,rx));lx3=e.touches[0].clientX;ly3=e.touches[0].clientY;},{passive:true});
+canvas3d.addEventListener('touchend',()=>drag3=false);
+
+window.addEventListener('resize',()=>{if(mode==='3d'){canvas3d.width=canvas3d.parentElement.clientWidth;canvas3d.height=canvas3d.parentElement.clientHeight;}});
+
+// ═══════════════════════════════════
+// VIEW SWITCH
+// ═══════════════════════════════════
+document.getElementById('btn2d').addEventListener('click',()=>{
+  mode='2d';document.getElementById('btn2d').classList.add('active');document.getElementById('btn3d').classList.remove('active');
+  document.getElementById('map').style.display='block';canvas3d.style.display='none';
+});
+document.getElementById('btn3d').addEventListener('click',()=>{
+  mode='3d';document.getElementById('btn3d').classList.add('active');document.getElementById('btn2d').classList.remove('active');
+  document.getElementById('map').style.display='none';canvas3d.style.display='block';
+  canvas3d.width=canvas3d.parentElement.clientWidth;canvas3d.height=canvas3d.parentElement.clientHeight;
+});
+
+// ═══════════════════════════════════
+// ANIMATION
+// ═══════════════════════════════════
+let last3=0;
+(function loop(ts){
+  requestAnimationFrame(loop);
+  if(mode==='3d'&&ts-last3>50){draw3();last3=ts;}
+})();
+
+// ═══════════════════════════════════
+// LOADER ANIMÉ
+// ═══════════════════════════════════
+const steps=[
+  [20,'CONNEXION AU RÉSEAU DE SATELLITES...'],
+  [40,'SYNCHRONISATION ISS NORAD #25544...'],
+  [60,'RÉCEPTION DONNÉES NASA NEO FEED...'],
+  [80,'CHARGEMENT BASE LANCEMENTS LL2...'],
+  [100,'INITIALISATION TERMINÉE // KOSMOS-7 EN LIGNE'],
+];
+let si=0;
+async function bootLoader(){
+  for(const[pct,msg] of steps){
+    document.getElementById('loaderFill').style.width=pct+'%';
+    document.getElementById('loaderSub').textContent=msg;
+    await new Promise(r=>setTimeout(r,600));
+  }
+  document.getElementById('loader').classList.add('hidden');
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+async function init(){
+  bootLoader();
+  addPlanets();
+  await Promise.allSettled([fetchISS(),fetchNEO(),fetchLaunches()]);
+  renderISS();
+  setInterval(fetchISS,5000);
+  setInterval(updateTicker,30000);
+}
+init();
+</script>
+</body>
+</html>
