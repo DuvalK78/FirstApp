@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kawasaki - Histoire et Motos</title>
+  <link rel="icon" type="image/png" href="https://storage.kawasaki.eu/public/kawasaki.eu/en-EU/news/th_black_river_mark.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #69bd27;
+      --green-dark: #4e8f1c;
+      --green-glow: rgba(105, 189, 39, 0.25);
+      --red: #EB003B;
+      --red-dark: #b80030;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --border: rgba(105, 189, 39, 0.18);
+      --text: #e8e8e8;
+      --muted: #888;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: relative;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .header-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green), var(--green-dark), transparent);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.12em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .header-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      color: rgba(105,189,39,0.06);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ─── HERO BAND ─── */
+    .hero-band {
+      background: var(--green);
+      padding: 0.55rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      overflow: hidden;
+    }
+
+    .hero-band-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 4rem;
+    }
+
+    /* ─── SECTION TITLE ─── */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .section-label::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1.05;
+      margin-bottom: 1.8rem;
+      position: relative;
+    }
+
+    h2 .accent {
+      color: var(--green);
+    }
+
+    /* ─── HISTOIRE SECTION ─── */
+    .histoire-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 4rem;
+      align-items: start;
+    }
+
+    .histoire-left { grid-column: 1 / -1; }
+
+    .histoire-left .section-header {
+      margin-bottom: 0.5rem;
+    }
+
+    .histoire-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .histoire-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background 0.25s;
+    }
+
+    .histoire-card:hover {
+      background: var(--surface2);
+    }
+
+    .histoire-card p {
+      font-size: 0.95rem;
+      color: #bbb;
+      line-height: 1.75;
+    }
+
+    .card-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--green);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+      opacity: 0.85;
+    }
+
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ─── STAT BAR ─── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3.5rem;
+    }
+
+    .stat {
+      background: var(--surface);
+      padding: 1.4rem 1.6rem;
+      text-align: center;
+      transition: background 0.25s;
+    }
+
+    .stat:hover { background: var(--surface2); }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.4rem;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ─── BUTTONS ─── */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after { opacity: 1; }
+
+    .btn-back {
+      background: var(--surface2);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-back:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--red-dark); }
+
+    .btn-arrow {
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-primary:hover .btn-arrow { transform: translateX(4px); }
+
+    /* ─── MOTOS SECTION ─── */
+    .motos-section {
+      position: relative;
+    }
+
+    .motos-intro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: 4px;
+      padding: 1.6rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .motos-intro-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--green); }
+      50%       { opacity: 0.5; box-shadow: 0 0 2px var(--green); }
+    }
+
+    .motos-intro p {
+      font-size: 0.95rem;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      margin: 3.5rem 0;
+      opacity: 0.4;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── REVEAL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 680px) {
+      .header-inner { padding: 1.2rem 1.5rem; }
+      .header-year  { display: none; }
+      main          { padding: 2.5rem 1.2rem 3rem; }
+      .histoire-cards { grid-template-columns: 1fr; }
+      .stats-bar    { grid-template-columns: 1fr; }
+      footer        { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div class="header-logo-area">
+        <div class="logo-icon">K</div>
+        <div>
+          <div class="header-brand">Kawasaki</div>
+          <div class="header-tagline">Let the good times roll</div>
+        </div>
+      </div>
+      <div class="header-year">1896</div>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="hero-band" aria-hidden="true">
+    <div class="hero-band-text">
+      KAWASAKI MOTORS &nbsp;·&nbsp; PERFORMANCE &nbsp;·&nbsp; INNOVATION &nbsp;·&nbsp; DEPUIS 1896 &nbsp;·&nbsp; NINJA &nbsp;·&nbsp; Z SERIES &nbsp;·&nbsp; VERSYS &nbsp;·&nbsp; KX &nbsp;·&nbsp; KAWASAKI MOTORS &nbsp;·&nbsp; PERFORMANCE &nbsp;·&nbsp; INNOVATION &nbsp;·&nbsp; DEPUIS 1896 &nbsp;·&nbsp; NINJA &nbsp;·&nbsp; Z SERIES &nbsp;·&nbsp; VERSYS &nbsp;·&nbsp; KX &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HISTOIRE -->
+    <section class="reveal">
+      <div class="section-label"><span>01 — Origines</span></div>
+      <h2>Histoire de <span class="accent">Kawasaki</span></h2>
+    </section>
+
+    <div class="histoire-cards reveal reveal-delay-1">
+      <div class="histoire-card">
+        <div class="card-year">1896</div>
+        <div class="card-title">Fondation</div>
+        <p>Kawasaki est fondée par Shōzō Kawasaki sous le nom de Kawasaki Tsukiji Shipyard. L'entreprise se concentre d'abord sur la construction navale, posant les bases d'un groupe industriel d'envergure mondiale.</p>
+      </div>
+      <div class="histoire-card">
+        <div class="card-year">1963</div>
+        <div class="card-title">Division Moto</div>
+        <p>Après une transition dans les années 1950 vers les moteurs d'avions, Kawasaki crée officiellement sa division motocycle. Depuis, la marque s'est imposée comme l'un des leaders mondiaux de la moto haute performance.</p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-bar reveal reveal-delay-2">
+      <div class="stat">
+        <div class="stat-num">128</div>
+        <div class="stat-label">Ans d'histoire</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">180+</div>
+        <div class="stat-label">Pays desservis</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Secteurs majeurs</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BUTTONS -->
+    <div class="buttons reveal">
+      <a href="../indexRide.html" class="btn btn-back">
+        ← Retour
+      </a>
+      <a href="Kawasaki2.html" class="btn btn-primary">
+        Voir les Motos <span class="btn-arrow">→</span>
+      </a>
+    </div>
+
+    <!-- MOTOS -->
+    <section class="motos-section reveal reveal-delay-1">
+      <div class="section-label"><span>02 — Gamme</span></div>
+      <h2>Nos <span class="accent">Motos</span></h2>
+      <div class="motos-intro">
+        <div class="motos-intro-dot"></div>
+        <p>Découvrez ici les différents modèles de motos Kawasaki — de la sportive à la trail, chaque machine est pensée pour l'excellence.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Kawasaki</div>
+    <div class="footer-copy">© 2024 Kawasaki Motors · Tous droits réservés</div>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
