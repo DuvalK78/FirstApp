@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kawasaki — Catégories de Motos</title>
+  <link rel="icon" type="image/png" href="https://storage.kawasaki.eu/public/kawasaki.eu/en-EU/news/th_black_river_mark.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #69bd27;
+      --green-dark: #4e8f1c;
+      --green-glow: rgba(105, 189, 39, 0.2);
+      --red: #EB003B;
+      --red-dark: #b80030;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --surface3: #1e1e1e;
+      --border: rgba(105, 189, 39, 0.15);
+      --border-hover: rgba(105, 189, 39, 0.45);
+      --text: #e8e8e8;
+      --muted: #777;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .header-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green), var(--green-dark), transparent);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.12em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .header-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-page-id {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: rgba(105,189,39,0.05);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ── TICKER ── */
+    .hero-band {
+      background: var(--green);
+      padding: 0.55rem 3rem;
+      overflow: hidden;
+    }
+
+    .hero-band-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── MAIN ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3.5rem 2rem 5rem;
+    }
+
+    /* ── PAGE TITLE ── */
+    .page-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .section-label::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1.05;
+    }
+
+    .page-title .accent { color: var(--green); }
+
+    /* ── CATEGORY BLOCK ── */
+    .category-block {
+      margin-bottom: 4rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 1.4rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .category-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.9rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      opacity: 0.7;
+    }
+
+    .category-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.07em;
+      color: #fff;
+    }
+
+    .category-count {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-left: auto;
+    }
+
+    /* ── MOTO GRID ── */
+    .moto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .moto-card {
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s;
+    }
+
+    .moto-card:hover {
+      background: var(--surface2);
+    }
+
+    .moto-card a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .moto-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--surface3);
+    }
+
+    .moto-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s ease, filter 0.45s ease;
+      filter: grayscale(20%);
+    }
+
+    .moto-card:hover .moto-img-wrap img {
+      transform: scale(1.07);
+      filter: grayscale(0%);
+    }
+
+    /* Green overlay line on hover */
+    .moto-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+
+    .moto-card:hover .moto-img-wrap::after {
+      transform: scaleX(1);
+    }
+
+    /* Arrow badge on hover */
+    .moto-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 28px; height: 28px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #000;
+      font-weight: 700;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .moto-card:hover .moto-badge {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .moto-info {
+      padding: 1rem 1.1rem 1.2rem;
+    }
+
+    .moto-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+
+    .moto-sub {
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Placeholder (no link yet) */
+    .moto-card.placeholder {
+      opacity: 0.45;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .placeholder-badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.6);
+      color: var(--muted);
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      margin: 3.5rem 0;
+      opacity: 0.3;
+    }
+
+    /* ── BUTTONS ── */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.07);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after { opacity: 1; }
+
+    .btn-back {
+      background: var(--surface2);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-back:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--red-dark); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .header-inner { padding: 1.2rem 1.5rem; }
+      .header-page-id { display: none; }
+      main { padding: 2rem 1.2rem 3rem; }
+      .moto-grid { grid-template-columns: 1fr 1fr; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div class="header-logo-area">
+        <div class="logo-icon">K</div>
+        <div>
+          <div class="header-brand">Kawasaki</div>
+          <div class="header-tagline">Let the good times roll</div>
+        </div>
+      </div>
+      <div class="header-page-id">GAMME</div>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="hero-band" aria-hidden="true">
+    <div class="hero-band-text">
+      NINJA ZX-10RR &nbsp;·&nbsp; Z1000 &nbsp;·&nbsp; VERSYS 650 &nbsp;·&nbsp; KX 450 &nbsp;·&nbsp; Z H2 &nbsp;·&nbsp; NINJA 400 &nbsp;·&nbsp; VULCAN S &nbsp;·&nbsp; Z900 &nbsp;·&nbsp; NINJA ZX-10RR &nbsp;·&nbsp; Z1000 &nbsp;·&nbsp; VERSYS 650 &nbsp;·&nbsp; KX 450 &nbsp;·&nbsp; Z H2 &nbsp;·&nbsp; NINJA 400 &nbsp;·&nbsp; VULCAN S &nbsp;·&nbsp; Z900 &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <main>
+
+    <!-- PAGE TITLE -->
+    <div class="page-header reveal">
+      <div class="section-label"><span>Catalogue</span></div>
+      <h1 class="page-title">Catégories de <span class="accent">Motos</span></h1>
+    </div>
+
+    <!-- SPORTIVES -->
+    <div class="category-block reveal reveal-d1">
+      <div class="category-header">
+        <span class="category-num">01</span>
+        <span class="category-title">Sportives</span>
+        <span class="category-count">1 modèle</span>
+      </div>
+      <div class="moto-grid">
+        <div class="moto-card">
+          <a href="Sportives/KawasakiZX-10RR2019.html">
+            <div class="moto-img-wrap">
+              <img src="https://previews.123rf.com/images/biseeise/biseeise2310/biseeise231023133/223806010-illustrating-the-essence-sports-bike-vector-thrills-vector-racing-sports-bikes-accelerated.jpg" alt="Kawasaki ZX-10RR">
+              <div class="moto-badge">→</div>
+            </div>
+            <div class="moto-info">
+              <div class="moto-name">Ninja ZX-10RR</div>
+              <div class="moto-sub">Supersportive · 2019</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROADSTERS -->
+    <div class="category-block reveal reveal-d2">
+      <div class="category-header">
+        <span class="category-num">02</span>
+        <span class="category-title">Roadsters</span>
+        <span class="category-count">1 modèle</span>
+      </div>
+      <div class="moto-grid">
+        <div class="moto-card">
+          <a href="Roadster/KawasakiZ10002006.html">
+            <div class="moto-img-wrap">
+              <img src="https://us.123rf.com/450wm/biseeise/biseeise2310/biseeise231020019/216594355-sleek-motorbike-vectors-a-design-showcase-cruising-with-style-motorcycle-vector-graphics.jpg?ver=6" alt="Kawasaki Z1000">
+              <div class="moto-badge">→</div>
+            </div>
+            <div class="moto-info">
+              <div class="moto-name">Z1000</div>
+              <div class="moto-sub">Naked · 2006</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRAILS -->
+    <div class="category-block reveal reveal-d3">
+      <div class="category-header">
+        <span class="category-num">03</span>
+        <span class="category-title">Trails</span>
+        <span class="category-count">1 modèle</span>
+      </div>
+      <div class="moto-grid">
+        <div class="moto-card placeholder">
+          <a href="LIEN_VERS_MOTO_TRAIL_1">
+            <div class="moto-img-wrap">
+              <img src="https://us.123rf.com/450wm/babbanbillo/babbanbillo2406/babbanbillo240606743/231200676-stealthstunner-stunning-the-roads-with-stealth-ravenrevolution-revolutionizing-supersport-design.jpg?ver=6" alt="Trail Kawasaki">
+              <span class="placeholder-badge">Bientôt</span>
+            </div>
+            <div class="moto-info">
+              <div class="moto-name">Trail — à venir</div>
+              <div class="moto-sub">Adventure · TBD</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPERMOTO -->
+    <div class="category-block reveal reveal-d4">
+      <div class="category-header">
+        <span class="category-num">04</span>
+        <span class="category-title">Supermoto</span>
+        <span class="category-count">1 modèle</span>
+      </div>
+      <div class="moto-grid">
+        <div class="moto-card placeholder">
+          <a href="LIEN_VERS_MOTO_SUPERMOTO_1">
+            <div class="moto-img-wrap">
+              <img src="https://media.gettyimages.com/id/499720293/fr/vectoriel/stunt-bike.jpg?s=612x612&w=gi&k=20&c=SUAFLXQJySuOi06sHGNfWQJb4d24WWCiac3xnEYoJxs=" alt="Supermoto Kawasaki">
+              <span class="placeholder-badge">Bientôt</span>
+            </div>
+            <div class="moto-info">
+              <div class="moto-name">Supermoto — à venir</div>
+              <div class="moto-sub">Urban · TBD</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BUTTONS -->
+    <div class="buttons reveal">
+      <a href="Kawasaki.html" class="btn btn-back">← Kawasaki</a>
+      <a href="../indexRide.html" class="btn btn-primary">Toutes les marques →</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Kawasaki</div>
+    <div class="footer-copy">© 2024 Kawasaki Motors · Tous droits réservés</div>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
