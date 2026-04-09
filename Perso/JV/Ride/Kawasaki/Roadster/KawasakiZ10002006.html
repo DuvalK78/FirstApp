@@ -3,244 +3,745 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kawasaki Z1000 2006 Showcase</title>
+  <title>Kawasaki Z1000 2006</title>
   <link rel="icon" type="image/png" href="https://storage.kawasaki.eu/public/kawasaki.eu/en-EU/news/th_black_river_mark.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'Letterstitch';
-      src: url('fonts/LetterstitchPlainRegular.woff2') format('woff2'),
-           url('fonts/LetterstitchPlainRegular.woff') format('woff');
+    :root {
+      --green: #69bd27;
+      --green-dark: #4e8f1c;
+      --red: #EB003B;
+      --red-dark: #b80030;
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --surface3: #1e1e1e;
+      --border: rgba(105, 189, 39, 0.15);
+      --text: #e8e8e8;
+      --muted: #777;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background-color: #5a5c5e;
-      font-family: 'Letterstitch', Arial, sans-serif;
-      color: white;
-      padding: 40px;
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    .container {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .header-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green), var(--green-dark), transparent);
+    }
+
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
       max-width: 1400px;
       margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-      flex-wrap: wrap;
     }
 
-    .bike-header {
-      flex: 1;
+    .header-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .header-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.12em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .header-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-model-id {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: rgba(105,189,39,0.05);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* TICKER */
+    .hero-band {
+      background: var(--green);
+      padding: 0.55rem 3rem;
+      overflow: hidden;
+    }
+
+    .hero-band-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* SHOWCASE GRID */
+    .showcase {
+      display: grid;
+      grid-template-columns: 260px 1fr 300px;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    .bike-identity {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      min-width: 220px;
+      gap: 0.4rem;
     }
 
-    .bike-header .brand {
-      font-size: 36px;
-      color: #2c2c2c;
-      font-weight: bold;
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.6rem;
     }
 
-    .bike-header .model {
-      font-size: 48px;
-      color: white;
-      font-weight: bold;
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green);
     }
 
-    .year-rank {
+    .section-label::after {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--green);
+    }
+
+    .bike-brand {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .bike-model {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.2rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .bike-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--green);
+      margin-top: 0.3rem;
+    }
+
+    .bike-type {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #000;
+      background: var(--green);
+      padding: 3px 10px;
+      border-radius: 2px;
+      margin-top: 0.5rem;
+      align-self: flex-start;
+    }
+
+    /* CENTER — main image */
+    .bike-image-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .year {
-      font-size: 22px;
-      color: white;
-    }
-
-    .rank {
-      background-color: #227bff;
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    .bike-image {
-      flex: 2;
-      display: flex;
       justify-content: center;
-      align-items: center;
+      position: relative;
     }
 
-    .bike-image img {
+    .bike-image-wrap::before {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 10%;
+      right: 10%;
+      height: 60px;
+      background: radial-gradient(ellipse, rgba(105,189,39,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #mainBikeImage {
       width: 100%;
       max-width: 640px;
       height: auto;
-      filter: drop-shadow(4px 4px 6px rgba(0, 0, 0, 0.6));
-      transition: transform 0.3s;
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.7));
+      transition: transform 0.4s ease, filter 0.4s ease;
+      position: relative;
+      z-index: 1;
     }
 
-    .bike-image img:hover {
-      transform: scale(1.02);
+    #mainBikeImage:hover {
+      transform: scale(1.03) translateY(-4px);
+      filter: drop-shadow(0 16px 48px rgba(0,0,0,0.8)) drop-shadow(0 0 20px rgba(105,189,39,0.12));
     }
 
-    .bike-details {
-      flex: 1;
-      background-color: #2c2c2c;
-      padding: 24px;
-      border-radius: 12px;
-      font-size: 15px;
-      min-width: 280px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-    }
-
-    .bike-details h2 {
-      font-size: 18px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      color: white;
-      border-bottom: 1px solid #777;
-      padding-bottom: 6px;
-    }
-
-    .bike-details p {
-      margin-bottom: 8px;
-    }
-
-    .bike-thumbnails {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 50px 0 30px;
-      gap: 12px;
-    }
-
-    .thumbnail {
-      width: 150px;
-      height: 100px;
-      background-color: #ccc;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+    /* RIGHT — specs panel */
+    .specs-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
-      transition: transform 0.3s;
     }
 
-    .thumbnail:hover {
-      transform: scale(1.05);
+    .specs-section {
+      padding: 1.4rem 1.6rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .thumbnail img {
-      max-width: 100%;
-      max-height: 100%;
-      display: block;
+    .specs-section:last-child { border-bottom: none; }
+
+    .specs-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
     }
 
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .spec-row:last-child { border-bottom: none; }
+
+    .spec-key {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .spec-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+
+    /* Performance bars */
+    .perf-row { margin-bottom: 0.9rem; }
+    .perf-row:last-child { margin-bottom: 0; }
+
+    .perf-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .perf-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .perf-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+
+    .perf-bar-bg {
+      height: 3px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .perf-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green-dark), var(--green));
+      border-radius: 2px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0;
+    }
+
+    /* THUMBNAILS */
+    .related-section { margin-bottom: 3.5rem; }
+
+    .related-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .related-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.07em;
+      color: #fff;
+    }
+
+    .related-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .thumbnails-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .thumb-card {
+      background: var(--surface);
+      cursor: pointer;
+      transition: background 0.25s;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .thumb-card:hover { background: var(--surface2); }
+
+    .thumb-img-wrap {
+      aspect-ratio: 3/2;
+      overflow: hidden;
+      background: var(--surface3);
+      position: relative;
+    }
+
+    .thumb-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+      transition: transform 0.4s ease, filter 0.3s ease;
+      filter: grayscale(30%);
+    }
+
+    .thumb-card:hover .thumb-img-wrap img {
+      transform: scale(1.06);
+      filter: grayscale(0%);
+    }
+
+    .thumb-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .thumb-card:hover .thumb-img-wrap::after { transform: scaleX(1); }
+
+    .thumb-info { padding: 0.75rem 0.9rem; }
+
+    .thumb-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .thumb-year { font-size: 0.7rem; color: var(--muted); }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--green), transparent);
+      margin: 3rem 0;
+      opacity: 0.3;
+    }
+
+    /* BUTTONS */
     .buttons {
-      text-align: center;
-      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .btn {
-      background-color: #2c2c2c;
-      color: white;
-      padding: 0.7rem 1.4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       text-decoration: none;
-      font-size: 1rem;
-      border: none;
-      border-radius: 6px;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
       cursor: pointer;
-      margin: 0.5rem;
-      transition: background-color 0.3s;
+      border: none;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn:hover {
-      background-color: #444;
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.07);
+      opacity: 0;
+      transition: opacity 0.2s;
     }
 
-    @media (max-width: 1000px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
+    .btn:hover::after { opacity: 1; }
 
-      .bike-header, .bike-details {
-        text-align: center;
+    .btn-back {
+      background: var(--surface2);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--red-dark); }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .footer-copy { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .showcase {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
       }
+      .bike-image-wrap { grid-column: 1 / -1; order: -1; }
+    }
+
+    @media (max-width: 680px) {
+      .header-inner { padding: 1.2rem 1.5rem; }
+      .header-model-id { display: none; }
+      main { padding: 2rem 1.2rem 3rem; }
+      .showcase { grid-template-columns: 1fr; }
+      .bike-image-wrap { order: -1; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="bike-header">
-      <div class="brand">Kawasaki</div>
-      <div class="model">Z1000</div>
-      <div class="year-rank">
-        <div class="year">2006</div>
-        <div class="rank"></div>
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div class="header-logo-area">
+        <div class="logo-icon">K</div>
+        <div>
+          <div class="header-brand">Kawasaki</div>
+          <div class="header-tagline">Let the good times roll</div>
+        </div>
+      </div>
+      <div class="header-model-id">Z1000</div>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="hero-band" aria-hidden="true">
+    <div class="hero-band-text">
+      Z1000 &nbsp;·&nbsp; 953 CC &nbsp;·&nbsp; 127 HP &nbsp;·&nbsp; 198 KG &nbsp;·&nbsp; ROADSTER &nbsp;·&nbsp; 2006 &nbsp;·&nbsp; KAWASAKI MOTORS &nbsp;·&nbsp; NAKED SPORT &nbsp;·&nbsp; Z1000 &nbsp;·&nbsp; 953 CC &nbsp;·&nbsp; 127 HP &nbsp;·&nbsp; 198 KG &nbsp;·&nbsp; ROADSTER &nbsp;·&nbsp; 2006 &nbsp;·&nbsp; KAWASAKI MOTORS &nbsp;·&nbsp; NAKED SPORT &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <main>
+
+    <!-- SHOWCASE -->
+    <div class="showcase reveal">
+
+      <!-- LEFT -->
+      <div class="bike-identity">
+        <div class="section-label"><span>Roadsters</span></div>
+        <div class="bike-brand">Kawasaki</div>
+        <div class="bike-model">Z1000</div>
+        <div class="bike-year">2006</div>
+        <div class="bike-type">Naked Sport</div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="bike-image-wrap">
+        <img id="mainBikeImage"
+          src="https://www.motoplanete.com/kawasaki/zoom-700px/Kawasaki-Z-1000-2006-700px.webp"
+          alt="Kawasaki Z1000 2006" />
+      </div>
+
+      <!-- RIGHT -->
+      <div class="specs-panel">
+
+        <div class="specs-section">
+          <div class="specs-title">Performance</div>
+          <div class="perf-row">
+            <div class="perf-label-row">
+              <span class="perf-label">Accélération</span>
+              <span class="perf-score">6.40</span>
+            </div>
+            <div class="perf-bar-bg"><div class="perf-bar-fill" data-width="64.0"></div></div>
+          </div>
+          <div class="perf-row">
+            <div class="perf-label-row">
+              <span class="perf-label">Vitesse max</span>
+              <span class="perf-score">5.50</span>
+            </div>
+            <div class="perf-bar-bg"><div class="perf-bar-fill" data-width="55.0"></div></div>
+          </div>
+          <div class="perf-row">
+            <div class="perf-label-row">
+              <span class="perf-label">Maniabilité</span>
+              <span class="perf-score">6.40</span>
+            </div>
+            <div class="perf-bar-bg"><div class="perf-bar-fill" data-width="64.0"></div></div>
+          </div>
+          <div class="perf-row">
+            <div class="perf-label-row">
+              <span class="perf-label">Freinage</span>
+              <span class="perf-score">6.70</span>
+            </div>
+            <div class="perf-bar-bg"><div class="perf-bar-fill" data-width="67.0"></div></div>
+          </div>
+        </div>
+
+        <div class="specs-section">
+          <div class="specs-title">Données techniques</div>
+          <div class="spec-row">
+            <span class="spec-key">Cylindrée</span>
+            <span class="spec-val">953 cc</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Moteur</span>
+            <span class="spec-val">4 cyl. · 4T</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Puissance</span>
+            <span class="spec-val">127 HP / 93 KW</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Poids</span>
+            <span class="spec-val">198 kg</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Couple</span>
+            <span class="spec-val">95 Nm (9.7 kgm)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Ratio P/P</span>
+            <span class="spec-val">1.559 kg/HP</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="bike-image">
-      <img id="mainBikeImage" src="https://www.motoplanete.com/kawasaki/zoom-700px/Kawasaki-Z-1000-2006-700px.webp" alt="Z1000" />
+    <!-- RELATED -->
+    <div class="related-section reveal reveal-d1">
+      <div class="related-header">
+        <span class="related-title">Modèles similaires</span>
+        <span class="related-sub">Gamme Z</span>
+      </div>
+      <div class="thumbnails-grid">
+
+        <div class="thumb-card" onclick="goToPage('')">
+          <div class="thumb-img-wrap">
+            <img src="" alt="">
+          </div>
+          <div class="thumb-info">
+            <div class="thumb-name">Z1000</div>
+            <div class="thumb-year">—</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="goToPage('')">
+          <div class="thumb-img-wrap">
+            <img src="" alt="">
+          </div>
+          <div class="thumb-info">
+            <div class="thumb-name">Z1000</div>
+            <div class="thumb-year">—</div>
+          </div>
+        </div>
+
+        <div class="thumb-card" onclick="goToPage('')">
+          <div class="thumb-img-wrap">
+            <img src="" alt="">
+          </div>
+          <div class="thumb-info">
+            <div class="thumb-name">Z1000</div>
+            <div class="thumb-year">—</div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <div class="bike-details">
-      <h2>PERFORMANCE</h2>
-      <p>Acceleration: 6.4</p>
-      <p>Top speed: 5.5</p>
-      <p>Handling: 6.4</p>
-      <p>Braking power: 6.7</p>
+    <div class="divider"></div>
 
-      <h2>TECHNICAL DATA</h2>
-      <p>Displacement: 953 cc</p>
-      <p>Engine: 4 Cylinders | 4S</p>
-      <p>Power: 127 HP ( KW)</p>
-      <p>Weight: 198 Kg</p>
-      <p>Torque: 95 Nm (9.7 Kgm)</p>
-      <p>Weight-to-power ratio: 1.559 kg/HP</p>
+    <!-- BUTTONS -->
+    <div class="buttons reveal reveal-d2">
+      <a href="../Kawasaki2.html" class="btn btn-back">← Retour</a>
+      <a href="../../indexRide.html" class="btn btn-primary">Toutes les marques →</a>
     </div>
-  </div>
 
-  <!-- Miniatures -->
-  <div class="bike-thumbnails">
-    <div class="thumbnail" onclick="goToPage('')">
-      <img src="" alt="">
-    </div>
-    <div class="thumbnail" onclick="goToPage('')">
-      <img src="" alt="">
-    </div>
-    <div class="thumbnail" onclick="goToPage('')">
-      <img src="" alt="">
-    </div>
-  </div>
+  </main>
 
-  <!-- Boutons retour -->
-  <div class="buttons">
-    <a href="../Kawasaki2.html" class="btn">Retour</a>
-    <a href="../../indexRide.html" class="btn">Retour à la sélection des marques</a>
-  </div>
+  <footer>
+    <div class="footer-brand">Kawasaki</div>
+    <div class="footer-copy">© 2024 Kawasaki Motors · Tous droits réservés</div>
+  </footer>
 
   <script>
     function goToPage(url) {
-      if (url.endsWith('.html')) {
-        window.location.href = url;
-      } else {
-        document.getElementById('mainBikeImage').src = url;
-      }
+      if (url) window.location.href = url;
     }
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Animate performance bars
+    setTimeout(() => {
+      document.querySelectorAll('.perf-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+    }, 300);
   </script>
 
 </body>
