@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ride — Fan Site Motos</title>
+  <link rel="icon" type="image/png" href="https://images.scooter-system.fr/bibliotheque/ride-logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --surface: #111111;
+      --surface2: #181818;
+      --surface3: #1e1e1e;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.18);
+      --text: #e8e8e8;
+      --muted: #666;
+      --accent: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    /* ── BG IMAGE ── */
+    .bg-image {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url('https://t3.ftcdn.net/jpg/01/10/25/70/360_F_110257004_PLp6DNqDdup6AyThxyraiAdgTgwVrle7.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.07;
+      filter: grayscale(100%);
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.6rem 3rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .site-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      letter-spacing: 0.2em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .site-subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .header-count {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: rgba(255,255,255,0.04);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: #fff;
+      padding: 0.5rem 0;
+      overflow: hidden;
+    }
+
+    .ticker-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #000;
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── MAIN ── */
+    main {
+      position: relative; z-index: 1;
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 4rem 2rem 5rem;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem;
+    }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--muted);
+    }
+
+    .section-label::after { content: ''; display: block; width: 32px; height: 1px; background: var(--muted); }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* ── BRAND GRID ── */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+
+    .brand-card {
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.25s;
+    }
+
+    .brand-card:hover { background: var(--surface2); }
+
+    .brand-card a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding: 2.5rem 1.5rem 2rem;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+      min-height: 180px;
+    }
+
+    /* Bottom line reveal on hover */
+    .brand-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+
+    .brand-card:hover::after { transform: scaleX(1); }
+
+    /* Corner number */
+    .brand-num {
+      position: absolute;
+      top: 10px; right: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.12);
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+
+    .brand-logo-wrap {
+      width: 80px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-wrap img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(1.4);
+      transition: filter 0.35s ease, transform 0.35s ease;
+    }
+
+    .brand-card:hover .brand-logo-wrap img {
+      filter: grayscale(0%) brightness(1);
+      transform: scale(1.08);
+    }
+
+    .brand-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .brand-arrow {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      transition: color 0.25s, transform 0.25s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    .brand-card:hover .brand-arrow {
+      color: #fff;
+    }
+
+    .arrow-icon {
+      display: inline-block;
+      transition: transform 0.25s;
+    }
+
+    .brand-card:hover .arrow-icon { transform: translateX(4px); }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border-radius: 3px;
+      background: var(--surface2);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-back::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.06); opacity: 0; transition: opacity 0.2s; }
+    .btn-back:hover::after { opacity: 1; }
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .brand-card {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.45s ease, transform 0.45s ease, background 0.25s;
+    }
+
+    .brand-card.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.15);
+    }
+
+    .footer-copy { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .header-inner { padding: 1.2rem 1.5rem; }
+      .header-count { display: none; }
+      main { padding: 2.5rem 1.2rem 3rem; }
+      .brands-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-image"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div>
+        <div class="site-title">Ride</div>
+        <div class="site-subtitle">Fan site — Sélection des marques</div>
+      </div>
+      <div class="header-count">07</div>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-text">
+      APRILIA &nbsp;·&nbsp; BMW &nbsp;·&nbsp; DUCATI &nbsp;·&nbsp; HONDA &nbsp;·&nbsp; KAWASAKI &nbsp;·&nbsp; SUZUKI &nbsp;·&nbsp; YAMAHA &nbsp;·&nbsp; FAN SITE NON OFFICIEL &nbsp;·&nbsp; PROJET PERSONNEL &nbsp;·&nbsp; APRILIA &nbsp;·&nbsp; BMW &nbsp;·&nbsp; DUCATI &nbsp;·&nbsp; HONDA &nbsp;·&nbsp; KAWASAKI &nbsp;·&nbsp; SUZUKI &nbsp;·&nbsp; YAMAHA &nbsp;·&nbsp; FAN SITE NON OFFICIEL &nbsp;·&nbsp; PROJET PERSONNEL &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <main>
+
+    <div class="section-header reveal">
+      <div class="section-label"><span>Catalogue</span></div>
+      <div class="section-title">Choisissez une marque</div>
+    </div>
+
+    <div class="brands-grid">
+
+      <div class="brand-card">
+        <a href="Aprilia/Aprilia.html">
+          <span class="brand-num">01</span>
+          <div class="brand-logo-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqaa5zsijBWURRfZzFfEdZEVCx-H-JYByjTw&s" alt="Aprilia">
+          </div>
+          <div class="brand-name">Aprilia</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="BMW/BMW.html">
+          <span class="brand-num">02</span>
+          <div class="brand-logo-wrap">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7Lkz8CYhLquLxpsQJVm-BKPDsbJO7pRw2MQ&s" alt="BMW">
+          </div>
+          <div class="brand-name">BMW</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="Ducati/Ducati.html">
+          <span class="brand-num">03</span>
+          <div class="brand-logo-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/a/ae/Ducati_logo.png" alt="Ducati">
+          </div>
+          <div class="brand-name">Ducati</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="Honda/Honda.html">
+          <span class="brand-num">04</span>
+          <div class="brand-logo-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg" alt="Honda">
+          </div>
+          <div class="brand-name">Honda</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="Kawasaki/Kawasaki.html">
+          <span class="brand-num">05</span>
+          <div class="brand-logo-wrap">
+            <img src="https://storage.kawasaki.eu/public/kawasaki.eu/en-EU/news/th_black_river_mark.jpg" alt="Kawasaki">
+          </div>
+          <div class="brand-name">Kawasaki</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="Suzuki/Suzuki.html">
+          <span class="brand-num">06</span>
+          <div class="brand-logo-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Suzuki_logo_2025_%28vertical%29.svg" alt="Suzuki">
+          </div>
+          <div class="brand-name">Suzuki</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+      <div class="brand-card">
+        <a href="Yamaha/Yamaha.html">
+          <span class="brand-num">07</span>
+          <div class="brand-logo-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Yamaha-Logo.png" alt="Yamaha">
+          </div>
+          <div class="brand-name">Yamaha</div>
+          <div class="brand-arrow">Explorer <span class="arrow-icon">→</span></div>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="back-wrap reveal">
+      <a href="../../../index.html" class="btn-back">← Retour</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Ride</div>
+    <div class="footer-copy">Projet personnel · Fan site non officiel · © 2025</div>
+  </footer>
+
+  <script>
+    // Staggered reveal for brand cards
+    const cards = document.querySelectorAll('.brand-card');
+    cards.forEach((card, i) => {
+      card.style.transitionDelay = `${i * 0.07}s`;
+    });
+
+    const all = document.querySelectorAll('.reveal, .brand-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08 });
+    all.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
