@@ -227,6 +227,16 @@
       align-self: flex-start;
     }
 
+    /* YEAR SELECTOR */
+    .year-selector { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.3rem; }
+    .year-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+    .year-select-wrap { position: relative; display: inline-flex; align-items: center; }
+    .year-select-wrap::after { content: '▾'; position: absolute; right: 10px; font-size: 0.7rem; color: var(--green); pointer-events: none; }
+    #year-select { appearance: none; -webkit-appearance: none; background: var(--surface2); border: 1px solid rgba(105,189,39,0.35); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.15em; padding: 4px 32px 4px 12px; border-radius: 3px; cursor: pointer; transition: border-color 0.2s, background 0.2s; outline: none; }
+    #year-select:hover { border-color: var(--green); background: var(--surface3); }
+    #year-select:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(105,189,39,0.15); }
+    #year-select option { background: var(--surface2); color: #fff; font-size: 1rem; }
+
     /* CENTER — main image */
     .bike-image-wrap {
       display: flex;
@@ -587,7 +597,18 @@
         <div class="section-label"><span>Sportives</span></div>
         <div class="bike-brand">Kawasaki</div>
         <div class="bike-model">Ninja ZX-6R 636</div>
-        <div class="bike-year">2014</div>
+
+        <!-- YEAR SELECTOR -->
+        <div class="year-selector">
+          <span class="year-label">Année</span>
+          <div class="year-select-wrap">
+            <select id="year-select" onchange="changeYear(this.value)">
+              <option value="KawasakiZX-6R2019.html">2019</option>
+              <option value="KawasakiZX-6R2014.html" selected>2014</option>
+            </select>
+          </div>
+        </div>
+
         <div class="bike-type">Supersportive</div>
       </div>
 
@@ -721,7 +742,9 @@
   </footer>
 
   <script>
-    function goToPage(url) {
+    function goToPage(url) { window.location.href = url; }
+
+    function changeYear(url) {
       if (url) window.location.href = url;
     }
 
