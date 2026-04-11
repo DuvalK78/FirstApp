@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histoire de Honda</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #cc0000;
+      --red-dark: #990000;
+      --silver: #b8c0cc;
+      --silver-dark: #78849a;
+      --black: #080a0c;
+      --surface: #0c0f12;
+      --surface2: #131720;
+      --surface3: #1a1f2a;
+      --border: rgba(184, 192, 204, 0.09);
+      --border-red: rgba(204, 0, 0, 0.2);
+      --text: #ccd0da;
+      --muted: #525a6a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 1;
+      min-height: 420px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 5rem 2rem;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* Clean grid pattern — Honda precision */
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(184,192,204,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,192,204,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(204,0,0,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .header-stripe {
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--red), var(--red-dark), transparent);
+    }
+
+    .header-watermark {
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(6rem, 17vw, 15rem);
+      color: rgba(255,255,255,0.025);
+      letter-spacing: 0.1em;
+      pointer-events: none; user-select: none;
+      white-space: nowrap; line-height: 1;
+    }
+
+    .header-logo {
+      position: relative; z-index: 1;
+      margin-bottom: 1.8rem; width: 70px; height: 50px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .header-logo img {
+      width: 100%; height: 100%; object-fit: contain;
+      filter: brightness(0) invert(1) opacity(0.5);
+    }
+
+    .header-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.42em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 1.2rem;
+      position: relative; z-index: 1;
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 13vw, 11rem);
+      letter-spacing: 0.1em; color: #fff; line-height: 1;
+      position: relative; z-index: 1;
+    }
+
+    .header-sub {
+      font-family: 'Barlow', sans-serif;
+      font-style: italic; font-weight: 300; font-size: 1rem;
+      color: var(--silver-dark); margin-top: 1rem; letter-spacing: 0.1em;
+      position: relative; z-index: 1;
+    }
+
+    /* ── TICKER ── */
+    .ticker { background: var(--red); padding: 0.55rem 0; overflow: hidden; }
+    .ticker-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.9); white-space: nowrap;
+      animation: marquee 30s linear infinite;
+    }
+
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,10,12,0.97); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 3rem; display: flex; justify-content: center; gap: 3rem;
+    }
+
+    nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding-bottom: 3px; border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav a:hover { color: #fff; border-bottom-color: var(--red); }
+
+    /* ── MAIN ── */
+    main { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 5rem 2rem 6rem; }
+
+    .story-section {
+      margin-bottom: 5rem;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .story-section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-label { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.4em; text-transform: uppercase; color: var(--red);
+    }
+
+    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-red), transparent); }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      letter-spacing: 0.06em; color: #fff; line-height: 1; margin-bottom: 1.6rem;
+    }
+
+    .story-section p { color: var(--text); font-size: 1rem; line-height: 1.9; max-width: 74ch; }
+    p + p { margin-top: 1.1rem; }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      position: relative; background: var(--surface2);
+      border: 1px solid var(--border-red); border-left: 3px solid var(--red);
+      border-radius: 0 4px 4px 0; padding: 2.4rem 2.8rem; overflow: hidden; margin-top: 1.5rem;
+    }
+
+    .highlight-box::after {
+      content: 'H'; position: absolute; right: 1.5rem; bottom: -1rem;
+      font-family: 'Bebas Neue', sans-serif; font-size: 9rem;
+      color: rgba(204,0,0,0.05); line-height: 1; pointer-events: none; user-select: none;
+    }
+
+    .highlight-box p { font-style: italic; font-size: 1.05rem; color: var(--text); position: relative; z-index: 1; line-height: 1.9; }
+
+    /* ── RECORDS GRID ── */
+    .records-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 2rem;
+    }
+
+    .record-card {
+      background: var(--surface2); padding: 1.8rem 2rem;
+      position: relative; overflow: hidden; transition: background 0.25s;
+    }
+
+    .record-card:hover { background: var(--surface3); }
+
+    .record-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease;
+    }
+
+    .record-card:hover::after { transform: scaleX(1); }
+
+    .record-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem;
+      color: var(--red); letter-spacing: 0.05em; line-height: 1; margin-bottom: 0.4rem;
+    }
+
+    .record-label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: #fff; margin-bottom: 0.6rem;
+    }
+
+    .record-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin: 3rem 0;
+    }
+
+    .stat-box { background: var(--surface); padding: 2rem 1.5rem; text-align: center; transition: background 0.25s; }
+    .stat-box:hover { background: var(--surface2); }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--red); letter-spacing: 0.05em; line-height: 1; }
+    .stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 2rem; border-left: 1px solid var(--border-red); }
+    .timeline-item { position: relative; margin-bottom: 2rem; }
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-item::before {
+      content: ''; position: absolute; left: -2.38rem; top: 0.42rem;
+      width: 7px; height: 7px; background: var(--red); border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(204,0,0,0.12);
+    }
+
+    .timeline-year { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--red); letter-spacing: 0.12em; line-height: 1; margin-bottom: 0.3rem; }
+    .timeline-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; }
+
+    .divider { height: 1px; background: linear-gradient(90deg, var(--red), transparent); margin: 4rem 0; opacity: 0.3; }
+
+    .buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase; text-decoration: none;
+      padding: 0.9rem 2.2rem; border-radius: 3px; cursor: pointer; border: none;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+
+    .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.07); opacity: 0; transition: opacity 0.2s; }
+    .btn:hover::after { opacity: 1; }
+    .btn-back { background: var(--surface2); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-primary:hover { background: var(--red-dark); }
+
+    footer {
+      position: relative; z-index: 1; border-top: 1px solid var(--border);
+      padding: 1.4rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.12); }
+    .footer-copy { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    @media (max-width: 680px) {
+      nav { padding: 0.8rem 1rem; gap: 1.5rem; }
+      main { padding: 3rem 1.2rem 4rem; }
+      .stats-row, .records-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-watermark">HONDA</div>
+    <div class="header-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Honda_Logo.svg" alt="Honda">
+    </div>
+    <div class="header-eyebrow">Hamamatsu, Japon · Fondée en 1948</div>
+    <div class="header-title">Honda</div>
+    <div class="header-sub">La puissance des rêves</div>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-text">
+      HONDA &nbsp;·&nbsp; HAMAMATSU 1948 &nbsp;·&nbsp; CBR1000RR &nbsp;·&nbsp; CB &nbsp;·&nbsp; AFRICA TWIN &nbsp;·&nbsp; GOLDWING &nbsp;·&nbsp; NSX &nbsp;·&nbsp; 900 TITRES EN GP &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; THE POWER OF DREAMS &nbsp;·&nbsp; HONDA &nbsp;·&nbsp; HAMAMATSU 1948 &nbsp;·&nbsp; CBR1000RR &nbsp;·&nbsp; CB &nbsp;·&nbsp; AFRICA TWIN &nbsp;·&nbsp; GOLDWING &nbsp;·&nbsp; NSX &nbsp;·&nbsp; 900 TITRES EN GP &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; THE POWER OF DREAMS &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <nav>
+    <a href="#origines">Origines</a>
+    <a href="#records">Records</a>
+    <a href="#competition">Compétition</a>
+    <a href="#aujourd-hui">Aujourd'hui</a>
+  </nav>
+
+  <main>
+
+    <div class="story-section" id="origines">
+      <div class="section-label"><span>01 · Les origines</span></div>
+      <h2>L'homme qui voulait changer le monde</h2>
+      <p>
+        Honda Motor Co. est fondée le 24 septembre 1948 à Hamamatsu par Soichiro Honda,
+        mécanicien autodidacte et visionnaire obstiné. L'entreprise naît dans un Japon
+        dévasté par la guerre, où le besoin de mobilité est urgent et les ressources rares.
+        Soichiro adapte des moteurs de surplus militaire sur des vélos — et c'est une révolution.
+      </p>
+      <p>
+        En 1949, la Dream D-Type est la première vraie moto Honda. Elle est suivie en 1958
+        par la Super Cub, qui deviendra le véhicule motorisé le plus vendu de l'histoire
+        humaine — plus de 100 millions d'unités. Honda ne fait pas que construire des motos.
+        Honda démocratise la mobilité.
+      </p>
+    </div>
+
+    <div class="stats-row story-section">
+      <div class="stat-box">
+        <div class="stat-num">1948</div>
+        <div class="stat-label">Fondation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">900+</div>
+        <div class="stat-label">Victoires en GP</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">160+</div>
+        <div class="stat-label">Pays distributeurs</div>
+      </div>
+    </div>
+
+    <div class="story-section" id="records">
+      <div class="section-label"><span>02 · Des records absolus</span></div>
+      <h2>Le constructeur le plus titré de l'histoire</h2>
+      <div class="records-grid">
+        <div class="record-card">
+          <div class="record-num">100M+</div>
+          <div class="record-label">Super Cub vendues</div>
+          <p>Le véhicule motorisé le plus produit de l'histoire. Lancée en 1958, elle est encore fabriquée aujourd'hui.</p>
+        </div>
+        <div class="record-card">
+          <div class="record-num">29</div>
+          <div class="record-label">Titres constructeurs GP</div>
+          <p>Un record absolu en compétition moto, toutes catégories confondues depuis les années 1960.</p>
+        </div>
+        <div class="record-card">
+          <div class="record-num">500</div>
+          <div class="record-label">Victoires au TT île de Man</div>
+          <p>Honda domine l'épreuve la plus mythique et la plus dangereuse du monde depuis six décennies.</p>
+        </div>
+        <div class="record-card">
+          <div class="record-num">5</div>
+          <div class="record-label">Titres Valentino Rossi</div>
+          <p>Dont 3 consécutifs sur RC211V (2001–2003) — partenariat légendaire entre le pilote et la machine.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-section" id="competition">
+      <div class="section-label"><span>03 · En compétition</span></div>
+      <h2>La domination comme philosophie</h2>
+      <div class="highlight-box">
+        <p>
+          Soichiro Honda avait une règle simple : si tu veux savoir si une machine est bonne,
+          engage-la en compétition. Dès 1959, Honda entre au Tourist Trophy de l'île de Man
+          et s'impose rapidement. La marque remporte ses premiers titres mondiaux en 1961,
+          puis construit une machine de guerre : la RC166 six cylindres 250cc qui reste
+          l'une des motos de Grand Prix les plus impressionnantes jamais construites.
+          En MotoGP moderne, les RC211V et RC213V s'imposent avec Rossi, Stoner, Márquez.
+        </p>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <div class="section-label"><span>Jalons clés</span></div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1958</div>
+            <div class="timeline-text">Lancement de la Super Cub — le véhicule le plus vendu de l'histoire.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1961</div>
+            <div class="timeline-text">Premiers titres mondiaux en 125cc et 250cc — Honda entre dans la légende du GP.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1969</div>
+            <div class="timeline-text">Honda CB750 — première "superbike" de série, elle révolutionne l'industrie moto mondiale.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2001–2003</div>
+            <div class="timeline-text">Valentino Rossi triple champion du monde MotoGP sur Honda RC211V.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2013–2014</div>
+            <div class="timeline-text">Marc Márquez champion du monde MotoGP à 20 ans — le plus jeune de l'histoire.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="story-section" id="aujourd-hui">
+      <div class="section-label"><span>04 · Aujourd'hui</span></div>
+      <h2>La puissance des rêves, toujours</h2>
+      <p>
+        Honda reste le premier constructeur mondial de motos en volume avec des dizaines
+        de millions d'unités produites chaque année. La CBR1000RR-R Fireblade incarne
+        l'excellence sportive, l'Africa Twin domine l'aventure, et la Gold Wing
+        représente le summum du grand tourisme. En MotoGP, Honda traverse une phase
+        de reconstruction mais son histoire reste inégalée.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="buttons">
+      <a href="../indexRide.html" class="btn btn-back">← Retour</a>
+      <a href="Honda2.html" class="btn btn-primary">Voir les motos →</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Honda</div>
+    <div class="footer-copy">© 2025 · Fan site non officiel · Inspiré de l'histoire de Honda Motor</div>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.story-section');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
