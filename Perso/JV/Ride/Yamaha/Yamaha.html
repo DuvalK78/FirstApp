@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histoire de Yamaha</title>
+  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/c/c3/Yamaha-Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #003f8a;
+      --blue-mid: #0055b8;
+      --blue-light: #1e7ad4;
+      --blue-glow: rgba(0, 63, 138, 0.25);
+      --white: #f0f4ff;
+      --black: #07090f;
+      --surface: #0b0d17;
+      --surface2: #111420;
+      --surface3: #181c2c;
+      --border: rgba(240, 244, 255, 0.07);
+      --border-blue: rgba(0, 85, 184, 0.25);
+      --text: #c8cede;
+      --muted: #505870;
+      --silver: #8892aa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 1;
+      min-height: 400px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 5rem 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse, rgba(0,85,184,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(
+        -50deg, transparent, transparent 80px,
+        rgba(0,85,184,0.025) 80px, rgba(0,85,184,0.025) 81px
+      );
+      pointer-events: none;
+    }
+
+    .header-stripe {
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--blue-light), var(--blue), transparent);
+    }
+
+    .header-watermark {
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(7rem, 19vw, 16rem);
+      color: rgba(0,85,184,0.05);
+      letter-spacing: 0.1em;
+      pointer-events: none; user-select: none;
+      white-space: nowrap; line-height: 1;
+    }
+
+    .header-logo {
+      position: relative; z-index: 1;
+      margin-bottom: 1.8rem;
+      width: 72px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .header-logo img {
+      width: 100%; height: 100%; object-fit: contain;
+      filter: brightness(0) invert(1) opacity(0.45);
+    }
+
+    .header-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.42em; text-transform: uppercase;
+      color: var(--blue-light); margin-bottom: 1.2rem;
+      position: relative; z-index: 1;
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 12vw, 10rem);
+      letter-spacing: 0.12em; color: #fff; line-height: 1;
+      position: relative; z-index: 1;
+    }
+
+    .header-sub {
+      font-family: 'Barlow', sans-serif;
+      font-style: italic; font-weight: 300; font-size: 1rem;
+      color: var(--silver); margin-top: 1rem; letter-spacing: 0.1em;
+      position: relative; z-index: 1;
+    }
+
+    /* ── TICKER ── */
+    .ticker { background: var(--blue); padding: 0.55rem 0; overflow: hidden; border-bottom: 1px solid rgba(0,0,0,0.4); }
+
+    .ticker-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.85); white-space: nowrap;
+      animation: marquee 30s linear infinite;
+    }
+
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(7,9,15,0.97); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 3rem; display: flex; justify-content: center; gap: 3rem;
+    }
+
+    nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding-bottom: 3px; border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav a:hover { color: var(--white); border-bottom-color: var(--blue-light); }
+
+    /* ── MAIN ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 920px; margin: 0 auto; padding: 5rem 2rem 6rem;
+    }
+
+    .story-section {
+      margin-bottom: 5rem;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .story-section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-label { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.4em; text-transform: uppercase; color: var(--blue-light);
+    }
+
+    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-blue), transparent); }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      letter-spacing: 0.06em; color: #fff; line-height: 1; margin-bottom: 1.6rem;
+    }
+
+    .story-section p { color: var(--text); font-size: 1rem; line-height: 1.9; max-width: 74ch; }
+    p + p { margin-top: 1.1rem; }
+
+    /* ── DUAL BLOCK ── */
+    .dual-block {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 2rem;
+    }
+
+    .dual-item {
+      background: var(--surface2); padding: 2rem 2.2rem;
+      position: relative; overflow: hidden; transition: background 0.25s;
+    }
+
+    .dual-item:hover { background: var(--surface3); }
+
+    .dual-item::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--blue-light); transform: scaleX(0); transform-origin: left; transition: transform 0.35s ease;
+    }
+
+    .dual-item:hover::after { transform: scaleX(1); }
+
+    .dual-icon { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--blue-light); letter-spacing: 0.08em; margin-bottom: 0.6rem; opacity: 0.8; }
+    .dual-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #fff; margin-bottom: 0.8rem; }
+    .dual-item p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin: 3rem 0;
+    }
+
+    .stat-box { background: var(--surface); padding: 2rem 1.5rem; text-align: center; transition: background 0.25s; }
+    .stat-box:hover { background: var(--surface2); }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--blue-light); letter-spacing: 0.05em; line-height: 1; }
+    .stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      position: relative; background: var(--surface2);
+      border: 1px solid var(--border-blue); border-left: 3px solid var(--blue-light);
+      border-radius: 0 4px 4px 0; padding: 2.4rem 2.8rem; overflow: hidden; margin-top: 1.5rem;
+    }
+
+    .highlight-box::after {
+      content: 'Y'; position: absolute; right: 1.5rem; bottom: -1rem;
+      font-family: 'Bebas Neue', sans-serif; font-size: 9rem;
+      color: rgba(0,85,184,0.06); line-height: 1; pointer-events: none; user-select: none;
+    }
+
+    .highlight-box p { font-style: italic; font-size: 1.05rem; color: var(--text); position: relative; z-index: 1; line-height: 1.9; }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 2rem; border-left: 1px solid var(--border-blue); }
+    .timeline-item { position: relative; margin-bottom: 2rem; }
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-item::before {
+      content: ''; position: absolute; left: -2.38rem; top: 0.42rem;
+      width: 7px; height: 7px; background: var(--blue-light);
+      border-radius: 50%; box-shadow: 0 0 0 3px rgba(0,85,184,0.15);
+    }
+
+    .timeline-year { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--blue-light); letter-spacing: 0.12em; line-height: 1; margin-bottom: 0.3rem; }
+    .timeline-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; }
+
+    /* ── DIVIDER ── */
+    .divider { height: 1px; background: linear-gradient(90deg, var(--blue), transparent); margin: 4rem 0; opacity: 0.3; }
+
+    /* ── BUTTONS ── */
+    .buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase; text-decoration: none;
+      padding: 0.9rem 2.2rem; border-radius: 3px; cursor: pointer; border: none;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+
+    .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.07); opacity: 0; transition: opacity 0.2s; }
+    .btn:hover::after { opacity: 1; }
+    .btn-back { background: var(--surface2); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-mid); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1; border-top: 1px solid var(--border);
+      padding: 1.4rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.12); }
+    .footer-copy { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    @media (max-width: 680px) {
+      nav { padding: 0.8rem 1rem; gap: 1.5rem; }
+      main { padding: 3rem 1.2rem 4rem; }
+      .stats-row { grid-template-columns: 1fr; }
+      .dual-block { grid-template-columns: 1fr; }
+      .highlight-box { padding: 1.8rem 1.5rem; }
+      footer { flex-direction: column; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-watermark">YAMAHA</div>
+    <div class="header-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Yamaha-Logo.png" alt="Yamaha">
+    </div>
+    <div class="header-eyebrow">Iwata, Japon · Fondée en 1955</div>
+    <div class="header-title">Yamaha</div>
+    <div class="header-sub">La musique du moteur, la précision du geste</div>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-text">
+      YAMAHA &nbsp;·&nbsp; IWATA 1955 &nbsp;·&nbsp; YZF-R1 &nbsp;·&nbsp; MT-09 &nbsp;·&nbsp; R6 &nbsp;·&nbsp; TÉNÉRÉ 700 &nbsp;·&nbsp; 37 TITRES MONDIAUX &nbsp;·&nbsp; VALENTINO ROSSI &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; MADE IN JAPAN &nbsp;·&nbsp; YAMAHA &nbsp;·&nbsp; IWATA 1955 &nbsp;·&nbsp; YZF-R1 &nbsp;·&nbsp; MT-09 &nbsp;·&nbsp; R6 &nbsp;·&nbsp; TÉNÉRÉ 700 &nbsp;·&nbsp; 37 TITRES MONDIAUX &nbsp;·&nbsp; VALENTINO ROSSI &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; MADE IN JAPAN &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <nav>
+    <a href="#origines">Origines</a>
+    <a href="#adn">ADN</a>
+    <a href="#competition">Compétition</a>
+    <a href="#aujourd-hui">Aujourd'hui</a>
+  </nav>
+
+  <main>
+
+    <div class="story-section" id="origines">
+      <div class="section-label"><span>01 · Les origines</span></div>
+      <h2>Du piano au piston</h2>
+      <p>
+        Yamaha Motor Company est fondée en 1955 à Iwata, dans la préfecture de Shizuoka,
+        au Japon — un essaimage de Nippon Gakki, le fabricant d'instruments de musique
+        fondé par Torakusu Yamaha en 1887. Cette double origine — le piano et le moteur —
+        n'est pas anecdotique : elle forge une culture d'entreprise obsédée par la précision,
+        le son et le ressenti, aussi bien en musique qu'en mécanique.
+      </p>
+      <p>
+        La première moto Yamaha, la YA-1, sort en 1954 et remporte dès sa première
+        année la Mont Fuji Climb Race. Un début foudroyant qui annonce la couleur :
+        Yamaha ne construit pas des machines, elle compose des expériences.
+      </p>
+    </div>
+
+    <div class="story-section" id="adn">
+      <div class="section-label"><span>02 · L'ADN</span></div>
+      <h2>Deux âmes, une marque</h2>
+      <div class="dual-block">
+        <div class="dual-item">
+          <div class="dual-icon">♩</div>
+          <div class="dual-title">L'héritage musical</div>
+          <p>Né de Nippon Gakki, Yamaha apporte à la moto la rigueur
+          de l'artisan luthier : chaque détail compte, chaque vibration
+          est maîtrisée. Le diapason à trois branches du logo rappelle
+          cette filiation unique.</p>
+        </div>
+        <div class="dual-item">
+          <div class="dual-icon">⚙</div>
+          <div class="dual-title">L'âme sportive</div>
+          <p>Dès la YA-1, Yamaha engage ses machines en compétition.
+          Cette obsession de la performance sur circuit irrigue toute
+          la gamme — de la R1 à la MT-09 en passant par la légendaire R6.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row story-section">
+      <div class="stat-box">
+        <div class="stat-num">37</div>
+        <div class="stat-label">Titres mondiaux</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">1955</div>
+        <div class="stat-label">Fondation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">180+</div>
+        <div class="stat-label">Pays distributeurs</div>
+      </div>
+    </div>
+
+    <div class="story-section" id="competition">
+      <div class="section-label"><span>03 · En compétition</span></div>
+      <h2>Le bleu et le blanc sur tous les podiums</h2>
+      <div class="highlight-box">
+        <p>
+          Yamaha entre en Grand Prix dès 1961. La marque remporte son premier
+          titre mondial en 1964 avec Phil Read en 250cc et ne s'arrête plus :
+          37 championnats du monde toutes catégories confondues, dont une
+          domination remarquable en MotoGP grâce à des pilotes comme Valentino Rossi
+          (5 titres sous les couleurs Yamaha), Jorge Lorenzo (3 titres) et
+          Fabio Quartararo, champion 2021 — premier Français de l'histoire à décrocher
+          le titre suprême.
+        </p>
+      </div>
+
+      <div style="margin-top: 3rem;">
+        <div class="section-label"><span>Jalons clés</span></div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1954</div>
+            <div class="timeline-text">Première moto : la YA-1, victorieuse à la Mont Fuji Climb Race dès sa première course.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1964</div>
+            <div class="timeline-text">Premier titre mondial en Grand Prix — Phil Read, 250cc.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1973</div>
+            <div class="timeline-text">Giacomo Agostini champion 500cc avec Yamaha — début d'une ère dorée.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1998</div>
+            <div class="timeline-text">Naissance de la YZF-R1, qui redéfinit les standards de la sportive moderne.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2004–2005</div>
+            <div class="timeline-text">Valentino Rossi rejoint Yamaha et remporte le MotoGP deux années consécutives.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2021</div>
+            <div class="timeline-text">Fabio Quartararo sacré champion du monde MotoGP — premier Français de l'histoire.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="story-section" id="aujourd-hui">
+      <div class="section-label"><span>04 · Aujourd'hui</span></div>
+      <h2>Toujours composer, toujours courir</h2>
+      <p>
+        Yamaha propose aujourd'hui une gamme parmi les plus complètes de l'industrie :
+        la YZF-R1 pour la piste, la MT-09 pour la ville et les twisties, la Ténéré 700
+        pour l'aventure, le XMAX pour le quotidien urbain. Chaque modèle porte
+        l'empreinte de cette double culture — la rigueur musicale et l'exigence sportive —
+        qui distingue Yamaha depuis plus de 70 ans.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="buttons">
+      <a href="../indexRide.html" class="btn btn-back">← Retour</a>
+      <a href="Yamaha2.html" class="btn btn-primary">Voir les motos →</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Yamaha</div>
+    <div class="footer-copy">© 2025 · Fan site non officiel · Inspiré de l'histoire de Yamaha Motor</div>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.story-section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
