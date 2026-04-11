@@ -1,113 +1,505 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histoire d'Aprilia</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,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">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-            color: #000;
-        }
-        header {
-            background-color: #d50000; /* Rouge Aprilia */
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        nav {
-            background-color: #000; /* Noir */
-            padding: 10px;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        section {
-            padding: 20px;
-            line-height: 1.6;
-        }
-        h1, h2 {
-            color: #d50000;
-        }
-        .italie {
-            border-left: 8px solid green;
-            border-right: 8px solid red;
-            padding: 10px;
-            background-color: #f5f5f5;
-        }
-        footer {
-            background-color: #000;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.9em;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histoire d'Aprilia</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,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">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #c8000a;
+      --red-dark: #8f0007;
+      --black: #0c0c0c;
+      --surface: #141414;
+      --surface2: #1c1c1c;
+      --border: rgba(200, 0, 10, 0.2);
+      --text: #e5e2dc;
+      --muted: #7a7570;
+      --gold: #b8a87a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* GRAIN */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 1;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    header::before {
+      content: 'APRILIA';
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(8rem, 20vw, 18rem);
+      color: rgba(200,0,10,0.04);
+      letter-spacing: 0.1em;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .header-stripe {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--red), var(--red-dark), transparent);
+    }
+
+    .header-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 8rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-top: 0.8rem;
+      letter-spacing: 0.06em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12,12,12,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 3rem;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+    }
+
+    nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav a:hover {
+      color: #fff;
+      border-bottom-color: var(--red);
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    /* SECTIONS */
+    .story-section {
+      margin-bottom: 5rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .story-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .story-section p {
+      color: var(--text);
+      font-size: 1.1rem;
+      line-height: 1.9;
+      max-width: 72ch;
+    }
+
+    /* QUOTE BLOCK — section compétition */
+    .competition-block {
+      background: var(--surface);
+      border-left: 3px solid var(--red);
+      padding: 2.5rem 3rem;
+      border-radius: 0 4px 4px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .competition-block::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem;
+      color: rgba(200,0,10,0.08);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .competition-block p {
+      font-style: italic;
+      font-size: 1.15rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 3rem 0;
+    }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--red);
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--red), transparent);
+      margin: 4rem 0;
+      opacity: 0.35;
+    }
+
+    /* BUTTONS */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 2.2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.07);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::after { opacity: 1; }
+
+    .btn-back {
+      background: var(--surface2);
+      color: #ccc;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--red-dark); }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.15);
+    }
+
+    .footer-copy {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* TICKER */
+    .ticker {
+      background: var(--red);
+      padding: 0.5rem 0;
+      overflow: hidden;
+    }
+
+    .ticker-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #fff;
+      white-space: nowrap;
+      animation: marquee 28s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 680px) {
+      nav { padding: 0.8rem 1rem; gap: 1.5rem; }
+      main { padding: 3rem 1.2rem 4rem; }
+      .stats-row { grid-template-columns: 1fr; }
+      .competition-block { padding: 1.8rem 1.5rem; }
+      footer { flex-direction: column; text-align: center; padding: 1.2rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Aprilia</h1>
-        <p>Passion, vitesse et innovation italienne</p>
-    </header>
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-eyebrow">Noale, Italie · Fondée en 1945</div>
+    <div class="header-title">Aprilia</div>
+    <div class="header-sub">Passion, vitesse et innovation italienne</div>
+  </header>
 
-    <nav>
-        <a href="#origines">Origines</a>
-        <a href="#competition">En compétition</a>
-        <a href="#aujourdhui">Aujourd'hui</a>
-    </nav>
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-text">
+      APRILIA &nbsp;·&nbsp; 54 TITRES MONDIAUX &nbsp;·&nbsp; 125CC &nbsp;·&nbsp; 250CC &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; RSV4 &nbsp;·&nbsp; TUONO &nbsp;·&nbsp; GROUPE PIAGGIO &nbsp;·&nbsp; NOALE 1945 &nbsp;·&nbsp; MADE IN ITALY &nbsp;·&nbsp;
+      APRILIA &nbsp;·&nbsp; 54 TITRES MONDIAUX &nbsp;·&nbsp; 125CC &nbsp;·&nbsp; 250CC &nbsp;·&nbsp; MOTOGP &nbsp;·&nbsp; RSV4 &nbsp;·&nbsp; TUONO &nbsp;·&nbsp; GROUPE PIAGGIO &nbsp;·&nbsp; NOALE 1945 &nbsp;·&nbsp; MADE IN ITALY &nbsp;·&nbsp;
+    </div>
+  </div>
 
-    <section id="origines">
-        <h2>Les origines</h2>
-        <p>
-            Aprilia a été fondée en 1945 à Noale, en Italie, par Cavaliere Alberto Beggio.
-            À l'origine, l'entreprise fabriquait des bicyclettes, avant de se lancer dans 
-            la production de cyclomoteurs et de motos dans les années 1960.
-        </p>
-    </section>
+  <!-- NAV -->
+  <nav>
+    <a href="#origines">Origines</a>
+    <a href="#competition">Compétition</a>
+    <a href="#aujourdhui">Aujourd'hui</a>
+  </nav>
 
-    <section id="competition" class="italie">
-        <h2>Aprilia en compétition</h2>
-        <p>
-            Dès les années 1970, Aprilia s'engage dans la compétition moto, 
-            remportant rapidement de nombreux titres dans les catégories 125cc et 250cc.
-            La marque est réputée pour ses innovations techniques et ses performances 
-            remarquables sur circuit, et a contribué à lancer la carrière de nombreux 
-            pilotes célèbres.
-        </p>
-    </section>
+  <main>
 
-    <section id="aujourdhui">
-        <h2>Aprilia aujourd'hui</h2>
-        <p>
-            Aujourd'hui, Aprilia fait partie du groupe Piaggio et continue de produire 
-            des motos sportives, routières et tout-terrain. Elle est reconnue dans le monde 
-            entier pour son design distinctif, ses performances de pointe et son héritage 
-            en compétition.
-        </p>
-    </section>
-
-    <div class="buttons">
-      <a href="../indexRide.html" class="btn">Retour</a>
-      <a href="Aprilia2.html" class="btn">Voir les Motos</a>
+    <!-- ORIGINES -->
+    <div class="story-section" id="origines">
+      <div class="section-label"><span>01 · Les origines</span></div>
+      <h2>Née à Noale en 1945</h2>
+      <p>
+        Aprilia a été fondée en 1945 à Noale, en Italie, par Cavaliere Alberto Beggio.
+        À l'origine, l'entreprise fabriquait des bicyclettes, avant de se lancer dans
+        la production de cyclomoteurs et de motos dans les années 1960.
+        Ce passage du vélo au moteur marque le début d'une aventure industrielle
+        et sportive hors du commun, ancrée dans le tissu artisanal de la Vénétie.
+      </p>
     </div>
 
-    <section id="motos">
-      <h2>Nos Motos</h2>
-      <p>Découvrez ici les différents modèles de motos Aprilia.</p>
+    <!-- STATS -->
+    <div class="stats-row story-section">
+      <div class="stat-box">
+        <div class="stat-num">54</div>
+        <div class="stat-label">Titres mondiaux</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">1945</div>
+        <div class="stat-label">Année de fondation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">38</div>
+        <div class="stat-label">Nations distributrices</div>
+      </div>
+    </div>
 
-    <footer>
-        <p>© 2025 - Page créée par  - Inspirée de l'histoire officielle d'Aprilia</p>
-    </footer>
+    <!-- COMPETITION -->
+    <div class="story-section" id="competition">
+      <div class="section-label"><span>02 · En compétition</span></div>
+      <h2>La victoire comme obsession</h2>
+      <div class="competition-block">
+        <p>
+          Dès les années 1970, Aprilia s'engage dans la compétition moto,
+          remportant rapidement de nombreux titres dans les catégories 125cc et 250cc.
+          La marque est réputée pour ses innovations techniques et ses performances
+          remarquables sur circuit, et a contribué à lancer la carrière de nombreux
+          pilotes célèbres — Valentino Rossi, Max Biaggi, Loris Capirossi — qui ont
+          forgé leur légende sous ses couleurs rouges.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- AUJOURD'HUI -->
+    <div class="story-section" id="aujourdhui">
+      <div class="section-label"><span>03 · Aujourd'hui</span></div>
+      <h2>L'héritage continue</h2>
+      <p>
+        Aujourd'hui, Aprilia fait partie du groupe Piaggio et continue de produire
+        des motos sportives, routières et tout-terrain. Elle est reconnue dans le monde
+        entier pour son design distinctif, ses performances de pointe et son héritage
+        en compétition. La RSV4 et la Tuono V4 demeurent des références absolues
+        dans l'univers de la moto haute performance.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+      <a href="../indexRide.html" class="btn btn-back">← Retour</a>
+      <a href="Aprilia2.html" class="btn btn-primary">Voir les motos →</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Aprilia</div>
+    <div class="footer-copy">© 2025 · Inspiré de l'histoire officielle d'Aprilia</div>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.story-section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+  </script>
 
 </body>
 </html>
