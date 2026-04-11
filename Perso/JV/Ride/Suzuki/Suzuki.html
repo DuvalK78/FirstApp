@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histoire de Suzuki</title>
+  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/e/ee/Suzuki_logo_2025_%28vertical%29.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #1a4f8a;
+      --blue-light: #2a6bbf;
+      --blue-glow: rgba(26, 79, 138, 0.3);
+      --silver: #c0c8d4;
+      --silver-dark: #8892a0;
+      --black: #09090f;
+      --surface: #0f1018;
+      --surface2: #161821;
+      --surface3: #1c1e28;
+      --border: rgba(192, 200, 212, 0.1);
+      --border-blue: rgba(26, 79, 138, 0.25);
+      --text: #d8dde6;
+      --muted: #60697a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 1;
+      min-height: 380px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    /* Diagonal grid background */
+    header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          -55deg,
+          transparent,
+          transparent 60px,
+          rgba(26,79,138,0.03) 60px,
+          rgba(26,79,138,0.03) 61px
+        );
+      pointer-events: none;
+    }
+
+    /* Large watermark */
+    .header-watermark {
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(7rem, 18vw, 16rem);
+      color: rgba(26,79,138,0.05);
+      letter-spacing: 0.08em;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      line-height: 1;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .header-stripe {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--blue-light), var(--blue), transparent);
+    }
+
+    /* Side accent lines */
+    .header-line-left {
+      position: absolute;
+      left: 3rem; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, var(--border-blue), transparent);
+    }
+
+    .header-line-right {
+      position: absolute;
+      right: 3rem; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, var(--border-blue), transparent);
+    }
+
+    .header-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--blue-light);
+      margin-bottom: 1.2rem;
+      position: relative; z-index: 1;
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4.5rem, 11vw, 9rem);
+      letter-spacing: 0.1em;
+      color: #fff;
+      line-height: 1;
+      position: relative; z-index: 1;
+    }
+
+    .header-sub {
+      font-family: 'Barlow', sans-serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1rem;
+      color: var(--silver-dark);
+      margin-top: 1rem;
+      letter-spacing: 0.08em;
+      position: relative; z-index: 1;
+    }
+
+    .header-logo {
+      position: relative; z-index: 1;
+      margin-bottom: 2rem;
+      width: 64px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .header-logo img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: brightness(0) invert(1) opacity(0.6);
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--blue);
+      padding: 0.55rem 0;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0,0,0,0.3);
+    }
+
+    .ticker-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+    }
+
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(9,9,15,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 3rem;
+      display: flex; justify-content: center; gap: 3rem;
+    }
+
+    nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    nav a:hover { color: var(--silver); border-bottom-color: var(--blue-light); }
+
+    /* ── MAIN ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    /* ── STORY SECTIONS ── */
+    .story-section {
+      margin-bottom: 5rem;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .story-section.visible { opacity: 1; transform: translateY(0); }
+
+    .section-label {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem;
+    }
+
+    .section-label span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--blue-light);
+    }
+
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border-blue), transparent);
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      letter-spacing: 0.06em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 1.6rem;
+    }
+
+    .story-section p {
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.9;
+      max-width: 74ch;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      position: relative;
+      background: var(--surface2);
+      border: 1px solid var(--border-blue);
+      border-radius: 4px;
+      padding: 2.4rem 2.8rem;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    .highlight-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(180deg, var(--blue-light), var(--blue));
+    }
+
+    .highlight-box::after {
+      content: 'S';
+      position: absolute;
+      right: 2rem; bottom: -1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 8rem;
+      color: rgba(26,79,138,0.06);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .highlight-box p {
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--silver);
+      position: relative; z-index: 1;
+    }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 3rem 0;
+    }
+
+    .stat-box {
+      background: var(--surface);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: background 0.25s;
+    }
+
+    .stat-box:hover { background: var(--surface2); }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--blue-light);
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 1px solid var(--border-blue);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.2rem;
+    }
+
+    .timeline-item:last-child { margin-bottom: 0; }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.4rem; top: 0.45rem;
+      width: 7px; height: 7px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(42,107,191,0.15);
+    }
+
+    .timeline-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--blue-light);
+      letter-spacing: 0.12em;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      margin: 4rem 0;
+      opacity: 0.3;
+    }
+
+    /* ── BUTTONS ── */
+    .buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      text-decoration: none; padding: 0.9rem 2.2rem; border-radius: 3px;
+      cursor: pointer; border: none; transition: all 0.2s;
+      position: relative; overflow: hidden;
+    }
+
+    .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.07); opacity: 0; transition: opacity 0.2s; }
+    .btn:hover::after { opacity: 1; }
+
+    .btn-back { background: var(--surface2); color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-back:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: var(--blue-light); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 1.4rem 3rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    .footer-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.12); }
+    .footer-copy { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      nav { padding: 0.8rem 1rem; gap: 1.5rem; }
+      main { padding: 3rem 1.2rem 4rem; }
+      .stats-row { grid-template-columns: 1fr; }
+      .highlight-box { padding: 1.8rem 1.5rem; }
+      .header-line-left, .header-line-right { display: none; }
+      footer { flex-direction: column; text-align: center; padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-stripe"></div>
+    <div class="header-line-left"></div>
+    <div class="header-line-right"></div>
+    <div class="header-watermark">SUZUKI</div>
+
+    <div class="header-logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Suzuki_logo_2025_%28vertical%29.svg" alt="Suzuki">
+    </div>
+    <div class="header-eyebrow">Hamamatsu, Japon · Fondée en 1909</div>
+    <div class="header-title">Suzuki</div>
+    <div class="header-sub">L'art de l'ingénierie au service de la route</div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-text">
+      SUZUKI &nbsp;·&nbsp; HAMAMATSU 1909 &nbsp;·&nbsp; GSX-R &nbsp;·&nbsp; HAYABUSA &nbsp;·&nbsp; V-STROM &nbsp;·&nbsp; 15 TITRES MONDIAUX &nbsp;·&nbsp; WSBK &nbsp;·&nbsp; MotoGP &nbsp;·&nbsp; MADE IN JAPAN &nbsp;·&nbsp; SUZUKI &nbsp;·&nbsp; HAMAMATSU 1909 &nbsp;·&nbsp; GSX-R &nbsp;·&nbsp; HAYABUSA &nbsp;·&nbsp; V-STROM &nbsp;·&nbsp; 15 TITRES MONDIAUX &nbsp;·&nbsp; WSBK &nbsp;·&nbsp; MotoGP &nbsp;·&nbsp; MADE IN JAPAN &nbsp;·&nbsp;
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#origines">Origines</a>
+    <a href="#competition">Compétition</a>
+    <a href="#heritage">Héritage</a>
+  </nav>
+
+  <main>
+
+    <!-- ORIGINES -->
+    <div class="story-section" id="origines">
+      <div class="section-label"><span>01 · Les origines</span></div>
+      <h2>De la soie au moteur</h2>
+      <p>
+        Suzuki naît en 1909 à Hamamatsu, dans la préfecture de Shizuoka au Japon,
+        sous l'impulsion de Michio Suzuki. L'entreprise commence par fabriquer
+        des métiers à tisser pour l'industrie soyeuse locale — activité alors
+        florissante dans la région. Ce n'est qu'après la Seconde Guerre mondiale,
+        face à l'effondrement du marché textile, que Suzuki pivote radicalement
+        vers la motorisation.
+      </p>
+      <p style="margin-top:1.2rem;">
+        En 1952, la marque présente son premier cyclomoteur, le <em>Power Free</em>,
+        équipé d'un moteur 36cc. Deux ans plus tard, la première moto complète voit
+        le jour — le <em>Colleda CO</em> — et Suzuki s'installe durablement dans
+        le paysage mondial de la deux-roues.
+      </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row story-section">
+      <div class="stat-box">
+        <div class="stat-num">1909</div>
+        <div class="stat-label">Fondation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">15</div>
+        <div class="stat-label">Titres mondiaux</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">100+</div>
+        <div class="stat-label">Pays distributeurs</div>
+      </div>
+    </div>
+
+    <!-- COMPETITION -->
+    <div class="story-section" id="competition">
+      <div class="section-label"><span>02 · En compétition</span></div>
+      <h2>La performance comme héritage</h2>
+      <div class="highlight-box">
+        <p>
+          Suzuki entre en Grand Prix en 1960 et décroche dès 1962 son premier titre
+          mondial avec Ernst Degner en 50cc. La marque remporte ensuite des championnats
+          en 50cc, 125cc et 500cc — catégorie reine — notamment grâce à Barry Sheene
+          (1976, 1977) et Marco Lucchinelli (1981). En Superbike, les GSX-R dominent
+          plusieurs saisons et deviennent des références techniques incontournables.
+        </p>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="story-section">
+      <div class="section-label"><span>Jalons clés</span></div>
+      <h2>Une histoire en dates</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-year">1909</div>
+          <div class="timeline-text">Fondation par Michio Suzuki — métiers à tisser.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1952</div>
+          <div class="timeline-text">Premier cyclomoteur : le <em>Power Free</em> 36cc.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1962</div>
+          <div class="timeline-text">Premier titre mondial Grand Prix en 50cc avec Ernst Degner.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1976–77</div>
+          <div class="timeline-text">Barry Sheene champion du monde 500cc deux années de suite.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1985</div>
+          <div class="timeline-text">Naissance de la GSX-R 750, pionnière des sportives modernes.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">1999</div>
+          <div class="timeline-text">Hayabusa — la moto de série la plus rapide de son époque.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-year">2020</div>
+          <div class="timeline-text">Joan Mir sacré champion du monde MotoGP.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- HÉRITAGE -->
+    <div class="story-section" id="heritage">
+      <div class="section-label"><span>03 · L'héritage</span></div>
+      <h2>L'esprit Suzuki, aujourd'hui</h2>
+      <p>
+        Suzuki construit sa réputation sur une philosophie discrète mais radicale :
+        offrir le maximum de performance et de fiabilité sans ostentation. La GSX-R,
+        la Hayabusa, la V-Strom — chacune incarne une facette de cet idéal.
+        Retirée du MotoGP fin 2022, la marque continue de produire des motos
+        plébiscitées par les pilotes du monde entier pour leur équilibre
+        entre polyvalence et caractère.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+      <a href="../indexRide.html" class="btn btn-back">← Retour</a>
+      <a href="Suzuki2.html" class="btn btn-primary">Voir les motos →</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-brand">Suzuki</div>
+    <div class="footer-copy">© 2025 · Fan site non officiel · Inspiré de l'histoire de Suzuki</div>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.story-section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
