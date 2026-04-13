@@ -5,214 +5,502 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FIA WEC – Team Carousel</title>
   <link rel="icon" type="image/png" href="https://www.fiawec.com/uploads/logo-wec-cyan-navy-67f5358f785c2353364808.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #00052a;
+    html, body {
+      background: #03030d;
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: Verdana, sans-serif;
-      padding: 2rem 1rem;
+      font-family: 'Inter', sans-serif;
     }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+    #wec-universe {
+      position: relative; overflow: hidden; min-height: 580px; width: 100%; max-width: 700px;
+      background: #03030d;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 0 1rem 2rem;
     }
-    .wec-root {
-      background: #00085C;
-      width: 100%;
-      max-width: 560px;
-      min-height: 420px;
-      padding: 2rem 1.5rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
+    canvas#bg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+
+    .wec-header {
+      position: relative; z-index: 2; text-align: center; margin-bottom: 1.5rem; padding-top: 1.8rem;
     }
-    .track-lines { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-    .track-line   { position: absolute; height: 1px; background: rgba(255,255,255,0.06); width: 100%; }
-    .wec-logo     { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
-    .wec-badge    {
-      background: #00B4FF; border-radius: 4px; padding: 4px 10px;
-      font-size: 11px; font-weight: bold; color: #00085C; letter-spacing: 1.5px;
-      text-transform: uppercase;
+    .wec-header .big-title {
+      font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+      letter-spacing: 5px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;
     }
-    .wec-title    { font-size: 13px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
-    .counter      { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 1.2rem; }
-    .carousel-area {
-      display: flex; align-items: center; gap: 16px;
-      width: 100%; margin-bottom: 1.5rem;
+    .wec-header .championship {
+      font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 900;
+      color: #fff; letter-spacing: 2px;
+      text-shadow: 0 0 30px var(--team-glow, #00f0ff), 0 0 60px var(--team-glow, #00f0ff44);
+      transition: text-shadow 0.6s ease;
     }
-    .arrow-btn {
-      background: rgba(255,255,255,0.07);
-      border: 0.5px solid rgba(255,255,255,0.15);
-      border-radius: 50%; width: 44px; height: 44px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 18px; transition: background 0.2s, transform 0.15s;
-      flex-shrink: 0;
+    .wec-header .season-badge {
+      display: inline-block; margin-top: 8px; padding: 3px 14px;
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
+      font-size: 10px; letter-spacing: 3px; color: rgba(255,255,255,0.4); text-transform: uppercase;
     }
-    .arrow-btn:hover  { background: rgba(0,180,255,0.2); transform: scale(1.1); }
-    .arrow-btn:active { transform: scale(0.95); }
-    .card-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .team-card {
-      width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(0,180,255,0.3);
-      border-radius: 16px;
-      padding: 1.5rem 1.25rem;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-      cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.15s;
-      text-decoration: none;
-      animation: fadeSlide 0.3s ease;
+
+    .track-visual {
+      position: relative; z-index: 2; width: 100%; max-width: 620px;
+      display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 1.2rem;
     }
-    .team-card:hover { background: rgba(0,180,255,0.12); border-color: #00B4FF; transform: translateY(-2px); }
-    .team-logo-circle {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      border: 0.5px solid rgba(255,255,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: bold; color: #00B4FF; letter-spacing: -1px;
+    .arrow-zone { width: 64px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+    .arr-btn {
+      width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.04);
+      color: #fff; font-size: 20px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: 'Orbitron', monospace;
     }
-    .team-name { font-size: 18px; font-weight: bold; color: #fff; text-align: center; line-height: 1.3; }
-    .team-class-badge {
-      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-      padding: 3px 10px; border-radius: 20px; font-weight: bold;
+    .arr-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.5); transform: scale(1.1); }
+    .arr-btn:active { transform: scale(0.93); }
+
+    .card-stage { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .car-silhouette {
+      width: 240px; height: 80px; margin-bottom: 8px; position: relative;
+      filter: drop-shadow(0 0 16px var(--team-glow, #00f0ff));
+      transition: filter 0.6s ease;
     }
-    .badge-hyper { background: rgba(0,180,255,0.15); color: #00B4FF; border: 0.5px solid rgba(0,180,255,0.4); }
-    .badge-lmgt3 { background: rgba(255,160,0,0.15); color: #FFA000; border: 0.5px solid rgba(255,160,0,0.4); }
-    .visit-link  { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.5px; }
-    .dots { display: flex; gap: 6px; }
+    .car-silhouette svg { width: 100%; height: 100%; }
+
+    .main-card {
+      width: 100%; max-width: 400px; border-radius: 12px; overflow: hidden;
+      position: relative; cursor: pointer; transition: transform 0.2s; display: block; text-decoration: none;
+    }
+    .main-card:hover { transform: scale(1.02) translateY(-3px); }
+    .card-border {
+      position: absolute; inset: 0; border-radius: 12px;
+      border: 1.5px solid transparent;
+      background: linear-gradient(var(--team-color1, #00f0ff), var(--team-color2, #ff2e63)) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out; mask-composite: exclude;
+      transition: all 0.6s; pointer-events: none;
+    }
+    .card-inner {
+      background: rgba(5,5,20,0.9); backdrop-filter: blur(8px);
+      padding: 1.5rem 1.5rem 1.2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .team-number {
+      font-family: 'Orbitron', monospace; font-size: 48px; font-weight: 900; line-height: 1;
+      color: transparent;
+      background: linear-gradient(135deg, var(--team-color1, #00f0ff), var(--team-color2, #ff2e63));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      opacity: 0.25; position: absolute; top: 10px; right: 18px; transition: all 0.6s;
+    }
+    .team-name-display {
+      font-family: 'Orbitron', monospace; font-size: 17px; font-weight: 700;
+      color: #fff; text-align: center; line-height: 1.3; transition: all 0.3s;
+    }
+    .badges-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .badge {
+      font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      font-weight: 600; padding: 4px 12px; border-radius: 20px;
+    }
+    .badge-hyper {
+      background: linear-gradient(90deg, rgba(0,240,255,0.15), rgba(0,240,255,0.05));
+      border: 1px solid rgba(0,240,255,0.4); color: #00f0ff;
+    }
+    .badge-lmgt3 {
+      background: linear-gradient(90deg, rgba(255,160,0,0.15), rgba(255,160,0,0.05));
+      border: 1px solid rgba(255,160,0,0.4); color: #ffa000;
+    }
+    .badge-car { border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.45); background: transparent; }
+    .visit-hint { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 1px; }
+
+    .progress-bar-wrap { position: relative; z-index: 2; width: 100%; max-width: 400px; margin-bottom: 1rem; }
+    .progress-track { height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, var(--team-color1, #00f0ff), var(--team-color2, #ff2e63));
+      transition: width 0.5s ease, background 0.6s ease;
+    }
+
+    .dots-row { position: relative; z-index: 2; display: flex; gap: 7px; margin-bottom: 0.8rem; }
     .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      transition: background 0.2s, transform 0.2s; cursor: pointer;
+      width: 5px; height: 5px; border-radius: 50%; cursor: pointer;
+      background: rgba(255,255,255,0.15); transition: all 0.25s;
     }
-    .dot.active { background: #00B4FF; transform: scale(1.3); }
+    .dot.on {
+      background: var(--team-color1, #00f0ff);
+      box-shadow: 0 0 8px var(--team-color1, #00f0ff);
+      transform: scale(1.5);
+    }
+
     .bottom-links {
-      margin-top: 1.5rem;
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      position: relative; z-index: 2; display: flex; flex-direction: column;
+      align-items: center; gap: 8px; margin-top: 0.5rem;
     }
-    .footer-link {
-      font-size: 11px; color: rgba(255,255,255,0.25);
-      text-decoration: none; letter-spacing: 0.5px;
+    .back-lnk {
+      font-size: 11px; color: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 6px 18px; text-decoration: none; letter-spacing: 1px;
+      transition: all 0.2s; font-family: 'Inter', sans-serif;
     }
-    .footer-link:hover { color: #00B4FF; }
-    .back-btn {
-      font-size: 12px; color: rgba(255,255,255,0.45);
-      border: 0.5px solid rgba(255,255,255,0.15);
-      border-radius: 6px; padding: 6px 16px;
-      text-decoration: none; transition: background 0.2s, color 0.2s;
+    .back-lnk:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06); }
+    .official-lnk {
+      font-size: 10px; color: rgba(255,255,255,0.2); text-decoration: none;
+      letter-spacing: 1px; transition: color 0.2s;
     }
-    .back-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .official-lnk:hover { color: rgba(255,255,255,0.55); }
+
+    @keyframes cardIn { from { opacity:0; transform:translateY(14px) scale(0.97); } to { opacity:1; transform:none; } }
+    @keyframes carIn  { from { opacity:0; transform:translateX(-20px); }           to { opacity:1; transform:none; } }
+    .anim-card { animation: cardIn 0.35s ease forwards; }
+    .anim-car  { animation: carIn  0.4s  ease forwards; }
   </style>
 </head>
 <body>
+<div id="wec-universe">
+  <canvas id="bg-canvas"></canvas>
 
-<div class="wec-root">
-  <div class="track-lines" id="trackLines"></div>
-
-  <div class="wec-logo">
-    <span class="wec-badge">FIA WEC</span>
-    <span class="wec-title">2025 Season</span>
+  <div class="wec-header">
+    <div class="big-title">FIA World Endurance Championship</div>
+    <div class="championship" id="champTitle">ENDURANCE</div>
+    <span class="season-badge">2025 · 2026 Season</span>
   </div>
 
-  <p class="counter" id="counter">1 / 10</p>
-
-  <div class="carousel-area">
-    <button class="arrow-btn" id="prev">&#8592;</button>
-    <div class="card-wrap">
-      <a class="team-card" id="teamCard" href="#">
-        <div class="team-logo-circle" id="teamInitials">TGR</div>
-        <span class="team-name" id="teamName">Toyota Gazoo Racing</span>
-        <span class="team-class-badge badge-hyper" id="teamBadge">Hypercar</span>
-        <span class="visit-link">Voir la page équipe →</span>
+  <div class="track-visual">
+    <div class="arrow-zone"><button class="arr-btn" id="prev">&#8592;</button></div>
+    <div class="card-stage">
+      <div class="car-silhouette" id="carSvg"></div>
+      <a class="main-card" id="mainCard" href="#">
+        <div class="card-border" id="cardBorder"></div>
+        <div class="card-inner">
+          <div class="team-number" id="teamNum">50</div>
+          <div class="team-name-display" id="teamNameEl">Ferrari AF Corse</div>
+          <div class="badges-row" id="badgesRow"></div>
+          <div class="visit-hint">Voir la page équipe →</div>
+        </div>
       </a>
     </div>
-    <button class="arrow-btn" id="next">&#8594;</button>
+    <div class="arrow-zone"><button class="arr-btn" id="next">&#8594;</button></div>
   </div>
 
-  <div class="dots" id="dots"></div>
-</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progFill" style="width:10%"></div></div>
+  </div>
 
-<div class="bottom-links">
-  <a class="back-btn" href="../../../../Websitesindex.html">← Retour à la sélection des sites</a>
-  <a class="footer-link" href="https://www.fiawec.com" target="_blank" rel="noopener noreferrer">
-    Visitez le site officiel de la FIA WEC
-  </a>
+  <div class="dots-row" id="dotsRow"></div>
+
+  <div class="bottom-links">
+    <a class="back-lnk" href="../../../../Websitesindex.html">← Retour à la sélection</a>
+    <a class="official-lnk" href="https://www.fiawec.com" target="_blank" rel="noopener noreferrer">fiawec.com</a>
+  </div>
 </div>
 
 <script>
 const teams = [
-  { name: "AF Corse",                link: "../WEC_Teams/AF_Corse.html",                cls: "LMGT3",    badge: "badge-lmgt3" },
-  { name: "Alpine Endurance Team",   link: "../WEC_Teams/Alpine_Endurance_Team.html",   cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Aston Martin",            link: "../WEC_Teams/Aston_Martin.html",            cls: "Hypercar", badge: "badge-hyper" },
-  { name: "BMW M Team WRT",          link: "../WEC_Teams/BMW_M_Team_WRT.html",          cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Cadillac Racing",         link: "../WEC_Teams/Cadillac_Racing.html",         cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Ferrari AF Corse",        link: "../WEC_Teams/Ferrari_AF_Corse.html",        cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Peugeot TotalEnergies",   link: "../WEC_Teams/Peugeot_TotalEnergies.html",   cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Porsche Penske Motorsport", link: "../WEC_Teams/Porsche_Penske_Motorsport.html", cls: "Hypercar", badge: "badge-hyper" },
-  { name: "Proton Competition",      link: "../WEC_Teams/Proton_Competition.html",      cls: "LMGT3",    badge: "badge-lmgt3" },
-  { name: "Toyota Gazoo Racing",     link: "../WEC_Teams/Toyota_Gazoo_Racing.html",     cls: "Hypercar", badge: "badge-hyper" }
+  {
+    name:"Ferrari AF Corse", link:"../WEC_Teams/Ferrari_AF_Corse.html",
+    cls:"Hypercar", car:"Ferrari 499P", num:"50/51",
+    c1:"#E8002D", c2:"#FFD700",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#E8002D" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#E8002D" opacity="0.6"/>
+      <path d="M20 48 Q60 10 120 8 Q180 6 225 42 L215 50 Q175 28 120 26 Q68 28 30 55Z" fill="#E8002D"/>
+      <path d="M80 8 L100 2 L140 2 L160 8Z" fill="#CC0020"/>
+      <rect x="35" y="38" width="170" height="12" rx="4" fill="#C0001A"/>
+      <path d="M215 42 L228 48 L220 52Z" fill="#FFD700"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#E8002D" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#E8002D" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Toyota Gazoo Racing", link:"../WEC_Teams/Toyota_Gazoo_Racing.html",
+    cls:"Hypercar", car:"Toyota GR010 Hybrid", num:"7/8",
+    c1:"#EB0A1E", c2:"#FFFFFF",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#EB0A1E" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#EB0A1E" opacity="0.6"/>
+      <path d="M18 46 Q55 8 122 6 Q182 4 226 40 L216 50 Q176 24 122 24 Q66 26 28 54Z" fill="#EB0A1E"/>
+      <path d="M75 6 L95 0 L148 0 L165 6Z" fill="#fff" opacity="0.9"/>
+      <rect x="30" y="37" width="178" height="13" rx="4" fill="#C00010"/>
+      <path d="M100 18 L122 14 L144 18 L140 22 L104 22Z" fill="#fff" opacity="0.4"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#EB0A1E" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#EB0A1E" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Porsche Penske Motorsport", link:"../WEC_Teams/Porsche_Penske_Motorsport.html",
+    cls:"Hypercar", car:"Porsche 963", num:"5/6",
+    c1:"#D5001C", c2:"#FFFFFF",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#888" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#888" opacity="0.6"/>
+      <path d="M22 47 Q58 10 122 7 Q182 5 222 42 L212 50 Q174 26 122 25 Q66 27 32 55Z" fill="#C0C0C0"/>
+      <path d="M78 7 L98 1 L146 1 L162 7Z" fill="#D5001C"/>
+      <rect x="32" y="38" width="176" height="12" rx="4" fill="#A8A8A8"/>
+      <path d="M108 16 L122 12 L136 16 L132 20 L112 20Z" fill="#D5001C" opacity="0.7"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#aaa" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#aaa" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#444"/>
+      <circle cx="190" cy="57" r="3" fill="#444"/>
+    </svg>`
+  },
+  {
+    name:"Alpine Endurance Team", link:"../WEC_Teams/Alpine_Endurance_Team.html",
+    cls:"Hypercar", car:"Alpine A424", num:"35/36",
+    c1:"#0055A4", c2:"#EF4135",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#0055A4" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#0055A4" opacity="0.6"/>
+      <path d="M20 47 Q60 9 122 7 Q182 5 224 42 L214 50 Q175 26 122 25 Q65 27 30 55Z" fill="#0055A4"/>
+      <path d="M76 7 L96 0 L148 0 L165 7Z" fill="#EF4135"/>
+      <rect x="30" y="38" width="178" height="12" rx="4" fill="#003A8C"/>
+      <path d="M105 14 L122 10 L139 14 L135 19 L109 19Z" fill="#EF4135" opacity="0.8"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#0055A4" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#0055A4" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"BMW M Team WRT", link:"../WEC_Teams/BMW_M_Team_WRT.html",
+    cls:"Hypercar", car:"BMW M Hybrid V8", num:"15/20",
+    c1:"#1C69D3", c2:"#E63312",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#1C69D3" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#1C69D3" opacity="0.6"/>
+      <path d="M22 47 Q60 10 122 7 Q183 5 222 43 L212 50 Q174 26 122 25 Q65 27 32 55Z" fill="#1C69D3"/>
+      <path d="M78 7 L98 0 L146 0 L163 7Z" fill="#E63312"/>
+      <rect x="32" y="38" width="176" height="12" rx="4" fill="#0A4FAA"/>
+      <path d="M100 14 L122 10 L144 14" stroke="#fff" stroke-width="2" opacity="0.6" fill="none"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#1C69D3" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#1C69D3" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Aston Martin THOR", link:"../WEC_Teams/Aston_Martin.html",
+    cls:"Hypercar", car:"Aston Martin Valkyrie", num:"007/009",
+    c1:"#00594F", c2:"#C5A028",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#00594F" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#00594F" opacity="0.6"/>
+      <path d="M24 48 Q62 10 122 7 Q184 5 220 44 L210 52 Q173 28 122 26 Q66 28 34 56Z" fill="#00594F"/>
+      <path d="M76 7 L96 0 L148 0 L165 7Z" fill="#C5A028"/>
+      <rect x="34" y="39" width="172" height="12" rx="4" fill="#003D36"/>
+      <path d="M100 14 L122 8 L144 14 L138 20 L106 20Z" fill="#C5A028" opacity="0.7"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#00594F" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#00594F" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Cadillac Hertz Team JOTA", link:"../WEC_Teams/Cadillac_Racing.html",
+    cls:"Hypercar", car:"Cadillac V-Series.R", num:"12/38",
+    c1:"#C9A84C", c2:"#1A1A1A",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#C9A84C" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#C9A84C" opacity="0.6"/>
+      <path d="M20 47 Q58 9 122 7 Q184 5 224 43 L214 51 Q175 27 122 25 Q64 27 30 55Z" fill="#C9A84C"/>
+      <path d="M78 7 L98 0 L146 0 L163 7Z" fill="#fff"/>
+      <rect x="30" y="38" width="178" height="12" rx="4" fill="#A88830"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#C9A84C" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#C9A84C" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Peugeot TotalEnergies", link:"../WEC_Teams/Peugeot_TotalEnergies.html",
+    cls:"Hypercar", car:"Peugeot 9X8", num:"93/94",
+    c1:"#FF0066", c2:"#111111",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#FF0066" opacity="0.6"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#FF0066" opacity="0.6"/>
+      <path d="M20 47 Q58 8 122 6 Q185 4 224 43 L214 51 Q174 26 122 24 Q64 27 30 56Z" fill="#111"/>
+      <path d="M78 6 L98 0 L146 0 L163 6Z" fill="#FF0066"/>
+      <rect x="30" y="37" width="178" height="13" rx="4" fill="#0A0A0A"/>
+      <path d="M100 14 L122 9 L144 14" stroke="#FF0066" stroke-width="3" fill="none"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#FF0066" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#FF0066" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#444"/>
+      <circle cx="190" cy="57" r="3" fill="#444"/>
+    </svg>`
+  },
+  {
+    name:"AF Corse", link:"../WEC_Teams/AF_Corse.html",
+    cls:"Hypercar", car:"Ferrari 499P #83", num:"83",
+    c1:"#E8002D", c2:"#FFD700",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="58" rx="14" ry="7" fill="#E8002D" opacity="0.5"/>
+      <ellipse cx="190" cy="58" rx="14" ry="7" fill="#E8002D" opacity="0.5"/>
+      <path d="M20 48 Q60 10 120 8 Q180 6 225 42 L215 50 Q175 28 120 26 Q68 28 30 55Z" fill="#FFD700"/>
+      <rect x="35" y="38" width="170" height="12" rx="4" fill="#E8B800"/>
+      <path d="M215 42 L228 48 L220 52Z" fill="#E8002D"/>
+      <circle cx="50" cy="57" r="8" fill="#111" stroke="#E8002D" stroke-width="2"/>
+      <circle cx="190" cy="57" r="8" fill="#111" stroke="#E8002D" stroke-width="2"/>
+      <circle cx="50" cy="57" r="3" fill="#333"/>
+      <circle cx="190" cy="57" r="3" fill="#333"/>
+    </svg>`
+  },
+  {
+    name:"Proton Competition", link:"../WEC_Teams/Proton_Competition.html",
+    cls:"LMGT3", car:"Porsche 911 GT3 R", num:"77/88",
+    c1:"#FF6B00", c2:"#ffffff",
+    svg:`<svg viewBox="0 0 240 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="52" cy="56" rx="12" ry="8" fill="#FF6B00" opacity="0.5"/>
+      <ellipse cx="188" cy="56" rx="12" ry="8" fill="#FF6B00" opacity="0.5"/>
+      <path d="M30 44 Q70 14 122 12 Q176 10 214 40 L206 50 Q170 30 122 29 Q74 30 38 52Z" fill="#FF6B00"/>
+      <rect x="38" y="36" width="164" height="14" rx="5" fill="#CC5500"/>
+      <path d="M90 28 L122 22 L154 28Z" fill="#fff" opacity="0.5"/>
+      <circle cx="52" cy="55" r="8" fill="#111" stroke="#FF6B00" stroke-width="2"/>
+      <circle cx="188" cy="55" r="8" fill="#111" stroke="#FF6B00" stroke-width="2"/>
+      <circle cx="52" cy="55" r="3" fill="#333"/>
+      <circle cx="188" cy="55" r="3" fill="#333"/>
+    </svg>`
+  }
 ];
 
 let idx = 0;
-const card       = document.getElementById("teamCard");
-const nameEl     = document.getElementById("teamName");
-const initialsEl = document.getElementById("teamInitials");
-const badgeEl    = document.getElementById("teamBadge");
-const counter    = document.getElementById("counter");
-const dotsEl     = document.getElementById("dots");
-const lines      = document.getElementById("trackLines");
-
-for (let i = 0; i < 8; i++) {
-  const l = document.createElement("div");
-  l.className = "track-line";
-  l.style.top = (10 + i * 12) + "%";
-  lines.appendChild(l);
-}
+const root       = document.getElementById('wec-universe');
+const champTitle = document.getElementById('champTitle');
+const carSvg     = document.getElementById('carSvg');
+const mainCard   = document.getElementById('mainCard');
+const cardBorder = document.getElementById('cardBorder');
+const teamNameEl = document.getElementById('teamNameEl');
+const teamNum    = document.getElementById('teamNum');
+const badgesRow  = document.getElementById('badgesRow');
+const progFill   = document.getElementById('progFill');
+const dotsRow    = document.getElementById('dotsRow');
 
 teams.forEach((_, i) => {
-  const d = document.createElement("div");
-  d.className = "dot" + (i === 0 ? " active" : "");
-  d.addEventListener("click", () => { idx = i; update(); });
-  dotsEl.appendChild(d);
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.addEventListener('click', () => { idx = i; render(); });
+  dotsRow.appendChild(d);
 });
 
-function initials(name) {
-  return name.split(" ").filter(w => /[A-Z]/.test(w[0])).slice(0, 3).map(w => w[0]).join("");
-}
-
-function update() {
+function render() {
   const t = teams[idx];
-  nameEl.textContent = t.name;
-  card.href = t.link;
-  initialsEl.textContent = initials(t.name);
-  badgeEl.textContent = t.cls;
-  badgeEl.className = "team-class-badge " + t.badge;
-  counter.textContent = (idx + 1) + " / " + teams.length;
-  document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === idx));
-  card.style.animation = "none";
-  void card.offsetWidth;
-  card.style.animation = "fadeSlide 0.3s ease";
+  root.style.setProperty('--team-glow',   t.c1 + 'aa');
+  root.style.setProperty('--team-color1', t.c1);
+  root.style.setProperty('--team-color2', t.c2);
+
+  champTitle.style.textShadow = `0 0 30px ${t.c1}cc, 0 0 70px ${t.c1}44`;
+  champTitle.textContent = t.name.split(' ')[0].toUpperCase();
+
+  carSvg.innerHTML = t.svg;
+  carSvg.style.filter = `drop-shadow(0 0 18px ${t.c1}bb)`;
+  carSvg.classList.remove('anim-car'); void carSvg.offsetWidth; carSvg.classList.add('anim-car');
+
+  teamNameEl.textContent = t.name;
+  teamNum.textContent = t.num;
+  teamNum.style.background = `linear-gradient(135deg, ${t.c1}, ${t.c2})`;
+  teamNum.style.webkitBackgroundClip = 'text';
+  teamNum.style.webkitTextFillColor = 'transparent';
+
+  cardBorder.style.background = `linear-gradient(${t.c1}, ${t.c2}) border-box`;
+
+  badgesRow.innerHTML = '';
+  const b1 = document.createElement('span');
+  b1.className = 'badge ' + (t.cls === 'Hypercar' ? 'badge-hyper' : 'badge-lmgt3');
+  b1.textContent = t.cls;
+  const b2 = document.createElement('span');
+  b2.className = 'badge badge-car';
+  b2.textContent = t.car;
+  badgesRow.appendChild(b1);
+  badgesRow.appendChild(b2);
+
+  mainCard.href = t.link;
+  mainCard.classList.remove('anim-card'); void mainCard.offsetWidth; mainCard.classList.add('anim-card');
+
+  progFill.style.width = ((idx + 1) / teams.length * 100) + '%';
+  progFill.style.background = `linear-gradient(90deg, ${t.c1}, ${t.c2})`;
+
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === idx));
+
+  updateParticles(t.c1, t.c2);
 }
 
-document.getElementById("prev").addEventListener("click", () => {
-  idx = (idx - 1 + teams.length) % teams.length; update();
-});
-document.getElementById("next").addEventListener("click", () => {
-  idx = (idx + 1) % teams.length; update();
-});
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowLeft")  { idx = (idx - 1 + teams.length) % teams.length; update(); }
-  if (e.key === "ArrowRight") { idx = (idx + 1) % teams.length; update(); }
+document.getElementById('prev').addEventListener('click', () => { idx = (idx - 1 + teams.length) % teams.length; render(); });
+document.getElementById('next').addEventListener('click', () => { idx = (idx + 1) % teams.length; render(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  { idx = (idx - 1 + teams.length) % teams.length; render(); }
+  if (e.key === 'ArrowRight') { idx = (idx + 1) % teams.length; render(); }
 });
 
-update();
+// ── Canvas particle system ──────────────────────────────────────────
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let particles = [], c1 = '#00f0ff', c2 = '#ff2e63';
+
+function resizeCanvas() { canvas.width = root.offsetWidth; canvas.height = root.offsetHeight; }
+resizeCanvas();
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height + 10;
+    this.vx = (Math.random() - 0.5) * 0.8;
+    this.vy = -(0.5 + Math.random() * 1.5);
+    this.r = 0.5 + Math.random() * 2;
+    this.life = 1;
+    this.decay = 0.004 + Math.random() * 0.008;
+    this.col = Math.random() > 0.5 ? c1 : c2;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.life -= this.decay;
+    if (this.life <= 0 || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.life * 0.7;
+    ctx.fillStyle = this.col;
+    ctx.shadowColor = this.col;
+    ctx.shadowBlur = 6;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+}
+
+for (let i = 0; i < 90; i++) {
+  const p = new Particle();
+  p.y = Math.random() * canvas.height;
+  p.life = Math.random();
+  particles.push(p);
+}
+
+function drawTrackLines() {
+  ctx.save();
+  for (let i = 0; i < 5; i++) {
+    const y = canvas.height * (0.15 + i * 0.18);
+    const grad = ctx.createLinearGradient(0, y, canvas.width, y);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.3, c1 + '22');
+    grad.addColorStop(0.7, c2 + '22');
+    grad.addColorStop(1, 'transparent');
+    ctx.strokeStyle = grad; ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+(function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawTrackLines();
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(loop);
+})();
+
+function updateParticles(nc1, nc2) { c1 = nc1; c2 = nc2; }
+
+new ResizeObserver(() => { resizeCanvas(); }).observe(root);
+
+render();
 </script>
 </body>
 </html>
