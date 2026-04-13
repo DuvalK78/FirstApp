@@ -338,18 +338,15 @@
   </footer>
 
   <script>
-    function goToPage(url) {
-      window.location.href = url;
-    }
+    function goToPage(url) { window.location.href = url; }
+    function changeYear(url) { if (url) window.location.href = url; }
 
-    // Reveal on scroll
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.08 });
     reveals.forEach(el => observer.observe(el));
 
-    // Animate perf bars on load
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.querySelectorAll('.perf-bar-fill').forEach(bar => {
