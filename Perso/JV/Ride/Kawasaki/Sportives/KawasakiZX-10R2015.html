@@ -36,143 +36,6 @@
 
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-    }
-
-    /* ── HEADER ── */
-    header {
-      position: relative;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .header-stripe {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--green), var(--green-dark), transparent);
-    }
-
-    .header-inner {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem 3rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .header-logo-area { display: flex; align-items: center; gap: 1.2rem; }
-
-    .logo-icon {
-      width: 44px; height: 44px;
-      background: var(--green);
-      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem; color: #000; flex-shrink: 0;
-    }
-
-    .header-brand {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2.6rem; letter-spacing: 0.12em; color: #fff; line-height: 1;
-    }
-
-    .header-tagline {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.72rem; letter-spacing: 0.3em;
-      color: var(--green); text-transform: uppercase; margin-top: 2px;
-    }
-
-    .header-model-id {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 3.5rem; color: rgba(105,189,39,0.05);
-      letter-spacing: 0.05em; line-height: 1; user-select: none;
-    }
-
-    /* ── TICKER ── */
-    .hero-band { background: var(--green); padding: 0.55rem 3rem; overflow: hidden; }
-
-    .hero-band-text {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.75rem; font-weight: 600;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: #000; white-space: nowrap;
-      animation: marquee 22s linear infinite;
-    }
-
-    @keyframes marquee {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* ── MAIN ── */
-    main {
-      position: relative; z-index: 1;
-      max-width: 1400px; margin: 0 auto;
-      padding: 3rem 2rem 5rem;
-    }
-
-    /* ── SHOWCASE ── */
-    .showcase {
-      display: grid;
-      grid-template-columns: 260px 1fr 300px;
-      gap: 2rem; align-items: center; margin-bottom: 4rem;
-    }
-
-    .bike-identity { display: flex; flex-direction: column; gap: 0.4rem; }
-
-    .section-label { display: inline-flex; align-items: center; gap: 0.7rem; margin-bottom: 0.6rem; }
-
-    .section-label span {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.68rem; font-weight: 700;
-      letter-spacing: 0.35em; text-transform: uppercase; color: var(--green);
-    }
-
-    .section-label::after { content: ''; display: block; width: 32px; height: 1px; background: var(--green); }
-
-    .bike-brand {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1rem; font-weight: 700;
-<style>
-    :root {
-      --green: #69bd27;
-      --green-dark: #4e8f1c;
-      --red: #EB003B;
-      --red-dark: #b80030;
-      --black: #0a0a0a;
-      --surface: #111111;
-      --surface2: #181818;
-      --surface3: #1e1e1e;
-      --border: rgba(105, 189, 39, 0.15);
-      --text: #e8e8e8;
-      --muted: #777;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background-color: var(--black);
-      color: var(--text);
-      font-family: 'Barlow', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
-
-    body::before {
-      content: '';
       position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none; z-index: 0; opacity: 0.6;
@@ -203,17 +66,22 @@
     .bike-brand { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
     .bike-model { font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; letter-spacing: 0.05em; color: #fff; line-height: 1; }
 
-    /* YEAR SELECTOR */
-    .year-selector { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.3rem; }
-    .year-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
-    .year-select-wrap { position: relative; display: inline-flex; align-items: center; }
+    .year-select-wrap { position: relative; display: inline-flex; align-items: center; margin-top: 0.3rem; }
     .year-select-wrap::after { content: '▾'; position: absolute; right: 10px; font-size: 0.7rem; color: var(--green); pointer-events: none; }
-    #year-select { appearance: none; -webkit-appearance: none; background: var(--surface2); border: 1px solid rgba(105,189,39,0.35); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.15em; padding: 4px 32px 4px 12px; border-radius: 3px; cursor: pointer; transition: border-color 0.2s, background 0.2s; outline: none; }
+    #year-select {
+      appearance: none; -webkit-appearance: none;
+      background: var(--surface2); border: 1px solid rgba(105,189,39,0.35);
+      color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem;
+      letter-spacing: 0.15em; padding: 4px 32px 4px 12px; border-radius: 3px;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s; outline: none;
+    }
     #year-select:hover { border-color: var(--green); background: var(--surface3); }
     #year-select:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(105,189,39,0.15); }
     #year-select option { background: var(--surface2); color: #fff; font-size: 1rem; }
 
-    .bike-type { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: #000; background: var(--green); padding: 3px 10px; border-radius: 2px; margin-top: 0.5rem; align-self: flex-start; }
+    .badges { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem; }
+    .bike-type { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: #000; background: var(--green); padding: 3px 10px; border-radius: 2px; align-self: flex-start; }
+    .bike-edition { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); border: 1px solid var(--green); padding: 3px 10px; border-radius: 2px; align-self: flex-start; }
 
     .bike-image-wrap { display: flex; align-items: center; justify-content: center; position: relative; }
     .bike-image-wrap::before { content: ''; position: absolute; bottom: -20px; left: 10%; right: 10%; height: 60px; background: radial-gradient(ellipse, rgba(105,189,39,0.12) 0%, transparent 70%); pointer-events: none; }
@@ -317,13 +185,15 @@
         <div class="section-label"><span>Sportives</span></div>
         <div class="bike-brand">Kawasaki</div>
         <div class="bike-model">Ninja ZX-10R</div>
+
         <div class="year-select-wrap">
-            <select id="year-select" onchange="changeYear(this.value)">
-              <option value="KawasakiZX-10R2015.html" selected>2015</option>
-              <option value="KawasakiZX-10R2016.html">2016</option>
-              <option value="KawasakiZX-10R2004.html">2004</option>
-            </select>
+          <select id="year-select" onchange="changeYear(this.value)">
+            <option value="KawasakiZX-10R2015.html" selected>2015</option>
+            <option value="KawasakiZX-10R2016.html">2016</option>
+            <option value="KawasakiZX-10R2004.html">2004</option>
+          </select>
         </div>
+
         <div class="badges">
           <div class="bike-type">Supersportive</div>
           <div class="bike-edition">30th Anniversary</div>
@@ -457,7 +327,10 @@
 
   <script>
     function goToPage(url) { window.location.href = url; }
-    function changeYear(url) { if (url) window.location.href = url; }
+
+    function changeYear(url) {
+      if (url) window.location.href = url;
+    }
 
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
