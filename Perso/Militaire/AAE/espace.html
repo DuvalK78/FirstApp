@@ -1,1 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commandement de l'Espace — Armée de l'Air et de l'Espace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+      --violet:   #2A1A4A;
+      --violet-light: #5A3A8A;
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--noir); color:var(--blanc); font-family:'Barlow',sans-serif; overflow-x:hidden; }
 
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 3rem; height:64px;
+      background:rgba(7,17,31,.92); backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(200,153,42,.25);
+    }
+    .nav-logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; }
+    .nav-logo svg { width:34px; height:34px; }
+    .nav-logo span { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--blanc); line-height:1.2; }
+    .nav-back { display:flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--gris); font-family:'Barlow Condensed',sans-serif; font-size:.8rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; transition:color .25s; }
+    .nav-back:hover { color:var(--or-light); }
+    .nav-back::before { content:'←'; }
+
+    /* HERO SPATIAL */
+    .page-hero {
+      position:relative; min-height:70vh; padding:100px 2rem 80px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; overflow:hidden;
+    }
+    .stars-bg { position:absolute; inset:0; background:#07111F; }
+    .stars-bg canvas { position:absolute; inset:0; }
+    /* Nébuleuse violette */
+    .nebula {
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(42,26,74,.6) 0%, transparent 70%),
+                  radial-gradient(ellipse 40% 40% at 75% 60%, rgba(13,31,60,.7) 0%, transparent 65%),
+                  radial-gradient(ellipse 80% 60% at 50% 100%, rgba(10,20,50,.5) 0%, transparent 60%);
+    }
+    .page-hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--or),transparent); }
+
+    .hero-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; gap:1.2rem; }
+    .page-hero-tag { font-family:'Barlow Condensed',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.35em; text-transform:uppercase; color:var(--or); }
+    .page-hero h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,7vw,5.5rem); letter-spacing:.05em; line-height:1; color:var(--blanc); }
+    .page-hero h1 em { color:var(--or); font-style:normal; }
+    .page-hero p { color:var(--gris); font-size:.95rem; font-style:italic; max-width:560px; line-height:1.7; }
+    .hero-date {
+      font-family:'Barlow Condensed',sans-serif; font-size:.75rem; font-weight:700;
+      letter-spacing:.2em; text-transform:uppercase;
+      color:var(--noir); background:var(--or);
+      padding:.4rem 1.2rem; border-radius:2px;
+    }
+
+    /* Orbite animée */
+    .orbit-anim {
+      position:relative; width:200px; height:200px; margin:1rem 0;
+    }
+    .orbit-anim svg { width:100%; height:100%; }
+
+    /* SECTIONS */
+    .main { max-width:1100px; margin:0 auto; padding:4rem 2rem 6rem; }
+
+    .section { margin-bottom:5rem; }
+    .section-header { margin-bottom:2.5rem; }
+    .section-tag { display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--or); border:1px solid rgba(200,153,42,.3); padding:.28rem .8rem; border-radius:2px; margin-bottom:.8rem; }
+    .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,4vw,2.8rem); letter-spacing:.05em; color:var(--blanc); }
+    .section-line { width:50px; height:2px; background:linear-gradient(90deg,var(--or),transparent); margin-top:.8rem; }
+
+    /* INTRO BLOC */
+    .intro-bloc {
+      display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;
+      margin-bottom:3rem;
+    }
+    .intro-text p { font-size:.95rem; color:#B8C8DC; line-height:1.85; margin-bottom:1.1rem; }
+    .intro-text p strong { color:var(--or-light); }
+
+    .cde-logo-wrap {
+      background:rgba(42,26,74,.3); border:1px solid rgba(90,58,138,.3);
+      border-radius:4px; padding:2.5rem; display:flex; align-items:center; justify-content:center;
+    }
+    .cde-logo-wrap svg { max-width:180px; filter:drop-shadow(0 0 20px rgba(90,58,138,.5)); }
+
+    /* MISSIONS GRID */
+    .missions-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.2rem;
+    }
+    .mission-card {
+      background:rgba(42,26,74,.2); border:1px solid rgba(90,58,138,.25); border-radius:4px;
+      padding:1.5rem; position:relative; overflow:hidden;
+      transition:transform .3s, border-color .3s, box-shadow .3s;
+      opacity:0; transform:translateY(14px); animation:fadeUp .5s ease forwards;
+    }
+    @keyframes fadeUp { to{opacity:1;transform:translateY(0);} }
+    .mission-card:hover { transform:translateY(-4px); border-color:rgba(200,153,42,.35); box-shadow:0 12px 35px rgba(0,0,0,.4); }
+    .mission-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--violet-light),var(--or)); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+    .mission-card:hover::before { transform:scaleX(1); }
+    .mission-icon { font-size:2rem; margin-bottom:.9rem; display:block; }
+    .mission-name { font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--or-light); margin-bottom:.5rem; }
+    .mission-desc { font-size:.82rem; color:var(--gris); line-height:1.6; }
+
+    /* SATELLITES */
+    .sats-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.2rem;
+    }
+    .sat-card {
+      background:rgba(13,31,60,.6); border:1px solid rgba(255,255,255,.07); border-radius:4px;
+      overflow:hidden; display:flex; flex-direction:column;
+      transition:transform .3s, border-color .3s;
+      opacity:0; transform:translateX(-12px); animation:slideIn .5s ease forwards;
+    }
+    @keyframes slideIn{to{opacity:1;transform:translateX(0);}}
+    .sat-card:hover { transform:translateX(4px); border-color:rgba(200,153,42,.3); }
+    .sat-header { padding:1.2rem 1.4rem .8rem; display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid rgba(255,255,255,.06); }
+    .sat-name { font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:.06em; color:var(--blanc); }
+    .sat-type { font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; background:rgba(90,58,138,.25); color:#A080E0; border:1px solid rgba(90,58,138,.35); padding:.2rem .5rem; border-radius:2px; }
+    .sat-body { padding:1rem 1.4rem 1.4rem; flex:1; }
+    .sat-role { font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--or); margin-bottom:.6rem; }
+    .sat-desc { font-size:.8rem; color:var(--gris); line-height:1.6; }
+    .sat-specs { display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-top:.9rem; }
+    .sat-spec { background:rgba(7,17,31,.5); border-left:2px solid rgba(90,58,138,.4); padding:.45rem .65rem; }
+    .sat-spec-label { font-size:.58rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--gris); }
+    .sat-spec-val { font-size:.8rem; color:var(--blanc); font-weight:600; margin-top:.15rem; }
+
+    /* TIMELINE */
+    .timeline { position:relative; max-width:750px; margin:0 auto; padding:0 1rem; }
+    .timeline::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:1px; background:rgba(90,58,138,.35); transform:translateX(-50%); }
+    .tl-item { display:flex; gap:2rem; align-items:flex-start; margin-bottom:2.5rem; position:relative; }
+    .tl-item:nth-child(odd)  { flex-direction:row; }
+    .tl-item:nth-child(even) { flex-direction:row-reverse; }
+    .tl-date { flex:0 0 calc(50% - 2rem); font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:var(--or); text-align:right; }
+    .tl-item:nth-child(even) .tl-date { text-align:left; }
+    .tl-dot { position:absolute; left:50%; top:.4rem; transform:translateX(-50%); width:12px; height:12px; border-radius:50%; background:var(--violet-light); box-shadow:0 0 12px rgba(90,58,138,.8); z-index:2; }
+    .tl-body { flex:0 0 calc(50% - 2rem); }
+    .tl-body h4 { font-family:'Barlow Condensed',sans-serif; font-size:.95rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--blanc); margin-bottom:.35rem; }
+    .tl-body p { font-size:.82rem; line-height:1.6; color:var(--gris); }
+
+    /* CHIFFRES CLÉS */
+    .stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1.2rem; margin:2rem 0; }
+    .stat-card { background:rgba(42,26,74,.25); border:1px solid rgba(90,58,138,.25); border-top:2px solid var(--violet-light); padding:1.4rem; border-radius:2px; text-align:center; }
+    .stat-number { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--or); line-height:1; }
+    .stat-label { font-size:.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--gris); margin-top:.3rem; }
+
+    /* FOOTER */
+    footer { background:#040C17; border-top:1px solid rgba(200,153,42,.15); padding:2.5rem 2rem; text-align:center; }
+    .footer-links { display:flex; justify-content:center; flex-wrap:wrap; gap:1.5rem; list-style:none; margin-bottom:1.5rem; }
+    .footer-links a { text-decoration:none; color:var(--gris); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; font-family:'Barlow Condensed',sans-serif; font-weight:600; transition:color .25s; }
+    .footer-links a:hover { color:var(--or-light); }
+    .footer-note { font-size:.72rem; color:rgba(138,155,181,.4); }
+
+    @media(max-width:768px){
+      nav{padding:0 1.2rem;}
+      .intro-bloc{grid-template-columns:1fr;}
+      .timeline::before{left:1.5rem;}
+      .tl-item,.tl-item:nth-child(even){flex-direction:column;padding-left:3.5rem;}
+      .tl-date{text-align:left;}
+      .tl-dot{left:1.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <a class="nav-back" href="index.html">Retour à l'accueil</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="stars-bg"><canvas id="starsCanvas"></canvas></div>
+  <div class="nebula"></div>
+
+  <div class="hero-content">
+    <span class="page-hero-tag">5ème Milieu Opérationnel</span>
+    <div class="orbit-anim">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="earthGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1A4080"/>
+            <stop offset="100%" stop-color="#0A2040"/>
+          </radialGradient>
+        </defs>
+        <!-- Terre -->
+        <circle cx="100" cy="100" r="30" fill="url(#earthGrad)" stroke="rgba(200,153,42,.3)" stroke-width="1"/>
+        <!-- Nuages / continents stylisés -->
+        <ellipse cx="90" cy="92" rx="14" ry="7" fill="rgba(40,160,80,.4)" transform="rotate(-20 90 92)"/>
+        <ellipse cx="112" cy="108" rx="10" ry="6" fill="rgba(40,160,80,.35)" transform="rotate(15 112 108)"/>
+        <!-- Orbites -->
+        <ellipse cx="100" cy="100" rx="70" ry="25" fill="none" stroke="rgba(90,58,138,.5)" stroke-width="1" stroke-dasharray="4 3"/>
+        <ellipse cx="100" cy="100" rx="55" ry="18" fill="none" stroke="rgba(200,153,42,.3)" stroke-width="1" stroke-dasharray="3 4"/>
+        <!-- Satellite 1 sur orbite extérieure -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="6s" repeatCount="indefinite"/>
+          <rect x="163" y="97" width="12" height="6" rx="1" fill="#C8992A"/>
+          <rect x="156" y="99" width="7" height="2" fill="#C8992A" opacity=".7"/>
+          <rect x="175" y="99" width="7" height="2" fill="#C8992A" opacity=".7"/>
+        </g>
+        <!-- Satellite 2 sur orbite intérieure -->
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="180 100 100" to="540 100 100" dur="4s" repeatCount="indefinite"/>
+          <rect x="148" y="98" width="8" height="4" rx="1" fill="#E8BC50"/>
+          <rect x="143" y="99.5" width="5" height="1" fill="#E8BC50" opacity=".6"/>
+          <rect x="156" y="99.5" width="5" height="1" fill="#E8BC50" opacity=".6"/>
+        </g>
+      </svg>
+    </div>
+
+    <h1>Commandement <em>de l'Espace</em></h1>
+    <p>Créé en 2019, le Commandement de l'Espace (CDE) assure la surveillance, la protection et la défense des intérêts français dans le domaine spatial.</p>
+    <span class="hero-date">Créé le 3 septembre 2019</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- PRÉSENTATION -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Présentation</span>
+      <h2 class="section-title">Qu'est-ce que le CDE ?</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="intro-bloc">
+      <div class="intro-text">
+        <p>Le <strong>Commandement de l'Espace (CDE)</strong> est le commandement militaire français dédié au domaine spatial, créé le <strong>3 septembre 2019</strong> par décision du Président de la République. C'est le premier commandement de ce type en Europe.</p>
+        <p>Rattaché à l'Armée de l'Air et de l'Espace, il a son siège à <strong>Toulouse</strong>, au cœur du pôle spatial français. Il coordonne l'ensemble des activités militaires spatiales : surveillance de l'espace, protection des satellites nationaux, et développement de capacités offensives et défensives en orbite.</p>
+        <p>La création du CDE s'inscrit dans la <strong>Stratégie spatiale de Défense</strong> adoptée en juillet 2019, qui reconnaît officiellement l'espace comme un <strong>5ème milieu opérationnel</strong> aux côtés de la terre, de la mer, de l'air et du cyberespace.</p>
+        <p>En 2020, l'intégration de la dimension spatiale dans la dénomination de l'Armée de l'Air — devenue <strong>Armée de l'Air et de l'Espace</strong> — a marqué l'affirmation définitive de cette nouvelle mission.</p>
+      </div>
+      <div class="cde-logo-wrap">
+        <!-- Logo CDE SVG -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="spaceGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1A0A30"/>
+              <stop offset="100%" stop-color="#07111F"/>
+            </radialGradient>
+          </defs>
+          <circle cx="100" cy="100" r="92" fill="url(#spaceGrad)" stroke="#C8992A" stroke-width="2.5"/>
+          <!-- Étoiles décoratives -->
+          <circle cx="45"  cy="45"  r="1.5" fill="white" opacity=".8"/>
+          <circle cx="155" cy="40"  r="1"   fill="white" opacity=".6"/>
+          <circle cx="160" cy="155" r="1.5" fill="white" opacity=".7"/>
+          <circle cx="40"  cy="150" r="1"   fill="white" opacity=".5"/>
+          <circle cx="100" cy="30"  r="1"   fill="white" opacity=".6"/>
+          <!-- Orbites -->
+          <ellipse cx="100" cy="100" rx="72" ry="26" fill="none" stroke="rgba(90,58,138,.5)" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <ellipse cx="100" cy="100" rx="55" ry="20" fill="none" stroke="rgba(200,153,42,.3)" stroke-width="1" stroke-dasharray="3 5"/>
+          <!-- Terre centrale -->
+          <circle cx="100" cy="100" r="22" fill="#0D2040" stroke="rgba(26,110,170,.5)" stroke-width="1.5"/>
+          <ellipse cx="94" cy="96" rx="10" ry="6" fill="rgba(40,140,60,.5)" transform="rotate(-25 94 96)"/>
+          <ellipse cx="108" cy="106" rx="8" ry="4" fill="rgba(40,140,60,.4)" transform="rotate(10 108 106)"/>
+          <!-- Satellite -->
+          <rect x="163" y="97" width="14" height="7" rx="1.5" fill="#C8992A"/>
+          <rect x="155" y="99.5" width="8" height="2" fill="#C8992A" opacity=".7"/>
+          <rect x="177" y="99.5" width="8" height="2" fill="#C8992A" opacity=".7"/>
+          <!-- Étoile filante emblème -->
+          <polygon points="100,58 103,67 113,67 105,73 108,83 100,77 92,83 95,73 87,67 97,67" fill="#E8BC50"/>
+          <!-- Texte -->
+          <text x="100" y="152" text-anchor="middle" font-family="serif" font-size="9" font-weight="bold" fill="#C8992A" letter-spacing="3">COMMANDEMENT</text>
+          <text x="100" y="165" text-anchor="middle" font-family="serif" font-size="9" fill="#8A9BB5" letter-spacing="3">DE L'ESPACE</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-number">2019</div><div class="stat-label">Année de création</div></div>
+      <div class="stat-card"><div class="stat-number">Toulouse</div><div class="stat-label">Siège du commandement</div></div>
+      <div class="stat-card"><div class="stat-number">~500</div><div class="stat-label">Personnels dédiés</div></div>
+      <div class="stat-card"><div class="stat-number">36 000</div><div class="stat-label">km — Orbite GEO surveillée</div></div>
+      <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Surveillance permanente</div></div>
+    </div>
+  </div>
+
+  <!-- MISSIONS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Attributions</span>
+      <h2 class="section-title">Missions</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="missions-grid">
+      <div class="mission-card" style="animation-delay:0ms">
+        <span class="mission-icon">🔭</span>
+        <div class="mission-name">Surveillance de l'espace</div>
+        <div class="mission-desc">Détecter, suivre et cataloguer les objets en orbite (satellites actifs, débris, vaisseaux étrangers). La France opère le radar GRAVES et le télescope GEO-IRS pour cette mission.</div>
+      </div>
+      <div class="mission-card" style="animation-delay:80ms">
+        <span class="mission-icon">🛡️</span>
+        <div class="mission-name">Protection des satellites</div>
+        <div class="mission-desc">Protéger les satellites militaires français contre les menaces (brouillage, éblouissement laser, approche hostile). Développement de nanosatellites d'observation rapprochée.</div>
+      </div>
+      <div class="mission-card" style="animation-delay:160ms">
+        <span class="mission-icon">📡</span>
+        <div class="mission-name">Télécommunications militaires</div>
+        <div class="mission-desc">Garantir la continuité des communications cryptées entre les forces armées françaises via les satellites Syracuse IV et futurs systèmes.</div>
+      </div>
+      <div class="mission-card" style="animation-delay:240ms">
+        <span class="mission-icon">🌍</span>
+        <div class="mission-name">Renseignement spatial</div>
+        <div class="mission-desc">Collecte de renseignements d'origine spatiale via les satellites d'observation Helios et CSO. Appui aux opérations militaires et à la décision politique.</div>
+      </div>
+      <div class="mission-card" style="animation-delay:320ms">
+        <span class="mission-icon">⚠️</span>
+        <div class="mission-name">Alerte balistique</div>
+        <div class="mission-desc">Détecter les tirs de missiles balistiques dans le cadre de la dissuasion nucléaire. Contribution à la composante aéroportée et à la défense anti-missiles.</div>
+      </div>
+      <div class="mission-card" style="animation-delay:400ms">
+        <span class="mission-icon">🤝</span>
+        <div class="mission-name">Coopération internationale</div>
+        <div class="mission-desc">Partage d'informations de surveillance spatiale avec les alliés OTAN et partenaires (États-Unis, Royaume-Uni, Allemagne). Participation aux exercices AsterX.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SATELLITES -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Systèmes spatiaux</span>
+      <h2 class="section-title">Satellites & Moyens</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="sats-grid">
+      <div class="sat-card" style="animation-delay:0ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">CSO — Composante Spatiale Optique</div>
+            <div class="sat-role" style="margin-top:.2rem">Observation militaire</div>
+          </div>
+          <span class="sat-type">Optique</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Constellation de 3 satellites d'observation optique à très haute résolution. Successeur des satellites Helios, le CSO assure une surveillance permanente du globe pour le renseignement militaire et stratégique.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Orbite</div><div class="sat-spec-val">~800 km (LEO)</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">En service</div><div class="sat-spec-val">2018 – Aujourd'hui</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sat-card" style="animation-delay:80ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">Syracuse IV</div>
+            <div class="sat-role" style="margin-top:.2rem">Télécommunications militaires</div>
+          </div>
+          <span class="sat-type">Telecom</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Nouvelle génération de satellites de télécommunications militaires sécurisées. Syracuse IV A et IV B garantissent les liaisons cryptées entre l'état-major, les forces déployées et les sous-marins nucléaires.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Orbite</div><div class="sat-spec-val">36 000 km (GEO)</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">En service</div><div class="sat-spec-val">2021 – Aujourd'hui</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sat-card" style="animation-delay:160ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">GRAVES</div>
+            <div class="sat-role" style="margin-top:.2rem">Radar de surveillance orbitale</div>
+          </div>
+          <span class="sat-type">Radar sol</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Grand Réseau Adapté à la Veille Spatiale. Radar bistatique au sol installé dans le Lot, GRAVES surveille les objets en orbite basse (LEO) et constitue le cœur du système français de connaissance de la situation spatiale.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Type</div><div class="sat-spec-val">Radar sol (bistatique)</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">En service</div><div class="sat-spec-val">2005 – Aujourd'hui</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sat-card" style="animation-delay:240ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">GEO-IRS / Iris</div>
+            <div class="sat-role" style="margin-top:.2rem">Surveillance orbite géostationnaire</div>
+          </div>
+          <span class="sat-type">Optique sol</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Télescope au sol dédié à la surveillance de l'orbite géostationnaire (GEO) à 36 000 km. Permet de détecter et cataloguer les satellites étrangers potentiellement menaçants pour les actifs spatiaux français.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Cible</div><div class="sat-spec-val">Orbite GEO (36 000 km)</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">Statut</div><div class="sat-spec-val">Opérationnel</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sat-card" style="animation-delay:320ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">Nanosatellites d'inspection (YODA)</div>
+            <div class="sat-role" style="margin-top:.2rem">Surveillance rapprochée active</div>
+          </div>
+          <span class="sat-type">Actif</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Petits satellites de surveillance capables d'approcher d'autres objets orbitaux pour les observer. Première capacité française d'action offensive-défensive en orbite, dans le cadre du concept d'Espace Combat.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Type</div><div class="sat-spec-val">Nanosatellite actif</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">Statut</div><div class="sat-spec-val">En développement</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sat-card" style="animation-delay:400ms">
+        <div class="sat-header">
+          <div>
+            <div class="sat-name">Helios II</div>
+            <div class="sat-role" style="margin-top:.2rem">Observation (2ème génération)</div>
+          </div>
+          <span class="sat-type">Optique</span>
+        </div>
+        <div class="sat-body">
+          <div class="sat-desc">Prédécesseur du CSO, le satellite Helios II a fourni des images à haute résolution pour le renseignement militaire de 2004 à 2021. Il a été progressivement remplacé par la constellation CSO.</div>
+          <div class="sat-specs">
+            <div class="sat-spec"><div class="sat-spec-label">Orbite</div><div class="sat-spec-val">~680 km (LEO)</div></div>
+            <div class="sat-spec"><div class="sat-spec-label">Statut</div><div class="sat-spec-val">Retiré du service</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHRONOLOGIE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Chronologie</span>
+      <h2 class="section-title">Histoire de l'Espace Militaire Français</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-date">1965</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Astérix — Premier satellite français</h4><p>Le 26 novembre 1965, la France lance Astérix avec la fusée Diamant, devenant le 3ème pays à disposer d'une capacité spatiale propre.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">1995</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Helios I — Naissance du renseignement spatial</h4><p>Mise en service du premier satellite d'observation militaire français, marquant l'entrée de la France dans le renseignement spatial souverain.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2005</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>GRAVES opérationnel</h4><p>Mise en service du radar de surveillance spatiale GRAVES, permettant à la France de suivre les objets en orbite basse de manière autonome.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2019</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Création du CDE</h4><p>Le 3 septembre 2019, annonce par la Ministre des Armées de la création du Commandement de l'Espace, premier commandement militaire spatial européen.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2020</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Armée de l'Air et de l'Espace</h4><p>Changement officiel de dénomination le 11 septembre 2020 pour intégrer la dimension spatiale dans l'identité de l'armée.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2021</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Exercice AsterX</h4><p>Premier exercice militaire spatial français, simulant des scénarios de menaces en orbite et testant les capacités de réponse du CDE.</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">2030</div>
+        <div class="tl-dot"></div>
+        <div class="tl-body"><h4>Horizon — Espace Combat</h4><p>Objectif de capacité opérationnelle complète pour les systèmes d'action en orbite (YODA, lasers anti-satellite) dans le cadre de la Loi de Programmation Militaire 2024-2030.</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="avions.html">Avions</a></li>
+    <li><a href="helicopteres.html">Hélicoptères</a></li>
+    <li><a href="grades.html">Grades</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="bases.html">Bases aériennes</a></li>
+  </ul>
+  <p class="footer-note">Sources : Ministère des Armées · Stratégie spatiale de Défense 2019 · CNES — Site non officiel à vocation éducative.</p>
+</footer>
+
+<script>
+// Étoiles canvas
+const canvas = document.getElementById('starsCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const stars = Array.from({length:200}, ()=>({
+  x: Math.random()*window.innerWidth,
+  y: Math.random()*window.innerHeight,
+  r: Math.random()*1.5+.3,
+  o: Math.random()*.7+.1,
+  speed: Math.random()*.003+.001
+}));
+
+let t=0;
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  t+=.016;
+  stars.forEach(s=>{
+    const flicker = s.o*(0.7+0.3*Math.sin(t*s.speed*100+s.x));
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${flicker})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+</script>
+</body>
+</html>
