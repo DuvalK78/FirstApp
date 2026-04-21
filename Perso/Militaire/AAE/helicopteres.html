@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hélicoptères — Armée de l'Air et de l'Espace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --bleu-mid: #162d54;
+      --bleu-ciel:#1A6EAA;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+      --vert:     #1A3C2A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: rgba(7,17,31,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo svg { width: 34px; height: 34px; }
+    .nav-logo span {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: .8rem;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--blanc); line-height: 1.2;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--gris);
+      font-family: 'Barlow Condensed', sans-serif; font-size: .8rem;
+      font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    .nav-back:hover { color: var(--or-light); }
+    .nav-back::before { content: '←'; }
+
+    /* ─── HERO ─── */
+    .page-hero {
+      position: relative; padding: 120px 2rem 60px;
+      text-align: center; overflow: hidden;
+      background: linear-gradient(175deg, #07111F 0%, #0D2018 50%, #07111F 100%);
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+    .page-hero-tag {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .7rem;
+      font-weight: 700; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--or); margin-bottom: .75rem; display: block;
+    }
+    .page-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      letter-spacing: .05em; line-height: 1;
+      color: var(--blanc);
+    }
+    .page-hero h1 em { color: var(--or); font-style: normal; }
+    .page-hero p {
+      margin-top: 1rem; color: var(--gris); font-size: .95rem;
+      font-style: italic; max-width: 520px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ─── FILTRES ─── */
+    .filters {
+      display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center;
+      padding: 2.5rem 2rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .filter-btn {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
+      font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      background: transparent; border: 1px solid rgba(200,153,42,.25);
+      color: var(--gris); padding: .45rem 1.1rem; border-radius: 2px;
+      cursor: pointer; transition: all .25s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--or); border-color: var(--or); color: var(--noir);
+    }
+
+    /* ─── GRILLE ─── */
+    .grid-container {
+      max-width: 1300px; margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ─── CARTE HELICO ─── */
+    .card {
+      background: rgba(10,25,20,.65);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 4px; overflow: hidden;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s, border-color .35s;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .5s ease forwards;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.5);
+      border-color: rgba(200,153,42,.35);
+    }
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    .card::before {
+      content: ''; display: block; height: 2px;
+      background: linear-gradient(90deg, var(--or), var(--or-light), var(--or));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .4s ease;
+    }
+    .card:hover::before { transform: scaleX(1); }
+
+    .card-header {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+    }
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: .04em;
+      color: var(--blanc); line-height: 1.1;
+    }
+    .card-aka { font-size: .75rem; color: var(--or-light); margin-top: .15rem; font-style: italic; }
+    .card-maker { font-size: .72rem; color: var(--gris); margin-top: .15rem; font-style: italic; }
+    .card-badges { display: flex; flex-direction: column; gap: .35rem; align-items: flex-end; flex-shrink: 0; }
+
+    .badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .6rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; padding: .2rem .55rem; border-radius: 2px;
+    }
+    .badge-actif { background: rgba(40,160,80,.2); color: #70D090; border: 1px solid rgba(40,160,80,.3); }
+    .badge-ret   { background: rgba(100,100,120,.2); color: #9A9AB5; border: 1px solid rgba(100,100,120,.3); }
+    .badge-era   { background: rgba(26,110,170,.3); color: #7BB8E0; border: 1px solid rgba(26,110,170,.4); }
+    .badge-ecole { background: rgba(200,153,42,.15); color: var(--or-light); border: 1px solid rgba(200,153,42,.3); }
+
+    .card-body { padding: 1.2rem 1.5rem; }
+    .card-role {
+      font-size: .78rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--or); margin-bottom: 1rem;
+    }
+
+    .specs { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1.2rem; }
+    .spec {
+      background: rgba(7,17,31,.5);
+      border-left: 2px solid rgba(200,153,42,.3);
+      padding: .55rem .75rem;
+    }
+    .spec-label {
+      font-size: .6rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gris); margin-bottom: .2rem;
+    }
+    .spec-value { font-size: .85rem; color: var(--blanc); font-weight: 600; }
+
+    .card-armement {
+      font-size: .8rem; color: #8A9BB5; line-height: 1.6;
+    }
+    .card-armement strong {
+      font-size: .65rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--or); display: block; margin-bottom: .3rem;
+    }
+
+    .no-results {
+      grid-column: 1/-1; text-align: center; padding: 4rem;
+      color: var(--gris); font-style: italic;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #040C17;
+      border-top: 1px solid rgba(200,153,42,.15);
+      padding: 2.5rem 2rem; text-align: center;
+    }
+    .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; list-style: none; margin-bottom: 1.5rem; }
+    .footer-links a {
+      text-decoration: none; color: var(--gris);
+      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      transition: color .25s;
+    }
+    .footer-links a:hover { color: var(--or-light); }
+    .footer-note { font-size: .72rem; color: rgba(138,155,181,.4); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .specs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <a class="nav-back" href="index.html">Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+  <span class="page-hero-tag">Flotte — Voilure Tournante</span>
+  <h1>Hélicoptères <em>AAE</em></h1>
+  <p>Des missions SAR aux opérations spéciales, les voilures tournantes de l'Armée de l'Air et de l'Espace.</p>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+  <button class="filter-btn" data-filter="actif">En service</button>
+  <button class="filter-btn" data-filter="retraite">Retirés</button>
+  <button class="filter-btn" data-filter="combat">Combat / Ops spéciales</button>
+  <button class="filter-btn" data-filter="sar">SAR / Sauvetage</button>
+  <button class="filter-btn" data-filter="transport">Transport</button>
+  <button class="filter-btn" data-filter="ecole">École / Liaison</button>
+</div>
+
+<div class="grid-container" id="grid"></div>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="avions.html">Avions</a></li>
+    <li><a href="grades.html">Grades</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="bases.html">Bases aériennes</a></li>
+    <li><a href="espace.html">Commandement de l'Espace</a></li>
+  </ul>
+  <p class="footer-note">Sources : Ministère des Armées · État-major de l'AAE · Airbus Helicopters — Site non officiel à vocation éducative.</p>
+</footer>
+
+<script>
+const HELICOS = [
+  {
+    nom: "Eurocopter EC725 Caracal",
+    aka: "H225M Caracal",
+    fabricant: "Airbus Helicopters (ex-Eurocopter)",
+    role: "Hélicoptère de combat / Transport opérations spéciales / SAR",
+    era: "2005 – Aujourd'hui",
+    statut: "actif",
+    categories: ["combat", "sar", "transport"],
+    moteur: "2 × Turbomeca Makila 2A1 (1 776 kW chacun)",
+    vitesse: "324 km/h (max)",
+    plafond: "6 095 m",
+    armement: "2 × mitrailleuses FN M3M 12,7 mm (optionnel) · Missiles HOT (selon config) · Équip. de ravitaillement en vol",
+  },
+  {
+    nom: "AS 532UL Cougar",
+    aka: "Cougar Mk I",
+    fabricant: "Aérospatiale / Eurocopter",
+    role: "Transport tactique / SAR combat",
+    era: "1992 – Remplacement progressif par Caracal",
+    statut: "retraite",
+    categories: ["transport", "sar"],
+    moteur: "2 × Turbomeca Makila 1A1 (1 327 kW chacun)",
+    vitesse: "278 km/h (max)",
+    plafond: "4 100 m",
+    armement: "Mitrailleuses de bord (optionnel) · Principalement non armé",
+  },
+  {
+    nom: "Aérospatiale SA 330 Puma",
+    aka: "SA 330 Puma",
+    fabricant: "Aérospatiale",
+    role: "Transport tactique / SAR",
+    era: "1969 – années 2000 (AAE)",
+    statut: "retraite",
+    categories: ["transport", "sar"],
+    moteur: "2 × Turbomeca Turmo IVC (1 175 kW chacun)",
+    vitesse: "271 km/h (max)",
+    plafond: "4 800 m",
+    armement: "Mitrailleuses de bord (optionnel) — principalement transport",
+  },
+  {
+    nom: "Aérospatiale SA 342 Gazelle",
+    aka: "Gazelle",
+    fabricant: "Aérospatiale / Westland",
+    role: "Liaison / Entraînement / Appui léger",
+    era: "1973 – années 2010 (AAE)",
+    statut: "retraite",
+    categories: ["ecole", "combat"],
+    moteur: "1 × Turbomeca Astazou XIVM (440 kW)",
+    vitesse: "310 km/h (max)",
+    plafond: "5 080 m",
+    armement: "Missiles HOT ou canon 20 mm (versions armées) · Version AAE : principalement liaison",
+  },
+  {
+    nom: "Eurocopter AS555 Fennec",
+    aka: "Fennec",
+    fabricant: "Eurocopter (Aérospatiale)",
+    role: "Défense des bases aériennes / Liaison / Entraînement",
+    era: "1991 – Aujourd'hui",
+    statut: "actif",
+    categories: ["combat", "ecole"],
+    moteur: "2 × Turbomeca TM 319 Arrius 1M (340 kW chacun)",
+    vitesse: "278 km/h (max)",
+    plafond: "5 910 m",
+    armement: "Mitrailleuse FN 7,62 mm ou 12,7 mm · Pod roquettes 68 mm (selon mission)",
+  },
+  {
+    nom: "Aérospatiale SA 316 Alouette III",
+    aka: "Alouette III",
+    fabricant: "Aérospatiale (Sud Aviation)",
+    role: "Sauvetage en montagne / Liaison / Formation",
+    era: "1962 – 2023 (AAE)",
+    statut: "retraite",
+    categories: ["sar", "ecole"],
+    moteur: "1 × Turbomeca Artouste IIIB (649 kW)",
+    vitesse: "220 km/h (max)",
+    plafond: "6 000 m (record altitude 12 442 m en 1972)",
+    armement: "Canon 20 mm ou mitrailleuse AA-52 (versions armées) — AAE : sauvetage",
+  },
+  {
+    nom: "Eurocopter EC 120 Colibri",
+    aka: "Colibri",
+    fabricant: "Eurocopter (Airbus Helicopters)",
+    role: "Hélicoptère école — formation initiale pilotes",
+    era: "1997 – Aujourd'hui",
+    statut: "actif",
+    categories: ["ecole"],
+    moteur: "1 × Turbomeca Arrius 2F (376 kW)",
+    vitesse: "232 km/h (max)",
+    plafond: "5 200 m",
+    armement: "Non armé — appareil école exclusivement",
+  },
+  {
+    nom: "NHIndustries NH90 TTH",
+    aka: "NH90",
+    fabricant: "NHIndustries (Airbus / Leonardo / NLR / Fokker)",
+    role: "Transport tactique moyen",
+    era: "2011 – Aujourd'hui (AAE limitée)",
+    statut: "actif",
+    categories: ["transport"],
+    moteur: "2 × Rolls-Royce / Turbomeca RTM 322 (1 662 kW chacun)",
+    vitesse: "300 km/h (max)",
+    plafond: "6 095 m",
+    armement: "Mitrailleuses de bord M134 ou FN MAG (selon config)",
+  },
+];
+
+const grid = document.getElementById('grid');
+const filterBtns = document.querySelectorAll('.filter-btn');
+
+function statutBadge(s) {
+  const map = {
+    actif:    ['badge-actif', 'En service'],
+    retraite: ['badge-ret',   'Retiré'],
+  };
+  const [cls, label] = map[s] || ['badge-ret', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function renderCards(filter) {
+  const filtered = filter === 'all'
+    ? HELICOS
+    : HELICOS.filter(h => h.statut === filter || h.categories.includes(filter));
+
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    grid.innerHTML = '<p class="no-results">Aucun appareil dans cette catégorie.</p>';
+    return;
+  }
+
+  filtered.forEach((h, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 70}ms`;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${h.nom}</div>
+          ${h.aka ? `<div class="card-aka">« ${h.aka} »</div>` : ''}
+          <div class="card-maker">${h.fabricant}</div>
+        </div>
+        <div class="card-badges">
+          ${statutBadge(h.statut)}
+          <span class="badge badge-era">${h.era.split('–')[0].trim()}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-role">${h.role}</div>
+        <div class="specs">
+          <div class="spec">
+            <div class="spec-label">Motorisation</div>
+            <div class="spec-value">${h.moteur}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Vitesse max</div>
+            <div class="spec-value">${h.vitesse}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Plafond</div>
+            <div class="spec-value">${h.plafond}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Période</div>
+            <div class="spec-value">${h.era}</div>
+          </div>
+        </div>
+        <div class="card-armement">
+          <strong>Armement / Équipement</strong>
+          ${h.armement}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCards(btn.dataset.filter);
+  });
+});
+
+renderCards('all');
+</script>
+</body>
+</html>
