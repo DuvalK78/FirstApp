@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avions — Armée de l'Air et de l'Espace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --bleu-mid: #162d54;
+      --bleu-ciel:#1A6EAA;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: rgba(7,17,31,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo svg { width: 34px; height: 34px; }
+    .nav-logo span {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: .8rem;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--blanc); line-height: 1.2;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--gris);
+      font-family: 'Barlow Condensed', sans-serif; font-size: .8rem;
+      font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    .nav-back:hover { color: var(--or-light); }
+    .nav-back::before { content: '←'; }
+
+    /* ─── HERO BANNER ─── */
+    .page-hero {
+      position: relative; padding: 120px 2rem 60px;
+      text-align: center; overflow: hidden;
+      background: linear-gradient(175deg, #07111F 0%, #0D1F3C 50%, #07111F 100%);
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+    .page-hero-tag {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .7rem;
+      font-weight: 700; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--or); margin-bottom: .75rem; display: block;
+    }
+    .page-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      letter-spacing: .05em; line-height: 1;
+      color: var(--blanc);
+    }
+    .page-hero h1 em { color: var(--or); font-style: normal; }
+    .page-hero p {
+      margin-top: 1rem; color: var(--gris); font-size: .95rem;
+      font-style: italic; max-width: 520px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ─── FILTRES ─── */
+    .filters {
+      display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center;
+      padding: 2.5rem 2rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .filter-btn {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
+      font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      background: transparent; border: 1px solid rgba(200,153,42,.25);
+      color: var(--gris); padding: .45rem 1.1rem; border-radius: 2px;
+      cursor: pointer; transition: all .25s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--or); border-color: var(--or); color: var(--noir);
+    }
+
+    /* ─── GRILLE ─── */
+    .grid-container {
+      max-width: 1300px; margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ─── CARTE AVION ─── */
+    .card {
+      background: rgba(13,31,60,.6);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 4px; overflow: hidden;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s, border-color .35s;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .5s ease forwards;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.5);
+      border-color: rgba(200,153,42,.35);
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 1rem;
+    }
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: .04em;
+      color: var(--blanc); line-height: 1.1;
+    }
+    .card-maker {
+      font-size: .75rem; color: var(--gris); margin-top: .2rem;
+      font-style: italic;
+    }
+    .card-badges { display: flex; flex-direction: column; gap: .35rem; align-items: flex-end; flex-shrink: 0; }
+    .badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .6rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; padding: .2rem .55rem; border-radius: 2px;
+    }
+    .badge-era   { background: rgba(26,110,170,.3); color: #7BB8E0; border: 1px solid rgba(26,110,170,.4); }
+    .badge-proto { background: rgba(200,100,30,.25); color: #E8A060; border: 1px solid rgba(200,100,30,.35); }
+    .badge-actif { background: rgba(40,160,80,.2); color: #70D090; border: 1px solid rgba(40,160,80,.3); }
+    .badge-ret   { background: rgba(100,100,120,.2); color: #9A9AB5; border: 1px solid rgba(100,100,120,.3); }
+    .badge-sepecat { background: rgba(160,40,200,.2); color: #C080E0; border: 1px solid rgba(160,40,200,.3); }
+
+    .card-body { padding: 1.2rem 1.5rem; }
+
+    .card-role {
+      font-size: .78rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--or);
+      margin-bottom: 1rem;
+    }
+
+    .specs { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1.2rem; }
+    .spec {
+      background: rgba(7,17,31,.5);
+      border-left: 2px solid rgba(200,153,42,.3);
+      padding: .55rem .75rem;
+    }
+    .spec-label {
+      font-size: .6rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gris); margin-bottom: .2rem;
+    }
+    .spec-value { font-size: .85rem; color: var(--blanc); font-weight: 600; }
+
+    .card-armement {
+      font-size: .8rem; color: #8A9BB5; line-height: 1.6;
+    }
+    .card-armement strong {
+      font-size: .65rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--or); display: block; margin-bottom: .3rem;
+    }
+
+    /* Ligne de séparation dorée au hover */
+    .card::before {
+      content: ''; display: block; height: 2px;
+      background: linear-gradient(90deg, var(--or), var(--or-light), var(--or));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .4s ease;
+    }
+    .card:hover::before { transform: scaleX(1); }
+
+    /* ─── EMPTY STATE ─── */
+    .no-results {
+      grid-column: 1/-1; text-align: center; padding: 4rem;
+      color: var(--gris); font-style: italic;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #040C17;
+      border-top: 1px solid rgba(200,153,42,.15);
+      padding: 2.5rem 2rem; text-align: center;
+    }
+    .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem; list-style: none; margin-bottom: 1.5rem; }
+    .footer-links a {
+      text-decoration: none; color: var(--gris);
+      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      transition: color .25s;
+    }
+    .footer-links a:hover { color: var(--or-light); }
+    .footer-note { font-size: .72rem; color: rgba(138,155,181,.4); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .specs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <a class="nav-back" href="index.html">Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+  <span class="page-hero-tag">Flotte — Voilure Fixe</span>
+  <h1>Avions de <em>Combat</em></h1>
+  <p>De l'ère des prototypes expérimentaux au Rafale, l'histoire de l'aviation de combat française racontée par ses appareils.</p>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="all">Tous</button>
+  <button class="filter-btn" data-filter="actif">En service</button>
+  <button class="filter-btn" data-filter="retraite">Retirés</button>
+  <button class="filter-btn" data-filter="prototype">Prototypes</button>
+  <button class="filter-btn" data-filter="combat">Combat</button>
+  <button class="filter-btn" data-filter="entrainement">Entraînement</button>
+  <button class="filter-btn" data-filter="transport">Transport / Ravitaillement</button>
+</div>
+
+<div class="grid-container" id="grid"></div>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="helicopteres.html">Hélicoptères</a></li>
+    <li><a href="grades.html">Grades</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="bases.html">Bases aériennes</a></li>
+    <li><a href="espace.html">Commandement de l'Espace</a></li>
+  </ul>
+  <p class="footer-note">Sources : Ministère des Armées · État-major de l'AAE · Dassault Aviation — Site non officiel à vocation éducative.</p>
+</footer>
+
+<script>
+const AVIONS = [
+  {
+    nom: "Dassault Rafale",
+    fabricant: "Dassault Aviation",
+    role: "Avion de combat multirôle",
+    era: "2001 – Aujourd'hui",
+    statut: "actif",
+    categories: ["combat"],
+    moteur: "2 × SNECMA M88-2 (75 kN chacun avec PA)",
+    vitesse: "Mach 1,8 (1 912 km/h)",
+    plafond: "15 235 m",
+    armement: "Canon DEFA 791B 30 mm · Missiles MICA, Meteor, SCALP-EG, ASMP-A · Bombes guidées laser GBU",
+  },
+  {
+    nom: "Dassault Mirage 2000",
+    fabricant: "Dassault Aviation",
+    role: "Chasseur / Avion d'attaque multirôle",
+    era: "1984 – En cours (retrait progressif)",
+    statut: "actif",
+    categories: ["combat"],
+    moteur: "1 × SNECMA M53-P2 (95,1 kN avec PA)",
+    vitesse: "Mach 2,2 (2 338 km/h)",
+    plafond: "17 060 m",
+    armement: "2 × canons DEFA 554 · Missiles Magic II, Super 530D, MICA · ASMP (version N) · Bombes guidées",
+  },
+  {
+    nom: "Dassault Mirage IV",
+    fabricant: "Dassault Aviation",
+    role: "Bombardier stratégique supersonique / Reconnaissance",
+    era: "1964 – 2005",
+    statut: "retraite",
+    categories: ["combat"],
+    moteur: "2 × SNECMA Atar 9K (69,6 kN chacun avec PA)",
+    vitesse: "Mach 2,2 (2 338 km/h)",
+    plafond: "20 000 m",
+    armement: "1 bombe nucléaire AN-22 (puis ASMP) · Pods de reconnaissance",
+  },
+  {
+    nom: "Dassault Mirage III",
+    fabricant: "Dassault Aviation",
+    role: "Chasseur intercepteur / Attaque au sol",
+    era: "1961 – 1994",
+    statut: "retraite",
+    categories: ["combat"],
+    moteur: "1 × SNECMA Atar 9C (60,8 kN avec PA)",
+    vitesse: "Mach 2,2 (2 350 km/h)",
+    plafond: "17 000 m",
+    armement: "2 × canons DEFA 552A · Missiles Matra R530, Magic · Roquettes ou bombes lisses",
+  },
+  {
+    nom: "Dassault Mirage 5",
+    fabricant: "Dassault Aviation",
+    role: "Avion d'attaque au sol VFR",
+    era: "1967 – 1993 (AAE française)",
+    statut: "retraite",
+    categories: ["combat"],
+    moteur: "1 × SNECMA Atar 9C (60,8 kN avec PA)",
+    vitesse: "Mach 2,1 (2 230 km/h)",
+    plafond: "17 000 m",
+    armement: "2 × canons DEFA 553 · Roquettes · Bombes lisses · Missiles Magic",
+  },
+  {
+    nom: "Dassault Mirage F1",
+    fabricant: "Dassault Aviation",
+    role: "Chasseur intercepteur / Attaque tous temps",
+    era: "1973 – 2014",
+    statut: "retraite",
+    categories: ["combat"],
+    moteur: "1 × SNECMA Atar 9K-50 (70,6 kN avec PA)",
+    vitesse: "Mach 2,2 (2 335 km/h)",
+    plafond: "20 000 m",
+    armement: "2 × canons DEFA 553 · Missiles Super 530, Magic · Bombes lisses et guidées · Pod de ravitaillement",
+  },
+  {
+    nom: "SEPECAT Jaguar",
+    fabricant: "SEPECAT (Dassault / BAC)",
+    role: "Avion d'attaque au sol / Appui tactique",
+    era: "1973 – 2005",
+    statut: "retraite",
+    categories: ["combat"],
+    moteur: "2 × Rolls-Royce / Turbomeca Adour Mk102 (32,5 kN chacun avec PA)",
+    vitesse: "Mach 1,6 (1 699 km/h)",
+    plafond: "14 000 m",
+    armement: "2 × canons DEFA 553 · Bombes lisses et guidées · Roquettes · Missiles Magic",
+    note: "Co-production franco-britannique"
+  },
+  {
+    nom: "Dassault/Dornier Alpha Jet",
+    fabricant: "Dassault Aviation / Dornier",
+    role: "Avion d'entraînement avancé / Appui léger",
+    era: "1978 – Aujourd'hui (Patrouille de France)",
+    statut: "actif",
+    categories: ["entrainement"],
+    moteur: "2 × SNECMA/Turbomeca Larzac 04-C6 (13,2 kN chacun)",
+    vitesse: "1 000 km/h (Mach 0,86)",
+    plafond: "14 630 m",
+    armement: "Pod canon 27 mm · Roquettes · Bombes légères (version appui) — Patrouille de France : désarmé",
+  },
+  {
+    nom: "Airbus A330 MRTT",
+    fabricant: "Airbus Defence & Space",
+    role: "Ravitailleur en vol / Transport stratégique",
+    era: "2018 – Aujourd'hui",
+    statut: "actif",
+    categories: ["transport"],
+    moteur: "2 × Rolls-Royce Trent 772B (300 kN chacun)",
+    vitesse: "880 km/h (croisière)",
+    plafond: "12 500 m",
+    armement: "Non armé · Perche de ravitaillement + 2 pods sous ailes · Capacité cargo/passagers",
+  },
+  {
+    nom: "Dassault Balzac V",
+    fabricant: "Dassault Aviation",
+    role: "Démonstrateur ADAC (décollage/atterrissage court)",
+    era: "1962 – 1965",
+    statut: "prototype",
+    categories: ["combat"],
+    moteur: "1 × Bristol Orpheus (poussée principale) + 8 × Rolls-Royce RB.108 (sustentation)",
+    vitesse: "Mach 1,15 (estimé)",
+    plafond: "Non communiqué",
+    armement: "Non armé (prototype expérimental)",
+  },
+  {
+    nom: "Dassault Milan",
+    fabricant: "Dassault Aviation",
+    role: "Dérivé du Mirage III — moustaches canard",
+    era: "1968 – 1972 (prototype)",
+    statut: "prototype",
+    categories: ["combat"],
+    moteur: "1 × SNECMA Atar 9C",
+    vitesse: "Mach 2,1",
+    plafond: "~17 000 m",
+    armement: "Configuration similaire Mirage III — jamais mis en service",
+  },
+  {
+    nom: "Dassault Mirage F2",
+    fabricant: "Dassault Aviation",
+    role: "Prototype de chasseur bimoteur à aile haute",
+    era: "1966 – 1967 (prototype)",
+    statut: "prototype",
+    categories: ["combat"],
+    moteur: "1 × SNECMA TF306 (prototype, biréacteur envisagé)",
+    vitesse: "Mach 2+ (estimé)",
+    plafond: "Non communiqué",
+    armement: "Non armé — programme arrêté au profit du Mirage F1",
+  },
+  {
+    nom: "Dassault Mirage G",
+    fabricant: "Dassault Aviation",
+    role: "Prototype à géométrie variable",
+    era: "1967 – 1968 (prototype)",
+    statut: "prototype",
+    categories: ["combat"],
+    moteur: "1 × SNECMA TF306",
+    vitesse: "Mach 2,1 (estimé)",
+    plafond: "Non communiqué",
+    armement: "Non armé — exploration de la géométrie variable, programme annulé",
+  },
+  {
+    nom: "Dassault Mirage 4000",
+    fabricant: "Dassault Aviation",
+    role: "Chasseur bimoteur lourd — prototype",
+    era: "1979 – 1992 (prototype)",
+    statut: "prototype",
+    categories: ["combat"],
+    moteur: "2 × SNECMA M53-5 (86 kN chacun avec PA)",
+    vitesse: "Mach 2,3",
+    plafond: "20 000 m",
+    armement: "Démonstration armement — jamais commandé par l'armée française, concurrent du F-15",
+  },
+];
+
+const grid = document.getElementById('grid');
+const filterBtns = document.querySelectorAll('.filter-btn');
+let activeFilter = 'all';
+
+function statutBadge(s) {
+  const map = {
+    actif:    ['badge-actif', 'En service'],
+    retraite: ['badge-ret',   'Retiré'],
+    prototype:['badge-proto', 'Prototype'],
+  };
+  const [cls, label] = map[s] || ['badge-ret', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function renderCards(filter) {
+  const filtered = filter === 'all'
+    ? AVIONS
+    : AVIONS.filter(a => a.statut === filter || a.categories.includes(filter));
+
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    grid.innerHTML = '<p class="no-results">Aucun appareil dans cette catégorie.</p>';
+    return;
+  }
+
+  filtered.forEach((a, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 60}ms`;
+
+    const noteHtml = a.note ? `<span class="badge badge-sepecat" style="margin-top:.4rem;display:inline-block">${a.note}</span>` : '';
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-name">${a.nom}</div>
+          <div class="card-maker">${a.fabricant}</div>
+          ${noteHtml}
+        </div>
+        <div class="card-badges">
+          ${statutBadge(a.statut)}
+          <span class="badge badge-era">${a.era.split('–')[0].trim()}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-role">${a.role}</div>
+        <div class="specs">
+          <div class="spec">
+            <div class="spec-label">Moteur</div>
+            <div class="spec-value">${a.moteur}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Vitesse max</div>
+            <div class="spec-value">${a.vitesse}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Plafond</div>
+            <div class="spec-value">${a.plafond}</div>
+          </div>
+          <div class="spec">
+            <div class="spec-label">Période</div>
+            <div class="spec-value">${a.era}</div>
+          </div>
+        </div>
+        <div class="card-armement">
+          <strong>Armement</strong>
+          ${a.armement}
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderCards(activeFilter);
+  });
+});
+
+renderCards('all');
+</script>
+</body>
+</html>
