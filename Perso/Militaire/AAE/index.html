@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Armée de l'Air et de l'Espace — France</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --bleu-mid: #162d54;
+      --bleu-ciel:#1A6EAA;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem;
+      height: 64px;
+      background: rgba(7,17,31,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.25);
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: .75rem;
+      text-decoration: none;
+    }
+    .nav-logo .roundel {
+      width: 38px; height: 38px;
+    }
+    .nav-logo span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .85rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blanc); line-height: 1.2;
+    }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--gris);
+      transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--or-light); }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      padding-top: 64px;
+    }
+
+    /* Animated sky background */
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 110%, #0D2A50 0%, transparent 70%),
+        linear-gradient(175deg, #07111F 0%, #0D1F3C 40%, #0B2645 65%, #07111F 100%);
+    }
+
+    /* Stars */
+    .stars {
+      position: absolute; inset: 0; overflow: hidden;
+    }
+    .stars span {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+      opacity: var(--o, .5);
+    }
+
+    @keyframes twinkle { from { opacity: var(--o); } to { opacity: calc(var(--o) * .3); } }
+
+    /* Horizon glow */
+    .horizon {
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 35%;
+      background: linear-gradient(to top, rgba(26,110,170,.15), transparent);
+    }
+
+    /* Scan line subtle */
+    .scanlines {
+      position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,.06) 3px, rgba(0,0,0,.06) 4px
+      );
+      opacity: .4;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      gap: 1.5rem;
+    }
+
+    /* SVG Roundel AAE */
+    .big-roundel {
+      width: 130px; height: 130px;
+      filter: drop-shadow(0 0 24px rgba(200,153,42,.45));
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 600;
+      letter-spacing: .35em; text-transform: uppercase;
+      color: var(--or);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: .95;
+      letter-spacing: .04em;
+      color: var(--blanc);
+    }
+    .hero-title em {
+      display: block;
+      color: var(--or);
+      font-style: normal;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem; font-weight: 300;
+      color: var(--gris); letter-spacing: .05em;
+      max-width: 480px; line-height: 1.6;
+      font-style: italic;
+    }
+
+    .hero-divider {
+      width: 80px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+
+    .hero-motto {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--blanc);
+    }
+    .hero-motto span { color: var(--or); }
+
+    /* ─── SCROLL CUE ──────────────────────────────── */
+    .scroll-cue {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .4rem;
+      z-index: 2;
+    }
+    .scroll-cue span {
+      font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gris);
+    }
+    .scroll-arrow {
+      width: 18px; height: 18px;
+      border-right: 2px solid var(--or); border-bottom: 2px solid var(--or);
+      transform: rotate(45deg);
+      animation: bounce 1.6s ease-in-out infinite;
+    }
+    @keyframes bounce { 0%,100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(5px); } }
+
+    /* ─── SECTIONS COMMUNES ───────────────────────── */
+    section { padding: 6rem 2rem; }
+
+    .section-header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .section-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .7rem; font-weight: 700; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--or);
+      border: 1px solid rgba(200,153,42,.35);
+      padding: .3rem .9rem; border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: .05em; color: var(--blanc);
+    }
+    .section-line {
+      width: 60px; height: 2px; margin: 1rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+
+    /* ─── PRÉSENTATION ────────────────────────────── */
+    #presentation {
+      background: var(--noir);
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1100px; margin: 0 auto;
+      align-items: start;
+    }
+
+    .intro-text p {
+      font-size: 1rem; line-height: 1.85; color: #B8C8DC;
+      margin-bottom: 1.2rem;
+    }
+    .intro-text p strong { color: var(--or-light); font-weight: 600; }
+
+    .stat-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
+    .stat-card {
+      background: rgba(13,31,60,.6);
+      border: 1px solid rgba(200,153,42,.2);
+      border-top: 2px solid var(--or);
+      padding: 1.5rem; border-radius: 2px;
+      transition: transform .3s, border-color .3s;
+    }
+    .stat-card:hover { transform: translateY(-4px); border-color: var(--or-light); }
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem; color: var(--or);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .75rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gris);
+      margin-top: .3rem;
+    }
+
+    /* ─── CARDS DE NAVIGATION ─────────────────────── */
+    #rubriques {
+      background: linear-gradient(180deg, var(--noir) 0%, var(--bleu) 50%, var(--noir) 100%);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .nav-card {
+      position: relative;
+      display: block; text-decoration: none;
+      background: rgba(13,31,60,.7);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 4px;
+      overflow: hidden;
+      padding: 2.5rem 2rem;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s, border-color .35s;
+      cursor: pointer;
+    }
+    .nav-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(200,153,42,.06), transparent 60%);
+      opacity: 0; transition: opacity .35s;
+    }
+    .nav-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+      transform: scaleX(0); transition: transform .35s;
+    }
+    .nav-card:hover { transform: translateY(-6px); border-color: rgba(200,153,42,.4); box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+    .nav-card:hover::before { opacity: 1; }
+    .nav-card:hover::after  { transform: scaleX(1); }
+
+    .card-icon {
+      font-size: 2.5rem; margin-bottom: 1.2rem;
+      display: block;
+    }
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; letter-spacing: .05em;
+      color: var(--blanc); margin-bottom: .6rem;
+    }
+    .card-desc {
+      font-size: .85rem; line-height: 1.6;
+      color: var(--gris); font-weight: 300;
+    }
+    .card-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: 1.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--or);
+      transition: gap .25s;
+    }
+    .nav-card:hover .card-link { gap: .7rem; }
+    .card-link::after { content: '→'; }
+
+    /* ─── TIMELINE HISTORIQUE ─────────────────────── */
+    #histoire {
+      background: var(--noir);
+      padding-bottom: 5rem;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 800px; margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: rgba(200,153,42,.25);
+      transform: translateX(-50%);
+    }
+
+    .tl-item {
+      display: flex; gap: 2rem;
+      align-items: flex-start;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .tl-item:nth-child(odd)  { flex-direction: row; }
+    .tl-item:nth-child(even) { flex-direction: row-reverse; }
+
+    .tl-date {
+      flex: 0 0 calc(50% - 2rem);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; color: var(--or);
+      text-align: right;
+    }
+    .tl-item:nth-child(even) .tl-date { text-align: left; }
+
+    .tl-dot {
+      position: absolute; left: 50%; top: .4rem;
+      transform: translateX(-50%);
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--or);
+      box-shadow: 0 0 10px var(--or);
+      z-index: 2;
+    }
+
+    .tl-body {
+      flex: 0 0 calc(50% - 2rem);
+    }
+    .tl-body h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--blanc);
+      margin-bottom: .4rem;
+    }
+    .tl-body p {
+      font-size: .85rem; line-height: 1.65; color: var(--gris);
+    }
+
+    /* ─── COMMANDEMENT ────────────────────────────── */
+    #commandement {
+      background: linear-gradient(180deg, var(--noir) 0%, #0A1929 100%);
+    }
+
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .cmd-card {
+      background: rgba(13,31,60,.5);
+      border: 1px solid rgba(255,255,255,.07);
+      border-left: 3px solid var(--or);
+      padding: 1.5rem 1.2rem;
+      border-radius: 2px;
+    }
+    .cmd-card h4 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .95rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--or-light); margin-bottom: .5rem;
+    }
+    .cmd-card p { font-size: .82rem; color: var(--gris); line-height: 1.55; }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      background: #040C17;
+      border-top: 1px solid rgba(200,153,42,.15);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .footer-logo {
+      display: flex; align-items: center; justify-content: center; gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+    .footer-links {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
+      list-style: none; margin-bottom: 2rem;
+    }
+    .footer-links a {
+      text-decoration: none; color: var(--gris);
+      font-size: .8rem; letter-spacing: .1em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      transition: color .25s;
+    }
+    .footer-links a:hover { color: var(--or-light); }
+    .footer-note {
+      font-size: .75rem; color: rgba(138,155,181,.45); line-height: 1.8;
+    }
+
+    /* ─── ANIMATIONS D'ENTRÉE ─────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      .intro-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .timeline::before { left: 1.5rem; }
+      .tl-item, .tl-item:nth-child(even) { flex-direction: column; padding-left: 3.5rem; }
+      .tl-date { text-align: left; }
+      .tl-dot { left: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVIGATION ──────────────────────────────── -->
+<nav>
+  <a class="nav-logo" href="#">
+    <!-- Roundel SVG inline -->
+    <svg class="roundel" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#presentation">Présentation</a></li>
+    <li><a href="#rubriques">Rubriques</a></li>
+    <li><a href="#histoire">Histoire</a></li>
+    <li><a href="#commandement">Organisation</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="stars" id="stars"></div>
+  <div class="horizon"></div>
+  <div class="scanlines"></div>
+
+  <div class="hero-content">
+    <!-- Grand Roundel AAE -->
+    <svg class="big-roundel" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Fond foncé + halo -->
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#C8992A" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#C8992A" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#glow)"/>
+      <!-- Roundel tricolore -->
+      <circle cx="100" cy="100" r="90" fill="#002395"/>
+      <circle cx="100" cy="100" r="60" fill="#FFFFFF"/>
+      <circle cx="100" cy="100" r="30" fill="#ED2939"/>
+      <!-- Anneau or -->
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#C8992A" stroke-width="3"/>
+    </svg>
+
+    <p class="hero-eyebrow">République Française</p>
+
+    <h1 class="hero-title">
+      Armée de l'Air
+      <em>et de l'Espace</em>
+    </h1>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-subtitle">
+      Gardienne des cieux de France et partenaire de la défense nationale,
+      l'AAE assure la souveraineté aérienne et spatiale de la nation.
+    </p>
+
+    <p class="hero-motto">« <span>Faire face</span> »</p>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Découvrir</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ─── PRÉSENTATION ─────────────────────────────── -->
+<section id="presentation">
+  <div class="section-header reveal">
+    <span class="section-tag">Qui sont-ils ?</span>
+    <h2 class="section-title">Présentation Générale</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="intro-grid">
+    <div class="intro-text reveal">
+      <p>
+        Créée le <strong>2 juillet 1934</strong>, l'Armée de l'Air et de l'Espace (AAE) est l'une des trois armes des Forces armées françaises. 
+        Depuis le <strong>11 septembre 2020</strong>, elle a intégré officiellement la dimension spatiale dans sa dénomination, 
+        reconnaissant ainsi l'espace comme un domaine de souveraineté à part entière.
+      </p>
+      <p>
+        Placée sous l'autorité du <strong>Chef d'état-major de l'Armée de l'Air et de l'Espace (CEMAA)</strong>, elle emploie environ 
+        <strong>45 000 militaires</strong> et civils répartis sur l'ensemble du territoire national et dans plusieurs implantations à l'étranger.
+      </p>
+      <p>
+        Ses missions couvrent un spectre très large : défense aérienne du territoire, projection de puissance, soutien aux forces terrestres et navales, 
+        dissuasion nucléaire aéroportée, et désormais surveillance et protection des intérêts français dans l'espace.
+      </p>
+      <p>
+        L'AAE est aussi engagée en permanence en opérations extérieures (<strong>OPEX</strong>), notamment au Sahel, 
+        au Moyen-Orient et dans le cadre des missions OTAN.
+      </p>
+    </div>
+
+    <div class="stat-grid reveal">
+      <div class="stat-card">
+        <div class="stat-number">~45 000</div>
+        <div class="stat-label">Personnels</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">1934</div>
+        <div class="stat-label">Année de création</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">~600</div>
+        <div class="stat-label">Aéronefs en service</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">~50</div>
+        <div class="stat-label">Bases et sites</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RUBRIQUES ─────────────────────────────────── -->
+<section id="rubriques">
+  <div class="section-header reveal">
+    <span class="section-tag">Explorer</span>
+    <h2 class="section-title">Rubriques du Site</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="cards-grid">
+
+    <a class="nav-card reveal" href="avions.html">
+      <span class="card-icon">✈️</span>
+      <div class="card-title">Avions de Combat</div>
+      <p class="card-desc">Rafale, Mirage 2000, MRTT… Découvrez la flotte d'aéronefs à voilure fixe de l'Armée de l'Air et de l'Espace, leurs missions et leurs caractéristiques techniques.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+    <a class="nav-card reveal" href="helicopteres.html">
+      <span class="card-icon">🚁</span>
+      <div class="card-title">Hélicoptères</div>
+      <p class="card-desc">NH90, EC725 Caracal, AS555 Fennec… Les voilures tournantes au service des missions de recherche et sauvetage, d'opérations spéciales et de transport.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+    <a class="nav-card reveal" href="grades.html">
+      <span class="card-icon">🎖️</span>
+      <div class="card-title">Grades & Hiérarchie</div>
+      <p class="card-desc">De l'Aviateur au Général d'Armée Aérienne, explorez la structure hiérarchique complète, les insignes et les galons de l'Armée de l'Air et de l'Espace.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+    <a class="nav-card reveal" href="symboles.html">
+      <span class="card-icon">🛡️</span>
+      <div class="card-title">Logos & Symboles</div>
+      <p class="card-desc">Cocarde tricolore, emblèmes des escadrons, fanions d'unité… L'univers héraldique et symbolique qui forge l'identité visuelle de l'Armée de l'Air.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+    <a class="nav-card reveal" href="bases.html">
+      <span class="card-icon">🗺️</span>
+      <div class="card-title">Bases Aériennes</div>
+      <p class="card-desc">Carte et descriptif des principales bases aériennes françaises, de Luxeuil à Istres en passant par Mont-de-Marsan, Évreux ou Cognac.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+    <a class="nav-card reveal" href="espace.html">
+      <span class="card-icon">🛰️</span>
+      <div class="card-title">Commandement de l'Espace</div>
+      <p class="card-desc">Créé en 2019, le Commandement de l'Espace (CDE) assure la surveillance et la protection des intérêts français dans le domaine spatial.</p>
+      <span class="card-link">Consulter</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ─── HISTOIRE ──────────────────────────────────── -->
+<section id="histoire">
+  <div class="section-header reveal">
+    <span class="section-tag">Chronologie</span>
+    <h2 class="section-title">Grandes Dates</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item reveal">
+      <div class="tl-date">1910</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Naissance de l'aviation militaire</h4>
+        <p>Création de l'Aéronautique militaire française, première force aérienne militaire au monde.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">1934</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Fondation de l'Armée de l'Air</h4>
+        <p>Loi du 2 juillet 1934 — l'armée de l'Air devient une arme indépendante, séparée de l'armée de Terre.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">1940–45</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Seconde Guerre mondiale</h4>
+        <p>Les Forces Aériennes Françaises Libres (FAFL) combattent aux côtés des Alliés sur tous les théâtres d'opérations.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">1964</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Dissuasion nucléaire</h4>
+        <p>L'Armée de l'Air intègre la composante aéroportée de la dissuasion nucléaire française avec les Mirage IV.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">2001</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Entrée en service du Rafale</h4>
+        <p>Premier vol opérationnel du Rafale, avion de combat multirôle devenu le fleuron de l'aviation de combat française.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">2019</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Commandement de l'Espace</h4>
+        <p>Création du Commandement de l'Espace (CDE), premier commandement militaire dédié au spatial en France.</p>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">2020</div>
+      <div class="tl-dot"></div>
+      <div class="tl-body">
+        <h4>Armée de l'Air et de l'Espace</h4>
+        <p>Le 11 septembre 2020, la dénomination officielle est modifiée pour inclure la dimension spatiale, consacrant l'espace comme 5ème milieu opérationnel.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── COMMANDEMENT ──────────────────────────────── -->
+<section id="commandement">
+  <div class="section-header reveal">
+    <span class="section-tag">Structure</span>
+    <h2 class="section-title">Organisation & Commandements</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="cmd-grid">
+    <div class="cmd-card reveal">
+      <h4>CEMAA</h4>
+      <p>Chef d'état-major de l'Armée de l'Air et de l'Espace — autorité suprême de la chaîne de commandement.</p>
+    </div>
+    <div class="cmd-card reveal">
+      <h4>CFA</h4>
+      <p>Commandement des Forces Aériennes — supervise l'ensemble des forces de combat et de transport.</p>
+    </div>
+    <div class="cmd-card reveal">
+      <h4>CDAOA</h4>
+      <p>Commandement de la Défense Aérienne et des Opérations Aériennes — protection du territoire national.</p>
+    </div>
+    <div class="cmd-card reveal">
+      <h4>CDE</h4>
+      <p>Commandement de l'Espace — surveillance et protection des intérêts français dans le domaine spatial.</p>
+    </div>
+    <div class="cmd-card reveal">
+      <h4>CFAS</h4>
+      <p>Commandement des Forces Aériennes Stratégiques — composante aéroportée de la dissuasion nucléaire.</p>
+    </div>
+    <div class="cmd-card reveal">
+      <h4>CSOA</h4>
+      <p>Centre de Soutien des Opérations et des Acheminements — logistique et projection des forces en OPEX.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">
+    <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:#8A9BB5">Armée de l'Air et de l'Espace</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="avions.html">Avions</a></li>
+    <li><a href="helicopteres.html">Hélicoptères</a></li>
+    <li><a href="grades.html">Grades</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="bases.html">Bases aériennes</a></li>
+    <li><a href="espace.html">Commandement de l'Espace</a></li>
+  </ul>
+  <p class="footer-note">
+    Site encyclopédique amateur à vocation éducative — Sources : Ministère des Armées, État-major de l'Armée de l'Air et de l'Espace.<br>
+    Ce site n'est pas un site officiel du gouvernement français.
+  </p>
+</footer>
+
+<!-- ─── SCRIPTS ───────────────────────────────────── -->
+<script>
+  // Génération des étoiles
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*70}%;
+      left:${Math.random()*100}%;
+      --o:${Math.random()*.6+.1};
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Reveal au scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
