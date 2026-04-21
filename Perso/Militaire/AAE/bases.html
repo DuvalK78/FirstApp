@@ -1,1 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bases Aériennes — Armée de l'Air et de l'Espace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--noir); color: var(--blanc); font-family: 'Barlow', sans-serif; overflow-x: hidden; }
 
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: rgba(7,17,31,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo svg { width: 34px; height: 34px; }
+    .nav-logo span { font-family: 'Barlow Condensed',sans-serif; font-weight:700; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--blanc); line-height:1.2; }
+    .nav-back { display:flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--gris); font-family:'Barlow Condensed',sans-serif; font-size:.8rem; font-weight:600; letter-spacing:.15em; text-transform:uppercase; transition:color .25s; }
+    .nav-back:hover { color:var(--or-light); }
+    .nav-back::before { content:'←'; }
+
+    /* HERO */
+    .page-hero {
+      position:relative; padding:120px 2rem 70px; text-align:center; overflow:hidden;
+      background: linear-gradient(170deg, #07111F 0%, #091525 40%, #0A1C30 65%, #07111F 100%);
+    }
+    .page-hero::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--or),transparent); }
+    /* Grille radar décorative */
+    .radar-deco {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; overflow:hidden; opacity:.06;
+    }
+    .radar-deco svg { width:600px; height:600px; }
+    .page-hero-tag { position:relative; z-index:2; font-family:'Barlow Condensed',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.35em; text-transform:uppercase; color:var(--or); margin-bottom:.75rem; display:block; }
+    .page-hero h1 { position:relative; z-index:2; font-family:'Bebas Neue',sans-serif; font-size:clamp(2.5rem,7vw,5.5rem); letter-spacing:.05em; line-height:1; color:var(--blanc); }
+    .page-hero h1 em { color:var(--or); font-style:normal; }
+    .page-hero p { position:relative; z-index:2; margin-top:1rem; color:var(--gris); font-size:.95rem; font-style:italic; max-width:540px; margin-left:auto; margin-right:auto; }
+
+    /* FILTRES */
+    .filters { display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; padding:2.5rem 2rem 1rem; border-bottom:1px solid rgba(255,255,255,.06); }
+    .filter-btn { font-family:'Barlow Condensed',sans-serif; font-size:.75rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; background:transparent; border:1px solid rgba(200,153,42,.25); color:var(--gris); padding:.45rem 1.1rem; border-radius:2px; cursor:pointer; transition:all .25s; }
+    .filter-btn:hover, .filter-btn.active { background:var(--or); border-color:var(--or); color:var(--noir); }
+
+    /* LAYOUT PRINCIPAL : carte + liste */
+    .main { max-width:1300px; margin:0 auto; padding:3rem 2rem 6rem; }
+
+    /* CARTE DE FRANCE SVG */
+    .map-section {
+      margin-bottom:3rem;
+      background: rgba(13,31,60,.4);
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:4px; overflow:hidden;
+      padding: 2rem;
+    }
+    .map-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:.06em; color:var(--blanc); margin-bottom:1.5rem; }
+    .map-container { position:relative; max-width:600px; margin:0 auto; }
+    .map-container svg { width:100%; height:auto; }
+
+    /* Points de bases sur la carte */
+    .base-dot { cursor:pointer; transition:r .2s; }
+    .base-dot:hover circle { r:10; }
+    .base-tooltip {
+      position:absolute; background:rgba(7,17,31,.95); border:1px solid rgba(200,153,42,.4);
+      border-radius:3px; padding:.6rem .9rem; pointer-events:none;
+      font-family:'Barlow Condensed',sans-serif; font-size:.8rem; color:var(--blanc);
+      white-space:nowrap; z-index:10; display:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.5);
+    }
+    .base-tooltip strong { color:var(--or-light); display:block; font-size:.85rem; margin-bottom:.2rem; }
+
+    /* GRILLE CARTES */
+    .bases-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:1.2rem;
+    }
+
+    /* CARTE BASE */
+    .base-card {
+      background:rgba(13,31,60,.55); border:1px solid rgba(255,255,255,.07); border-radius:4px;
+      overflow:hidden;
+      transition:transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, border-color .3s;
+      opacity:0; transform:translateY(16px);
+      animation:fadeUp .5s ease forwards;
+    }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+    .base-card:hover { transform:translateY(-5px); box-shadow:0 16px 40px rgba(0,0,0,.5); border-color:rgba(200,153,42,.3); }
+    .base-card::before { content:''; display:block; height:2px; background:linear-gradient(90deg,var(--or),var(--or-light),var(--or)); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+    .base-card:hover::before { transform:scaleX(1); }
+
+    .base-header { padding:1.2rem 1.4rem .8rem; border-bottom:1px solid rgba(255,255,255,.06); display:flex; justify-content:space-between; align-items:flex-start; gap:.8rem; }
+    .base-num { font-family:'Bebas Neue',sans-serif; font-size:2.2rem; line-height:1; color:rgba(200,153,42,.2); flex-shrink:0; }
+    .base-name-wrap { flex:1; }
+    .base-name { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:.05em; color:var(--blanc); line-height:1.2; }
+    .base-location { font-size:.75rem; color:var(--gris); margin-top:.2rem; font-style:italic; }
+    .base-status { flex-shrink:0; }
+    .badge { font-family:'Barlow Condensed',sans-serif; font-size:.62rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; padding:.2rem .55rem; border-radius:2px; }
+    .badge-actif { background:rgba(40,160,80,.2); color:#70D090; border:1px solid rgba(40,160,80,.3); }
+    .badge-soutien { background:rgba(26,110,170,.2); color:#7BB8E0; border:1px solid rgba(26,110,170,.3); }
+    .badge-ecole { background:rgba(200,153,42,.15); color:var(--or-light); border:1px solid rgba(200,153,42,.3); }
+
+    .base-body { padding:1rem 1.4rem 1.4rem; }
+    .base-role { font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--or); margin-bottom:.7rem; }
+    .base-desc { font-size:.8rem; color:var(--gris); line-height:1.6; margin-bottom:.9rem; }
+    .base-units { display:flex; flex-wrap:wrap; gap:.35rem; }
+    .unit-tag { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; background:rgba(13,31,60,.8); border:1px solid rgba(255,255,255,.1); color:var(--blanc); padding:.2rem .55rem; border-radius:2px; }
+
+    /* FOOTER */
+    footer { background:#040C17; border-top:1px solid rgba(200,153,42,.15); padding:2.5rem 2rem; text-align:center; }
+    .footer-links { display:flex; justify-content:center; flex-wrap:wrap; gap:1.5rem; list-style:none; margin-bottom:1.5rem; }
+    .footer-links a { text-decoration:none; color:var(--gris); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; font-family:'Barlow Condensed',sans-serif; font-weight:600; transition:color .25s; }
+    .footer-links a:hover { color:var(--or-light); }
+    .footer-note { font-size:.72rem; color:rgba(138,155,181,.4); }
+
+    @media(max-width:768px){ nav{padding:0 1.2rem;} }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <a class="nav-back" href="index.html">Retour à l'accueil</a>
+</nav>
+
+<div class="page-hero">
+  <div class="radar-deco">
+    <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="300" cy="300" r="250" fill="none" stroke="#C8992A" stroke-width="1"/>
+      <circle cx="300" cy="300" r="190" fill="none" stroke="#C8992A" stroke-width="1"/>
+      <circle cx="300" cy="300" r="130" fill="none" stroke="#C8992A" stroke-width="1"/>
+      <circle cx="300" cy="300" r="70"  fill="none" stroke="#C8992A" stroke-width="1"/>
+      <line x1="50"  y1="300" x2="550" y2="300" stroke="#C8992A" stroke-width=".8"/>
+      <line x1="300" y1="50"  x2="300" y2="550" stroke="#C8992A" stroke-width=".8"/>
+      <line x1="123" y1="123" x2="477" y2="477" stroke="#C8992A" stroke-width=".5"/>
+      <line x1="477" y1="123" x2="123" y2="477" stroke="#C8992A" stroke-width=".5"/>
+      <path d="M300,300 L550,300" stroke="#C8992A" stroke-width="2" opacity=".6">
+        <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="8s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+  </div>
+  <span class="page-hero-tag">Infrastructure — Territoire National</span>
+  <h1>Bases <em>Aériennes</em></h1>
+  <p>Épine dorsale de la puissance aérienne française, les bases aériennes accueillent les escadrons, assurent la formation et projettent la force partout dans le monde.</p>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">Toutes</button>
+  <button class="filter-btn" data-filter="chasse">Chasse / Combat</button>
+  <button class="filter-btn" data-filter="transport">Transport</button>
+  <button class="filter-btn" data-filter="ecole">Écoles / Formation</button>
+  <button class="filter-btn" data-filter="soutien">Soutien / Logistique</button>
+</div>
+
+<div class="main">
+
+  <!-- CARTE DÉCORATIVE -->
+  <div class="map-section">
+    <div class="map-title">📍 Implantation sur le territoire</div>
+    <div class="map-container" id="mapContainer">
+      <!-- Carte France simplifiée SVG + points -->
+      <svg viewBox="0 0 500 520" xmlns="http://www.w3.org/2000/svg" id="franceMap">
+        <defs>
+          <filter id="glow"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- Silhouette France métropolitaine simplifiée -->
+        <path d="M185,30 L215,25 L245,35 L275,28 L310,40 L330,55 L345,70 L355,90 L370,95 L385,115
+                 L390,135 L380,155 L390,175 L400,200 L405,225 L395,250 L400,270 L385,295
+                 L370,315 L355,330 L340,345 L320,360 L300,375 L280,385 L260,395 L240,400
+                 L220,395 L200,390 L180,380 L160,370 L140,355 L125,335 L115,315 L110,295
+                 L105,270 L100,250 L95,225 L100,200 L95,175 L100,155 L110,135 L115,115
+                 L125,95 L135,75 L150,55 L165,42 Z"
+          fill="#0D1F3C" stroke="rgba(200,153,42,.35)" stroke-width="1.5"/>
+        <!-- Points bases -->
+        <g id="baseDots"></g>
+      </svg>
+      <div class="base-tooltip" id="tooltip"></div>
+    </div>
+  </div>
+
+  <div class="bases-grid" id="basesGrid"></div>
+</div>
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="avions.html">Avions</a></li>
+    <li><a href="helicopteres.html">Hélicoptères</a></li>
+    <li><a href="grades.html">Grades</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="espace.html">Commandement de l'Espace</a></li>
+  </ul>
+  <p class="footer-note">Sources : Ministère des Armées · État-major de l'AAE — Site non officiel à vocation éducative.</p>
+</footer>
+
+<script>
+const BASES = [
+  {
+    num:"BA 113", nom:"Base Aérienne 113 Saint-Dizier — Robinson", region:"Grand Est (Haute-Marne)",
+    statut:"actif", type:"chasse",
+    role:"Base de chasse — Rafale",
+    desc:"Principal site d'entraînement et d'engagement sur Rafale C. Accueille les escadrons EC 1/7 Provence et EC 2/7 Argonne. Base de projection de premier plan pour les OPEX.",
+    unites:["EC 1/7 Provence","EC 2/7 Argonne","Rafale C"],
+    mapX:310, mapY:160
+  },
+  {
+    num:"BA 115", nom:"Base Aérienne 115 Orange — Caritat", region:"Provence-Alpes-Côte d'Azur (Vaucluse)",
+    statut:"actif", type:"chasse",
+    role:"Base de chasse — Rafale",
+    desc:"Base du sud-est accueillant les escadrons Rafale. Centre de formation avancée sur Rafale et base de déploiement pour la Méditerranée.",
+    unites:["EC 2/5 Île-de-France","EC 3/5 Comtat Venaissin","Rafale C"],
+    mapX:295, mapY:340
+  },
+  {
+    num:"BA 116", nom:"Base Aérienne 116 Luxeuil-les-Bains", region:"Bourgogne-Franche-Comté (Haute-Saône)",
+    statut:"actif", type:"chasse",
+    role:"Base de chasse — Rafale",
+    desc:"Héberge les légendaires Cigognes (EC 1/2). Base historique de la chasse française, impliquée dans la dissuasion nucléaire aéroportée.",
+    unites:["EC 1/2 Cigognes","EC 2/4 La Fayette","Rafale C/B","ASMP-A"],
+    mapX:318, mapY:178
+  },
+  {
+    num:"BA 118", nom:"Base Aérienne 118 Mont-de-Marsan", region:"Nouvelle-Aquitaine (Landes)",
+    statut:"actif", type:"chasse",
+    role:"Centre d'expériences aériennes militaires (CEAM)",
+    desc:"Centre d'expérimentation et d'évaluation des systèmes d'armes. Accueille le CEAM, chargé de qualifier tous les nouveaux armements et équipements aéronautiques de l'AAE.",
+    unites:["CEAM","EC 2/2 Côte d'Or","Mirage 2000","Rafale"],
+    mapX:165, mapY:320
+  },
+  {
+    num:"BA 120", nom:"Base Aérienne 120 Cazaux", region:"Nouvelle-Aquitaine (Gironde)",
+    statut:"actif", type:"ecole",
+    role:"École de chasse — Hélicoptères combat",
+    desc:"Base école de référence pour la formation des pilotes de chasse. Héberge le EPAA (Escadron de Présentation et Aguerissement Aéronautique) et les escadrons d'hélicoptères SAR/CSAR.",
+    unites:["EPAA","EH 1/67 Pyrénées","Alpha Jet","Caracal","EC725"],
+    mapX:158, mapY:308
+  },
+  {
+    num:"BA 123", nom:"Base Aérienne 123 Orléans — Bricy", region:"Centre-Val de Loire (Loiret)",
+    statut:"actif", type:"transport",
+    role:"Transport stratégique et tactique",
+    desc:"Principal hub de transport de l'AAE. Accueille les avions gros porteurs C-130, CASA CN-235 et A400M Atlas pour les projections logistiques en OPEX et les missions humanitaires.",
+    unites:["ET 1/61 Touraine","ET 2/61 Franche-Comté","A400M Atlas","C-130H"],
+    mapX:228, mapY:215
+  },
+  {
+    num:"BA 125", nom:"Base Aérienne 125 Istres — Le Tubé", region:"Provence-Alpes-Côte d'Azur (Bouches-du-Rhône)",
+    statut:"actif", type:"soutien",
+    role:"Base de ravitaillement en vol — Essais DGA",
+    desc:"Base stratégique accueillant les MRTT (A330) pour le ravitaillement en vol et les Mirage 2000N de la dissuasion. Héberge également le centre d'essais de la DGA.",
+    unites:["ERV 4/31 Sologne","MRTT A330","DGA Essais en Vol","Mirage 2000N"],
+    mapX:288, mapY:360
+  },
+  {
+    num:"BA 126", nom:"Base Aérienne 126 Ventiseri — Solenzara", region:"Haute-Corse",
+    statut:"actif", type:"chasse",
+    role:"Base avancée — Projection méditerranéenne",
+    desc:"Seule base aérienne de Corse, utilisée comme base de déploiement avancée pour les opérations en Méditerranée et en Afrique du Nord.",
+    unites:["Détachements Rafale","Base de projection OPEX"],
+    mapX:370, mapY:378
+  },
+  {
+    num:"BA 133", nom:"Base Aérienne 133 Nancy — Ochey", region:"Grand Est (Meurthe-et-Moselle)",
+    statut:"actif", type:"chasse",
+    role:"Base de chasse — Mirage 2000 D",
+    desc:"Base de l'est de la France spécialisée dans l'attaque au sol et l'appui air-sol. Dernier bastion du Mirage 2000D avant sa modernisation.",
+    unites:["EC 1/3 Navarre","EC 2/3 Champagne","Mirage 2000D"],
+    mapX:305, mapY:150
+  },
+  {
+    num:"BA 702", nom:"Base Aérienne 702 Avord", region:"Centre-Val de Loire (Cher)",
+    statut:"actif", type:"soutien",
+    role:"Surveillance aérienne — AWACS / Drones",
+    desc:"Centre de surveillance aérienne et de commandement. Accueille les E-3F Sentry AWACS, pivots du contrôle de l'espace aérien, et les drones MALE Reaper.",
+    unites:["GE 36/912 Dunkerque","E-3F Sentry AWACS","Reaper MQ-9","Atlantique 2"],
+    mapX:240, mapY:222
+  },
+  {
+    num:"BA 721", nom:"Base Aérienne 721 Rochefort — Soubise", region:"Nouvelle-Aquitaine (Charente-Maritime)",
+    statut:"ecole", type:"ecole",
+    role:"École des sous-officiers — EFSOAA",
+    desc:"Siège de l'École de Formation des Sous-Officiers de l'Armée de l'Air (EFSOAA). Forme les futurs sous-officiers appelés à encadrer l'ensemble des spécialités de l'AAE.",
+    unites:["EFSOAA","Formation sous-officiers"],
+    mapX:175, mapY:268
+  },
+  {
+    num:"EAE", nom:"École de l'Air et de l'Espace — Salon-de-Provence", region:"Provence-Alpes-Côte d'Azur (Bouches-du-Rhône)",
+    statut:"ecole", type:"ecole",
+    role:"Grande école militaire — Formation des officiers",
+    desc:"La grande école de l'AAE, fondée en 1935. Forme les officiers de carrière sur 3 ans. Héberge la Patrouille de France et le brevet de pilote militaire. Équivalent de Saint-Cyr pour l'armée de l'air.",
+    unites:["Patrouille de France","Alpha Jet","Formation officiers","Brevet pilote"],
+    mapX:282, mapY:352
+  },
+];
+
+const filterBtns = document.querySelectorAll('.filter-btn');
+const grid = document.getElementById('basesGrid');
+let activeFilter = 'all';
+
+function statutBadge(s) {
+  const map = { actif:['badge-actif','Opérationnelle'], ecole:['badge-ecole','École'], soutien:['badge-soutien','Soutien'] };
+  const [cls,label] = map[s]||['badge-actif',s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function renderBases(filter) {
+  const filtered = filter==='all' ? BASES : BASES.filter(b=>b.type===filter);
+  grid.innerHTML='';
+  filtered.forEach((b,i)=>{
+    const card=document.createElement('div');
+    card.className='base-card';
+    card.style.animationDelay=`${i*60}ms`;
+    card.innerHTML=`
+      <div class="base-header">
+        <div class="base-num">${b.num.replace('BA ','')}</div>
+        <div class="base-name-wrap">
+          <div class="base-name">${b.nom}</div>
+          <div class="base-location">📍 ${b.region}</div>
+        </div>
+        <div class="base-status">${statutBadge(b.statut)}</div>
+      </div>
+      <div class="base-body">
+        <div class="base-role">${b.role}</div>
+        <div class="base-desc">${b.desc}</div>
+        <div class="base-units">${b.unites.map(u=>`<span class="unit-tag">${u}</span>`).join('')}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter=btn.dataset.filter;
+    renderBases(activeFilter);
+  });
+});
+
+// Points sur la carte
+const dotsG = document.getElementById('baseDots');
+const tooltip = document.getElementById('tooltip');
+const mapContainer = document.getElementById('mapContainer');
+
+BASES.forEach(b=>{
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('class','base-dot');
+
+  const outer=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  outer.setAttribute('cx',b.mapX); outer.setAttribute('cy',b.mapY); outer.setAttribute('r','8');
+  outer.setAttribute('fill','rgba(200,153,42,.15)'); outer.setAttribute('stroke','rgba(200,153,42,.4)'); outer.setAttribute('stroke-width','1');
+
+  const inner=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  inner.setAttribute('cx',b.mapX); inner.setAttribute('cy',b.mapY); inner.setAttribute('r','4');
+  const colorMap={chasse:'#ED2939', transport:'#1A6EAA', ecole:'#C8992A', soutien:'#70D090'};
+  inner.setAttribute('fill', colorMap[b.type]||'#C8992A');
+
+  g.appendChild(outer); g.appendChild(inner);
+  g.addEventListener('mouseenter', e=>{
+    tooltip.style.display='block';
+    tooltip.innerHTML=`<strong>${b.nom}</strong>${b.role}`;
+  });
+  g.addEventListener('mousemove', e=>{
+    const rect=mapContainer.getBoundingClientRect();
+    tooltip.style.left=(e.clientX-rect.left+12)+'px';
+    tooltip.style.top=(e.clientY-rect.top-10)+'px';
+  });
+  g.addEventListener('mouseleave',()=>{ tooltip.style.display='none'; });
+  dotsG.appendChild(g);
+});
+
+renderBases('all');
+</script>
+</body>
+</html>
