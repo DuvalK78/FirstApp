@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grades & Hiérarchie — Armée de l'Air et de l'Espace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bleu:     #0D1F3C;
+      --bleu-mid: #162d54;
+      --bleu-ciel:#1A6EAA;
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+      --argent:   #C0C8D8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: rgba(7,17,31,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo svg { width: 34px; height: 34px; }
+    .nav-logo span {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: .8rem;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--blanc); line-height: 1.2;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--gris);
+      font-family: 'Barlow Condensed', sans-serif; font-size: .8rem;
+      font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+      transition: color .25s;
+    }
+    .nav-back:hover { color: var(--or-light); }
+    .nav-back::before { content: '←'; }
+
+    /* ── HERO ── */
+    .page-hero {
+      position: relative; padding: 120px 2rem 60px;
+      text-align: center; overflow: hidden;
+      background: linear-gradient(170deg, #07111F 0%, #0D1F3C 45%, #0A1828 70%, #07111F 100%);
+    }
+    .page-hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+    /* Motif galons décoratifs en arrière-plan */
+    .hero-deco {
+      position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .hero-deco span {
+      position: absolute; display: block;
+      height: 1px; background: rgba(200,153,42,.12);
+    }
+    .page-hero-tag {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .7rem;
+      font-weight: 700; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--or); margin-bottom: .75rem; display: block;
+    }
+    .page-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      letter-spacing: .05em; line-height: 1; color: var(--blanc);
+    }
+    .page-hero h1 em { color: var(--or); font-style: normal; }
+    .page-hero p {
+      margin-top: 1rem; color: var(--gris); font-size: .95rem;
+      font-style: italic; max-width: 540px; margin-left: auto; margin-right: auto;
+      line-height: 1.6;
+    }
+
+    /* ── TABS ── */
+    .tabs-wrapper {
+      position: sticky; top: 64px; z-index: 50;
+      background: rgba(7,17,31,.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .tabs {
+      display: flex; overflow-x: auto;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 2rem;
+      gap: 0;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .78rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gris);
+      padding: 1.1rem 1.4rem;
+      border-bottom: 2px solid transparent;
+      transition: color .25s, border-color .25s;
+    }
+    .tab-btn:hover { color: var(--blanc); }
+    .tab-btn.active { color: var(--or-light); border-bottom-color: var(--or); }
+
+    /* ── CONTENU PRINCIPAL ── */
+    .main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    .tab-section { display: none; }
+    .tab-section.visible { display: block; }
+
+    /* ── INTRO CATÉGORIE ── */
+    .cat-intro {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 2.5rem; padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .cat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem; line-height: 1; color: rgba(200,153,42,.12);
+      flex-shrink: 0; min-width: 80px;
+    }
+    .cat-text h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem; letter-spacing: .06em; color: var(--blanc);
+    }
+    .cat-text p {
+      font-size: .9rem; color: var(--gris); line-height: 1.65; margin-top: .4rem;
+    }
+
+    /* ── GRILLE GRADES ── */
+    .grades-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ── CARTE GRADE ── */
+    .grade-card {
+      background: rgba(13,31,60,.5);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 3px;
+      display: flex; align-items: stretch;
+      overflow: hidden;
+      transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, border-color .3s;
+      opacity: 0; transform: translateX(-10px);
+      animation: slideIn .45s ease forwards;
+    }
+    .grade-card:hover {
+      transform: translateX(4px);
+      border-color: rgba(200,153,42,.3);
+      box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    }
+
+    @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+
+    /* Barre latérale colorée selon niveau */
+    .grade-card .side-bar {
+      width: 4px; flex-shrink: 0;
+    }
+
+    /* Insigne SVG (galons) */
+    .grade-insigne {
+      width: 70px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(7,17,31,.4);
+      padding: .8rem .5rem;
+    }
+    .grade-insigne svg { width: 48px; height: 48px; }
+
+    .grade-info {
+      padding: .9rem 1rem; flex: 1;
+    }
+    .grade-rang {
+      font-size: .58rem; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gris); margin-bottom: .25rem;
+    }
+    .grade-nom {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem; font-weight: 700; letter-spacing: .05em;
+      color: var(--blanc); line-height: 1.1; margin-bottom: .3rem;
+    }
+    .grade-desc {
+      font-size: .75rem; color: var(--gris); line-height: 1.5;
+    }
+    .grade-abrv {
+      display: inline-block; margin-top: .4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .65rem; font-weight: 700; letter-spacing: .15em;
+      background: rgba(200,153,42,.12); color: var(--or);
+      border: 1px solid rgba(200,153,42,.25);
+      padding: .15rem .45rem; border-radius: 2px;
+    }
+
+    /* Niveaux couleurs */
+    .lvl-1 .side-bar { background: #5A6A8A; }   /* Militaires du rang */
+    .lvl-2 .side-bar { background: #3A7A5A; }   /* Sous-officiers */
+    .lvl-3 .side-bar { background: #1A6EAA; }   /* Officiers subalternes */
+    .lvl-4 .side-bar { background: #C8992A; }   /* Officiers supérieurs */
+    .lvl-5 .side-bar { background: #E0D0A0; }   /* Généraux */
+
+    /* ── PYRAMIDE HIÉRARCHIQUE ── */
+    .pyramid-section {
+      margin-top: 4rem;
+    }
+    .pyramid-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; letter-spacing: .06em; color: var(--blanc);
+      margin-bottom: 2rem; text-align: center;
+    }
+    .pyramid {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      max-width: 700px; margin: 0 auto;
+    }
+    .pyr-row {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; gap: .5rem;
+    }
+    .pyr-block {
+      background: rgba(13,31,60,.7);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 2px;
+      padding: .5rem 1rem; text-align: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .78rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: transform .2s, border-color .2s;
+      cursor: default;
+    }
+    .pyr-block:hover { transform: scale(1.04); border-color: rgba(200,153,42,.4); }
+    .pyr-generaux .pyr-block { border-left: 3px solid #E0D0A0; color: #E0D0A0; flex: 1; max-width: 200px; }
+    .pyr-sup .pyr-block      { border-left: 3px solid #C8992A; color: #C8992A; flex: 1; max-width: 200px; }
+    .pyr-off .pyr-block      { border-left: 3px solid #1A6EAA; color: #7BB8E0; flex: 1; max-width: 180px; }
+    .pyr-soff .pyr-block     { border-left: 3px solid #3A7A5A; color: #70C090; flex: 1; max-width: 170px; }
+    .pyr-rang .pyr-block     { border-left: 3px solid #5A6A8A; color: #9AAAC0; flex: 1; max-width: 160px; }
+
+    .pyr-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .62rem; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gris);
+      writing-mode: horizontal-tb;
+      min-width: 130px; text-align: right; padding-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #040C17;
+      border-top: 1px solid rgba(200,153,42,.15);
+      padding: 2.5rem 2rem; text-align: center;
+    }
+    .footer-links {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 1.5rem; list-style: none; margin-bottom: 1.5rem;
+    }
+    .footer-links a {
+      text-decoration: none; color: var(--gris);
+      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      transition: color .25s;
+    }
+    .footer-links a:hover { color: var(--or-light); }
+    .footer-note { font-size: .72rem; color: rgba(138,155,181,.4); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .cat-intro { flex-direction: column; gap: .5rem; }
+      .cat-number { font-size: 3rem; }
+      .pyr-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#002395"/>
+      <circle cx="50" cy="50" r="32" fill="#FFFFFF"/>
+      <circle cx="50" cy="50" r="16" fill="#ED2939"/>
+    </svg>
+    <span>Armée de l'Air<br>et de l'Espace</span>
+  </a>
+  <a class="nav-back" href="index.html">Retour à l'accueil</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="hero-deco" id="heroDeco"></div>
+  <span class="page-hero-tag">Structure — Personnel</span>
+  <h1>Grades &amp; <em>Hiérarchie</em></h1>
+  <p>De l'Aviateur au Général d'Armée Aérienne, la structure hiérarchique complète de l'Armée de l'Air et de l'Espace, ses galons et ses insignes.</p>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="rang">Militaires du rang</button>
+    <button class="tab-btn" data-tab="soff">Sous-officiers</button>
+    <button class="tab-btn" data-tab="off">Officiers subalternes</button>
+    <button class="tab-btn" data-tab="sup">Officiers supérieurs</button>
+    <button class="tab-btn" data-tab="gen">Généraux</button>
+    <button class="tab-btn" data-tab="pyramide">Vue d'ensemble</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ── MILITAIRES DU RANG ── -->
+  <div class="tab-section visible" id="tab-rang">
+    <div class="cat-intro">
+      <div class="cat-number">01</div>
+      <div class="cat-text">
+        <h2>Militaires du Rang</h2>
+        <p>Premier échelon de la hiérarchie militaire, les militaires du rang constituent la base de la force opérationnelle. 
+        Ils rejoignent l'armée par engagement volontaire et peuvent évoluer vers les grades de sous-officiers.</p>
+      </div>
+    </div>
+    <div class="grades-grid" id="grid-rang"></div>
+  </div>
+
+  <!-- ── SOUS-OFFICIERS ── -->
+  <div class="tab-section" id="tab-soff">
+    <div class="cat-intro">
+      <div class="cat-number">02</div>
+      <div class="cat-text">
+        <h2>Sous-Officiers</h2>
+        <p>Épine dorsale de l'armée, les sous-officiers assurent l'encadrement de proximité des militaires du rang. 
+        Ils accèdent à ce corps par concours, par promotion interne ou depuis les grandes écoles spécialisées (EFSOAA).</p>
+      </div>
+    </div>
+    <div class="grades-grid" id="grid-soff"></div>
+  </div>
+
+  <!-- ── OFFICIERS SUBALTERNES ── -->
+  <div class="tab-section" id="tab-off">
+    <div class="cat-intro">
+      <div class="cat-number">03</div>
+      <div class="cat-text">
+        <h2>Officiers Subalternes</h2>
+        <p>Formés à l'École de l'Air et de l'Espace (EAE) de Salon-de-Provence ou par concours interne, 
+        les officiers subalternes commandent les premiers échelons tactiques et ont vocation à exercer des responsabilités croissantes.</p>
+      </div>
+    </div>
+    <div class="grades-grid" id="grid-off"></div>
+  </div>
+
+  <!-- ── OFFICIERS SUPÉRIEURS ── -->
+  <div class="tab-section" id="tab-sup">
+    <div class="cat-intro">
+      <div class="cat-number">04</div>
+      <div class="cat-text">
+        <h2>Officiers Supérieurs</h2>
+        <p>Les officiers supérieurs exercent des commandements d'unités, d'escadrons ou de bases aériennes. 
+        Leur avancement est soumis à sélection et leurs responsabilités couvrent aussi bien les domaines opérationnels qu'administratifs.</p>
+      </div>
+    </div>
+    <div class="grades-grid" id="grid-sup"></div>
+  </div>
+
+  <!-- ── GÉNÉRAUX ── -->
+  <div class="tab-section" id="tab-gen">
+    <div class="cat-intro">
+      <div class="cat-number">05</div>
+      <div class="cat-text">
+        <h2>Généraux</h2>
+        <p>Au sommet de la hiérarchie, les officiers généraux commandent les grandes formations, les commandements majeurs 
+        et siègent aux plus hauts niveaux de décision. Le Général d'Armée Aérienne est le grade le plus élevé de l'AAE.</p>
+      </div>
+    </div>
+    <div class="grades-grid" id="grid-gen"></div>
+  </div>
+
+  <!-- ── PYRAMIDE ── -->
+  <div class="tab-section" id="tab-pyramide">
+    <div class="cat-intro">
+      <div class="cat-number">∑</div>
+      <div class="cat-text">
+        <h2>Vue d'ensemble hiérarchique</h2>
+        <p>Représentation schématique de la pyramide des grades de l'Armée de l'Air et de l'Espace, du bas vers le haut.</p>
+      </div>
+    </div>
+
+    <div class="pyramid">
+
+      <div class="pyr-row">
+        <span class="pyr-label">Généraux</span>
+        <div class="pyr-generaux" style="display:flex;gap:.5rem;flex:1;justify-content:center">
+          <div class="pyr-block">Général de Brigade Aérienne</div>
+          <div class="pyr-block">Général de Division Aérienne</div>
+          <div class="pyr-block">Général de Corps Aérien</div>
+          <div class="pyr-block">Général d'Armée Aérienne</div>
+        </div>
+      </div>
+
+      <div class="pyr-row">
+        <span class="pyr-label">Officiers supérieurs</span>
+        <div class="pyr-sup" style="display:flex;gap:.5rem;flex:1;justify-content:center">
+          <div class="pyr-block">Lieutenant-Colonel</div>
+          <div class="pyr-block">Colonel</div>
+        </div>
+      </div>
+
+      <div class="pyr-row">
+        <span class="pyr-label">Officiers subalternes</span>
+        <div class="pyr-off" style="display:flex;gap:.5rem;flex:1;justify-content:center">
+          <div class="pyr-block">Sous-Lieutenant</div>
+          <div class="pyr-block">Lieutenant</div>
+          <div class="pyr-block">Capitaine</div>
+          <div class="pyr-block">Commandant</div>
+        </div>
+      </div>
+
+      <div class="pyr-row">
+        <span class="pyr-label">Sous-officiers</span>
+        <div class="pyr-soff" style="display:flex;gap:.5rem;flex:1;justify-content:center;flex-wrap:wrap">
+          <div class="pyr-block">Sergent</div>
+          <div class="pyr-block">Sergent-Chef</div>
+          <div class="pyr-block">Adjudant</div>
+          <div class="pyr-block">Adjudant-Chef</div>
+          <div class="pyr-block">Major</div>
+        </div>
+      </div>
+
+      <div class="pyr-row">
+        <span class="pyr-label">Militaires du rang</span>
+        <div class="pyr-rang" style="display:flex;gap:.5rem;flex:1;justify-content:center;flex-wrap:wrap">
+          <div class="pyr-block">Aviateur 2ème Cl.</div>
+          <div class="pyr-block">Aviateur 1ère Cl.</div>
+          <div class="pyr-block">Caporal</div>
+          <div class="pyr-block">Caporal-Chef</div>
+          <div class="pyr-block">Caporal-Chef 1ère Cl.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Légende -->
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1.5rem;margin-top:3rem;">
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gris)">
+        <span style="display:inline-block;width:12px;height:12px;background:#5A6A8A;border-radius:2px"></span>Militaires du rang
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gris)">
+        <span style="display:inline-block;width:12px;height:12px;background:#3A7A5A;border-radius:2px"></span>Sous-officiers
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gris)">
+        <span style="display:inline-block;width:12px;height:12px;background:#1A6EAA;border-radius:2px"></span>Officiers subalternes
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gris)">
+        <span style="display:inline-block;width:12px;height:12px;background:#C8992A;border-radius:2px"></span>Officiers supérieurs
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--gris)">
+        <span style="display:inline-block;width:12px;height:12px;background:#E0D0A0;border-radius:2px"></span>Généraux
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <ul class="footer-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="avions.html">Avions</a></li>
+    <li><a href="helicopteres.html">Hélicoptères</a></li>
+    <li><a href="symboles.html">Symboles</a></li>
+    <li><a href="bases.html">Bases aériennes</a></li>
+    <li><a href="espace.html">Commandement de l'Espace</a></li>
+  </ul>
+  <p class="footer-note">Sources : Ministère des Armées · Décret n°2008-952 portant statut particulier du corps des officiers de l'air — Site non officiel à vocation éducative.</p>
+</footer>
+
+<script>
+// ── DONNÉES GRADES ──────────────────────────────────────────────
+
+const GRADES = {
+  rang: [
+    {
+      nom: "Aviateur de 2ème Classe",
+      abrv: "Av2",
+      rang: "Grade 1 — Militaires du rang",
+      desc: "Premier grade militaire. Obtenu à l'issue de la formation militaire initiale (FMI). Correspond à la période d'incorporation.",
+      lvl: 1,
+      galon: galonRang(0),
+    },
+    {
+      nom: "Aviateur de 1ère Classe",
+      abrv: "Av1",
+      rang: "Grade 2 — Militaires du rang",
+      desc: "Accès automatique après 6 mois de service. Premier insigne distinctif : un chevron doré sur la manche.",
+      lvl: 1,
+      galon: galonRang(1),
+    },
+    {
+      nom: "Caporal",
+      abrv: "Cpl",
+      rang: "Grade 3 — Militaires du rang",
+      desc: "Premier grade de commandement. Le caporal peut être chef d'équipe de 3 à 5 hommes. Deux chevrons sur la manche.",
+      lvl: 1,
+      galon: galonRang(2),
+    },
+    {
+      nom: "Caporal-Chef",
+      abrv: "CCh",
+      rang: "Grade 4 — Militaires du rang",
+      desc: "Grade intermédiaire. Le caporal-chef assure souvent des fonctions de spécialiste ou de chef d'équipe confirmé.",
+      lvl: 1,
+      galon: galonRang(3),
+    },
+    {
+      nom: "Caporal-Chef de 1ère Classe",
+      abrv: "CCh1",
+      rang: "Grade 5 — Militaires du rang",
+      desc: "Grade supérieur des militaires du rang. Sert de pont avec le corps des sous-officiers. Chevron doré avec étoile.",
+      lvl: 1,
+      galon: galonRang(4),
+    },
+  ],
+
+  soff: [
+    {
+      nom: "Sergent",
+      abrv: "Sgt",
+      rang: "Grade 6 — Sous-officiers",
+      desc: "Premier grade du corps des sous-officiers. Formé à l'EFSOAA (École de Formation des Sous-Officiers de l'Armée de l'Air). Chef de groupe.",
+      lvl: 2,
+      galon: galonSOff(1),
+    },
+    {
+      nom: "Sergent-Chef",
+      abrv: "SgtCh",
+      rang: "Grade 7 — Sous-officiers",
+      desc: "Sous-officier de commandement. Encadre une section ou un groupe de spécialistes. Responsable technique et disciplinaire.",
+      lvl: 2,
+      galon: galonSOff(2),
+    },
+    {
+      nom: "Adjudant",
+      abrv: "Adj",
+      rang: "Grade 8 — Sous-officiers",
+      desc: "Grade de responsabilité élevée dans les sous-officiers. Peut commander un peloton ou un atelier de spécialité.",
+      lvl: 2,
+      galon: galonSOff(3),
+    },
+    {
+      nom: "Adjudant-Chef",
+      abrv: "AdjCh",
+      rang: "Grade 9 — Sous-officiers",
+      desc: "Sous-officier supérieur. Exerce des fonctions de conseil auprès des officiers et encadre les sous-officiers subordonnés.",
+      lvl: 2,
+      galon: galonSOff(4),
+    },
+    {
+      nom: "Major",
+      abrv: "Maj",
+      rang: "Grade 10 — Sous-officiers",
+      desc: "Grade le plus élevé du corps des sous-officiers. Rôle de conseiller technique et humain. Insigne : trois galons dorés avec une étoile.",
+      lvl: 2,
+      galon: galonSOff(5),
+    },
+  ],
+
+  off: [
+    {
+      nom: "Sous-Lieutenant",
+      abrv: "S/Lt",
+      rang: "Grade 11 — Officiers subalternes",
+      desc: "Premier grade du corps des officiers, obtenu à la sortie de l'École de l'Air et de l'Espace (Salon-de-Provence). Grade de transition.",
+      lvl: 3,
+      galon: galonOff(1),
+    },
+    {
+      nom: "Lieutenant",
+      abrv: "Lt",
+      rang: "Grade 12 — Officiers subalternes",
+      desc: "Commande un groupe, une section ou un détachement. Souvent chef de patrouille ou commandant d'aéronef en début de carrière.",
+      lvl: 3,
+      galon: galonOff(2),
+    },
+    {
+      nom: "Capitaine",
+      abrv: "Cne",
+      rang: "Grade 13 — Officiers subalternes",
+      desc: "Commande une compagnie, un détachement ou un élément d'escadron. Grade clé dans la carrière des officiers navigants.",
+      lvl: 3,
+      galon: galonOff(3),
+    },
+    {
+      nom: "Commandant",
+      abrv: "Cdt",
+      rang: "Grade 14 — Officiers subalternes",
+      desc: "Premier grade des officiers supérieurs de transition. Le commandant peut diriger un escadron ou un service technique.",
+      lvl: 3,
+      galon: galonOff(4),
+    },
+  ],
+
+  sup: [
+    {
+      nom: "Lieutenant-Colonel",
+      abrv: "Lt-Col",
+      rang: "Grade 15 — Officiers supérieurs",
+      desc: "Commande un escadron de chasse, de transport ou un bataillon. Souvent en poste d'état-major ou de commandement intermédiaire.",
+      lvl: 4,
+      galon: galonSup(1),
+    },
+    {
+      nom: "Colonel",
+      abrv: "Col",
+      rang: "Grade 16 — Officiers supérieurs",
+      desc: "Commande une base aérienne ou un grand commandement. Grade le plus élevé avant le corps des officiers généraux.",
+      lvl: 4,
+      galon: galonSup(2),
+    },
+  ],
+
+  gen: [
+    {
+      nom: "Général de Brigade Aérienne",
+      abrv: "GBA",
+      rang: "Grade 17 — Officiers généraux",
+      desc: "Premier grade du corps des généraux. Étoile distinctive. Commande une brigade ou un commandement opérationnel de taille intermédiaire.",
+      lvl: 5,
+      galon: galonGen(1),
+    },
+    {
+      nom: "Général de Division Aérienne",
+      abrv: "GDA",
+      rang: "Grade 18 — Officiers généraux",
+      desc: "Deux étoiles. Exerce des commandements majeurs, des fonctions à l'état-major des armées ou auprès de l'OTAN.",
+      lvl: 5,
+      galon: galonGen(2),
+    },
+    {
+      nom: "Général de Corps Aérien",
+      abrv: "GCA",
+      rang: "Grade 19 — Officiers généraux",
+      desc: "Trois étoiles. Commande un commandement majeur (CFA, CDAOA, CFAS…) ou représente la France dans des instances internationales.",
+      lvl: 5,
+      galon: galonGen(3),
+    },
+    {
+      nom: "Général d'Armée Aérienne",
+      abrv: "GAA",
+      rang: "Grade 20 — Officiers généraux",
+      desc: "Quatre étoiles. Grade le plus élevé de l'Armée de l'Air et de l'Espace. Correspond au poste de Chef d'État-Major (CEMAA).",
+      lvl: 5,
+      galon: galonGen(4),
+    },
+  ],
+};
+
+// ── SVG GALONS ──────────────────────────────────────────────────
+
+function galonRang(n) {
+  // Chevrons simples
+  let chevrons = '';
+  for (let i = 0; i < Math.max(1, n); i++) {
+    const y = 36 - i * 10;
+    chevrons += `<polyline points="8,${y+6} 24,${y} 40,${y+6}" fill="none" stroke="${n===0?'#8A9BB5':'#C8992A'}" stroke-width="2.5" stroke-linejoin="round"/>`;
+  }
+  const etoile = n === 4 ? `<polygon points="24,6 26,13 33,13 27,17 29,24 24,20 19,24 21,17 15,13 22,13" fill="#C8992A"/>` : '';
+  return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="3" fill="rgba(13,31,60,.8)"/>
+    ${chevrons}${etoile}
+  </svg>`;
+}
+
+function galonSOff(n) {
+  // Galons horizontaux dorés
+  let galons = '';
+  const count = n <= 2 ? n : n <= 4 ? n - 1 : 3;
+  const hasEtoile = n >= 4;
+  const hasGrandBar = n === 5;
+  for (let i = 0; i < count; i++) {
+    const y = 38 - i * 8;
+    galons += `<rect x="6" y="${y}" width="36" height="3.5" rx="1" fill="#C8992A"/>`;
+  }
+  if (hasEtoile || n === 4) {
+    galons += `<polygon points="24,8 26,15 33,15 27,19 29,26 24,21 19,26 21,19 15,15 22,15" fill="#C8992A"/>`;
+  }
+  if (n === 5) {
+    galons += `<rect x="6" y="12" width="36" height="5" rx="2" fill="#C8992A"/>`;
+  }
+  return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="3" fill="rgba(13,31,60,.8)"/>
+    ${galons}
+  </svg>`;
+}
+
+function galonOff(n) {
+  let galons = '';
+  for (let i = 0; i < n; i++) {
+    const y = 40 - i * 9;
+    galons += `<rect x="4" y="${y}" width="40" height="4" rx="1.5" fill="#C8992A"/>`;
+  }
+  return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="3" fill="rgba(13,31,60,.8)"/>
+    ${galons}
+  </svg>`;
+}
+
+function galonSup(n) {
+  let galons = '';
+  const total = n === 1 ? 4 : 5;
+  for (let i = 0; i < total; i++) {
+    const y = 42 - i * 7;
+    galons += `<rect x="4" y="${y}" width="40" height="3.5" rx="1.5" fill="${i === total-1 ? '#E8BC50' : '#C8992A'}"/>`;
+  }
+  return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="3" fill="rgba(13,31,60,.8)"/>
+    ${galons}
+  </svg>`;
+}
+
+function galonGen(n) {
+  let etoiles = '';
+  const positions = [
+    [[24,20]],
+    [[16,22],[32,22]],
+    [[10,24],[24,18],[38,24]],
+    [[8,26],[20,18],[28,18],[40,26]],
+  ];
+  const pts = positions[n-1] || [];
+  pts.forEach(([cx,cy]) => {
+    etoiles += `<polygon points="${cx},${cy-7} ${cx+2.5},${cy-1} ${cx+8},${cy-1} ${cx+3},${cy+3} ${cx+5},${cy+9} ${cx},${cy+5} ${cx-5},${cy+9} ${cx-3},${cy+3} ${cx-8},${cy-1} ${cx-2.5},${cy-1}" fill="#E0D0A0"/>`;
+  });
+  return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="3" fill="rgba(13,31,60,.8)"/>
+    <rect x="4" y="36" width="40" height="5" rx="2" fill="#C8992A"/>
+    ${etoiles}
+  </svg>`;
+}
+
+// ── RENDU ────────────────────────────────────────────────────────
+
+function renderGrades(key) {
+  const container = document.getElementById(`grid-${key}`);
+  if (!container) return;
+  container.innerHTML = '';
+  GRADES[key].forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = `grade-card lvl-${g.lvl}`;
+    card.style.animationDelay = `${i * 70}ms`;
+    card.innerHTML = `
+      <div class="side-bar"></div>
+      <div class="grade-insigne">${g.galon}</div>
+      <div class="grade-info">
+        <div class="grade-rang">${g.rang}</div>
+        <div class="grade-nom">${g.nom}</div>
+        <div class="grade-desc">${g.desc}</div>
+        <span class="grade-abrv">${g.abrv}</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Rendre toutes les sections au départ
+['rang','soff','off','sup','gen'].forEach(k => renderGrades(k));
+
+// ── TABS ─────────────────────────────────────────────────────────
+
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabSections = document.querySelectorAll('.tab-section');
+
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabBtns.forEach(b => b.classList.remove('active'));
+    tabSections.forEach(s => s.classList.remove('visible'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('visible');
+    // Re-trigger animations
+    document.querySelectorAll(`#tab-${btn.dataset.tab} .grade-card`).forEach((c,i) => {
+      c.style.animation = 'none';
+      c.offsetHeight;
+      c.style.animation = '';
+      c.style.animationDelay = `${i*70}ms`;
+    });
+  });
+});
+
+// ── DECO HERO ────────────────────────────────────────────────────
+const deco = document.getElementById('heroDeco');
+for (let i = 0; i < 8; i++) {
+  const span = document.createElement('span');
+  span.style.cssText = `top:${20+i*10}%;left:0;right:0;`;
+  deco.appendChild(span);
+}
+</script>
+
+</body>
+</html>
