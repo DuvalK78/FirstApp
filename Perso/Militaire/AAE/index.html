@@ -65,6 +65,16 @@
     }
     .nav-links a:hover { color: var(--or-light); }
 
+    .nav-back-home {
+      display: flex; align-items: center; gap: .4rem;
+      text-decoration: none; color: var(--gris);
+      font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
+      font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      border: 1px solid rgba(200,153,42,.25); padding: .35rem .9rem; border-radius: 2px;
+      transition: color .25s, border-color .25s, background .25s;
+    }
+    .nav-back-home:hover { color: var(--noir); background: var(--or); border-color: var(--or); }
+
     /* ─── HERO ────────────────────────────────────── */
     .hero {
       position: relative;
@@ -460,6 +470,7 @@
     </svg>
     <span>Armée de l'Air<br>et de l'Espace</span>
   </a>
+  <a class="nav-back-home" href="../index.html">← Accueil général</a>
   <ul class="nav-links">
     <li><a href="#presentation">Présentation</a></li>
     <li><a href="#rubriques">Rubriques</a></li>
@@ -520,7 +531,7 @@
 <!-- ─── PRÉSENTATION ─────────────────────────────── -->
 <section id="presentation">
   <div class="section-header reveal">
-    <span class="section-tag">Qui sont-ils ?</span>
+    <span class="section-tag">Qui sommes-nous ?</span>
     <h2 class="section-title">Présentation Générale</h2>
     <div class="section-line"></div>
   </div>
@@ -753,7 +764,7 @@
     <li><a href="espace.html">Commandement de l'Espace</a></li>
   </ul>
   <p class="footer-note">
-    Site encyclopédique amateur à vocation éducative — Sources : Ministère des Armées, État-major de l'Armée de l'Air et de l'Espace.<br>
+    Site encyclopédique à vocation éducative — Sources : Ministère des Armées, État-major de l'Armée de l'Air et de l'Espace.<br>
     Ce site n'est pas un site officiel du gouvernement français.
   </p>
 </footer>
