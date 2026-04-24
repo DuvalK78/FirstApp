@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forces Armées Françaises — Index Général</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --or:       #C8992A;
+      --or-light: #E8BC50;
+      --blanc:    #F0F4FA;
+      --gris:     #8A9BB5;
+      --noir:     #07111F;
+
+      /* Couleurs par armée */
+      --terre:    #3A5A2A;
+      --terre-l:  #5A8A40;
+      --air:      #1A3A6A;
+      --air-l:    #2A6EAA;
+      --marine:   #0A2A4A;
+      --marine-l: #1A5A8A;
+      --gend:     #1A1A4A;
+      --gend-l:   #3A3A8A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--noir);
+      color: var(--blanc);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── FOND ANIMÉ ── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 60% at 20% 80%, rgba(26,58,106,.2) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 80% 20%, rgba(58,90,42,.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 50% 50%, rgba(10,42,74,.15) 0%, transparent 70%),
+        #07111F;
+    }
+    /* Lignes de grille discrètes */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(200,153,42,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,153,42,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 3rem; height: 64px;
+      background: rgba(7,17,31,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,153,42,.2);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: .9rem;
+    }
+    /* Blason République SVG inline */
+    .nav-emblem svg { width: 36px; height: 36px; }
+    .nav-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: .82rem;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blanc); line-height: 1.25;
+    }
+    .nav-title span { color: var(--or); }
+    .nav-right {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .7rem; font-weight: 600; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gris);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 80px 2rem 60px;
+      overflow: hidden;
+    }
+
+    /* Étoiles générées JS */
+    #stars { position: absolute; inset: 0; pointer-events: none; }
+    #stars span {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle var(--d,3s) ease-in-out infinite alternate;
+      opacity: var(--o,.4);
+    }
+    @keyframes twinkle { from{opacity:var(--o)} to{opacity:calc(var(--o)*.2)} }
+
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem; font-weight: 700; letter-spacing: .4em;
+      text-transform: uppercase; color: var(--or);
+      margin-bottom: 1.2rem;
+    }
+
+    /* Grand blason central */
+    .hero-emblem {
+      margin-bottom: 1.8rem;
+      filter: drop-shadow(0 0 30px rgba(200,153,42,.35));
+      animation: float 5s ease-in-out infinite;
+    }
+    .hero-emblem svg { width: 120px; height: 120px; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 9vw, 7.5rem);
+      line-height: .92; letter-spacing: .04em;
+      color: var(--blanc);
+    }
+    .hero-title em { display: block; color: var(--or); font-style: normal; }
+
+    .hero-divider {
+      width: 90px; height: 2px; margin: 1.8rem auto;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+
+    .hero-sub {
+      font-size: 1rem; font-weight: 300; font-style: italic;
+      color: var(--gris); max-width: 480px; line-height: 1.7; margin: 0 auto;
+    }
+
+    .hero-scroll {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    }
+    .hero-scroll span { font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gris); }
+    .arrow { width: 16px; height: 16px; border-right: 2px solid var(--or); border-bottom: 2px solid var(--or); transform: rotate(45deg); animation: bounce 1.6s ease-in-out infinite; }
+    @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(5px)} }
+
+    /* ── SECTION ARMÉES ── */
+    #armees {
+      position: relative; z-index: 1;
+      padding: 5rem 2rem 7rem;
+    }
+    .section-header {
+      text-align: center; margin-bottom: 4rem;
+    }
+    .section-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif; font-size: .68rem;
+      font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--or); border: 1px solid rgba(200,153,42,.3);
+      padding: .3rem .9rem; border-radius: 2px; margin-bottom: .9rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: .05em; color: var(--blanc);
+    }
+    .section-line { width: 55px; height: 2px; background: linear-gradient(90deg, transparent, var(--or), transparent); margin: .9rem auto 0; }
+
+    /* ── GRANDE GRILLE ── */
+    .armies-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    /* ── CARTE ARMÉE ── */
+    .army-card {
+      position: relative;
+      text-decoration: none;
+      display: flex; flex-direction: column;
+      background: rgba(13,31,60,.5);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 6px; overflow: hidden;
+      min-height: 340px;
+      transition: transform .4s cubic-bezier(.22,1,.36,1), box-shadow .4s, border-color .4s;
+      opacity: 0; transform: translateY(24px);
+      animation: fadeUp .6s ease forwards;
+    }
+    @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+    .army-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 24px 60px rgba(0,0,0,.55);
+    }
+
+    /* Bande colorée latérale */
+    .army-card .color-band {
+      position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+      transition: width .35s;
+    }
+    .army-card:hover .color-band { width: 8px; }
+
+    /* Fond dégradé teinté */
+    .army-card .card-bg {
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity .35s;
+    }
+    .army-card:hover .card-bg { opacity: 1; }
+
+    /* Ligne dorée bas */
+    .army-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      transform: scaleX(0); transform-origin: left; transition: transform .4s;
+    }
+    .army-card:hover::after { transform: scaleX(1); }
+
+    .card-inner {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; flex: 1;
+      padding: 2rem 2rem 2rem 2.5rem;
+    }
+
+    .card-emblem {
+      margin-bottom: 1.4rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.4));
+      transition: filter .3s, transform .3s;
+    }
+    .army-card:hover .card-emblem {
+      filter: drop-shadow(0 0 16px rgba(200,153,42,.4));
+      transform: scale(1.06);
+    }
+    .card-emblem svg { width: 72px; height: 72px; }
+
+    .card-tag {
+      font-family: 'Barlow Condensed', sans-serif; font-size: .65rem;
+      font-weight: 700; letter-spacing: .25em; text-transform: uppercase;
+      margin-bottom: .5rem;
+    }
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: .04em; line-height: 1;
+      color: var(--blanc); margin-bottom: .8rem;
+    }
+    .card-desc {
+      font-size: .82rem; color: var(--gris); line-height: 1.65; flex: 1;
+    }
+
+    /* Stats inline */
+    .card-stats {
+      display: flex; gap: 1.5rem; margin-top: 1.2rem; padding-top: 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+    .card-stat-item { display: flex; flex-direction: column; }
+    .card-stat-val {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; line-height: 1;
+    }
+    .card-stat-lbl {
+      font-size: .6rem; font-weight: 700; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--gris); margin-top: .15rem;
+    }
+
+    .card-cta {
+      display: inline-flex; align-items: center; gap: .5rem; margin-top: 1.4rem;
+      font-family: 'Barlow Condensed', sans-serif; font-size: .75rem;
+      font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+      transition: gap .25s;
+    }
+    .army-card:hover .card-cta { gap: .85rem; }
+    .card-cta::after { content: '→'; }
+
+    /* Couleurs par armée */
+    .card-terre .color-band { background: var(--terre-l); }
+    .card-terre .card-bg { background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(58,90,42,.18), transparent); }
+    .card-terre::after { background: linear-gradient(90deg, var(--terre-l), transparent); }
+    .card-terre .card-tag { color: var(--terre-l); }
+    .card-terre .card-stat-val { color: #80C060; }
+    .card-terre .card-cta { color: #80C060; }
+
+    .card-air .color-band { background: var(--air-l); }
+    .card-air .card-bg { background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(26,58,106,.22), transparent); }
+    .card-air::after { background: linear-gradient(90deg, var(--air-l), transparent); }
+    .card-air .card-tag { color: #7BB8E0; }
+    .card-air .card-stat-val { color: #7BB8E0; }
+    .card-air .card-cta { color: #7BB8E0; }
+
+    .card-marine .color-band { background: var(--marine-l); }
+    .card-marine .card-bg { background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(10,42,74,.22), transparent); }
+    .card-marine::after { background: linear-gradient(90deg, var(--marine-l), transparent); }
+    .card-marine .card-tag { color: #60A8D0; }
+    .card-marine .card-stat-val { color: #60A8D0; }
+    .card-marine .card-cta { color: #60A8D0; }
+
+    .card-gend .color-band { background: var(--gend-l); }
+    .card-gend .card-bg { background: radial-gradient(ellipse 80% 80% at 0% 50%, rgba(26,26,74,.22), transparent); }
+    .card-gend::after { background: linear-gradient(90deg, var(--gend-l), transparent); }
+    .card-gend .card-tag { color: #9090D0; }
+    .card-gend .card-stat-val { color: #9090D0; }
+    .card-gend .card-cta { color: #9090D0; }
+
+    /* ── BANDEAU REPUBLIQUE ── */
+    .republic-banner {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto 4rem;
+      background: rgba(13,31,60,.4);
+      border: 1px solid rgba(200,153,42,.15);
+      border-radius: 4px; padding: 2rem 2.5rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .republic-banner svg { width: 56px; height: 56px; flex-shrink: 0; }
+    .republic-text h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem;
+      font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--or-light); margin-bottom: .4rem;
+    }
+    .republic-text p { font-size: .82rem; color: var(--gris); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      background: #040C17;
+      border-top: 1px solid rgba(200,153,42,.12);
+      padding: 3rem 2rem; text-align: center;
+    }
+    /* Tricolore décoratif */
+    .footer-tricolor {
+      display: flex; justify-content: center; margin-bottom: 2rem;
+    }
+    .footer-tricolor span {
+      display: block; height: 3px; width: 60px;
+    }
+    .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem; list-style: none; margin-bottom: 1.8rem; }
+    .footer-links a {
+      text-decoration: none; color: var(--gris);
+      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+      transition: color .25s;
+    }
+    .footer-links a:hover { color: var(--or-light); }
+    .footer-motto {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: .25em; color: rgba(138,155,181,.3);
+      margin-bottom: .8rem;
+    }
+    .footer-note { font-size: .72rem; color: rgba(138,155,181,.35); }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 1.2rem; }
+      .armies-grid { grid-template-columns: 1fr; }
+      .republic-banner { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grid"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-emblem">
+      <!-- Blason RF simplifié -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,5 95,30 95,70 50,95 5,70 5,30" fill="#0D1F3C" stroke="#C8992A" stroke-width="3"/>
+        <!-- RF -->
+        <text x="50" y="58" text-anchor="middle" font-family="serif" font-size="28" font-weight="bold" fill="#C8992A">RF</text>
+      </svg>
+    </div>
+    <div class="nav-title">Forces Armées<br><span>Françaises</span></div>
+  </div>
+  <div class="nav-right">Liberté · Égalité · Fraternité</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div id="stars"></div>
+
+  <p class="hero-eyebrow">République Française — Ministère des Armées</p>
+
+  <!-- Grand blason RF -->
+  <div class="hero-emblem">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="emblemGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#C8992A" stop-opacity=".3"/>
+          <stop offset="100%" stop-color="#C8992A" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="url(#emblemGlow)"/>
+      <polygon points="100,12 188,55 188,145 100,188 12,145 12,55" fill="#0D1F3C" stroke="#C8992A" stroke-width="3"/>
+      <!-- Tricolore vertical intérieur -->
+      <clipPath id="hexClip">
+        <polygon points="100,16 184,57 184,143 100,184 16,143 16,57"/>
+      </clipPath>
+      <rect x="16"  y="16" width="56" height="168" fill="#002395" clip-path="url(#hexClip)"/>
+      <rect x="72"  y="16" width="56" height="168" fill="#FFFFFF" clip-path="url(#hexClip)"/>
+      <rect x="128" y="16" width="72" height="168" fill="#ED2939" clip-path="url(#hexClip)"/>
+      <!-- RF -->
+      <text x="100" y="115" text-anchor="middle" font-family="serif" font-size="42" font-weight="bold" fill="#C8992A" opacity=".95">RF</text>
+      <!-- Couronne de laurier simplifiée -->
+      <circle cx="100" cy="100" r="78" fill="none" stroke="#C8992A" stroke-width="1.5" stroke-dasharray="6 4" opacity=".4"/>
+    </svg>
+  </div>
+
+  <h1 class="hero-title">
+    Forces Armées
+    <em>Françaises</em>
+  </h1>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-sub">
+    Explorer l'organisation, les hommes et les équipements des quatre grandes composantes
+    militaires de la République Française.
+  </p>
+
+  <div class="hero-scroll">
+    <span>Explorer</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- SECTION ARMÉES -->
+<section id="armees">
+  <div class="section-header">
+    <span class="section-tag">Organisation</span>
+    <h2 class="section-title">Les Composantes Militaires</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="armies-grid">
+
+    <!-- ARMÉE DE TERRE -->
+    <a class="army-card card-terre" href="terre/index.html" style="animation-delay:0ms">
+      <div class="color-band"></div>
+      <div class="card-bg"></div>
+      <div class="card-inner">
+        <div class="card-emblem">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="tg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3A5A2A"/><stop offset="100%" stop-color="#1A3A10"/></radialGradient></defs>
+            <circle cx="60" cy="60" r="56" fill="url(#tg)" stroke="#5A8A40" stroke-width="2"/>
+            <!-- Épée -->
+            <rect x="57" y="20" width="6" height="60" rx="2" fill="#E8BC50"/>
+            <rect x="42" y="60" width="36" height="5" rx="2" fill="#C8992A"/>
+            <polygon points="60,15 65,28 55,28" fill="#E8BC50"/>
+            <!-- Lauriers -->
+            <ellipse cx="36" cy="55" rx="12" ry="7" fill="#5A8A40" transform="rotate(-40 36 55)"/>
+            <ellipse cx="84" cy="55" rx="12" ry="7" fill="#5A8A40" transform="rotate(40 84 55)"/>
+            <ellipse cx="30" cy="70" rx="10" ry="6" fill="#4A7A30" transform="rotate(-60 30 70)"/>
+            <ellipse cx="90" cy="70" rx="10" ry="6" fill="#4A7A30" transform="rotate(60 90 70)"/>
+            <text x="60" y="98" text-anchor="middle" font-family="serif" font-size="9" font-weight="bold" fill="#C8992A" letter-spacing="1">TERRE</text>
+          </svg>
+        </div>
+        <div class="card-tag">Composante terrestre</div>
+        <div class="card-name">Armée de Terre</div>
+        <div class="card-desc">
+          Force de combat terrestre de la République, l'Armée de Terre déploie ses unités sur l'ensemble du spectre des conflits modernes : guerre de haute intensité, opérations de contre-insurrection, maintien de la paix et protection du territoire national (opération Sentinelle).
+        </div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-val">~112 000</span>
+            <span class="card-stat-lbl">Militaires</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">1477</span>
+            <span class="card-stat-lbl">Année de création</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">Leclerc</span>
+            <span class="card-stat-lbl">Char principal</span>
+          </div>
+        </div>
+        <span class="card-cta">Explorer</span>
+      </div>
+    </a>
+
+    <!-- ARMÉE DE L'AIR ET DE L'ESPACE -->
+    <a class="army-card card-air" href="aae/index.html" style="animation-delay:120ms">
+      <div class="color-band"></div>
+      <div class="card-bg"></div>
+      <div class="card-inner">
+        <div class="card-emblem">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="ag" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1A3A6A"/><stop offset="100%" stop-color="#0A1A3A"/></radialGradient></defs>
+            <circle cx="60" cy="60" r="56" fill="url(#ag)" stroke="#2A6EAA" stroke-width="2"/>
+            <!-- Roundel tricolore -->
+            <circle cx="60" cy="60" r="36" fill="#002395"/>
+            <circle cx="60" cy="60" r="24" fill="#FFFFFF"/>
+            <circle cx="60" cy="60" r="12" fill="#ED2939"/>
+            <circle cx="60" cy="60" r="36" fill="none" stroke="#C8992A" stroke-width="1.5"/>
+            <!-- Étoile au centre -->
+            <polygon points="60,53 62,59 69,59 63,63 65,69 60,65 55,69 57,63 51,59 58,59" fill="#C8992A"/>
+          </svg>
+        </div>
+        <div class="card-tag">Composante aérienne & spatiale</div>
+        <div class="card-name">Armée de l'Air et de l'Espace</div>
+        <div class="card-desc">
+          Gardienne des cieux et de l'espace, l'AAE assure la souveraineté aérienne de la France, la dissuasion nucléaire aéroportée et la surveillance du domaine spatial. Elle opère le Rafale, le MRTT et gère le Commandement de l'Espace depuis 2019.
+        </div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-val">~45 000</span>
+            <span class="card-stat-lbl">Militaires</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">1934</span>
+            <span class="card-stat-lbl">Année de création</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">Rafale</span>
+            <span class="card-stat-lbl">Avion de combat</span>
+          </div>
+        </div>
+        <span class="card-cta">Explorer</span>
+      </div>
+    </a>
+
+    <!-- MARINE NATIONALE -->
+    <a class="army-card card-marine" href="marine/index.html" style="animation-delay:240ms">
+      <div class="color-band"></div>
+      <div class="card-bg"></div>
+      <div class="card-inner">
+        <div class="card-emblem">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="mg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0A2A4A"/><stop offset="100%" stop-color="#051525"/></radialGradient></defs>
+            <circle cx="60" cy="60" r="56" fill="url(#mg)" stroke="#1A5A8A" stroke-width="2"/>
+            <!-- Ancre marine -->
+            <rect x="57" y="22" width="6" height="55" rx="2" fill="#C8992A"/>
+            <!-- Anneau ancre -->
+            <circle cx="60" cy="28" r="9" fill="none" stroke="#C8992A" stroke-width="4"/>
+            <!-- Bras horizontaux -->
+            <rect x="40" y="68" width="40" height="5" rx="2" fill="#C8992A"/>
+            <!-- Pattes ancre -->
+            <path d="M40,73 Q32,73 30,80" stroke="#C8992A" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M80,73 Q88,73 90,80" stroke="#C8992A" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Étoile -->
+            <polygon points="60,50 62.5,57 70,57 64,62 66,69 60,64 54,69 56,62 50,57 57.5,57" fill="#E8BC50"/>
+            <text x="60" y="98" text-anchor="middle" font-family="serif" font-size="8" font-weight="bold" fill="#C8992A" letter-spacing="1">MARINE</text>
+          </svg>
+        </div>
+        <div class="card-tag">Composante navale</div>
+        <div class="card-name">Marine Nationale</div>
+        <div class="card-desc">
+          Seule marine européenne à opérer un porte-avions à propulsion nucléaire, la Marine nationale assure la liberté des mers, la composante océanique de la dissuasion nucléaire (SNLE), et la protection des approches maritimes françaises sur tous les océans.
+        </div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-val">~40 000</span>
+            <span class="card-stat-lbl">Marins</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">1624</span>
+            <span class="card-stat-lbl">Année de création</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">CDG</span>
+            <span class="card-stat-lbl">Porte-avions</span>
+          </div>
+        </div>
+        <span class="card-cta">Explorer</span>
+      </div>
+    </a>
+
+    <!-- GENDARMERIE -->
+    <a class="army-card card-gend" href="gendarmerie/index.html" style="animation-delay:360ms">
+      <div class="color-band"></div>
+      <div class="card-bg"></div>
+      <div class="card-inner">
+        <div class="card-emblem">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="gg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1A1A4A"/><stop offset="100%" stop-color="#0A0A2A"/></radialGradient></defs>
+            <circle cx="60" cy="60" r="56" fill="url(#gg)" stroke="#3A3A8A" stroke-width="2"/>
+            <!-- Grenade gendarmerie -->
+            <ellipse cx="60" cy="68" rx="20" ry="18" fill="#C8992A"/>
+            <ellipse cx="60" cy="68" rx="16" ry="14" fill="#1A1A4A"/>
+            <!-- Flamme -->
+            <path d="M60,50 Q55,42 58,36 Q60,30 62,36 Q65,42 60,50Z" fill="#E8BC50"/>
+            <path d="M60,50 Q57,44 59,38 Q60,33 61,38 Q63,44 60,50Z" fill="#FFF0A0"/>
+            <!-- Mèche -->
+            <rect x="58" y="48" width="4" height="6" rx="1" fill="#8A6A20"/>
+            <!-- Étoiles autour -->
+            <polygon points="60,18 61.5,23 67,23 62.5,26 64,31 60,28 56,31 57.5,26 53,23 58.5,23" fill="#E8BC50" transform="scale(.7) translate(25.7,8)"/>
+            <text x="60" y="98" text-anchor="middle" font-family="serif" font-size="7.5" font-weight="bold" fill="#C8992A" letter-spacing="1">GENDARMERIE</text>
+          </svg>
+        </div>
+        <div class="card-tag">Force de sécurité militaire</div>
+        <div class="card-name">Gendarmerie Nationale</div>
+        <div class="card-desc">
+          Corps militaire à statut particulier, la Gendarmerie nationale assure à la fois des missions de police judiciaire, de maintien de l'ordre et de défense. Elle inclut le GIGN, unité d'élite d'intervention anti-terroriste reconnue mondialement.
+        </div>
+        <div class="card-stats">
+          <div class="card-stat-item">
+            <span class="card-stat-val">~100 000</span>
+            <span class="card-stat-lbl">Gendarmes</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">1791</span>
+            <span class="card-stat-lbl">Année de création</span>
+          </div>
+          <div class="card-stat-item">
+            <span class="card-stat-val">GIGN</span>
+            <span class="card-stat-lbl">Unité d'élite</span>
+          </div>
+        </div>
+        <span class="card-cta">Explorer</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Bandeau République -->
+  <div class="republic-banner" style="margin-top:3rem">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="5"  y="10" width="30" height="80" rx="2" fill="#002395"/>
+      <rect x="35" y="10" width="30" height="80" rx="2" fill="#FFFFFF"/>
+      <rect x="65" y="10" width="30" height="80" rx="2" fill="#ED2939"/>
+      <polygon points="50,5 53,14 62,14 55,20 58,29 50,23 42,29 45,20 38,14 47,14" fill="#C8992A"/>
+    </svg>
+    <div class="republic-text">
+      <h3>Sous l'autorité du Président de la République</h3>
+      <p>
+        Les forces armées françaises sont placées sous l'autorité du Chef des armées, le Président de la République, 
+        assisté du Ministre des Armées. Ensemble, elles représentent environ <strong style="color:var(--blanc)">300 000 militaires d'active</strong> 
+        et constituent l'un des outils de défense les plus complets d'Europe, incluant la 
+        <strong style="color:var(--blanc)">dissuasion nucléaire</strong> dans ses trois composantes.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-tricolor">
+    <span style="background:#002395"></span>
+    <span style="background:#FFFFFF"></span>
+    <span style="background:#ED2939"></span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="aae/index.html">Armée de l'Air et de l'Espace</a></li>
+    <li><a href="terre/index.html">Armée de Terre</a></li>
+    <li><a href="marine/index.html">Marine Nationale</a></li>
+    <li><a href="gendarmerie/index.html">Gendarmerie Nationale</a></li>
+  </ul>
+  <div class="footer-motto">Liberté · Égalité · Fraternité</div>
+  <p class="footer-note">Site encyclopédique à vocation éducative — Sources : Ministère des Armées, État-majors des armées.<br>Ce site n'est pas un site officiel du gouvernement français.</p>
+</footer>
+
+<script>
+  // Étoiles
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('span');
+    const size = Math.random() * 2 + .4;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--o:${(Math.random()*.55+.08).toFixed(2)};--d:${(Math.random()*3+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+    starsEl.appendChild(s);
+  }
+
+  // Reveal au scroll
+  const cards = document.querySelectorAll('.army-card');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.style.opacity='1', i*80); });
+  }, { threshold: .1 });
+  cards.forEach(c => io.observe(c));
+</script>
+</body>
+</html>
