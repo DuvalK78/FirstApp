@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personnages — Kaiju No.8</title>
+<link rel="stylesheet" href="style.css">
+<style>
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 64px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover { color: var(--text-secondary); border-color: var(--border-strong); }
+
+.filter-btn.active {
+  color: var(--accent);
+  border-color: rgba(81,252,243,0.3);
+  background: var(--accent-dim);
+}
+
+/* ── GRID ── */
+.chars-grid {
+  padding: 40px 64px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--border);
+}
+
+/* ── CHARACTER CARD ── */
+.char-card {
+  background: var(--bg);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.char-card:hover { background: var(--bg-card); }
+
+.char-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--card-accent, var(--border));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.char-card:hover::before { transform: scaleX(1); }
+
+/* accent par division */
+.char-card[data-div="1"]  { --card-accent: var(--mina-mint); }
+.char-card[data-div="2"]  { --card-accent: var(--hoshina-purple); }
+.char-card[data-div="3"]  { --card-accent: var(--kikoru-gold); }
+.char-card[data-div="dir"]{ --card-accent: var(--df-beige); }
+.char-card[data-div="kaiju"]{ --card-accent: var(--kaiju10-red); }
+
+.char-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.char-photo-slot {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--bg-panel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.char-photo-slot:hover { background: rgba(255,255,255,0.02); }
+
+.char-photo-slot .slot-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.char-photo-slot .slot-icon {
+  width: 36px; height: 36px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; opacity: 0.25;
+}
+
+.char-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.char-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.char-name-jp {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+
+.char-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 1;
+}
+
+.char-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+
+.char-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.char-stats { flex: 1; }
+
+.char-bio {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.65;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.char-meta-row {
+  display: flex;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.char-meta-item { display: flex; flex-direction: column; gap: 2px; }
+
+.char-meta-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.char-meta-val {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+/* ── DETAIL OVERLAY ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,9,13,0.92);
+  z-index: 200;
+  overflow-y: auto;
+  backdrop-filter: blur(6px);
+}
+
+.overlay.open { display: block; }
+
+.overlay-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 80px 40px 80px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.overlay-close {
+  position: fixed;
+  top: 20px; right: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  z-index: 201;
+  background: var(--bg);
+  transition: all 0.15s;
+}
+
+.overlay-close:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+.overlay-header {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.overlay-photo-slot {
+  width: 100%; aspect-ratio: 3/4;
+  background: var(--bg-panel);
+  border: 1px dashed rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 10px; cursor: pointer;
+}
+
+.overlay-photo-slot span {
+  font-family: var(--font-mono);
+  font-size: 8px; color: var(--text-dim);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  text-align: center; padding: 0 16px;
+}
+
+.overlay-info { display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+
+.overlay-name-jp { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; }
+
+.overlay-name {
+  font-family: var(--font-display);
+  font-size: 52px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+  line-height: 0.92;
+}
+
+.overlay-role { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); letter-spacing: 0.08em; }
+
+.overlay-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin-bottom: 32px;
+  border: 1px solid var(--border);
+}
+
+.overlay-stat {
+  background: var(--bg-panel);
+  padding: 16px;
+}
+
+.overlay-stat-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.overlay-stat-val {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+}
+
+.overlay-section-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.overlay-bio {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.overlay-abilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .filter-bar, .chars-grid { padding-left: 20px; padding-right: 20px; }
+  .overlay-header { grid-template-columns: 1fr; }
+  .overlay-name { font-size: 36px; }
+  .overlay-stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Kaiju <span class="num">No.8</span><span class="jp">怪獣8号</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="personnages.html" class="active">Personnages</a></li>
+    <li><a href="kaijus.html">Kaijus</a></li>
+    <li><a href="armes.html">Armes</a></li>
+    <li><a href="lore.html">Lore</a></li>
+  </ul>
+  <div class="nav-spacer"></div>
+  <div class="nav-status"><div class="status-dot"></div>MENACE ACTIVE</div>
+</nav>
+
+<div class="page-wrapper">
+  <div class="page-hero">
+    <div class="section-label">Personnel — Japan Anti-Kaiju Defence Force</div>
+    <h1 class="section-title">Personnages <span class="accent">DF</span></h1>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">Filtrer :</span>
+    <button class="filter-btn active" onclick="filter(this,'all')">Tous</button>
+    <button class="filter-btn" onclick="filter(this,'1')">Division 1</button>
+    <button class="filter-btn" onclick="filter(this,'2')">Division 2</button>
+    <button class="filter-btn" onclick="filter(this,'3')">Division 3</button>
+    <button class="filter-btn" onclick="filter(this,'dir')">Direction</button>
+    <button class="filter-btn" onclick="filter(this,'kaiju')">Identité Kaiju</button>
+  </div>
+
+  <div class="chars-grid" id="chars-grid"></div>
+</div>
+
+<!-- OVERLAY DETAIL -->
+<div class="overlay" id="overlay">
+  <div class="overlay-close" onclick="closeOverlay()">[ Fermer ]</div>
+  <div class="overlay-inner">
+    <div class="overlay-header">
+      <div class="overlay-photo-slot" id="ov-photo-slot" onclick="this.querySelector('input').click()">
+        <span style="font-size:24px;opacity:0.2">⊕</span>
+        <span>Ajouter une photo</span>
+        <input type="file" accept="image/*" style="display:none" onchange="loadOvPhoto(this)">
+      </div>
+      <div class="overlay-info">
+        <div class="overlay-name-jp" id="ov-jp"></div>
+        <div class="overlay-name" id="ov-name"></div>
+        <div class="overlay-role" id="ov-role"></div>
+        <div id="ov-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px"></div>
+      </div>
+    </div>
+    <div class="overlay-stats-grid" id="ov-stats"></div>
+    <div class="overlay-section-title">Capacités de combat</div>
+    <div class="stat-bar-wrap" id="ov-bars" style="margin-bottom:24px"></div>
+    <div class="overlay-section-title">Biographie</div>
+    <div class="overlay-bio" id="ov-bio"></div>
+    <div class="overlay-section-title">Capacités & Pouvoirs</div>
+    <div class="overlay-abilities" id="ov-abilities"></div>
+  </div>
+</div>
+
+<script>
+const chars = [
+  {
+    id: 0, div: "3",
+    jp: "日比野カフカ", name: "Kafka Hibino", role: "Soldat 1ère classe · Kaiju N°8",
+    tags: ["tag-cyan","S","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"S"},{l:"Âge",v:"32"},{l:"Taille",v:"181 cm"},{l:"Puissance",v:"<1% / Ω"}],
+    bars: [
+      {l:"Force (Kaiju)",v:98,c:""},
+      {l:"Contrôle",v:42,c:"red"},
+      {l:"Expérience",v:75,c:"gold"},
+      {l:"Endurance",v:90,c:""}
+    ],
+    bio: "Ancien employé de Monster Sweeper Inc., Kafka rêvait depuis l'enfance d'intégrer la Defence Force aux côtés de Mina Ashiro. Après de multiples échecs aux examens d'entrée, un parasite Kaiju fusionne avec lui — lui conférant la capacité de se transformer en Kaiju de classe Ω. Il conserve une conscience humaine totale dans sa forme monstrueuse. Sa puissance brute en forme Kaiju atteint 9,8 sur l'échelle de puissance, soit le plus haut jamais enregistré. Il cache son identité à sa hiérarchie tout en servant dans la Division 3.",
+    abilities: ["Transformation Kaiju","Régénération accélérée","Force Ω","Détection des Kaijus","Absorption de pouvoirs","Armure organique"]
+  },
+  {
+    id: 1, div: "3",
+    jp: "市川レノ", name: "Reno Ichikawa", role: "Soldat · Sniper — Division 3",
+    tags: ["tag-gold","A","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"A"},{l:"Âge",v:"18"},{l:"Taille",v:"178 cm"},{l:"Puissance",v:"53%"}],
+    bars: [
+      {l:"Précision",v:91,c:"gold"},
+      {l:"Force",v:55,c:""},
+      {l:"Sang-froid",v:78,c:""},
+      {l:"Vitesse",v:70,c:""}
+    ],
+    bio: "Reno Ichikawa est une recrue prometteuse qui intègre la Division 3 en même temps que Kafka. Spécialiste du tir longue portée, il devient rapidement le partenaire et ami de Kafka. Connaissant le secret de sa transformation, il choisit de le protéger. Sa progression dans la DF est remarquable pour son âge. Il utilise une arme standard équipée d'organes uni-kaiju pour maximiser sa puissance de feu.",
+    abilities: ["Tir de précision longue portée","Combat aux armes à feu","Arme équipée d'uni-organs"]
+  },
+  {
+    id: 2, div: "3",
+    jp: "四ノ宮キコル", name: "Kikoru Shinomiya", role: "Soldat d'élite · Héritière — Division 3",
+    tags: ["tag-gold","A","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"A"},{l:"Âge",v:"18"},{l:"Taille",v:"157 cm"},{l:"Puissance",v:"92%"}],
+    bars: [
+      {l:"Force",v:87,c:"gold"},
+      {l:"Puissance",v:92,c:"gold"},
+      {l:"Vitesse",v:80,c:""},
+      {l:"Leadership",v:85,c:""}
+    ],
+    bio: "Fille du Directeur Général Isao Shinomiya, Kikoru s'est entraînée toute sa vie pour rejoindre la DF et honorer la mémoire de sa mère Hikari, morte au combat. Valedictorian de son université de neutralisation à l'étranger, elle est la recrue la plus puissante jamais enregistrée. Elle hérite de l'Arme Numérotée 4 — la combinaison de combat de sa mère — qui lui confère vol et mobilité extrême. Elle utilise une hache gigantesque comme arme principale.",
+    abilities: ["Arme Numérotée 4 (Combinaison d'Hikari)","Hache géante","Vol & mobilité","Puissance de combat exceptionnelle","Compatible 4 armes numérotées"]
+  },
+  {
+    id: 3, div: "3",
+    jp: "市川保科宗四郎", name: "Soshiro Hoshina", role: "Vice-Capitaine — Division 3",
+    tags: ["tag-purple","S","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"S"},{l:"Âge",v:"27"},{l:"Taille",v:"171 cm"},{l:"Puissance",v:"89%"}],
+    bars: [
+      {l:"Vitesse",v:97,c:"purple"},
+      {l:"Lames",v:93,c:"purple"},
+      {l:"Force",v:80,c:""},
+      {l:"Instinct",v:88,c:""}
+    ],
+    bio: "Vice-Capitaine de la Division 3, Hoshina est réputé pour sa vitesse de déplacement hors norme et son style de combat au corps-à-corps. Sa lignée de neutraliseurs de kaijus remonte à la période Muromachi. Il combat avec des lames fabriquées à partir d'os de Kaijus et fait usage de l'Arme Numérotée 10 après la capture du Kaiju N°10. Perspicace et décontracté en apparence, il nourrit une rivalité avec Gen Narumi.",
+    abilities: ["Lames d'os kaiju","Arme Numérotée 10","Vitesse extrême","Hoshina-Style Sword-Slay Technique","Combat rapproché"]
+  },
+  {
+    id: 4, div: "3",
+    jp: "芦依ミナ", name: "Mina Ashiro", role: "Capitaine — Division 3",
+    tags: ["tag-mint","S","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"S"},{l:"Âge",v:"27"},{l:"Taille",v:"166 cm"},{l:"Puissance",v:"96%"}],
+    bars: [
+      {l:"Portée",v:99,c:"mint"},
+      {l:"Précision",v:95,c:"mint"},
+      {l:"Force",v:80,c:""},
+      {l:"Tactique",v:92,c:""}
+    ],
+    bio: "Amie d'enfance de Kafka, Mina Ashiro est devenue Capitaine de la Division 3, l'une des plus redoutées de la DF. Sans talent pour les lames, elle se spécialise dans l'artillerie lourde. Son canon antikaiju T-25101985 et son Rail Gun anti-géants lui permettent d'abattre des Kaijus de classe Beta d'un seul tir. Elle est l'une des soldates les plus puissantes en activité à 96% de puissance libérée.",
+    abilities: ["Canon T-25101985","Rail Gun anti-géants","Artillerie lourde","Puissance libérée 96%"]
+  },
+  {
+    id: 5, div: "1",
+    jp: "鳴海弦", name: "Gen Narumi", role: "Capitaine — Division 1",
+    tags: ["tag-df","S","tag-df","Div. 1"],
+    stats: [{l:"Rang",v:"S"},{l:"Âge",v:"~30"},{l:"Taille",v:"185 cm"},{l:"Puissance",v:"98%"}],
+    bars: [
+      {l:"Combat",v:98,c:"white"},
+      {l:"Précision",v:96,c:"white"},
+      {l:"Stratégie",v:94,c:"white"},
+      {l:"Puissance",v:98,c:"white"}
+    ],
+    bio: "Capitaine de la Division 1 et combattant le plus puissant en activité de la Defence Force. Gen Narumi utilise l'Arme Numérotée 1, une combinaison qui lui confère une prédiction parfaite des mouvements ennemis. Il manie une GS-3305 baïonnette en combat rapproché et favorise une stratégie de corps-à-corps ultra-précis. Ancien élève d'Isao Shinomiya, il n'a jamais réussi à l'impressionner. Paresseux hors combat, il est passionné de jeux vidéo et de merchandising en ligne.",
+    abilities: ["Arme Numérotée 1 (Rétine prédictive)","GS-3305 Bayonet","Prédiction des mouvements","Gunsword","Puissance libérée 98%"]
+  },
+  {
+    id: 6, div: "1",
+    jp: "東雲りん", name: "Rin Shinonome", role: "Cheffe de Peloton — Division 1",
+    tags: ["tag-df","A","tag-df","Div. 1"],
+    stats: [{l:"Rang",v:"A"},{l:"Âge",v:"?"},{l:"Taille",v:"165 cm"},{l:"Anniversaire",v:"26 jan."}],
+    bars: [
+      {l:"Armement lourd",v:88,c:"mint"},
+      {l:"Précision",v:82,c:""},
+      {l:"Détermination",v:95,c:"gold"},
+      {l:"Endurance",v:78,c:""}
+    ],
+    bio: "Cheffe de peloton au sein de la Division 1, Rin Shinonome est spécialisée dans le maniement des armes lourdes. En apparence calme et composée, elle cache une détermination farouche. Sa motivation première est de se battre aux côtés de Gen Narumi — rivalité et admiration mêlées. Son esprit de compétition l'anime dans chaque mission.",
+    abilities: ["Armement lourd","Armes anti-kaijus","Combat à distance"]
+  },
+  {
+    id: 7, div: "1",
+    jp: "長谷川英二", name: "Eiji Hasegawa", role: "Vice-Capitaine — Division 1",
+    tags: ["tag-df","A","tag-df","Div. 1"],
+    stats: [{l:"Rang",v:"A"},{l:"Âge",v:"~30"},{l:"Division",v:"1"},{l:"Rôle",v:"Vice-Cap."}],
+    bars: [
+      {l:"Leadership",v:88,c:"mint"},
+      {l:"Combat",v:78,c:""},
+      {l:"Tactique",v:85,c:""},
+      {l:"Autorité",v:90,c:""}
+    ],
+    bio: "Vice-Capitaine de la Division 1, Eiji Hasegawa est respecté par les officiers de toutes les divisions. Compétent et rigoureux, il est en quelque sorte le cerveau opérationnel derrière le leadership de Narumi. Il sera remplacé dans sa position de vice-capitaine par Kikoru Shinomiya après la bataille finale contre le Kaiju N°9.",
+    abilities: ["Commandement tactique","Combat à l'arme standard","Leadership"]
+  },
+  {
+    id: 8, div: "dir",
+    jp: "四ノ宮功", name: "Isao Shinomiya", role: "Directeur Général — Japan Anti-Kaiju DF",
+    tags: ["tag-df","SS","tag-df","Direction"],
+    stats: [{l:"Rang",v:"SS"},{l:"Âge",v:"~58"},{l:"Taille",v:"190 cm"},{l:"Arme",v:"N°2"}],
+    bars: [
+      {l:"Puissance",v:96,c:"white"},
+      {l:"Arts martiaux",v:99,c:"white"},
+      {l:"Autorité",v:100,c:"white"},
+      {l:"Stratégie",v:98,c:"white"}
+    ],
+    bio: "Directeur Général de la Japan Anti-Kaiju Defence Force, Isao Shinomiya est considéré comme le combattant humain le plus puissant de l'histoire. Il manie l'Arme Numérotée 2 — gantlets massifs générant des ondes de choc dévastateurs. Père de Kikoru, il l'a élevée froidement en la poussant vers la perfection après la mort de sa femme Hikari. Il a entraîné personnellement Gen Narumi. Il est absorbé par le Kaiju N°9 lors de l'attaque de Tokyo — sa conscience persistant à l'intérieur du monstre jusqu'à la défaite finale.",
+    abilities: ["Arme Numérotée 2 (Gantlets choc)","Arts martiaux — maîtrise totale","Escrime","Tir de précision","Entraîneur de Narumi"]
+  },
+  {
+    id: 9, div: "dir",
+    jp: "伊丹啓司", name: "Keiji Itami", role: "Sous-Directeur → Directeur Général",
+    tags: ["tag-df","A","tag-df","Direction"],
+    stats: [{l:"Rang",v:"A"},{l:"Rôle",v:"Dir. après Isao"},{l:"Division",v:"Dir."},{l:"Âge",v:"?"}],
+    bars: [
+      {l:"Autorité",v:85,c:""},
+      {l:"Gestion",v:90,c:""},
+      {l:"Combat",v:65,c:""},
+      {l:"Stratégie",v:80,c:""}
+    ],
+    bio: "Sous-Directeur de la Defence Force, Keiji Itami est nommé Directeur Général après la mort d'Isao Shinomiya face au Kaiju N°9. Homme de devoir, il assure la continuité de commandement dans une période de crise maximale pour la DF.",
+    abilities: ["Commandement stratégique","Administration DF"]
+  },
+  {
+    id: 10, div: "dir",
+    jp: "乃木坂十蔵", name: "Juzo Nogizaka", role: "Chef d'État-Major — Commandement Est",
+    tags: ["tag-df","S","tag-df","Direction"],
+    stats: [{l:"Rang",v:"S"},{l:"Rôle",v:"Chef Est"},{l:"Signe",v:"Cache-œil"},{l:"Âge",v:"?"}],
+    bars: [
+      {l:"Combat",v:88,c:""},
+      {l:"Stratégie",v:92,c:""},
+      {l:"Autorité",v:87,c:""},
+      {l:"Expérience",v:95,c:""}
+    ],
+    bio: "Chef d'État-Major sévère du Commandement Est de la Defence Force, reconnaissable à son cache-œil. Nogizaka dirige les opérations dans les divisions Est du Japon avec une rigueur absolue.",
+    abilities: ["Commandement Est","Stratégie avancée","Combat (cache-œil)"]
+  },
+  {
+    id: 11, div: "3",
+    jp: "古橋五百里", name: "Iharu Furuhashi", role: "Soldat — Division 3",
+    tags: ["tag-df","B","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"B"},{l:"Âge",v:"~20"},{l:"Division",v:"3"},{l:"Type",v:"Assault"}],
+    bars: [
+      {l:"Combat",v:62,c:"red"},
+      {l:"Endurance",v:70,c:""},
+      {l:"Équipe",v:82,c:""},
+      {l:"Bravoure",v:80,c:"red"}
+    ],
+    bio: "Membre de la Division 3, Iharu Furuhashi combat aux côtés de Kafka, Reno et Kikoru. Reconnaissable à ses traits expressifs et sa personnalité chaleureuse, il est un pilier de l'esprit d'équipe du groupe.",
+    abilities: ["Combat à l'arme standard","Travail d'équipe"]
+  },
+  {
+    id: 12, div: "3",
+    jp: "和泉晴一", name: "Haruichi Izumo", role: "Soldat — Division 3",
+    tags: ["tag-df","B","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"B"},{l:"Âge",v:"~20"},{l:"Division",v:"3"},{l:"Spé.",v:"Support"}],
+    bars: [
+      {l:"Précision",v:68,c:""},
+      {l:"Support",v:85,c:""},
+      {l:"Combat",v:60,c:""},
+      {l:"Sang-froid",v:75,c:""}
+    ],
+    bio: "Haruichi Izumo est un soldat de la Division 3 aux teintes acier et teal, spécialisé dans le soutien tactique de son équipe. Son calme sous pression contraste avec le tempérament fougueux de certains coéquipiers.",
+    abilities: ["Support tactique","Arme standard","Couverture d'équipe"]
+  },
+  {
+    id: 13, div: "3",
+    jp: "小此木コノミ", name: "Konomi Okonogi", role: "Soldat — Division 3",
+    tags: ["tag-df","B","tag-df","Div. 3"],
+    stats: [{l:"Rang",v:"B"},{l:"Âge",v:"~20"},{l:"Division",v:"3"},{l:"Type",v:"Sniper"}],
+    bars: [
+      {l:"Précision",v:80,c:""},
+      {l:"Discrétion",v:75,c:""},
+      {l:"Combat",v:58,c:""},
+      {l:"Moral",v:85,c:""}
+    ],
+    bio: "Soldate de la Division 3, Konomi Okonogi est une tireuse efficace dont la présence stabilise son équipe. Elle fait partie du groupe principal qui combat aux côtés de Kafka lors des premières opérations.",
+    abilities: ["Tir de précision","Arme standard","Combat défensif"]
+  },
+  {
+    id: 14, div: "2",
+    jp: "五十嵐白亜", name: "Hakua Igarashi", role: "Soldat — Division 2 / 3",
+    tags: ["tag-df","B","tag-df","Div. 2"],
+    stats: [{l:"Rang",v:"B"},{l:"Âge",v:"~20"},{l:"Arme",v:"Fusil d'assaut"},{l:"Spé.",v:"Feu"}],
+    bars: [
+      {l:"Feu",v:82,c:"red"},
+      {l:"Combat",v:65,c:""},
+      {l:"Défense",v:78,c:""},
+      {l:"Précision",v:70,c:""}
+    ],
+    bio: "Hakua Igarashi est une défenseure équipée d'un fusil d'assaut capable de tirs incendiaires. Sœur de Jura Igarashi, elle apporte une puissance de feu à distance complémentaire dans les combats collectifs.",
+    abilities: ["Fusil d'assaut","Tirs incendiaires","Défense"]
+  },
+  {
+    id: 15, div: "4",
+    jp: "緒方十五", name: "Jugo Ogata", role: "Capitaine — Division 4",
+    tags: ["tag-df","S","tag-df","Div. 4"],
+    stats: [{l:"Rang",v:"S"},{l:"Âge",v:"~40"},{l:"Division",v:"4"},{l:"Lien",v:"Hikari"}],
+    bars: [
+      {l:"Expérience",v:95,c:"white"},
+      {l:"Combat",v:85,c:""},
+      {l:"Stratégie",v:88,c:""},
+      {l:"Prudence",v:92,c:"white"}
+    ],
+    bio: "Capitaine de la Division 4, Jugo Ogata est un homme marqué par ses pertes. La mort d'Hikari Shinomiya, avec qui il entretenait une amitié profonde, a fait de lui un commandant prudent, voire trop, aux yeux de ses supérieurs. Ses décisions sont teintées d'une volonté de préserver ses soldats au-delà du calcul tactique.",
+    abilities: ["Commandement Division 4","Stratégie défensive","Combat expérimenté"]
+  },
+  {
+    id: 16, div: "dir",
+    jp: "四ノ宮光", name: "Hikari Shinomiya", role: "Capitaine Div. 2 (†) — Mère de Kikoru",
+    tags: ["tag-gold","S","tag-df","Décédée"],
+    stats: [{l:"Rang",v:"S"},{l:"Division",v:"2 (ex)"},{l:"Arme",v:"N°4"},{l:"Statut",v:"†"}],
+    bars: [
+      {l:"Combat",v:92,c:"gold"},
+      {l:"Vol",v:95,c:"gold"},
+      {l:"Mobilité",v:96,c:"gold"},
+      {l:"Héritage",v:100,c:"gold"}
+    ],
+    bio: "Ancienne Capitaine de la 2ème Division, Hikari Shinomiya était l'une des soldates les plus admirées de la DF. Épouse d'Isao, mère de Kikoru, elle est morte en combattant le Kaiju N°6 dans une invasion qui précède les événements de la série. Son Arme Numérotée 4 — combinaison de mobilité et de vol — est transmise à sa fille Kikoru. Sa mort a profondément transformé Isao et façonné le destin de Kikoru.",
+    abilities: ["Arme Numérotée 4","Vol","Mobilité hyper-vélocité","Frappe aérienne"]
+  },
+  {
+    id: 17, div: "kaiju",
+    jp: "怪獣8号 変身形態", name: "Kafka — Forme Kaiju", role: "Kaiju N°8 · Classe Ω",
+    tags: ["tag-cyan","Ω","tag-cyan","Kaiju N°8"],
+    stats: [{l:"Classe",v:"Ω"},{l:"Puissance",v:"9.8"},{l:"Contrôle",v:"Variable"},{l:"Statut",v:"Classifié"}],
+    bars: [
+      {l:"Force brute",v:98,c:""},
+      {l:"Régénération",v:95,c:""},
+      {l:"Armure",v:92,c:""},
+      {l:"Contrôle",v:42,c:"red"}
+    ],
+    bio: "La forme Kaiju de Kafka Hibino, désignée Kaiju N°8 par la Defence Force. Armure noire, yeux cyan lumineux caractéristiques. Puissance enregistrée à 9,8 — la plus haute jamais mesurée. Sa capacité à perturber la régénération de ses cibles est unique. La transformation est déclenchée par une nausée. La conscience humaine de Kafka persiste à l'intérieur. Après la bataille finale, il conserve sa capacité de transformation tout en retrouvant pleinement son humanité grâce au cœur d'Isao Shinomiya.",
+    abilities: ["Force Ω","Régénération","Armure organique noire","Perturbation de régénération","Absorption de pouvoirs","Conscience humaine préservée","Yeux cyan — signature visuelle"]
+  },
+];
+
+function buildCards() {
+  const grid = document.getElementById('chars-grid');
+  grid.innerHTML = chars.map(c => `
+    <div class="char-card card" data-div="${c.div}" onclick="openOverlay(${c.id})">
+      <div class="char-photo-slot" onclick="event.stopPropagation();this.querySelector('input').click()">
+        <div class="slot-icon">⊕</div>
+        <div class="slot-label">Photo / Illustration<br>${c.name}</div>
+        <input type="file" accept="image/*" style="display:none" onchange="loadCardPhoto(this)">
+      </div>
+      <div class="char-body">
+        <div class="char-head">
+          <div>
+            <div class="char-name-jp">${c.jp}</div>
+            <div class="char-name">${c.name}</div>
+            <div class="char-role">${c.role}</div>
+          </div>
+          <span class="rank rank-${c.tags[1]}">${c.tags[1]}</span>
+        </div>
+        <div class="char-tags">
+          ${c.tags.slice(2).map(t => `<span class="tag tag-df">${t}</span>`).join('')}
+        </div>
+        <div class="stat-bar-wrap char-stats">
+          ${c.bars.slice(0,3).map(b => `
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">${b.l}</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill ${b.c}" style="width:0%" data-w="${b.v}%"></div></div>
+              <span class="stat-bar-val">${b.v}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  setTimeout(() => {
+    document.querySelectorAll('.stat-bar-fill').forEach(el => el.style.width = el.dataset.w);
+  }, 50);
+}
+
+function loadCardPhoto(input) {
+  const file = input.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const slot = input.closest('.char-photo-slot');
+  slot.innerHTML = `<img class="char-photo" src="${url}">`;
+}
+
+function filter(btn, div) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.char-card').forEach(c => {
+    c.style.display = (div === 'all' || c.dataset.div === div) ? 'flex' : 'none';
+  });
+}
+
+function openOverlay(id) {
+  const c = chars.find(x => x.id === id);
+  document.getElementById('ov-jp').textContent = c.jp;
+  document.getElementById('ov-name').textContent = c.name;
+  document.getElementById('ov-role').textContent = c.role;
+  document.getElementById('ov-tags').innerHTML = c.tags.map((t,i) => i % 2 === 0 ? `<span class="tag ${c.tags[i]}">${c.tags[i+1] || ''}</span>` : '').join('');
+  document.getElementById('ov-stats').innerHTML = c.stats.map(s => `
+    <div class="overlay-stat">
+      <div class="overlay-stat-label">${s.l}</div>
+      <div class="overlay-stat-val">${s.v}</div>
+    </div>`).join('');
+  document.getElementById('ov-bars').innerHTML = c.bars.map(b => `
+    <div class="stat-bar-row">
+      <span class="stat-bar-label">${b.l}</span>
+      <div class="stat-bar-track"><div class="stat-bar-fill ${b.c}" style="width:0%" data-w="${b.v}%"></div></div>
+      <span class="stat-bar-val">${b.v}</span>
+    </div>`).join('');
+  document.getElementById('ov-bio').textContent = c.bio;
+  document.getElementById('ov-abilities').innerHTML = c.abilities.map(a => `<span class="tag tag-df">${a}</span>`).join('');
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    document.querySelectorAll('#ov-bars .stat-bar-fill').forEach(el => el.style.width = el.dataset.w);
+  }, 60);
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function loadOvPhoto(input) {
+  const file = input.files[0]; if (!file) return;
+  const url = URL.createObjectURL(file);
+  const slot = input.closest('.overlay-photo-slot');
+  slot.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+
+buildCards();
+</script>
+</body>
+</html>
