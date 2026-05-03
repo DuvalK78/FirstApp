@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mazda Rotary — RX-7 & RX-8</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #070809;
+    --bg2:      #0d1012;
+    --bg3:      #131619;
+    --panel:    #0f1215;
+    --border:   rgba(255,255,255,0.06);
+
+    /* RX-7 = orange / ember */
+    --rx7:      #e05a1a;
+    --rx7-dim:  #7a3010;
+    --rx7-glow: rgba(224,90,26,0.18);
+
+    /* RX-8 = electric blue */
+    --rx8:      #0ea5e9;
+    --rx8-dim:  #0a4a6a;
+    --rx8-glow: rgba(14,165,233,0.15);
+
+    --active:   var(--rx7);
+    --active-glow: var(--rx7-glow);
+
+    --white:    #eef0f2;
+    --off:      #c8ccd0;
+    --muted:    #5a6068;
+    --mono:     'IBM Plex Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    background: rgba(7,8,9,0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo .r { color: var(--active); transition: color 0.5s; }
+
+  /* ─── TAB SWITCHER ─── */
+  .tab-bar {
+    display: flex; gap: 2px;
+    background: var(--bg3);
+    border-radius: 4px;
+    padding: 3px;
+  }
+  .tab-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 8px 24px;
+    border: none; cursor: pointer;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .tab-btn.active {
+    background: var(--active);
+    color: #fff;
+  }
+  .tab-btn[data-car="rx7"] { --col: var(--rx7); }
+  .tab-btn[data-car="rx8"] { --col: var(--rx8); }
+  .tab-btn[data-car="rx7"].active { background: var(--rx7); }
+  .tab-btn[data-car="rx8"].active { background: var(--rx8); }
+  .tab-btn:not(.active):hover { color: var(--off); }
+
+  nav { display: flex; gap: 32px; }
+  nav a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--active); }
+
+  /* ─── CAR PANELS ─── */
+  .car-panel {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .car-panel.active {
+    display: block;
+    opacity: 1;
+  }
+  .car-panel.entering { animation: panelIn 0.5s ease both; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── HERO AREA ─── */
+  .car-hero {
+    position: relative;
+    height: 100vh;
+    padding-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 56px 80px;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    color: var(--active);
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+  .hero-model {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(64px, 9vw, 130px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.35s both;
+  }
+  .hero-model em { color: var(--active); font-style: normal; }
+  .hero-tagline {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(16px, 1.8vw, 24px);
+    font-weight: 300;
+    color: var(--muted);
+    margin-top: 20px;
+    max-width: 380px;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.5s both;
+  }
+
+  /* hero stats strip */
+  .hero-stats {
+    display: flex; gap: 2px;
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 0.65s both;
+  }
+  .h-stat {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    padding: 16px 18px;
+    border-top: 2px solid var(--active);
+  }
+  .h-stat-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--active);
+    line-height: 1;
+  }
+  .h-stat-lbl {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  /* hero right — SVG canvas */
+  .hero-right {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-right svg { width: 100%; height: 100%; position: absolute; }
+  .hero-bg-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 70% at 50% 55%, var(--active-glow) 0%, transparent 70%);
+    transition: background 0.6s;
+  }
+
+  /* ghost text behind car */
+  .ghost-text {
+    position: absolute;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(80px, 12vw, 160px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+    bottom: 60px; left: 0; right: 0;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.15em;
+  }
+
+  /* ─── ROTOR DIAGRAM ─── */
+  .rotor-section {
+    padding: 100px 48px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .rotor-text .section-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--active);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .rotor-text .section-tag::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--active);
+  }
+  .rotor-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 28px;
+  }
+  .rotor-title em { color: var(--active); font-style: normal; }
+  .rotor-desc {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+  .rotor-facts { display: flex; flex-direction: column; gap: 14px; }
+  .fact-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 0.9rem;
+    color: var(--off);
+    line-height: 1.5;
+  }
+  .fact-row::before {
+    content: '▸';
+    color: var(--active);
+    font-size: 0.7rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .rotor-diagram {
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .rotor-diagram svg {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+  }
+
+  /* ─── SPECS SECTION ─── */
+  .specs-section {
+    padding: 100px 48px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  .specs-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 56px;
+  }
+  .specs-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(32px, 4vw, 60px);
+    font-weight: 900;
+    line-height: 1;
+  }
+  .specs-title em { color: var(--active); font-style: normal; }
+  .specs-gen {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 48px;
+  }
+  .spec-card {
+    background: var(--panel);
+    padding: 28px 26px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.25s, background 0.25s;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.25s, background 0.25s;
+  }
+  .spec-card.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .spec-card:hover {
+    background: rgba(255,255,255,0.03);
+    border-bottom-color: var(--active);
+  }
+  .spec-card.big {
+    grid-column: span 1;
+  }
+  .spec-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .spec-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--white);
+  }
+  .spec-unit {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .spec-card.accent .spec-val { color: var(--active); }
+  .bar { margin-top: 14px; height: 2px; background: rgba(255,255,255,0.06); }
+  .bar-fill { height: 100%; width: 0%; background: var(--active); transition: width 1.3s cubic-bezier(0.16,1,0.3,1); }
+
+  /* full detail table */
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .detail-table tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .detail-table tr:hover { background: rgba(255,255,255,0.02); }
+  .detail-table td {
+    padding: 16px 20px;
+    font-size: 0.92rem;
+  }
+  .detail-table td:first-child {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 35%;
+  }
+  .detail-table td:last-child { color: var(--off); }
+  .detail-table td.hl { color: var(--active); font-weight: 600; font-family: 'Rajdhani', sans-serif; }
+
+  /* ─── COMPARE SECTION ─── */
+  .compare-section {
+    padding: 100px 48px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .compare-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 900;
+    margin-bottom: 56px;
+    line-height: 1;
+  }
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .cmp-col {
+    background: var(--panel);
+    padding: 36px 32px;
+  }
+  .cmp-col-head {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--active);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .cmp-col.rx7 .cmp-col-head { border-color: var(--rx7); color: var(--rx7); }
+  .cmp-col.rx8 .cmp-col-head { border-color: var(--rx8); color: var(--rx8); }
+  .cmp-col-head span {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+  .cmp-rows { display: flex; flex-direction: column; gap: 0; }
+  .cmp-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cmp-key {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cmp-val {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--off);
+  }
+  .cmp-val.win { color: var(--active); }
+  .cmp-col.rx7 .cmp-val.win { color: var(--rx7); }
+  .cmp-col.rx8 .cmp-val.win { color: var(--rx8); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg);
+  }
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    opacity: 0.5;
+    letter-spacing: 0.1em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* spin animation for rotor */
+  @keyframes rotorSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .rotor-spinning { transform-origin: center; animation: rotorSpin 8s linear infinite; }
+
+  @media (max-width: 900px) {
+    header { padding: 0 20px; }
+    nav { display: none; }
+    .car-hero { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
+    .hero-left { padding: 100px 24px 60px; }
+    .hero-right { height: 50vw; min-height: 280px; }
+    .hero-stats { flex-wrap: wrap; }
+    .rotor-section { grid-template-columns: 1fr; padding: 60px 24px; gap: 48px; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .specs-section, .compare-section { padding: 70px 24px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#"><span class="r">M</span>AZDA ROTARY</a>
+  <div class="tab-bar">
+    <button class="tab-btn active" data-car="rx7">RX-7</button>
+    <button class="tab-btn" data-car="rx8">RX-8</button>
+  </div>
+  <nav>
+    <a href="#moteur">Moteur</a>
+    <a href="#specs">Specs</a>
+    <a href="#compare">Comparer</a>
+  </nav>
+</header>
+
+<!-- ═══════════════════════ RX-7 PANEL ═══════════════════════ -->
+<div class="car-panel active entering" id="panel-rx7">
+
+  <!-- HERO -->
+  <div class="car-hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">MAZDA · 1978 — 2002 · FD3S SERIES VIII</p>
+      <h1 class="hero-model">RX<em>-7</em></h1>
+      <p class="hero-tagline">Le chef-d'œuvre bi-rotor. Un moteur qui ne connaît que la montée en régime — léger, compact, sublime.</p>
+      <div class="hero-stats">
+        <div class="h-stat">
+          <div class="h-stat-val">280</div>
+          <div class="h-stat-lbl">chevaux</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">5,3s</div>
+          <div class="h-stat-lbl">0→100</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">255</div>
+          <div class="h-stat-lbl">km/h max</div>
+        </div>
+        <div class="h-stat">
+          <div class="h-stat-val">7000</div>
+          <div class="h-stat-lbl">tr/min</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-bg-glow"></div>
+      <!-- RX-7 FD SVG -->
+      <svg viewBox="0 0 620 440" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rx7g1" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#e05a1a" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="fx7glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="620" height="440" fill="#070809"/>
+        <rect width="620" height="440" fill="url(#rx7g1)"/>
+        <!-- ground -->
+        <line x1="40" y1="348" x2="580" y2="348" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <ellipse cx="310" cy="356" rx="240" ry="14" fill="rgba(0,0,0,0.5)"/>
+
+        <g transform="translate(30,100)">
+          <!-- FD RX-7 body — iconic fastback pop-up headlight era to FD smooth nose -->
+          <path d="
+            M40,248 L40,168
+            Q44,135 90,110
+            L180,76
+            Q235,55 300,48
+            Q375,40 435,52
+            L490,70
+            Q530,88 546,118
+            L556,158 L556,248 Z
+          " fill="#1a1c1e" stroke="rgba(224,90,26,0.5)" stroke-width="1.5"/>
+
+          <!-- smooth fastback roofline — very sleek -->
+          <path d="
+            M165,110
+            Q210,58 305,42
+            Q395,28 450,58
+            L480,110 Z
+          " fill="#141618" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+          <!-- glass -->
+          <path d="
+            M180,108
+            Q220,60 305,44
+            Q390,30 444,56
+            L468,108 Z
+          " fill="rgba(120,180,220,0.07)" stroke="rgba(120,180,220,0.2)" stroke-width="1"/>
+          <!-- B-pillar -->
+          <line x1="340" y1="43" x2="340" y2="108" stroke="rgba(255,255,255,0.06)" stroke-width="0.8"/>
+
+          <!-- pop-up headlight pods -->
+          <rect x="498" y="138" width="44" height="22" rx="2" fill="#111315" stroke="rgba(224,90,26,0.4)" stroke-width="1"/>
+          <line x1="500" y1="145" x2="540" y2="145" stroke="rgba(224,90,26,0.3)" stroke-width="0.8"/>
+
+          <!-- front splitter -->
+          <path d="M518,196 L556,202 L556,214 L518,208 Z" fill="rgba(224,90,26,0.2)" stroke="rgba(224,90,26,0.5)" stroke-width="0.8"/>
+
+          <!-- rear tail — angular -->
+          <rect x="40" y="138" width="28" height="52" rx="2" fill="rgba(224,90,26,0.55)" stroke="rgba(224,90,26,1)" stroke-width="0.5"/>
+          <line x1="62" y1="138" x2="62" y2="190" stroke="rgba(224,90,26,0.7)" stroke-width="1.5"/>
+
+          <!-- exhaust tips -->
+          <ellipse cx="56" cy="240" rx="7" ry="5" fill="#0d0e0f" stroke="rgba(224,90,26,0.6)" stroke-width="1" filter="url(#fx7glow)"/>
+          <ellipse cx="70" cy="240" rx="7" ry="5" fill="#0d0e0f" stroke="rgba(224,90,26,0.4)" stroke-width="1"/>
+
+          <!-- front wheel -->
+          <ellipse cx="118" cy="234" rx="44" ry="44" fill="#111315" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+          <ellipse cx="118" cy="234" rx="28" ry="28" fill="#0a0b0c" stroke="rgba(224,90,26,0.2)" stroke-width="1"/>
+          <ellipse cx="118" cy="234" rx="11" ry="11" fill="#161819"/>
+          <g stroke="rgba(224,90,26,0.3)" stroke-width="1">
+            <line x1="118" y1="206" x2="118" y2="262"/>
+            <line x1="90" y1="234" x2="146" y2="234"/>
+            <line x1="98" y1="214" x2="138" y2="254"/>
+            <line x1="138" y1="214" x2="98" y2="254"/>
+          </g>
+          <!-- brake caliper red -->
+          <path d="M97,218 L97,250 L104,250 L104,218 Z" fill="rgba(224,90,26,0.8)" stroke="rgba(224,90,26,1)" stroke-width="0.5"/>
+
+          <!-- rear wheel -->
+          <ellipse cx="460" cy="234" rx="46" ry="46" fill="#111315" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+          <ellipse cx="460" cy="234" rx="29" ry="29" fill="#0a0b0c" stroke="rgba(224,90,26,0.2)" stroke-width="1"/>
+          <ellipse cx="460" cy="234" rx="11" ry="11" fill="#161819"/>
+          <g stroke="rgba(224,90,26,0.3)" stroke-width="1">
+            <line x1="460" y1="205" x2="460" y2="263"/>
+            <line x1="431" y1="234" x2="489" y2="234"/>
+            <line x1="439" y1="213" x2="481" y2="255"/>
+            <line x1="481" y1="213" x2="439" y2="255"/>
+          </g>
+          <path d="M441,218 L441,250 L448,250 L448,218 Z" fill="rgba(224,90,26,0.8)" stroke="rgba(224,90,26,1)" stroke-width="0.5"/>
+
+          <!-- twin turbo vents on hood -->
+          <g fill="none" stroke="rgba(224,90,26,0.25)" stroke-width="1">
+            <rect x="340" y="130" width="80" height="8" rx="2"/>
+            <rect x="340" y="142" width="80" height="8" rx="2"/>
+          </g>
+
+          <!-- text -->
+          <text x="230" y="165" fill="rgba(224,90,26,0.18)" font-family="Orbitron,Arial" font-size="9" letter-spacing="4">13B-REW TWIN TURBO</text>
+          <text x="264" y="178" fill="rgba(224,90,26,0.12)" font-family="IBM Plex Mono,monospace" font-size="7" letter-spacing="3">654cc × 2 ROTORS</text>
+        </g>
+      </svg>
+      <div class="ghost-text">RX7</div>
+    </div>
+  </div>
+
+  <!-- ROTOR SECTION -->
+  <section class="rotor-section" id="moteur">
+    <div class="rotor-text">
+      <p class="section-tag">Architecture moteur</p>
+      <h2 class="rotor-title">Le <em>13B-REW</em><br>Bi-Rotor Séquentiel</h2>
+      <p class="rotor-desc">Le 13B-REW est l'apogée du moteur rotatif de série. Deux rotors de 654 cm³ chacun, deux turbines séquentielles (une petite pour la réponse, une grande pour la puissance), et un son unique — aucun autre moteur n'accélère comme ça.</p>
+      <div class="rotor-facts">
+        <div class="fact-row">654 cm³ par rotor — 1 308 cm³ total, pour 280 ch officiels (réels : ~320 ch)</div>
+        <div class="fact-row">Double turbo séquentiel : le petit (12PSI) jusqu'à 4 500 tr/min, le grand s'ouvre ensuite</div>
+        <div class="fact-row">Seulement 13 pièces mobiles dans le groupe motopropulseur — contre 40+ pour un piston</div>
+        <div class="fact-row">Centre de gravité très bas : le moteur pèse 114 kg et loge entièrement sous la ligne du capot</div>
+        <div class="fact-row">Conso d'huile volontaire par design — le rotatif lubrifie ses joints apex à l'huile moteur injectée</div>
+      </div>
+    </div>
+    <div class="rotor-diagram">
+      <!-- Wankel rotor diagram animated -->
+      <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg7" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e05a1a" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="420" height="420" fill="var(--bg2)"/>
+        <circle cx="210" cy="210" r="170" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <circle cx="210" cy="210" r="130" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+        <!-- epitrochoid housing shape -->
+        <path d="
+          M210,50
+          C290,50 370,130 370,210
+          C370,290 290,370 210,370
+          C130,370 50,290 50,210
+          C50,130 130,50 210,50 Z
+        " fill="none" stroke="rgba(224,90,26,0.25)" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+        <!-- actual epitrochoid (simplified) -->
+        <path d="
+          M210,68
+          C258,52 358,102 368,168
+          C378,234 338,338 278,362
+          C218,386 102,362 68,298
+          C34,234 62,108 110,76
+          C134,60 186,80 210,68 Z
+        " fill="rgba(224,90,26,0.04)" stroke="rgba(224,90,26,0.35)" stroke-width="2"/>
+
+        <!-- spinning rotor group -->
+        <g class="rotor-spinning">
+          <!-- Reuleaux triangle rotor -->
+          <path d="
+            M210,118
+            C246,100 290,140 290,178
+            C290,216 270,270 232,288
+            C194,306 140,284 124,248
+            C108,212 122,148 154,128
+            C170,118 186,124 210,118 Z
+          " fill="rgba(224,90,26,0.12)" stroke="rgba(224,90,26,0.65)" stroke-width="2.5"/>
+          <!-- rotor face details -->
+          <circle cx="210" cy="210" r="22" fill="none" stroke="rgba(224,90,26,0.4)" stroke-width="1.5"/>
+          <circle cx="210" cy="210" r="8" fill="rgba(224,90,26,0.3)"/>
+          <!-- eccentric shaft -->
+          <circle cx="210" cy="210" r="4" fill="rgba(224,90,26,0.8)"/>
+
+          <!-- apex seals (the 3 corners) -->
+          <circle cx="210" cy="122" r="5" fill="rgba(224,90,26,0.9)" filter="url(#fx7glow)"/>
+          <circle cx="284" cy="276" r="5" fill="rgba(224,90,26,0.9)" filter="url(#fx7glow)"/>
+          <circle cx="136" cy="276" r="5" fill="rgba(224,90,26,0.9)" filter="url(#fx7glow)"/>
+        </g>
+
+        <!-- labels -->
+        <text x="210" y="28" fill="rgba(224,90,26,0.5)" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle" letter-spacing="3">ADMISSION</text>
+        <text x="378" y="260" fill="rgba(224,90,26,0.4)" font-family="IBM Plex Mono,monospace" font-size="9" text-anchor="start" letter-spacing="2">COMPRESS.</text>
+        <text x="28" y="260" fill="rgba(224,90,26,0.4)" font-family="IBM Plex Mono,monospace" font-size="9" text-anchor="end" letter-spacing="2">ECHAPP.</text>
+        <text x="210" y="406" fill="rgba(224,90,26,0.3)" font-family="IBM Plex Mono,monospace" font-size="9" text-anchor="middle" letter-spacing="2">DÉTENTE</text>
+
+        <!-- center label -->
+        <text x="210" y="204" fill="rgba(224,90,26,0.5)" font-family="Orbitron,Arial" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2">13B</text>
+        <text x="210" y="220" fill="rgba(224,90,26,0.3)" font-family="IBM Plex Mono,monospace" font-size="8" text-anchor="middle" letter-spacing="1">WANKEL</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section class="specs-section" id="specs">
+    <div class="specs-header">
+      <h2 class="specs-title">FICHE<br><em>TECHNIQUE</em></h2>
+      <span class="specs-gen">// RX-7 · FD3S · Série VIII · 1999–2002</span>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-card accent">
+        <div class="spec-label">Puissance</div>
+        <div class="spec-val">280<span class="spec-unit">ch</span></div>
+        <div class="bar"><div class="bar-fill" data-pct="72%"></div></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Couple max</div>
+        <div class="spec-val">314<span class="spec-unit">Nm</span></div>
+        <div class="bar"><div class="bar-fill" data-pct="55%"></div></div>
+      </div>
+      <div class="spec-card accent">
+        <div class="spec-label">0 – 100 km/h</div>
+        <div class="spec-val">5,3<span class="spec-unit">s</span></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Vitesse max</div>
+        <div class="spec-val">255<span class="spec-unit">km/h</span></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Régime maxi</div>
+        <div class="spec-val">7000<span class="spec-unit">tr/min</span></div>
+      </div>
+      <div class="spec-card accent">
+        <div class="spec-label">Poids à vide</div>
+        <div class="spec-val">1335<span class="spec-unit">kg</span></div>
+      </div>
+    </div>
+
+    <table class="detail-table">
+      <tbody>
+        <tr><td>Moteur</td><td class="hl">Bi-rotor Wankel 13B-REW — 1 308 cm³</td></tr>
+        <tr><td>Alimentation</td><td>Double turbo séquentiel (Twin Turbo)</td></tr>
+        <tr><td>Architecture</td><td>2 rotors de 654 cm³ — carter peritrochoid</td></tr>
+        <tr><td>Puissance / Couple</td><td>280 ch à 6 500 tr/min · 314 Nm à 5 000 tr/min</td></tr>
+        <tr><td>Régime maxi</td><td class="hl">7 000 tr/min</td></tr>
+        <tr><td>Boîte</td><td>Manuelle 5 rapports (Mazda R154)</td></tr>
+        <tr><td>Traction</td><td>Propulsion (RWD)</td></tr>
+        <tr><td>Châssis</td><td>Acier — répartition 50/50 AV/AR</td></tr>
+        <tr><td>Carrosserie</td><td>Coupé 2+2 portes — acier</td></tr>
+        <tr><td>Dimensions (L×l×h)</td><td>4 285 × 1 760 × 1 230 mm</td></tr>
+        <tr><td>Empattement</td><td>2 425 mm</td></tr>
+        <tr><td>Poids à vide</td><td class="hl">1 335 kg</td></tr>
+        <tr><td>Rapport poids/ch</td><td>4,77 kg/ch</td></tr>
+        <tr><td>Suspension av</td><td>Double triangulation</td></tr>
+        <tr><td>Suspension ar</td><td>Multibras</td></tr>
+        <tr><td>Freins av/ar</td><td>Disques ventilés ø294 / ø292 mm</td></tr>
+        <tr><td>Pneus av / ar</td><td>225/50 R16 / 245/45 R16</td></tr>
+        <tr><td>Production totale</td><td>~68 000 exemplaires (toutes séries)</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- ═══════════════════════ RX-8 PANEL ═══════════════════════ -->
+<div class="car-panel" id="panel-rx8">
+
+  <!-- HERO -->
+  <div class="car-hero" style="--active: var(--rx8); --active-glow: var(--rx8-glow);">
+    <div class="hero-left">
+      <p class="hero-eyebrow" style="color:var(--rx8)">MAZDA · 2003 — 2012 · SE3P</p>
+      <h1 class="hero-model" style="color:var(--white)">RX<em style="color:var(--rx8)">-8</em></h1>
+      <p class="hero-tagline">4 vraies portes. Un rotor libre de toute turbo. Le son le plus pur du moteur Wankel — 9 500 tr/min naturellement aspirés.</p>
+      <div class="hero-stats" style="--active: var(--rx8);">
+        <div class="h-stat" style="border-top-color:var(--rx8)">
+          <div class="h-stat-val" style="color:var(--rx8)">231</div>
+          <div class="h-stat-lbl">chevaux</div>
+        </div>
+        <div class="h-stat" style="border-top-color:var(--rx8)">
+          <div class="h-stat-val" style="color:var(--rx8)">6,4s</div>
+          <div class="h-stat-lbl">0→100</div>
+        </div>
+        <div class="h-stat" style="border-top-color:var(--rx8)">
+          <div class="h-stat-val" style="color:var(--rx8)">234</div>
+          <div class="h-stat-lbl">km/h max</div>
+        </div>
+        <div class="h-stat" style="border-top-color:var(--rx8)">
+          <div class="h-stat-val" style="color:var(--rx8)">9500</div>
+          <div class="h-stat-lbl">tr/min</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-bg-glow" style="background: radial-gradient(ellipse 70% 70% at 50% 55%, var(--rx8-glow) 0%, transparent 70%)"></div>
+      <!-- RX-8 SE3P SVG -->
+      <svg viewBox="0 0 620 440" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rx8g1" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#070809" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="fx8glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="620" height="440" fill="#070809"/>
+        <rect width="620" height="440" fill="url(#rx8g1)"/>
+        <line x1="40" y1="348" x2="580" y2="348" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        <ellipse cx="310" cy="356" rx="240" ry="14" fill="rgba(0,0,0,0.5)"/>
+
+        <g transform="translate(30,100)">
+          <!-- RX-8 body — wider, taller than RX-7, 4 door coupe -->
+          <path d="
+            M44,248 L44,162
+            Q50,128 100,102
+            L200,66
+            Q256,48 316,44
+            Q386,40 446,54
+            L500,72
+            Q540,90 554,122
+            L560,162 L560,248 Z
+          " fill="#131618" stroke="rgba(14,165,233,0.45)" stroke-width="1.5"/>
+
+          <!-- more upright roofline — 4 door feel -->
+          <path d="
+            M188,102
+            Q234,54 316,42
+            Q400,30 460,60
+            L490,102 Z
+          " fill="#0e1214" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+          <!-- glazing -->
+          <path d="
+            M202,100
+            Q244,56 316,44
+            Q395,32 452,58
+            L474,100 Z
+          " fill="rgba(14,165,233,0.06)" stroke="rgba(14,165,233,0.18)" stroke-width="1"/>
+
+          <!-- B-pillar (noticeably wide — suicide door) -->
+          <line x1="330" y1="44" x2="330" y2="100" stroke="rgba(14,165,233,0.15)" stroke-width="3"/>
+
+          <!-- front headlights — sweeping LEDs -->
+          <path d="M508,110 L554,136 L546,148 L504,122 Z" fill="rgba(14,165,233,0.15)" stroke="rgba(14,165,233,0.3)" stroke-width="0.8" filter="url(#fx8glow)"/>
+          <line x1="510" y1="114" x2="552" y2="138" stroke="rgba(14,165,233,0.6)" stroke-width="0.8" filter="url(#fx8glow)"/>
+
+          <!-- front lower grille -->
+          <path d="M510,162 L558,168 L558,178 L510,172 Z" fill="rgba(14,165,233,0.12)" stroke="rgba(14,165,233,0.3)" stroke-width="0.5"/>
+
+          <!-- rear light bar -->
+          <rect x="44" y="140" width="30" height="56" rx="2" fill="rgba(14,165,233,0.5)" stroke="rgba(14,165,233,0.9)" stroke-width="0.5"/>
+          <line x1="72" y1="140" x2="72" y2="196" stroke="rgba(14,165,233,0.7)" stroke-width="1.5"/>
+
+          <!-- suicide door line -->
+          <line x1="330" y1="100" x2="330" y2="248" stroke="rgba(14,165,233,0.15)" stroke-width="2"/>
+
+          <!-- exhaust -->
+          <ellipse cx="60" cy="240" rx="8" ry="5" fill="#0d0e0f" stroke="rgba(14,165,233,0.5)" stroke-width="1" filter="url(#fx8glow)"/>
+
+          <!-- front wheel -->
+          <ellipse cx="126" cy="232" rx="44" ry="44" fill="#0f1214" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+          <ellipse cx="126" cy="232" rx="28" ry="28" fill="#090a0c" stroke="rgba(14,165,233,0.18)" stroke-width="1"/>
+          <ellipse cx="126" cy="232" rx="11" ry="11" fill="#141618"/>
+          <g stroke="rgba(14,165,233,0.28)" stroke-width="1">
+            <line x1="126" y1="204" x2="126" y2="260"/>
+            <line x1="98" y1="232" x2="154" y2="232"/>
+            <line x1="106" y1="212" x2="146" y2="252"/>
+            <line x1="146" y1="212" x2="106" y2="252"/>
+          </g>
+          <path d="M105,216 L105,248 L112,248 L112,216 Z" fill="rgba(14,165,233,0.7)" stroke="rgba(14,165,233,1)" stroke-width="0.5"/>
+
+          <!-- rear wheel -->
+          <ellipse cx="464" cy="232" rx="46" ry="46" fill="#0f1214" stroke="rgba(255,255,255,0.07)" stroke-width="1.5"/>
+          <ellipse cx="464" cy="232" rx="29" ry="29" fill="#090a0c" stroke="rgba(14,165,233,0.18)" stroke-width="1"/>
+          <ellipse cx="464" cy="232" rx="11" ry="11" fill="#141618"/>
+          <g stroke="rgba(14,165,233,0.28)" stroke-width="1">
+            <line x1="464" y1="203" x2="464" y2="261"/>
+            <line x1="435" y1="232" x2="493" y2="232"/>
+            <line x1="443" y1="211" x2="485" y2="253"/>
+            <line x1="485" y1="211" x2="443" y2="253"/>
+          </g>
+          <path d="M445,216 L445,248 L452,248 L452,216 Z" fill="rgba(14,165,233,0.7)" stroke="rgba(14,165,233,1)" stroke-width="0.5"/>
+
+          <!-- text -->
+          <text x="236" y="162" fill="rgba(14,165,233,0.16)" font-family="Orbitron,Arial" font-size="9" letter-spacing="4">RENESIS · N/A</text>
+          <text x="250" y="175" fill="rgba(14,165,233,0.11)" font-family="IBM Plex Mono,monospace" font-size="7" letter-spacing="3">654cc × 2 ROTORS</text>
+        </g>
+      </svg>
+      <div class="ghost-text" style="-webkit-text-stroke: 1px rgba(14,165,233,0.05)">RX8</div>
+    </div>
+  </div>
+
+  <!-- ROTOR SECTION -->
+  <section class="rotor-section" id="moteur" style="--active:var(--rx8)">
+    <div class="rotor-text">
+      <p class="section-tag" style="color:var(--rx8)">Architecture moteur</p>
+      <h2 class="rotor-title">Le <em style="color:var(--rx8)">RENESIS</em><br>Rotatif Naturellement Aspiré</h2>
+      <p class="rotor-desc">Le RENESIS (REvolución ENgine of Exceptional Significance) est la version la plus évoluée du rotatif de série. Sans turbo, il grimpe à 9 500 tr/min avec une linéarité déconcertante. C'est lui qui a valu le titre de Moteur de l'Année 2003.</p>
+      <div class="rotor-facts" style="--active:var(--rx8)">
+        <div class="fact-row" style="--active:var(--rx8)">Orifices latéraux (side-port) au lieu des orifices périphériques du 13B — meilleure gestion des gaz à bas régime</div>
+        <div class="fact-row">9 500 tr/min en série — seuls quelques supercars atteignent ce régime</div>
+        <div class="fact-row">Moteur de l'Année 2003 (International Engine of the Year) — premier rotatif à obtenir ce titre</div>
+        <div class="fact-row">Deux versions : 192 ch (boîte auto) et 231 ch (boîte manuelle 6 rapports) grâce aux différences de cames</div>
+        <div class="fact-row">Consommation d'huile inhérente : Mazda préconisait de vérifier le niveau toutes les 3 000 km</div>
+      </div>
+    </div>
+    <div class="rotor-diagram">
+      <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <rect width="420" height="420" fill="var(--bg2)"/>
+        <circle cx="210" cy="210" r="170" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+        <!-- epitrochoid -->
+        <path d="
+          M210,68
+          C258,52 358,102 368,168
+          C378,234 338,338 278,362
+          C218,386 102,362 68,298
+          C34,234 62,108 110,76
+          C134,60 186,80 210,68 Z
+        " fill="rgba(14,165,233,0.04)" stroke="rgba(14,165,233,0.3)" stroke-width="2"/>
+
+        <!-- side port markers (unique to RENESIS) -->
+        <rect x="40" y="180" width="18" height="60" rx="3" fill="rgba(14,165,233,0.15)" stroke="rgba(14,165,233,0.5)" stroke-width="1"/>
+        <rect x="362" y="180" width="18" height="60" rx="3" fill="rgba(14,165,233,0.1)" stroke="rgba(14,165,233,0.4)" stroke-width="1"/>
+
+        <!-- spinning rotor -->
+        <g class="rotor-spinning" style="animation-duration:10s; animation-direction: reverse;">
+          <path d="
+            M210,118
+            C246,100 290,140 290,178
+            C290,216 270,270 232,288
+            C194,306 140,284 124,248
+            C108,212 122,148 154,128
+            C170,118 186,124 210,118 Z
+          " fill="rgba(14,165,233,0.1)" stroke="rgba(14,165,233,0.6)" stroke-width="2.5"/>
+          <circle cx="210" cy="210" r="22" fill="none" stroke="rgba(14,165,233,0.35)" stroke-width="1.5"/>
+          <circle cx="210" cy="210" r="8" fill="rgba(14,165,233,0.25)"/>
+          <circle cx="210" cy="210" r="4" fill="rgba(14,165,233,0.8)"/>
+
+          <!-- apex seals -->
+          <circle cx="210" cy="122" r="5" fill="rgba(14,165,233,0.9)" filter="url(#fx8glow)"/>
+          <circle cx="284" cy="276" r="5" fill="rgba(14,165,233,0.9)" filter="url(#fx8glow)"/>
+          <circle cx="136" cy="276" r="5" fill="rgba(14,165,233,0.9)" filter="url(#fx8glow)"/>
+        </g>
+
+        <text x="210" y="28" fill="rgba(14,165,233,0.5)" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle" letter-spacing="3">RENESIS</text>
+        <text x="210" y="406" fill="rgba(14,165,233,0.3)" font-family="IBM Plex Mono,monospace" font-size="9" text-anchor="middle" letter-spacing="2">SIDE-PORT</text>
+        <text x="18" y="215" fill="rgba(14,165,233,0.5)" font-family="IBM Plex Mono,monospace" font-size="8" text-anchor="middle" letter-spacing="1" transform="rotate(-90,18,215)">ECHAPP.</text>
+        <text x="402" y="215" fill="rgba(14,165,233,0.4)" font-family="IBM Plex Mono,monospace" font-size="8" text-anchor="middle" letter-spacing="1" transform="rotate(90,402,215)">ADMISS.</text>
+        <text x="210" y="204" fill="rgba(14,165,233,0.5)" font-family="Orbitron,Arial" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="2">RENESIS</text>
+        <text x="210" y="220" fill="rgba(14,165,233,0.3)" font-family="IBM Plex Mono,monospace" font-size="7" text-anchor="middle" letter-spacing="1">13B-MSP</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section class="specs-section" id="specs" style="--active:var(--rx8)">
+    <div class="specs-header">
+      <h2 class="specs-title" style="--active:var(--rx8)">FICHE<br><em style="color:var(--rx8)">TECHNIQUE</em></h2>
+      <span class="specs-gen">// RX-8 · SE3P · Phase II · 2008–2012</span>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-card" style="--active:var(--rx8)">
+        <div class="spec-label">Puissance</div>
+        <div class="spec-val" style="color:var(--rx8)">231<span class="spec-unit">ch</span></div>
+        <div class="bar"><div class="bar-fill" data-pct="60%" style="background:var(--rx8)"></div></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Couple max</div>
+        <div class="spec-val">211<span class="spec-unit">Nm</span></div>
+        <div class="bar"><div class="bar-fill" data-pct="37%" style="background:var(--rx8)"></div></div>
+      </div>
+      <div class="spec-card" style="--active:var(--rx8)">
+        <div class="spec-label">0 – 100 km/h</div>
+        <div class="spec-val" style="color:var(--rx8)">6,4<span class="spec-unit">s</span></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Vitesse max</div>
+        <div class="spec-val">234<span class="spec-unit">km/h</span></div>
+      </div>
+      <div class="spec-card" style="--active:var(--rx8)">
+        <div class="spec-label">Régime maxi</div>
+        <div class="spec-val" style="color:var(--rx8)">9500<span class="spec-unit">tr/min</span></div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Poids à vide</div>
+        <div class="spec-val">1350<span class="spec-unit">kg</span></div>
+      </div>
+    </div>
+
+    <table class="detail-table">
+      <tbody>
+        <tr><td>Moteur</td><td class="hl" style="color:var(--rx8)">Bi-rotor Wankel RENESIS 13B-MSP — 1 308 cm³</td></tr>
+        <tr><td>Alimentation</td><td>Naturellement aspiré (N/A) — injection multipoint</td></tr>
+        <tr><td>Architecture</td><td>2 rotors de 654 cm³ — ports latéraux (side-port)</td></tr>
+        <tr><td>Puissance / Couple</td><td>231 ch à 8 500 tr/min · 211 Nm à 5 500 tr/min</td></tr>
+        <tr><td>Régime maxi</td><td class="hl" style="color:var(--rx8)">9 500 tr/min</td></tr>
+        <tr><td>Boîte</td><td>Manuelle 6 rapports (ou 5 rapports Phase I) · Auto 4 rapports</td></tr>
+        <tr><td>Traction</td><td>Propulsion (RWD)</td></tr>
+        <tr><td>Carrosserie</td><td>Coupé 4 portes (portes suicide arrière sans montant B)</td></tr>
+        <tr><td>Dimensions (L×l×h)</td><td>4 430 × 1 770 × 1 340 mm</td></tr>
+        <tr><td>Empattement</td><td>2 700 mm</td></tr>
+        <tr><td>Poids à vide</td><td class="hl" style="color:var(--rx8)">1 350 kg</td></tr>
+        <tr><td>Rapport poids/ch</td><td>5,84 kg/ch</td></tr>
+        <tr><td>Répartition des masses</td><td>50/50 — moteur en position avant-milieu</td></tr>
+        <tr><td>Suspension av</td><td>Double triangulation</td></tr>
+        <tr><td>Suspension ar</td><td>Multibras</td></tr>
+        <tr><td>Freins av/ar</td><td>Disques ventilés ø300 / ø284 mm</td></tr>
+        <tr><td>Pneus av / ar</td><td>225/45 R18 / 225/45 R18</td></tr>
+        <tr><td>Capacité (places)</td><td>4 passagers</td></tr>
+        <tr><td>Production totale</td><td>~192 000 exemplaires</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- ═══════════════════════ COMPARE (toujours visible) ═══════════════════════ -->
+<section class="compare-section" id="compare">
+  <h2 class="compare-title">RX-7 <span style="color:var(--muted);font-size:0.5em">vs</span> RX-8</h2>
+  <div class="compare-grid">
+    <div class="cmp-col rx7">
+      <div class="cmp-col-head">RX-7 FD <span>1978–2002</span></div>
+      <div class="cmp-rows">
+        <div class="cmp-row"><span class="cmp-key">Moteur</span><span class="cmp-val">13B-REW Twin Turbo</span></div>
+        <div class="cmp-row"><span class="cmp-key">Puissance</span><span class="cmp-val win">280 ch</span></div>
+        <div class="cmp-row"><span class="cmp-key">Couple</span><span class="cmp-val win">314 Nm</span></div>
+        <div class="cmp-row"><span class="cmp-key">Régime</span><span class="cmp-val">7 000 tr/min</span></div>
+        <div class="cmp-row"><span class="cmp-key">0 – 100</span><span class="cmp-val win">5,3 s</span></div>
+        <div class="cmp-row"><span class="cmp-key">Vmax</span><span class="cmp-val win">255 km/h</span></div>
+        <div class="cmp-row"><span class="cmp-key">Poids</span><span class="cmp-val win">1 335 kg</span></div>
+        <div class="cmp-row"><span class="cmp-key">kg/ch</span><span class="cmp-val win">4,77</span></div>
+        <div class="cmp-row"><span class="cmp-key">Boîte</span><span class="cmp-val">M5</span></div>
+        <div class="cmp-row"><span class="cmp-key">Portes</span><span class="cmp-val">2</span></div>
+        <div class="cmp-row"><span class="cmp-key">Alimentation</span><span class="cmp-val">Twin Turbo</span></div>
+        <div class="cmp-row"><span class="cmp-key">Points forts</span><span class="cmp-val">Performances, légèreté, pureté</span></div>
+      </div>
+    </div>
+    <div class="cmp-col rx8">
+      <div class="cmp-col-head">RX-8 SE3P <span>2003–2012</span></div>
+      <div class="cmp-rows">
+        <div class="cmp-row"><span class="cmp-key">Moteur</span><span class="cmp-val">RENESIS N/A</span></div>
+        <div class="cmp-row"><span class="cmp-key">Puissance</span><span class="cmp-val">231 ch</span></div>
+        <div class="cmp-row"><span class="cmp-key">Couple</span><span class="cmp-val">211 Nm</span></div>
+        <div class="cmp-row"><span class="cmp-key">Régime</span><span class="cmp-val win">9 500 tr/min</span></div>
+        <div class="cmp-row"><span class="cmp-key">0 – 100</span><span class="cmp-val">6,4 s</span></div>
+        <div class="cmp-row"><span class="cmp-key">Vmax</span><span class="cmp-val">234 km/h</span></div>
+        <div class="cmp-row"><span class="cmp-key">Poids</span><span class="cmp-val">1 350 kg</span></div>
+        <div class="cmp-row"><span class="cmp-key">kg/ch</span><span class="cmp-val">5,84</span></div>
+        <div class="cmp-row"><span class="cmp-key">Boîte</span><span class="cmp-val win">M6</span></div>
+        <div class="cmp-row"><span class="cmp-key">Portes</span><span class="cmp-val win">4 (suicide)</span></div>
+        <div class="cmp-row"><span class="cmp-key">Alimentation</span><span class="cmp-val win">Atmosphérique</span></div>
+        <div class="cmp-row"><span class="cmp-key">Points forts</span><span class="cmp-val">Régime, linearité, praticité</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">MAZDA · ROTARY HERITAGE</div>
+  <div class="footer-copy">// SITE NON OFFICIEL · DONNÉES CONSTRUCTEUR · 2024</div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.car-panel');
+  const logo_r = document.querySelector('.logo .r');
+  const rx7Color = '#e05a1a';
+  const rx8Color = '#0ea5e9';
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const car = tab.dataset.car;
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      panels.forEach(p => {
+        p.classList.remove('active', 'entering');
+      });
+      const panel = document.getElementById('panel-' + car);
+      panel.classList.add('active', 'entering');
+
+      // update root color cues
+      logo_r.style.color = car === 'rx7' ? rx7Color : rx8Color;
+
+      // animate bars in new panel
+      setTimeout(() => {
+        panel.querySelectorAll('.bar-fill').forEach(b => {
+          const pct = b.dataset.pct;
+          if (pct) b.style.width = pct;
+        });
+        panel.querySelectorAll('.spec-card').forEach((c, i) => {
+          setTimeout(() => c.classList.add('visible'), i * 80);
+        });
+      }, 150);
+    });
+  });
+
+  // Intersection observers for initial page load
+  const specIO = new IntersectionObserver((obs) => {
+    obs.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.spec-card').forEach((c, i) => {
+        setTimeout(() => c.classList.add('visible'), i * 80);
+      });
+      entry.target.querySelectorAll('.bar-fill').forEach(b => {
+        const pct = b.dataset.pct;
+        if (pct) setTimeout(() => { b.style.width = pct; }, 200);
+      });
+      specIO.unobserve(entry.target);
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.specs-section').forEach(el => specIO.observe(el));
+
+  // Trigger bars for initially active panel
+  setTimeout(() => {
+    document.querySelectorAll('#panel-rx7 .bar-fill').forEach(b => {
+      const pct = b.dataset.pct;
+      if (pct) b.style.width = pct;
+    });
+    document.querySelectorAll('#panel-rx7 .spec-card').forEach((c, i) => {
+      setTimeout(() => c.classList.add('visible'), 300 + i * 80);
+    });
+  }, 400);
+</script>
+</body>
+</html>
