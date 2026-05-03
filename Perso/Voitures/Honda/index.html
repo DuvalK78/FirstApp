@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honda Sport — Héritage de Performance</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e8001d;
+    --red-dim: #9b0012;
+    --white: #f5f0eb;
+    --off-white: #d8d0c5;
+    --dark: #0d0c0b;
+    --dark2: #181614;
+    --dark3: #231f1b;
+    --gold: #c9a84c;
+    --text-muted: #7a7067;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: linear-gradient(to bottom, rgba(13,12,11,0.95) 0%, transparent 100%);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--red); }
+  nav { display: flex; gap: 32px; }
+  nav a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--off-white);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  nav a:hover { opacity: 1; color: var(--red); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 60%, rgba(232,0,29,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 50% at 30% 30%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      var(--dark);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+  }
+  .hero-number {
+    position: absolute; top: 50%; right: -20px; transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(180px, 22vw, 340px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(232,0,29,0.15);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 9vw, 130px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    position: relative; z-index: 1;
+  }
+  .hero-title em { color: var(--red); font-style: normal; }
+  .hero-sub {
+    margin-top: 24px;
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 420px;
+    line-height: 1.7;
+    position: relative; z-index: 1;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 32px; right: 48px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block; width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 48px;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 40px; height: 1px;
+    background: var(--red);
+  }
+
+  /* ─── CARS SECTION ─── */
+  #voitures { padding: 120px 0; }
+
+  .car-entry {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    position: relative;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .car-entry.visible { opacity: 1; transform: translateY(0); }
+
+  .car-entry:nth-child(even) { direction: rtl; }
+  .car-entry:nth-child(even) > * { direction: ltr; }
+
+  .car-visual {
+    position: relative;
+    background: var(--dark2);
+    overflow: hidden;
+    min-height: 600px;
+  }
+  .car-visual-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.8s ease;
+  }
+  .car-entry:hover .car-visual-bg { transform: scale(1.04); }
+
+  /* Car visuals – SVG placeholders with character */
+  .car-svg-wrap {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .car-model-num {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 10vw, 140px);
+    color: rgba(255,255,255,0.035);
+    text-align: center;
+    line-height: 1;
+    padding-bottom: 12px;
+    pointer-events: none;
+  }
+  .car-badge {
+    position: absolute; top: 32px; left: 32px;
+    background: var(--red);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+  }
+  .car-year-badge {
+    position: absolute; bottom: 32px; right: 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: var(--red);
+    opacity: 0.6;
+    line-height: 1;
+  }
+
+  .car-info {
+    padding: 64px 56px;
+    display: flex; flex-direction: column; justify-content: center;
+    background: var(--dark2);
+    position: relative;
+  }
+  .car-info::before {
+    content: '';
+    position: absolute; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+  }
+  .car-entry:nth-child(odd) .car-info::before { left: 0; }
+  .car-entry:nth-child(even) .car-info::before { right: 0; }
+
+  .car-make {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .car-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 5vw, 72px);
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+  .car-gen {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 40px;
+  }
+  .stat {
+    background: rgba(255,255,255,0.03);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .stat:hover { background: rgba(232,0,29,0.07); }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-unit {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: 4px;
+  }
+  .stat.highlight .stat-value { color: var(--red); }
+
+  .bar-wrap {
+    margin-top: 8px;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--red);
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .car-details {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+  }
+  .detail-line {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .detail-key {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .detail-val {
+    font-size: 0.85rem;
+    color: var(--off-white);
+    font-weight: 400;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  #comparaison {
+    padding: 120px 48px;
+    background: var(--dark3);
+  }
+  .comp-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 7vw, 96px);
+    color: var(--white);
+    margin-bottom: 64px;
+    line-height: 0.9;
+  }
+  .comp-title span { color: var(--red); }
+
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  thead tr {
+    border-bottom: 2px solid var(--red);
+  }
+  thead th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 16px 20px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+  tbody tr:hover { background: rgba(232,0,29,0.05); }
+  tbody td {
+    padding: 20px 20px;
+    color: var(--off-white);
+    font-weight: 300;
+  }
+  tbody td:first-child {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    font-weight: 700;
+  }
+  td.best {
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag    { animation: fadeUp 0.8s ease 0.2s both; }
+  .hero-title  { animation: fadeUp 0.8s ease 0.4s both; }
+  .hero-sub    { animation: fadeUp 0.8s ease 0.6s both; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .car-entry, .car-entry:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+    .car-visual { min-height: 380px; }
+    header { padding: 16px 24px; }
+    nav { display: none; }
+    .hero { padding: 0 24px 60px; }
+    #comparaison { padding: 80px 24px; }
+    .stat-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#"><span>H</span>ONDA SPORT</a>
+  <nav>
+    <a href="#voitures">Modèles</a>
+    <a href="#comparaison">Comparaison</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-number">H</div>
+  <p class="hero-tag">Collection sportive · Héritage japonais</p>
+  <h1 class="hero-title">L'ADN<br><em>SPORT</em><br>HONDA</h1>
+  <p class="hero-sub">Du pavé citadin au circuit international, trois machines qui définissent l'excellence japonaise. Chiffres bruts, sensations pures.</p>
+  <div class="hero-scroll">Défiler</div>
+</section>
+
+<!-- CARS -->
+<section id="voitures">
+
+  <!-- CIVIC TYPE R (EK9) -->
+  <article class="car-entry" data-max-power="185" data-max-speed="220" data-max-weight="1090">
+    <div class="car-visual">
+      <div class="car-visual-bg">
+        <!-- SVG illustration EK9 -->
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;">
+          <defs>
+            <radialGradient id="g1" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#e8001d" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#0d0c0b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="400" fill="#181614"/>
+          <rect width="600" height="400" fill="url(#g1)"/>
+          <!-- Road line -->
+          <line x1="60" y1="285" x2="540" y2="285" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <!-- EK9 silhouette -->
+          <g transform="translate(60,130)" fill="none">
+            <!-- body -->
+            <path d="M30,155 L30,110 Q32,80 80,60 L170,32 Q210,20 260,18 Q310,16 360,24 L400,42 Q430,56 448,80 L460,110 L460,155 Z" fill="#2a2420" stroke="rgba(232,0,29,0.5)" stroke-width="1.5"/>
+            <!-- roof -->
+            <path d="M100,60 Q140,15 240,8 Q330,2 380,28 L410,60 Z" fill="#231f1b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <!-- windows -->
+            <path d="M118,58 Q152,18 238,10 Q305,4 355,26 L378,58 Z" fill="rgba(150,210,255,0.08)" stroke="rgba(150,210,255,0.2)" stroke-width="1"/>
+            <line x1="248" y1="8" x2="248" y2="58" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <!-- front detail -->
+            <path d="M436,90 L460,110" stroke="rgba(232,0,29,0.6)" stroke-width="2"/>
+            <ellipse cx="54" cy="148" rx="34" ry="34" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="54" cy="148" rx="20" ry="20" fill="#0d0c0b" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <ellipse cx="54" cy="148" rx="8" ry="8" fill="#1a1714"/>
+            <ellipse cx="404" cy="148" rx="34" ry="34" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="404" cy="148" rx="20" ry="20" fill="#0d0c0b" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <ellipse cx="404" cy="148" rx="8" ry="8" fill="#1a1714"/>
+            <!-- headlight -->
+            <path d="M430,80 L458,98 L448,105 L422,88 Z" fill="rgba(255,240,180,0.25)" stroke="rgba(255,240,180,0.4)" stroke-width="0.5"/>
+            <!-- taillight -->
+            <rect x="30" y="88" width="18" height="28" rx="2" fill="rgba(232,0,29,0.5)" stroke="rgba(232,0,29,0.8)" stroke-width="0.5"/>
+            <!-- VTEC badge hint -->
+            <text x="200" y="105" fill="rgba(232,0,29,0.4)" font-family="Arial" font-size="9" letter-spacing="3">VTEC</text>
+          </g>
+        </svg>
+      </div>
+      <div class="car-model-num">EK9</div>
+      <div class="car-badge">Génération I</div>
+      <div class="car-year-badge">2000</div>
+    </div>
+    <div class="car-info">
+      <p class="car-make">Honda</p>
+      <h2 class="car-name">Civic<br>Type R</h2>
+      <p class="car-gen">Première génération · EK9 · 1997–2001</p>
+
+      <div class="stat-grid">
+        <div class="stat highlight">
+          <div class="stat-label">Puissance</div>
+          <div class="stat-value">185<span class="stat-unit">ch</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:32%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Couple</div>
+          <div class="stat-value">160<span class="stat-unit">Nm</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:25%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">0–100 km/h</div>
+          <div class="stat-value">7,4<span class="stat-unit">s</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Vitesse max</div>
+          <div class="stat-value">220<span class="stat-unit">km/h</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Régime maxi</div>
+          <div class="stat-value">8400<span class="stat-unit">tr/min</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Poids</div>
+          <div class="stat-value">1090<span class="stat-unit">kg</span></div>
+        </div>
+      </div>
+
+      <div class="car-details">
+        <div class="detail-line">
+          <span class="detail-key">Moteur</span>
+          <span class="detail-val">4 cyl. en ligne — 1.6L B16B VTEC</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Boîte</span>
+          <span class="detail-val">Manuelle 5 rapports</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Dimensions</span>
+          <span class="detail-val">4180 × 1695 × 1360 mm</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Rapport poids/puissance</span>
+          <span class="detail-val">5,89 kg/ch</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Traction</span>
+          <span class="detail-val">Avant (FWD)</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Carrosserie</span>
+          <span class="detail-val">Berline 3 portes</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- CIVIC TYPE R II (FK8/FL5) -->
+  <article class="car-entry" data-max-power="329" data-max-speed="275" data-max-weight="1429">
+    <div class="car-visual">
+      <div class="car-visual-bg">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;">
+          <defs>
+            <radialGradient id="g2" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.12"/>
+              <stop offset="100%" stop-color="#0d0c0b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="400" fill="#181614"/>
+          <rect width="600" height="400" fill="url(#g2)"/>
+          <line x1="60" y1="285" x2="540" y2="285" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <!-- FK8/FL5 silhouette – lower, wider, more aggressive -->
+          <g transform="translate(50,120)" fill="none">
+            <path d="M25,165 L25,108 Q28,75 85,52 L180,22 Q230,8 290,6 Q350,4 400,14 L445,38 Q472,55 488,85 L498,130 L498,165 Z" fill="#2a2420" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+            <!-- lower roofline -->
+            <path d="M115,52 Q160,10 288,4 Q368,0 418,30 L445,52 Z" fill="#231f1b" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <path d="M130,50 Q175,12 288,6 Q364,2 412,28 L434,50 Z" fill="rgba(150,210,255,0.07)" stroke="rgba(150,210,255,0.18)" stroke-width="1"/>
+            <line x1="284" y1="4" x2="284" y2="50" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+            <!-- rear wing -->
+            <path d="M22,50 L22,42 L100,36 L100,44 Z" fill="rgba(201,168,76,0.3)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+            <!-- front splitter -->
+            <path d="M460,130 L500,140 L500,148 L458,140 Z" fill="rgba(201,168,76,0.25)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+            <!-- wheels -->
+            <ellipse cx="58" cy="158" rx="36" ry="36" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="58" cy="158" rx="22" ry="22" fill="#0d0c0b" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <ellipse cx="58" cy="158" rx="9" ry="9" fill="#1a1714"/>
+            <ellipse cx="438" cy="158" rx="36" ry="36" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="438" cy="158" rx="22" ry="22" fill="#0d0c0b" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <ellipse cx="438" cy="158" rx="9" ry="9" fill="#1a1714"/>
+            <!-- headlight angular -->
+            <path d="M462,70 L496,96 L480,104 L448,78 Z" fill="rgba(255,240,180,0.2)" stroke="rgba(255,240,180,0.35)" stroke-width="0.5"/>
+            <rect x="26" y="85" width="22" height="32" rx="2" fill="rgba(232,0,29,0.6)" stroke="rgba(232,0,29,0.9)" stroke-width="0.5"/>
+            <text x="220" y="100" fill="rgba(201,168,76,0.35)" font-family="Arial" font-size="8" letter-spacing="3">TURBO</text>
+            <text x="218" y="112" fill="rgba(201,168,76,0.3)" font-family="Arial" font-size="7" letter-spacing="2">VTEC</text>
+          </g>
+        </svg>
+      </div>
+      <div class="car-model-num">FK8</div>
+      <div class="car-badge">Génération II</div>
+      <div class="car-year-badge">2023</div>
+    </div>
+    <div class="car-info">
+      <p class="car-make">Honda</p>
+      <h2 class="car-name">Civic<br>Type R II</h2>
+      <p class="car-gen">Deuxième génération · FL5 · 2023–2025</p>
+
+      <div class="stat-grid">
+        <div class="stat highlight">
+          <div class="stat-label">Puissance</div>
+          <div class="stat-value">329<span class="stat-unit">ch</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:57%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Couple</div>
+          <div class="stat-value">420<span class="stat-unit">Nm</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:65%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">0–100 km/h</div>
+          <div class="stat-value">5,4<span class="stat-unit">s</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Vitesse max</div>
+          <div class="stat-value">275<span class="stat-unit">km/h</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Régime maxi</div>
+          <div class="stat-value">6500<span class="stat-unit">tr/min</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Poids</div>
+          <div class="stat-value">1429<span class="stat-unit">kg</span></div>
+        </div>
+      </div>
+
+      <div class="car-details">
+        <div class="detail-line">
+          <span class="detail-key">Moteur</span>
+          <span class="detail-val">4 cyl. en ligne — 2.0L K20C1 Turbo</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Boîte</span>
+          <span class="detail-val">Manuelle 6 rapports</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Dimensions</span>
+          <span class="detail-val">4590 × 1890 × 1410 mm</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Rapport poids/puissance</span>
+          <span class="detail-val">4,34 kg/ch</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Traction</span>
+          <span class="detail-val">Avant (FWD)</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Carrosserie</span>
+          <span class="detail-val">Berline 5 portes</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- NSX II -->
+  <article class="car-entry" data-max-power="581" data-max-speed="307" data-max-weight="1725">
+    <div class="car-visual">
+      <div class="car-visual-bg">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;">
+          <defs>
+            <radialGradient id="g3" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#e8001d" stop-opacity="0.20"/>
+              <stop offset="50%" stop-color="#c9a84c" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#0d0c0b" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="600" height="400" fill="#181614"/>
+          <rect width="600" height="400" fill="url(#g3)"/>
+          <line x1="60" y1="295" x2="540" y2="295" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <!-- NSX mid-engine supercar silhouette – very low, wide -->
+          <g transform="translate(45,145)" fill="none">
+            <!-- main body – very low profile -->
+            <path d="M20,150 L20,100 Q26,72 88,55 L170,30 Q220,18 295,14 Q375,10 430,22 L470,42 Q502,62 514,92 L520,130 L520,150 Z" fill="#2a2420" stroke="rgba(232,0,29,0.6)" stroke-width="1.5"/>
+            <!-- extremely low roof -->
+            <path d="M160,55 Q200,18 294,10 Q386,4 430,28 L448,55 Z" fill="#1e1b18" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+            <path d="M172,53 Q214,20 294,12 Q380,6 424,26 L440,53 Z" fill="rgba(150,210,255,0.06)" stroke="rgba(150,210,255,0.15)" stroke-width="1"/>
+            <!-- engine vents mid-rear -->
+            <line x1="350" y1="30" x2="350" y2="18" stroke="rgba(232,0,29,0.4)" stroke-width="1"/>
+            <line x1="360" y1="28" x2="360" y2="16" stroke="rgba(232,0,29,0.4)" stroke-width="1"/>
+            <line x1="370" y1="26" x2="370" y2="15" stroke="rgba(232,0,29,0.3)" stroke-width="1"/>
+            <!-- front splitter aggressive -->
+            <path d="M470,108 L520,118 L520,128 L470,118 Z" fill="rgba(232,0,29,0.35)" stroke="rgba(232,0,29,0.6)" stroke-width="1"/>
+            <!-- rear diffuser -->
+            <path d="M20,108 L20,118 L20,128 L54,128 L54,108 Z" fill="rgba(232,0,29,0.2)" stroke="rgba(232,0,29,0.4)" stroke-width="1"/>
+            <!-- wider wheels -->
+            <ellipse cx="64" cy="140" rx="40" ry="40" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="64" cy="140" rx="25" ry="25" fill="#0d0c0b" stroke="rgba(232,0,29,0.2)" stroke-width="1"/>
+            <ellipse cx="64" cy="140" rx="10" ry="10" fill="#1a1714"/>
+            <ellipse cx="454" cy="140" rx="40" ry="40" fill="#151210" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <ellipse cx="454" cy="140" rx="25" ry="25" fill="#0d0c0b" stroke="rgba(232,0,29,0.2)" stroke-width="1"/>
+            <ellipse cx="454" cy="140" rx="10" ry="10" fill="#1a1714"/>
+            <!-- LED headlight strip -->
+            <path d="M474,60 L518,82 L510,90 L468,68 Z" fill="rgba(255,240,180,0.18)" stroke="rgba(255,240,180,0.3)" stroke-width="0.5"/>
+            <path d="M476,65 L516,85" stroke="rgba(255,240,180,0.6)" stroke-width="0.5"/>
+            <!-- taillight -->
+            <rect x="20" y="80" width="26" height="36" rx="2" fill="rgba(232,0,29,0.65)" stroke="rgba(232,0,29,1)" stroke-width="0.5"/>
+            <text x="215" y="90" fill="rgba(232,0,29,0.35)" font-family="Arial" font-size="8" letter-spacing="3">V6 BITURBO</text>
+            <text x="222" y="102" fill="rgba(201,168,76,0.3)" font-family="Arial" font-size="7" letter-spacing="2">SH-AWD</text>
+          </g>
+        </svg>
+      </div>
+      <div class="car-model-num">NC2</div>
+      <div class="car-badge">Supercar</div>
+      <div class="car-year-badge">2022</div>
+    </div>
+    <div class="car-info">
+      <p class="car-make">Honda / Acura</p>
+      <h2 class="car-name">NSX<br>Génération II</h2>
+      <p class="car-gen">NC2 · 2016–2022 — Hybride Sport</p>
+
+      <div class="stat-grid">
+        <div class="stat highlight">
+          <div class="stat-label">Puissance totale</div>
+          <div class="stat-value">581<span class="stat-unit">ch</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:100%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Couple</div>
+          <div class="stat-value">645<span class="stat-unit">Nm</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="--pct:100%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">0–100 km/h</div>
+          <div class="stat-value">3,0<span class="stat-unit">s</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Vitesse max</div>
+          <div class="stat-value">307<span class="stat-unit">km/h</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Régime maxi</div>
+          <div class="stat-value">7500<span class="stat-unit">tr/min</span></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Poids</div>
+          <div class="stat-value">1725<span class="stat-unit">kg</span></div>
+        </div>
+      </div>
+
+      <div class="car-details">
+        <div class="detail-line">
+          <span class="detail-key">Moteur</span>
+          <span class="detail-val">V6 3.5L Biturbo + 3 moteurs électriques</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Boîte</span>
+          <span class="detail-val">Automatique DCT 9 rapports</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Dimensions</span>
+          <span class="detail-val">4470 × 1941 × 1214 mm</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Rapport poids/puissance</span>
+          <span class="detail-val">2,97 kg/ch</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Traction</span>
+          <span class="detail-val">Intégrale Sport Hybride (SH-AWD)</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-key">Carrosserie</span>
+          <span class="detail-val">Coupé 2 portes (aluminium)</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- COMPARISON TABLE -->
+<section id="comparaison">
+  <div class="section-label">Données comparatives</div>
+  <h2 class="comp-title">FACE<br><span>À FACE</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Modèle</th>
+          <th>Puissance</th>
+          <th>Couple</th>
+          <th>0–100 km/h</th>
+          <th>Vmax</th>
+          <th>Poids</th>
+          <th>kg/ch</th>
+          <th>Régime</th>
+          <th>Moteur</th>
+          <th>Boîte</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Civic Type R (EK9)</td>
+          <td>185 ch</td>
+          <td>160 Nm</td>
+          <td>7,4 s</td>
+          <td class="best">220 km/h</td>
+          <td class="best">1 090 kg</td>
+          <td>5,89</td>
+          <td class="best">8 400 tr/min</td>
+          <td>4 cyl. 1.6L</td>
+          <td>M5</td>
+        </tr>
+        <tr>
+          <td>Civic Type R II (FL5)</td>
+          <td>329 ch</td>
+          <td>420 Nm</td>
+          <td>5,4 s</td>
+          <td>275 km/h</td>
+          <td>1 429 kg</td>
+          <td>4,34</td>
+          <td>6 500 tr/min</td>
+          <td>4 cyl. 2.0L Turbo</td>
+          <td>M6</td>
+        </tr>
+        <tr>
+          <td>NSX II (NC2)</td>
+          <td class="best">581 ch</td>
+          <td class="best">645 Nm</td>
+          <td class="best">3,0 s</td>
+          <td class="best">307 km/h</td>
+          <td>1 725 kg</td>
+          <td class="best">2,97</td>
+          <td>7 500 tr/min</td>
+          <td>V6 3.5L BiT + hybride</td>
+          <td>DCT 9</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HONDA <span style="color:var(--red)">SPORT</span></div>
+  <div class="footer-copy">Site non officiel · Données constructeur · 2024</div>
+</footer>
+
+<script>
+  // Intersection Observer for scroll reveals
+  const entries = document.querySelectorAll('.car-entry');
+  const io = new IntersectionObserver((obs) => {
+    obs.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        // animate bars
+        e.target.querySelectorAll('.bar-fill').forEach(b => {
+          b.style.width = b.style.getPropertyValue('--pct') || b.getAttribute('style').match(/--pct:([^%]+%)/)?.[1] || '0%';
+        });
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  entries.forEach(e => io.observe(e));
+
+  // Fix bar fill animation (CSS custom property → direct width)
+  document.querySelectorAll('.bar-fill').forEach(b => {
+    const styleAttr = b.getAttribute('style') || '';
+    const match = styleAttr.match(/--pct:\s*([^;]+)/);
+    if (match) {
+      b.dataset.pct = match[1].trim();
+      b.style.cssText = 'width:0%';
+    }
+  });
+
+  const io2 = new IntersectionObserver((obs) => {
+    obs.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.bar-fill').forEach(b => {
+          if (b.dataset.pct) {
+            setTimeout(() => { b.style.width = b.dataset.pct; }, 200);
+          }
+        });
+        io2.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  entries.forEach(e => io2.observe(e));
+</script>
+</body>
+</html>
