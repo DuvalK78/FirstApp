@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Date Tech</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="favicon-DateTech.png">
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+  <header class="bg-white shadow p-6 border-l-4 border-teal-500">
+    <h1 class="text-4xl font-bold text-center text-teal-600">🏐 Date Kōgyō</h1>
+    <p class="text-center text-gray-500 mt-1 text-sm">伊達工業高校 — Date, Préfecture de Miyagi</p>
+  </header>
+
+  <main class="max-w-5xl mx-auto py-10 px-4 space-y-10">
+
+    <!-- Retour -->
+    <div class="bg-black rounded-lg shadow p-6 border-l-4 border-white">
+      <h2 class="text-2xl font-semibold">
+        <a href="IndexHaikyuu.html" class="text-white hover:text-gray-300 transition">← Retour</a>
+      </h2>
+    </div>
+
+    <!-- Bannière SVG -->
+    <div class="flex justify-center">
+      <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg" class="w-full max-w-lg rounded-lg shadow-lg">
+        <!-- Fond blanc cassé façon maillot Date Tech -->
+        <rect width="520" height="160" fill="#f0fafa" rx="8"/>
+        <!-- Bordure teal -->
+        <rect x="6" y="6" width="508" height="148" fill="none" stroke="#0d9488" stroke-width="2.5" rx="5"/>
+        <!-- Bande teal décorative gauche -->
+        <rect x="0" y="0" width="8" height="160" fill="#0d9488" rx="4"/>
+        <!-- Kanji 鉄 (Fer) -->
+        <text x="105" y="122" font-size="108" font-family="serif" fill="#0d9488" text-anchor="middle" font-weight="bold">鉄</text>
+        <!-- Séparateur -->
+        <line x1="182" y1="20" x2="182" y2="140" stroke="#0d9488" stroke-width="1.5" opacity="0.4"/>
+        <!-- Nom école -->
+        <text x="228" y="52" font-size="17" font-family="serif" fill="#134e4a" text-anchor="middle" font-weight="bold">伊達工業高校</text>
+        <text x="228" y="76" font-size="12" font-family="serif" fill="#0d9488" text-anchor="middle">排球部</text>
+        <!-- Slogan -->
+        <text x="375" y="100" font-size="15" font-family="serif" fill="#134e4a" text-anchor="middle" font-weight="bold" letter-spacing="1">DATE'S</text>
+        <text x="375" y="126" font-size="26" font-family="serif" fill="#0d9488" text-anchor="middle" font-weight="bold" letter-spacing="2">IRON WALL</text>
+        <!-- Trait décoratif -->
+        <line x1="300" y1="134" x2="450" y2="134" stroke="#0d9488" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <!-- Présentation -->
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-teal-500">
+      <h2 class="text-xl font-bold text-teal-600 mb-2">🧱 Le Mur de Fer de Miyagi</h2>
+      <p class="text-gray-700 text-sm leading-relaxed">
+        Date Kōgyō est un lycée technique réputé pour posséder le <span class="font-semibold">taux de contre le plus élevé de la préfecture de Miyagi</span>. Leur système défensif repose sur le <em>bunch read</em> : trois contreurs qui convergent au centre et lisent le jeu pour bloquer en nombre. Leur bannière proclame <span class="font-semibold">"Date's Iron Wall"</span> — un titre qu'ils défendent match après match. Couleurs : <span class="font-semibold text-teal-600">blanc & teal</span>.
+      </p>
+    </div>
+
+    <!-- Filtres -->
+    <div class="bg-white rounded-lg shadow p-4 border-l-4 border-teal-500">
+      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Filtrer par poste / rôle</p>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="filtrer('tous')"      class="filtre-btn active-filtre text-xs font-semibold px-3 py-1.5 rounded-full border transition" data-filtre="tous">Tous</button>
+        <button onclick="filtrer('Ailier')"    class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200" data-filtre="Ailier">Ailier</button>
+        <button onclick="filtrer('Middle')"    class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-teal-50 text-teal-700 border-teal-300 hover:bg-teal-100" data-filtre="Middle">Middle Blocker</button>
+        <button onclick="filtrer('Passeur')"   class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100" data-filtre="Passeur">Passeur</button>
+        <button onclick="filtrer('Libéro')"    class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-orange-50 text-orange-700 border-orange-300 hover:bg-orange-100" data-filtre="Libéro">Libéro</button>
+        <button onclick="filtrer('Staff')"     class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-teal-50 text-teal-800 border-teal-400 hover:bg-teal-100" data-filtre="Staff">Staff</button>
+        <button onclick="filtrer('Capitaine')" class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-red-50 text-red-700 border-red-300 hover:bg-red-100" data-filtre="Capitaine">⭐ Capitaine</button>
+        <button onclick="filtrer('Ace')"       class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-amber-50 text-amber-800 border-amber-400 hover:bg-amber-100" data-filtre="Ace">🔥 Ace</button>
+        <button onclick="filtrer('1ère')"      class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-green-50 text-green-700 border-green-300 hover:bg-green-100" data-filtre="1ère">1ère année</button>
+        <button onclick="filtrer('2ème')"      class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-purple-50 text-purple-700 border-purple-300 hover:bg-purple-100" data-filtre="2ème">2ème année</button>
+        <button onclick="filtrer('3ème')"      class="filtre-btn text-xs font-semibold px-3 py-1.5 rounded-full border transition bg-indigo-50 text-indigo-700 border-indigo-300 hover:bg-indigo-100" data-filtre="3ème">3ème année</button>
+      </div>
+    </div>
+
+    <!-- Compteur -->
+    <p id="compteur" class="text-xs text-gray-400 -mt-6 px-1"></p>
+
+    <!-- Grille unifiée -->
+    <div id="grille" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- Moniwa -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-teal-600 hover:shadow-md transition"
+           data-postes="Passeur" data-tags="3ème Capitaine">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-teal-600">#1</span>
+          <span class="text-xs bg-teal-100 text-teal-800 font-semibold px-2 py-0.5 rounded-full">Passeur · Capitaine</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Kaname Moniwa</h3>
+        <p class="text-xs text-gray-500 mb-1">籾和 要 · 3ème année</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Capitaine bienveillant et légèrement anxieux, souvent débordé par l'énergie de ses coéquipiers. Il prend soin de chacun et ressent profondément la pression de la direction d'équipe. Sa retraite après l'Inter-lycées marque un tournant pour Date Tech.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Kamasaki -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-gray-500 hover:shadow-md transition"
+           data-postes="Ailier" data-tags="3ème">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-gray-500">#5</span>
+          <span class="text-xs bg-gray-200 text-gray-700 font-semibold px-2 py-0.5 rounded-full">Ailier · Vice-Cap.</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Yasushi Kamasaki</h3>
+        <p class="text-xs text-gray-500 mb-1">鎌先 靖志 · 3ème année · 186,8 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Vice-capitaine grand et fort, souvent en conflit verbal avec Futakuchi. Leur accrochage permanent finit toujours par nécessiter l'intervention silencieuse d'Aone. Blocker confirmé du Mur de Fer, passionné et un brin querelleur.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Sasaya -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-gray-400 hover:shadow-md transition"
+           data-postes="Middle" data-tags="3ème">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-gray-400">#6</span>
+          <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-2 py-0.5 rounded-full">Middle Blocker</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Takehito Sasaya</h3>
+        <p class="text-xs text-gray-500 mb-1">佐々谷 武人 · 3ème année</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Le plus jeune des troisièmes années malgré son allure de "vieux senpai". Observateur et posé, il regarde souvent les chamailleries de Kamasaki et Futakuchi avec un sourire amusé. Bloqueur solide du Mur de Fer originel.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Futakuchi -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-teal-500 hover:shadow-md transition"
+           data-postes="Ailier" data-tags="2ème Capitaine Ace">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-teal-500">#2</span>
+          <span class="text-xs bg-teal-100 text-teal-700 font-semibold px-2 py-0.5 rounded-full">Ailier · Capitaine · Ace</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Kenji Futakuchi</h3>
+        <p class="text-xs text-gray-500 mb-1">二口 堅治 · 2ème année · 184,2 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Ace et nouveau capitaine après la retraite des 3ème. Décontracté en apparence, mordant dans ses remarques — surtout envers Kamasaki. Comprend vite à quel point il donnait du fil à retordre à ses aînés en devant gérer Koganegawa. Post-timeskip : joueur pour VC Date.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Aone -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-slate-600 hover:shadow-md transition"
+           data-postes="Middle" data-tags="2ème">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-slate-600">#4</span>
+          <span class="text-xs bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded-full">Middle Blocker</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Takanobu Aone</h3>
+        <p class="text-xs text-gray-500 mb-1">青根 高伸 · 2ème année · 193,3 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Pilier du Mur de Fer. Silencieux et intimidant d'apparence, il est en réalité doux et attentionné. Il parle à peine — seulement quand c'est nécessaire. Fasciné par Hinata qu'il reconnaît comme un redoutable leurre. Se sent personnellement offensé quand on sous-estime le petit numéro 10. Post-timeskip : joueur pour VC Date.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Obara -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-teal-400 hover:shadow-md transition"
+           data-postes="Ailier" data-tags="2ème">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-teal-400">#3</span>
+          <span class="text-xs bg-teal-50 text-teal-700 font-semibold px-2 py-0.5 rounded-full">Ailier</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Yutaka Obara</h3>
+        <p class="text-xs text-gray-500 mb-1">小腹 豊 · 2ème année · 187,0 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Le plus grand des secondes années de Date Tech. Ailier imposant qui contribue au bloc collectif et à la puissance offensive de l'équipe. Un profil de bloqueur redoutable dans le dispositif tactique du Mur de Fer.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Onagawa -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-gray-400 hover:shadow-md transition"
+           data-postes="Ailier" data-tags="2ème">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-gray-400">#8</span>
+          <span class="text-xs bg-gray-100 text-gray-700 font-semibold px-2 py-0.5 rounded-full">Ailier</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Tarō Onagawa</h3>
+        <p class="text-xs text-gray-500 mb-1">小長川 太郎 · 2ème année · 176,0 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Le plus petit des secondes années de Date Tech. Ailier régulier qui apparaît notamment dans le bloc face à Aoba Johsai. Sa discrétion sur le terrain contraste avec la stature imposante de ses coéquipiers.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Koganegawa -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-yellow-500 hover:shadow-md transition"
+           data-postes="Passeur" data-tags="1ère">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-yellow-500">#7</span>
+          <span class="text-xs bg-yellow-100 text-yellow-700 font-semibold px-2 py-0.5 rounded-full">Passeur</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Kanji Koganegawa</h3>
+        <p class="text-xs text-gray-500 mb-1">黄金川 兼治 · 1ère année · 194,0 cm</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Nouveau passeur recruté après la retraite des troisièmes. Immense, enthousiaste et encore brut — ses passes partent souvent trop haut, terrorisant Futakuchi. Son énergie débordante rappelle à ce dernier combien il était lui-même incontrôlable. Coaché par Sakunami pour progresser.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+      <!-- Sakunami -->
+      <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-orange-400 hover:shadow-md transition"
+           data-postes="Libéro" data-tags="1ère">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-2xl font-black text-orange-400">#9</span>
+          <span class="text-xs bg-orange-100 text-orange-700 font-semibold px-2 py-0.5 rounded-full">Libéro</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">Kōsuke Sakunami</h3>
+        <p class="text-xs text-gray-500 mb-1">作並 光介 · 1ère année</p>
+        <p class="text-xs text-gray-600 mb-3 leading-relaxed">Libéro de premier année déjà titulaire. L'entraîneur Oiwake lui confie la mission d'aider Koganegawa à progresser. Sérieux et responsable pour son âge, sa réception est un maillon clé derrière le mur de bloqueurs de Date Tech.</p>
+        <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+      </div>
+
+    </div>
+
+    <!-- Message aucun résultat -->
+    <p id="aucun" class="hidden text-center text-gray-400 text-sm py-10">Aucun joueur ne correspond à ce filtre.</p>
+
+    <!-- Section Staff -->
+    <section>
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-teal-400 pb-2">Staff</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Oiwake -->
+        <div class="card bg-black rounded-lg shadow p-5 border-l-4 border-teal-500 hover:shadow-md transition"
+             data-postes="Staff" data-tags="Staff">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs bg-teal-500 text-white font-semibold px-2 py-0.5 rounded-full">Entraîneur</span>
+          </div>
+          <h3 class="text-lg font-bold text-white">Takurō Oiwake</h3>
+          <p class="text-xs text-gray-400 mb-1">及川 卓郎</p>
+          <p class="text-xs text-gray-300 mb-3 leading-relaxed">Coach de Date Tech, il repère et intègre Koganegawa comme nouveau passeur malgré son inexpérience totale. Il confie à Sakunami la responsabilité de guider le géant. Pragmatique, il croit dans la construction à long terme du Mur de Fer.</p>
+          <div class="text-xs text-gray-500 border-t border-gray-700 pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+        </div>
+
+        <!-- Nametsu -->
+        <div class="card bg-white rounded-lg shadow p-5 border-l-4 border-teal-300 hover:shadow-md transition"
+             data-postes="Staff" data-tags="Staff">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs bg-teal-100 text-teal-700 font-semibold px-2 py-0.5 rounded-full">Manager</span>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900">Mai Nametsu</h3>
+          <p class="text-xs text-gray-500 mb-1">滑津 舞</p>
+          <p class="text-xs text-gray-600 mb-3 leading-relaxed">Manager de Date Tech, présente lors des matchs officiels. Elle soutient l'équipe dans son organisation et son suivi, contribuant à l'ambiance studieuse et sérieuse propre à ce lycée technique.</p>
+          <div class="text-xs text-gray-500 border-t pt-2 flex items-center gap-1"><span>📍</span><span>Date, Miyagi</span></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Retour bas de page -->
+    <div class="bg-black rounded-lg shadow p-6 border-l-4 border-white">
+      <h2 class="text-2xl font-semibold">
+        <a href="IndexHaikyuu.html" class="text-white hover:text-gray-300 transition">← Retour à l'index</a>
+      </h2>
+    </div>
+
+  </main>
+
+  <style>
+    .active-filtre { background-color: #0d9488 !important; color: white !important; border-color: #0d9488 !important; }
+  </style>
+
+  <script>
+    function filtrer(valeur) {
+      document.querySelectorAll('.filtre-btn').forEach(btn => {
+        btn.classList.remove('active-filtre');
+        if (btn.dataset.filtre === valeur) btn.classList.add('active-filtre');
+      });
+
+      const cards = document.querySelectorAll('.card');
+      let visible = 0;
+      cards.forEach(card => {
+        const tout = (card.dataset.postes || '') + ' ' + (card.dataset.tags || '');
+        const match = valeur === 'tous' || tout.includes(valeur);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      const compteur = document.getElementById('compteur');
+      const aucun = document.getElementById('aucun');
+      compteur.textContent = valeur === 'tous' ? '' : visible + ' résultat' + (visible > 1 ? 's' : '');
+      aucun.classList.toggle('hidden', visible > 0);
+    }
+  </script>
+
+</body>
+</html>
