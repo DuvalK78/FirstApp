@@ -1,0 +1,233 @@
+export default function BlueLockFanSite() {
+  const players = [
+    {
+      name: "Yoichi Isagi",
+      role: "L’attaquant qui analyse tout",
+      aura: "Vision Métavision",
+      img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      name: "Rin Itoshi",
+      role: "Le monstre glacial",
+      aura: "Destruction totale",
+      img: "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      name: "Seishiro Nagi",
+      role: "Le génie paresseux",
+      aura: "Contrôle absolu",
+      img: "https://images.unsplash.com/photo-1511884642898-4c92249e20b6?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      name: "Meguru Bachira",
+      role: "Le monstre créatif",
+      aura: "Dribble imprévisible",
+      img: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop"
+    }
+  ];
+
+  return (
+    <div className="bg-black text-white min-h-screen overflow-hidden font-sans">
+      {/* HERO */}
+      <section className="relative h-screen flex items-center justify-center px-6">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1800&auto=format&fit=crop"
+            className="w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black"></div>
+        </div>
+
+        <div className="relative z-10 max-w-6xl text-center">
+          <p className="uppercase tracking-[10px] text-cyan-400 mb-4 text-sm md:text-base">
+            Ego • Rivalité • Football
+          </p>
+
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black leading-none tracking-tight">
+            BLUE
+            <span className="text-cyan-400"> LOCK</span>
+          </h1>
+
+          <div className="mt-8 flex justify-center gap-4 flex-wrap">
+            <div className="backdrop-blur-md bg-white/10 border border-cyan-400/40 px-6 py-3 rounded-2xl">
+              ⚽ Projet Blue Lock
+            </div>
+            <div className="backdrop-blur-md bg-white/10 border border-white/20 px-6 py-3 rounded-2xl">
+              🔥 Ego ultime
+            </div>
+            <div className="backdrop-blur-md bg-white/10 border border-cyan-400/40 px-6 py-3 rounded-2xl">
+              👁 Métavision
+            </div>
+          </div>
+
+          <button className="mt-10 bg-cyan-400 hover:scale-105 transition-all duration-300 text-black font-black px-10 py-5 rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.6)] text-lg">
+            ENTER THE BLUE LOCK
+          </button>
+        </div>
+
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce text-cyan-300 text-sm tracking-widest">
+          SCROLL
+        </div>
+      </section>
+
+      {/* QUOTE SECTION */}
+      <section className="py-28 px-6 relative">
+        <div className="absolute inset-0 bg-cyan-500/5 blur-3xl"></div>
+
+        <div className="relative max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl md:text-5xl font-black leading-tight">
+            “Le football n’a pas besoin d’amitié.
+            <span className="text-cyan-400"> Il a besoin d’un ego absolu.</span>”
+          </h2>
+
+          <p className="mt-8 text-zinc-400 text-lg leading-relaxed max-w-3xl mx-auto">
+            Blue Lock transforme des attaquants ordinaires en monstres capables d’écraser le monde entier.
+            Ici, il n’y a qu’une seule règle : devenir le meilleur attaquant de la planète.
+          </p>
+        </div>
+      </section>
+
+      {/* PLAYER CARDS */}
+      <section className="px-6 py-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between flex-wrap gap-6 mb-12">
+            <div>
+              <p className="text-cyan-400 uppercase tracking-[8px] text-sm mb-3">
+                Blue Lock Players
+              </p>
+              <h2 className="text-5xl font-black">Les Monstres</h2>
+            </div>
+
+            <div className="text-zinc-400 max-w-xl">
+              Chaque joueur possède son propre style, son propre ego et sa propre arme.
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            {players.map((player, index) => (
+              <div
+                key={index}
+                className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-900 hover:-translate-y-3 transition-all duration-500"
+              >
+                <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400/10 transition-all duration-500"></div>
+
+                <div className="h-[420px] overflow-hidden">
+                  <img
+                    src={player.img}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                  />
+                </div>
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+
+                <div className="absolute bottom-0 p-6 z-10">
+                  <p className="text-cyan-400 text-sm uppercase tracking-[4px] mb-2">
+                    {player.aura}
+                  </p>
+
+                  <h3 className="text-3xl font-black leading-tight">
+                    {player.name}
+                  </h3>
+
+                  <p className="text-zinc-300 mt-3 text-sm leading-relaxed">
+                    {player.role}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="py-24 px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-cyan-500/10"></div>
+
+        <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            ["300", "Attaquants enfermés"],
+            ["1", "Survivant ultime"],
+            ["∞", "Ego déchaîné"]
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-10 text-center hover:scale-105 transition-all duration-300"
+            >
+              <h3 className="text-6xl font-black text-cyan-400">
+                {item[0]}
+              </h3>
+
+              <p className="mt-4 text-zinc-300 tracking-wide uppercase text-sm">
+                {item[1]}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ARENA SECTION */}
+      <section className="px-6 py-24">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-cyan-400 uppercase tracking-[8px] text-sm mb-4">
+              Neo Egoist League
+            </p>
+
+            <h2 className="text-5xl md:text-6xl font-black leading-tight">
+              Le terrain.
+              <br />
+              <span className="text-cyan-400">La guerre.</span>
+            </h2>
+
+            <p className="mt-8 text-zinc-400 leading-relaxed text-lg">
+              Dans Blue Lock, chaque match est une bataille mentale.
+              Les joueurs doivent écraser leurs rivaux, évoluer instantanément et transformer leur frustration en puissance.
+            </p>
+
+            <div className="mt-10 flex gap-4 flex-wrap">
+              <button className="bg-cyan-400 text-black px-8 py-4 rounded-2xl font-black hover:scale-105 transition-all">
+                Voir les équipes
+              </button>
+
+              <button className="border border-white/20 px-8 py-4 rounded-2xl font-semibold hover:bg-white/10 transition-all">
+                Explorer l’univers
+              </button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute -inset-5 bg-cyan-400/20 blur-3xl rounded-full"></div>
+
+            <img
+              src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1600&auto=format&fit=crop"
+              className="relative rounded-[2rem] border border-cyan-400/30 shadow-[0_0_60px_rgba(34,211,238,0.2)]"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="relative py-32 px-6 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-cyan-400/10 blur-3xl"></div>
+
+        <div className="relative max-w-4xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-black leading-tight">
+            DEVORE.
+            <br />
+            EVOLVE.
+            <br />
+            <span className="text-cyan-400">DOMINATE.</span>
+          </h2>
+
+          <p className="mt-8 text-zinc-400 text-lg leading-relaxed">
+            Un fan-site inspiré de l’intensité et de l’énergie monstrueuse de Blue Lock.
+          </p>
+
+          <button className="mt-10 bg-white text-black px-10 py-5 rounded-2xl font-black hover:scale-105 transition-all duration-300">
+            Become The Striker
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
