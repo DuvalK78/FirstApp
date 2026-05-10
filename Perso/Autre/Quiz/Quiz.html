@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUIZ.EXE</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff88;
+    --green-dim: #00cc66;
+    --green-dark: #003319;
+    --amber: #ffaa00;
+    --red: #ff3355;
+    --bg: #050f08;
+    --panel: #081510;
+    --border: #00ff8840;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* CRT flicker */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+    z-index: 99;
+    animation: flicker 8s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.92; }
+    97% { opacity: 1; }
+    98% { opacity: 0.95; }
+  }
+
+  .container {
+    width: 100%;
+    max-width: 720px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 900;
+    letter-spacing: 8px;
+    color: var(--green);
+    text-shadow: 0 0 20px var(--green), 0 0 40px var(--green-dim), 0 0 80px #00ff8820;
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { text-shadow: 0 0 20px var(--green), 0 0 40px var(--green-dim), 0 0 80px #00ff8820; }
+    50% { text-shadow: 0 0 30px var(--green), 0 0 60px var(--green-dim), 0 0 100px #00ff8830; }
+  }
+
+  .subtitle {
+    color: var(--green-dim);
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-top: 6px;
+    opacity: 0.7;
+  }
+
+  /* Score bar */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    margin-bottom: 20px;
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .score-val { color: var(--amber); font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; }
+  .q-counter { color: var(--green-dim); }
+  .streak { color: var(--green); }
+  .streak span { color: var(--amber); }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 3px;
+    background: #0a1f12;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dim), var(--green));
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  /* Question panel */
+  .panel {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 28px;
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .panel::before {
+    content: '▸ QUESTION';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--panel);
+    padding: 0 8px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green-dim);
+  }
+
+  .category-tag {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--amber);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .question-text {
+    font-size: clamp(14px, 2.5vw, 18px);
+    line-height: 1.6;
+    color: #ccffdd;
+    min-height: 60px;
+  }
+
+  /* Loading dots */
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green-dim);
+    font-size: 14px;
+  }
+
+  .dots { display: inline-flex; gap: 4px; }
+  .dots span {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Answers grid */
+  .answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 500px) { .answers { grid-template-columns: 1fr; } }
+
+  .answer-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    padding: 14px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    position: relative;
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+  }
+
+  .answer-btn .letter {
+    color: var(--amber);
+    margin-right: 10px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .answer-btn:hover:not(:disabled) {
+    border-color: var(--green);
+    background: rgba(0,255,136,0.06);
+    text-shadow: 0 0 8px var(--green);
+    transform: translateX(3px);
+  }
+
+  .answer-btn.correct {
+    border-color: var(--green);
+    background: rgba(0,255,136,0.15);
+    color: var(--green);
+    text-shadow: 0 0 10px var(--green);
+    animation: correct-flash 0.4s ease;
+  }
+
+  .answer-btn.wrong {
+    border-color: var(--red);
+    background: rgba(255,51,85,0.12);
+    color: var(--red);
+    text-shadow: 0 0 10px var(--red);
+  }
+
+  .answer-btn.reveal {
+    border-color: var(--green);
+    background: rgba(0,255,136,0.08);
+    color: var(--green-dim);
+  }
+
+  @keyframes correct-flash {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  .answer-btn:disabled { cursor: not-allowed; }
+
+  /* Feedback */
+  .feedback {
+    padding: 12px 18px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border-left: 3px solid;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    display: none;
+    animation: slide-in 0.3s ease;
+  }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback.correct { border-color: var(--green); background: rgba(0,255,136,0.05); color: #aaffcc; }
+  .feedback.wrong { border-color: var(--red); background: rgba(255,51,85,0.05); color: #ffaabb; }
+
+  /* Next button */
+  .next-btn {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    text-shadow: 0 0 8px var(--green);
+  }
+
+  .next-btn:hover {
+    background: rgba(0,255,136,0.1);
+    box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  }
+
+  /* Game over */
+  .gameover {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    animation: slide-in 0.5s ease;
+  }
+
+  .gameover-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+  }
+
+  .final-score {
+    font-family: 'Orbitron', monospace;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--amber);
+    text-shadow: 0 0 30px var(--amber);
+    margin-bottom: 8px;
+  }
+
+  .final-label { color: var(--green-dim); font-size: 12px; letter-spacing: 3px; margin-bottom: 24px; }
+  .final-rank { font-size: 16px; color: #ccffdd; margin-bottom: 30px; letter-spacing: 2px; }
+
+  .restart-btn {
+    padding: 14px 40px;
+    background: transparent;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-shadow: 0 0 8px var(--amber);
+  }
+
+  .restart-btn:hover {
+    background: rgba(255,170,0,0.1);
+    box-shadow: 0 0 20px rgba(255,170,0,0.2);
+  }
+
+  /* Timer */
+  .timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--green-dim);
+    letter-spacing: 2px;
+  }
+
+  .timer-bar {
+    flex: 1;
+    height: 4px;
+    background: #0a1f12;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+    transition: width 1s linear;
+    box-shadow: 0 0 6px currentColor;
+  }
+
+  .timer-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--amber);
+    min-width: 24px;
+    text-align: right;
+  }
+
+  /* Scrolling bg text */
+  .bg-text {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    font-size: 10px;
+    color: rgba(0,255,136,0.06);
+    letter-spacing: 8px;
+    text-align: center;
+    pointer-events: none;
+    z-index: 0;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-text">QUIZ.EXE v2.4 — CULTURE GÉNÉRALE — POWERED BY AI — QUIZ.EXE v2.4 — CULTURE GÉNÉRALE — POWERED BY AI —</div>
+
+<div class="container">
+  <div class="header">
+    <div class="title">QUIZ.EXE</div>
+    <div class="subtitle">▸ CULTURE GÉNÉRALE ◂ POWERED BY AI</div>
+  </div>
+
+  <div id="game-area">
+    <div class="scorebar">
+      <div>SCORE <span class="score-val" id="score">000</span></div>
+      <div class="q-counter" id="q-counter">Q 1 / 10</div>
+      <div class="streak">STREAK <span id="streak">0</span>🔥</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress" style="width:0%"></div>
+    </div>
+
+    <div class="timer-wrap">
+      <span>⏱</span>
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+      <span class="timer-num" id="timer-num">20</span>
+    </div>
+
+    <div class="panel">
+      <div class="category-tag" id="category">CHARGEMENT...</div>
+      <div class="question-text" id="question">
+        <div class="loading">
+          <span>INITIALISATION IA</span>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">▸ QUESTION SUIVANTE</button>
+  </div>
+
+  <div class="gameover" id="gameover">
+    <div class="gameover-title" id="go-title">GAME OVER</div>
+    <div class="final-score" id="final-score">0</div>
+    <div class="final-label">POINTS OBTENUS</div>
+    <div class="final-rank" id="final-rank"></div>
+    <button class="restart-btn" onclick="restartGame()">▸ REJOUER</button>
+  </div>
+</div>
+
+<script>
+const TOTAL_QUESTIONS = 10;
+const TIME_PER_Q = 20;
+
+let state = {
+  score: 0,
+  qNum: 0,
+  streak: 0,
+  answered: false,
+  timerInterval: null,
+  timeLeft: TIME_PER_Q,
+  currentCorrect: '',
+  history: []
+};
+
+async function fetchQuestion() {
+  const used = state.history.map(q => q.question).join(' | ');
+  const prompt = `Tu es un générateur de questions de quiz culture générale en français.
+Génère UNE question de culture générale variée (histoire, géographie, science, sport, cinéma, musique, art, cuisine...).
+Les questions doivent être de difficulté moyenne, intéressantes et précises.
+Ne génère PAS ces questions déjà posées: ${used || 'aucune'}
+
+Réponds UNIQUEMENT en JSON valide, sans markdown, sans aucun texte avant ou après:
+{
+  "category": "CATÉGORIE EN MAJUSCULES (ex: HISTOIRE, GÉOGRAPHIE, SCIENCE...)",
+  "question": "La question ici ?",
+  "answers": ["Bonne réponse", "Mauvaise réponse 2", "Mauvaise réponse 3", "Mauvaise réponse 4"],
+  "correct": 0,
+  "explanation": "Courte explication de la bonne réponse (1-2 phrases)."
+}
+L'index "correct" est la position (0-3) de la bonne réponse dans le tableau. Mélange aléatoirement les réponses.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await res.json();
+  const text = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
+  return JSON.parse(text);
+}
+
+function pad(n) { return String(n).padStart(3, '0'); }
+
+function startTimer() {
+  state.timeLeft = TIME_PER_Q;
+  updateTimer();
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimer();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      timeUp();
+    }
+  }, 1000);
+}
+
+function updateTimer() {
+  document.getElementById('timer-num').textContent = state.timeLeft;
+  const pct = (state.timeLeft / TIME_PER_Q) * 100;
+  document.getElementById('timer-fill').style.width = pct + '%';
+}
+
+function timeUp() {
+  if (state.answered) return;
+  state.answered = true;
+  state.streak = 0;
+  document.getElementById('streak').textContent = state.streak;
+
+  // Reveal correct answer
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === state.currentCorrectIdx) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback wrong';
+  fb.innerHTML = `⏰ TEMPS ÉCOULÉ — La bonne réponse était : <strong>${state.currentCorrect}</strong><br><small>${state.currentExplanation}</small>`;
+  fb.style.display = 'block';
+
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function renderQuestion(q) {
+  state.currentCorrect = q.answers[q.correct];
+  state.currentCorrectIdx = q.correct;
+  state.currentExplanation = q.explanation;
+  state.history.push({ question: q.question });
+
+  document.getElementById('category').textContent = '▸ ' + q.category;
+  document.getElementById('question').textContent = q.question;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const answersEl = document.getElementById('answers');
+  answersEl.innerHTML = '';
+
+  q.answers.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span class="letter">${letters[i]}</span>${ans}`;
+    btn.onclick = () => selectAnswer(i, q);
+    answersEl.appendChild(btn);
+  });
+
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  state.answered = false;
+
+  startTimer();
+}
+
+function selectAnswer(idx, q) {
+  if (state.answered) return;
+  state.answered = true;
+  clearInterval(state.timerInterval);
+
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  const isCorrect = idx === q.correct;
+
+  if (isCorrect) {
+    btns[idx].classList.add('correct');
+    const bonus = Math.ceil(state.timeLeft / TIME_PER_Q * 50);
+    const points = 100 + bonus + (state.streak * 10);
+    state.score += points;
+    state.streak++;
+    document.getElementById('score').textContent = pad(state.score);
+    document.getElementById('streak').textContent = state.streak;
+
+    fb.className = 'feedback correct';
+    fb.innerHTML = `✓ CORRECT ! +${points} pts${state.streak > 1 ? ` — STREAK x${state.streak} 🔥` : ''}<br><small>${q.explanation}</small>`;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.correct].classList.add('reveal');
+    state.streak = 0;
+    document.getElementById('streak').textContent = 0;
+
+    fb.className = 'feedback wrong';
+    fb.innerHTML = `✗ FAUX — Bonne réponse : <strong>${q.answers[q.correct]}</strong><br><small>${q.explanation}</small>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+async function loadQuestion() {
+  // Show loading
+  document.getElementById('category').textContent = '▸ CHARGEMENT...';
+  document.getElementById('question').innerHTML = `<div class="loading"><span>GÉNÉRATION IA</span><div class="dots"><span></span><span></span><span></span></div></div>`;
+  document.getElementById('answers').innerHTML = '';
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+
+  try {
+    const q = await fetchQuestion();
+    renderQuestion(q);
+  } catch(e) {
+    document.getElementById('question').textContent = 'Erreur de chargement. Vérifiez votre connexion.';
+    console.error(e);
+  }
+}
+
+function nextQuestion() {
+  state.qNum++;
+  if (state.qNum >= TOTAL_QUESTIONS) {
+    showGameOver();
+    return;
+  }
+  updateProgress();
+  document.getElementById('q-counter').textContent = `Q ${state.qNum + 1} / ${TOTAL_QUESTIONS}`;
+  loadQuestion();
+}
+
+function updateProgress() {
+  const pct = (state.qNum / TOTAL_QUESTIONS) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function showGameOver() {
+  clearInterval(state.timerInterval);
+  document.getElementById('game-area').style.display = 'none';
+  const go = document.getElementById('gameover');
+  go.style.display = 'block';
+
+  const pct = state.score / (TOTAL_QUESTIONS * 150) * 100;
+  let rank, color;
+  if (pct >= 90) { rank = '🏆 GÉNIE — Score légendaire !'; color = '#ffaa00'; }
+  else if (pct >= 70) { rank = '⭐ EXPERT — Excellent !'; color = '#00ff88'; }
+  else if (pct >= 50) { rank = '👍 CONFIRMÉ — Bon travail !'; color = '#00cc66'; }
+  else if (pct >= 30) { rank = '📚 APPRENTI — Encore des efforts !'; color = '#ffaa00'; }
+  else { rank = '💀 DÉBUTANT — Retourne à l\'école !'; color = '#ff3355'; }
+
+  document.getElementById('final-score').textContent = state.score;
+  document.getElementById('final-score').style.color = color;
+  document.getElementById('final-rank').textContent = rank;
+  document.getElementById('go-title').textContent = pct >= 50 ? 'FÉLICITATIONS' : 'GAME OVER';
+}
+
+function restartGame() {
+  state = { score: 0, qNum: 0, streak: 0, answered: false, timerInterval: null, timeLeft: TIME_PER_Q, currentCorrect: '', history: [] };
+  document.getElementById('score').textContent = '000';
+  document.getElementById('q-counter').textContent = 'Q 1 / 10';
+  document.getElementById('streak').textContent = '0';
+  document.getElementById('progress').style.width = '0%';
+  document.getElementById('gameover').style.display = 'none';
+  document.getElementById('game-area').style.display = 'block';
+  loadQuestion();
+}
+
+// Start
+loadQuestion();
+</script>
+</body>
+</html>
