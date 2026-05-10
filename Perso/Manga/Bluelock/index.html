@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BLUE LOCK — Fan Site</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cyan: #22d3ee;
+      --cyan-dark: #0891b2;
+      --cyan-glow: rgba(34, 211, 238, 0.45);
+      --black: #000;
+      --zinc-900: #0f0f0f;
+      --zinc-800: #1a1a1a;
+      --zinc-400: #a1a1aa;
+      --zinc-300: #d4d4d8;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: #fff;
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,.8), transparent);
+      backdrop-filter: blur(4px);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: var(--cyan);
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--zinc-400);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .9rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,.85) 0%, rgba(0,0,0,.5) 50%, #000 100%),
+        url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1800&auto=format&fit=crop') center/cover no-repeat;
+    }
+    /* animated grid overlay */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(34,211,238,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,211,238,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPan 20s linear infinite;
+    }
+    @keyframes gridPan {
+      from { transform: translateY(0); }
+      to   { transform: translateY(60px); }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 0 1.5rem;
+      animation: fadeUp .9s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .85rem;
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(6rem, 16vw, 14rem);
+      line-height: .9;
+      letter-spacing: -2px;
+    }
+    .hero-title span { color: var(--cyan); }
+    .hero-badges {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .badge {
+      padding: .6rem 1.4rem;
+      border: 1px solid rgba(34,211,238,.4);
+      border-radius: 999px;
+      font-size: .85rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 2px;
+      background: rgba(255,255,255,.05);
+      backdrop-filter: blur(8px);
+    }
+    .hero-btn {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 1.1rem 3rem;
+      background: var(--cyan);
+      color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 4px;
+      border-radius: 1rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 40px var(--cyan-glow);
+      transition: transform .25s, box-shadow .25s;
+      text-decoration: none;
+    }
+    .hero-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 60px var(--cyan-glow);
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem;
+      letter-spacing: 6px;
+      color: var(--cyan);
+      animation: bounce 1.8s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── QUOTE ── */
+    #quote {
+      padding: 8rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    #quote::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(34,211,238,.06) 0%, transparent 70%);
+    }
+    .quote-text {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.25;
+      font-style: italic;
+    }
+    .quote-text span { color: var(--cyan); font-style: normal; }
+    .quote-sub {
+      margin-top: 2rem;
+      max-width: 680px;
+      margin-inline: auto;
+      color: var(--zinc-400);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* ── PLAYERS ── */
+    #players { padding: 5rem 2rem 7rem; }
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: .8rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1;
+    }
+    .players-header {
+      max-width: 1280px;
+      margin: 0 auto 3.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .players-header p {
+      max-width: 420px;
+      color: var(--zinc-400);
+      line-height: 1.6;
+    }
+    .cards-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.8rem;
+    }
+    .card {
+      position: relative;
+      border-radius: 1.8rem;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.08);
+      background: var(--zinc-900);
+      cursor: pointer;
+      transition: transform .5s cubic-bezier(.22,.68,0,1.2);
+    }
+    .card:hover { transform: translateY(-14px); }
+    .card-img-wrap { height: 420px; overflow: hidden; }
+    .card-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+      display: block;
+    }
+    .card:hover .card-img-wrap img { transform: scale(1.1); }
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #000 0%, rgba(0,0,0,.35) 50%, transparent 100%);
+      transition: background .4s;
+    }
+    .card:hover .card-overlay {
+      background: linear-gradient(to top, #000 0%, rgba(0,0,0,.5) 55%, rgba(34,211,238,.08) 100%);
+    }
+    .card-body {
+      position: absolute;
+      bottom: 0;
+      padding: 1.5rem;
+      z-index: 2;
+    }
+    .card-aura {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .75rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: .5rem;
+    }
+    .card-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      line-height: 1;
+    }
+    .card-role {
+      margin-top: .6rem;
+      font-size: .85rem;
+      color: var(--zinc-300);
+      line-height: 1.5;
+    }
+
+    /* ── STATS ── */
+    #stats {
+      padding: 6rem 2rem;
+      position: relative;
+    }
+    #stats::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(34,211,238,.07), transparent, rgba(34,211,238,.07));
+    }
+    .stats-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 1.8rem;
+      padding: 3rem 2rem;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      transition: transform .3s;
+    }
+    .stat-card:hover { transform: scale(1.05); }
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: var(--cyan);
+      line-height: 1;
+    }
+    .stat-label {
+      margin-top: 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--zinc-300);
+    }
+
+    /* ── ARENA ── */
+    #arena { padding: 5rem 2rem 8rem; }
+    .arena-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    @media (max-width: 900px) { .arena-inner { grid-template-columns: 1fr; } }
+    .arena-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1;
+    }
+    .arena-title span { color: var(--cyan); }
+    .arena-desc {
+      margin-top: 2rem;
+      color: var(--zinc-400);
+      line-height: 1.8;
+      font-size: 1rem;
+    }
+    .arena-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    .btn-primary {
+      padding: .9rem 2.2rem;
+      background: var(--cyan);
+      color: #000;
+      border: none;
+      border-radius: 1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: transform .25s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { transform: scale(1.06); }
+    .btn-outline {
+      padding: .9rem 2.2rem;
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: background .25s;
+      text-decoration: none;
+    }
+    .btn-outline:hover { background: rgba(255,255,255,.1); }
+    .arena-img-wrap {
+      position: relative;
+    }
+    .arena-glow {
+      position: absolute;
+      inset: -2rem;
+      background: radial-gradient(ellipse, rgba(34,211,238,.22) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .arena-img-wrap img {
+      position: relative;
+      width: 100%;
+      border-radius: 2rem;
+      border: 1px solid rgba(34,211,238,.3);
+      box-shadow: 0 0 60px rgba(34,211,238,.18);
+      display: block;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      padding: 8rem 2rem 10rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(34,211,238,.12) 0%, transparent 65%);
+    }
+    .cta-title {
+      position: relative;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: .95;
+    }
+    .cta-title span { color: var(--cyan); }
+    .cta-sub {
+      position: relative;
+      margin-top: 2rem;
+      color: var(--zinc-400);
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 500px;
+      margin-inline: auto;
+    }
+    .cta-btn {
+      position: relative;
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding: 1.1rem 3rem;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 1rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 4px;
+      cursor: pointer;
+      transition: transform .25s;
+      text-decoration: none;
+    }
+    .cta-btn:hover { transform: scale(1.06); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: .8rem;
+      color: var(--zinc-400);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 2px;
+    }
+    footer span { color: var(--cyan); }
+
+    /* ── RESPONSIVE NAV ── */
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: .75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">BLUE<span style="color:#fff">LOCK</span></div>
+    <ul class="nav-links">
+      <li><a href="#players">Joueurs</a></li>
+      <li><a href="#arena">Arène</a></li>
+      <li><a href="#cta">Rejoindre</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Ego &bull; Rivalité &bull; Football</p>
+      <h1 class="hero-title">BLUE<br><span>LOCK</span></h1>
+      <div class="hero-badges">
+        <span class="badge">⚽ Projet Blue Lock</span>
+        <span class="badge">🔥 Ego ultime</span>
+        <span class="badge">👁 Métavision</span>
+      </div>
+      <a href="#players" class="hero-btn">ENTER THE BLUE LOCK</a>
+    </div>
+    <div class="scroll-hint">SCROLL</div>
+  </section>
+
+  <!-- QUOTE -->
+  <section id="quote">
+    <blockquote class="quote-text">
+      "Le football n'a pas besoin d'amitié.
+      <span>Il a besoin d'un ego absolu.</span>"
+    </blockquote>
+    <p class="quote-sub">
+      Blue Lock transforme des attaquants ordinaires en monstres capables d'écraser le monde entier.
+      Ici, il n'y a qu'une seule règle : devenir le meilleur attaquant de la planète.
+    </p>
+  </section>
+
+  <!-- PLAYERS -->
+  <section id="players">
+    <div class="players-header">
+      <div>
+        <p class="section-label">Blue Lock Players</p>
+        <h2 class="section-title">Les Monstres</h2>
+      </div>
+      <p>Chaque joueur possède son propre style, son propre ego et sa propre arme.</p>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Isagi -->
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=800&auto=format&fit=crop" alt="Isagi"/>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <p class="card-aura">Vision Métavision</p>
+          <h3 class="card-name">Yoichi Isagi</h3>
+          <p class="card-role">L'attaquant qui analyse tout</p>
+        </div>
+      </div>
+      <!-- Rin -->
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?q=80&w=800&auto=format&fit=crop" alt="Rin"/>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <p class="card-aura">Destruction totale</p>
+          <h3 class="card-name">Rin Itoshi</h3>
+          <p class="card-role">Le monstre glacial</p>
+        </div>
+      </div>
+      <!-- Nagi -->
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1511884642898-4c92249e20b6?q=80&w=800&auto=format&fit=crop" alt="Nagi"/>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <p class="card-aura">Contrôle absolu</p>
+          <h3 class="card-name">Seishiro Nagi</h3>
+          <p class="card-role">Le génie paresseux</p>
+        </div>
+      </div>
+      <!-- Bachira -->
+      <div class="card">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=800&auto=format&fit=crop" alt="Bachira"/>
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <p class="card-aura">Dribble imprévisible</p>
+          <h3 class="card-name">Meguru Bachira</h3>
+          <p class="card-role">Le monstre créatif</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">300</div>
+        <p class="stat-label">Attaquants enfermés</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">1</div>
+        <p class="stat-label">Survivant ultime</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">∞</div>
+        <p class="stat-label">Ego déchaîné</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARENA -->
+  <section id="arena">
+    <div class="arena-inner">
+      <div>
+        <p class="section-label">Neo Egoist League</p>
+        <h2 class="arena-title">Le terrain.<br><span>La guerre.</span></h2>
+        <p class="arena-desc">
+          Dans Blue Lock, chaque match est une bataille mentale.
+          Les joueurs doivent écraser leurs rivaux, évoluer instantanément et transformer
+          leur frustration en puissance.
+        </p>
+        <div class="arena-btns">
+          <a href="#players" class="btn-primary">Voir les équipes</a>
+          <a href="#quote" class="btn-outline">Explorer l'univers</a>
+        </div>
+      </div>
+      <div class="arena-img-wrap">
+        <div class="arena-glow"></div>
+        <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1000&auto=format&fit=crop" alt="Arena"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <h2 class="cta-title">DEVORE.<br>EVOLVE.<br><span>DOMINATE.</span></h2>
+    <p class="cta-sub">Un fan-site inspiré de l'intensité et de l'énergie monstrueuse de Blue Lock.</p>
+    <a href="#hero" class="cta-btn">BECOME THE STRIKER</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>BLUE LOCK</span>
+    <p>Fan-site non officiel &bull; © 2025</p>
+    <p>Manga de <span>Muneyuki Kaneshiro</span> &bull; Art de <span>Yusuke Nomura</span></p>
+  </footer>
+
+</body>
+</html>
