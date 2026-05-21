@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Honda Performance Evolution</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#f4f4f2;
+    color:#111;
+    overflow-x:hidden;
+}
+
+/* ========================= */
+/* HERO */
+/* ========================= */
+
+.hero{
+    height:100vh;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:
+    linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.75)),
+    url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2070&auto=format&fit=crop") center/cover;
+}
+
+.hero::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to right, rgba(255,0,0,.08), transparent);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    color:white;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:clamp(3rem,8vw,8rem);
+    font-weight:800;
+    letter-spacing:-4px;
+    line-height:.9;
+}
+
+.hero p{
+    margin-top:25px;
+    font-size:1.2rem;
+    opacity:.85;
+    font-weight:300;
+}
+
+.scroll-indicator{
+    position:absolute;
+    bottom:40px;
+    left:50%;
+    transform:translateX(-50%);
+    color:white;
+    font-size:.9rem;
+    letter-spacing:2px;
+    opacity:.7;
+}
+
+/* ========================= */
+/* GENERAL SECTION */
+/* ========================= */
+
+section{
+    width:100%;
+    padding:120px 8%;
+}
+
+.section-title{
+    margin-bottom:60px;
+}
+
+.section-title span{
+    color:#c40000;
+    font-weight:700;
+    letter-spacing:2px;
+    font-size:.9rem;
+}
+
+.section-title h2{
+    font-size:clamp(2.5rem,5vw,5rem);
+    margin-top:10px;
+    line-height:1;
+    letter-spacing:-2px;
+}
+
+/* ========================= */
+/* CAR SECTION */
+/* ========================= */
+
+.car-section{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:60px;
+    align-items:center;
+    min-height:100vh;
+}
+
+.car-image{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+}
+
+.car-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:1.2s ease;
+}
+
+.car-image:hover img{
+    transform:scale(1.04);
+}
+
+.car-info h3{
+    font-size:clamp(2rem,4vw,4rem);
+    margin-bottom:15px;
+    letter-spacing:-2px;
+}
+
+.subtitle{
+    font-size:1rem;
+    color:#777;
+    margin-bottom:35px;
+    line-height:1.7;
+}
+
+.specs{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.spec-card{
+    background:white;
+    padding:28px;
+    border-radius:24px;
+    transition:.4s ease;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.spec-card:hover{
+    transform:translateY(-6px);
+}
+
+.spec-card h4{
+    font-size:.8rem;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#888;
+    margin-bottom:12px;
+}
+
+.spec-card p{
+    font-size:1.5rem;
+    font-weight:700;
+}
+
+/* ========================= */
+/* SPECIAL COLORS */
+/* ========================= */
+
+.ek9 .accent{
+    color:#c40000;
+}
+
+.fl5{
+    background:#ececea;
+}
+
+.fl5 .accent{
+    color:#d00000;
+}
+
+.nsx{
+    background:#101216;
+    color:white;
+}
+
+.nsx .subtitle{
+    color:#b9c0cb;
+}
+
+.nsx .spec-card{
+    background:#171b21;
+    color:white;
+}
+
+.nsx .spec-card h4{
+    color:#9ba5b3;
+}
+
+.nsx .accent{
+    color:#8db8ff;
+}
+
+/* ========================= */
+/* FINAL SECTION */
+/* ========================= */
+
+.final{
+    min-height:70vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:100px 10%;
+    background:
+    linear-gradient(to bottom, rgba(255,255,255,.95), rgba(255,255,255,.98)),
+    url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop") center/cover;
+}
+
+.final h2{
+    font-size:clamp(2.5rem,5vw,6rem);
+    line-height:1;
+    letter-spacing:-3px;
+    margin-bottom:25px;
+}
+
+.final p{
+    max-width:800px;
+    margin:auto;
+    font-size:1.1rem;
+    color:#555;
+    line-height:1.8;
+}
+
+/* ========================= */
+/* ANIMATIONS */
+/* ========================= */
+
+.fade{
+    opacity:0;
+    transform:translateY(40px);
+    transition:1s ease;
+}
+
+.fade.visible{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media(max-width:1000px){
+
+    .car-section{
+        grid-template-columns:1fr;
+    }
+
+    .specs{
+        grid-template-columns:1fr;
+    }
+
+    section{
+        padding:80px 6%;
+    }
+
+    .hero{
+        text-align:center;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+
+<header class="hero">
+
+    <div class="hero-content fade">
+        <h1>HONDA<br>Performance Evolution</h1>
+        <p>
+            Three generations. Three philosophies. One racing spirit.
+        </p>
+    </div>
+
+    <div class="scroll-indicator">
+        SCROLL
+    </div>
+
+</header>
+
+<!-- EK9 -->
+
+<section class="ek9">
+
+    <div class="section-title fade">
+        <span>2000</span>
+        <h2>Civic Type R EK9</h2>
+    </div>
+
+    <div class="car-section">
+
+        <div class="car-image fade">
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1974&auto=format&fit=crop">
+        </div>
+
+        <div class="car-info fade">
+
+            <h3>
+                Pure <span class="accent">VTEC</span> Emotion
+            </h3>
+
+            <p class="subtitle">
+                Lightweight. Mechanical. Raw.  
+                The EK9 became one of the purest expressions
+                of Honda performance engineering.
+            </p>
+
+            <div class="specs">
+
+                <div class="spec-card">
+                    <h4>Power</h4>
+                    <p>185 HP</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Torque</h4>
+                    <p>160 Nm</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Redline</h4>
+                    <p>8400 RPM</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Weight</h4>
+                    <p>1090 kg</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Top Speed</h4>
+                    <p>220 km/h</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Transmission</h4>
+                    <p>5-Speed Manual</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FL5 -->
+
+<section class="fl5">
+
+    <div class="section-title fade">
+        <span>2025</span>
+        <h2>Civic Type R FL5</h2>
+    </div>
+
+    <div class="car-section">
+
+        <div class="car-image fade">
+            <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=2070&auto=format&fit=crop">
+        </div>
+
+        <div class="car-info fade">
+
+            <h3>
+                Precision <span class="accent">Turbo</span> Performance
+            </h3>
+
+            <p class="subtitle">
+                Sharper, wider and faster.  
+                The FL5 pushes the Type R philosophy
+                into a new era of modern track performance.
+            </p>
+
+            <div class="specs">
+
+                <div class="spec-card">
+                    <h4>Power</h4>
+                    <p>329 HP</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Torque</h4>
+                    <p>420 Nm</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Engine</h4>
+                    <p>4 Cyl Turbo</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Weight</h4>
+                    <p>1429 kg</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Top Speed</h4>
+                    <p>275 km/h</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Transmission</h4>
+                    <p>6-Speed Manual</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- NSX -->
+
+<section class="nsx">
+
+    <div class="section-title fade">
+        <span>2016 — 2022</span>
+        <h2>Honda / Acura NSX</h2>
+    </div>
+
+    <div class="car-section">
+
+        <div class="car-image fade">
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=2070&auto=format&fit=crop">
+        </div>
+
+        <div class="car-info fade">
+
+            <h3>
+                Hybrid <span class="accent">Supercar</span> Technology
+            </h3>
+
+            <p class="subtitle">
+                Combining electrification and racing DNA,
+                the second generation NSX redefined
+                what a modern Honda performance car could become.
+            </p>
+
+            <div class="specs">
+
+                <div class="spec-card">
+                    <h4>Power</h4>
+                    <p>581 HP</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Torque</h4>
+                    <p>645 Nm</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Engine</h4>
+                    <p>V6 Biturbo</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>0-100 km/h</h4>
+                    <p>3.0 sec</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Top Speed</h4>
+                    <p>307 km/h</p>
+                </div>
+
+                <div class="spec-card">
+                    <h4>Transmission</h4>
+                    <p>9-Speed Auto</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FINAL -->
+
+<section class="final">
+
+    <div class="fade">
+
+        <h2>
+            From VTEC<br>
+            to Hybrid Performance
+        </h2>
+
+        <p>
+            Honda continues to shape driving emotion through innovation,
+            engineering precision and motorsport heritage.
+        </p>
+
+    </div>
+
+</section>
+
+<script>
+
+const fades = document.querySelectorAll('.fade');
+
+const observer = new IntersectionObserver(entries => {
+
+    entries.forEach(entry => {
+
+        if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+        }
+
+    });
+
+},{
+    threshold:.15
+});
+
+fades.forEach(el => observer.observe(el));
+
+</script>
+
+</body>
+</html>
