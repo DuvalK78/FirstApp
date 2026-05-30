@@ -1,0 +1,33 @@
+[
+  {
+    "name":"France",
+    "capital":"Paris",
+    "group":"D",
+    "titles":"2",
+    "flag":"https://flagcdn.com/w640/fr.png"
+  },
+
+  {
+    "name":"Brazil",
+    "capital":"Brasilia",
+    "group":"F",
+    "titles":"5",
+    "flag":"https://flagcdn.com/w640/br.png"
+  },
+
+  {
+    "name":"Argentina",
+    "capital":"Buenos Aires",
+    "group":"C",
+    "titles":"3",
+    "flag":"https://flagcdn.com/w640/ar.png"
+  },
+
+  {
+    "name":"Germany",
+    "capital":"Berlin",
+    "group":"A",
+    "titles":"4",
+    "flag":"https://flagcdn.com/w640/de.png"
+  }
+]
