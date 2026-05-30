@@ -3,140 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FIFA World Cup 2026 — Le Guide Ultime</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<title>FIFA World Cup 2026 — Guide Officiel</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Black+Han+Sans&display=swap" rel="stylesheet">
 <style>
+/* ============ RESET & ROOT ============ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
 :root {
-  --gold: #D4A017;
-  --gold-light: #F0C040;
-  --red: #C0392B;
-  --dark: #0A0A0F;
-  --dark2: #12121A;
-  --dark3: #1A1A28;
-  --card-bg: #15151F;
-  --border: rgba(212,160,23,0.2);
-  --text: #E8E8F0;
-  --muted: #7070A0;
-  --accent-blue: #1a6dff;
-  --group-colors: #D4A017;
+  --grass-dark: #0d2e0a;
+  --grass-mid:  #134010;
+  --grass-light:#1a5214;
+  --pitch:      #1a5214;
+  --lime:       #7ED321;
+  --white:      #FFFFFF;
+  --off-white:  #F0EDE6;
+  --cream:      #F5F0E8;
+  --gold:       #E8B923;
+  --gold-dark:  #B8920F;
+  --gold-glow:  rgba(232,185,35,0.3);
+  --red:        #C0392B;
+  --dark:       #080C08;
+  --dark2:      #0f150f;
+  --card:       #111811;
+  --card2:      #161e16;
+  --border:     rgba(126,211,33,0.12);
+  --border2:    rgba(232,185,35,0.2);
+  --text:       #E8EDE8;
+  --muted:      #6B7D6B;
+  --shadow:     0 8px 40px rgba(0,0,0,0.8);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--dark);
   color: var(--text);
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  cursor: default;
 }
 
-/* HERO */
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--dark2); }
+::-webkit-scrollbar-thumb { background: var(--grass-light); border-radius: 3px; }
+
+/* ============ HERO ============ */
 .hero {
-  position: relative;
   min-height: 100vh;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 0%, #1a0a00 0%, var(--dark) 70%);
+  background: var(--grass-dark);
 }
 
-.hero-bg {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(circle at 20% 50%, rgba(212,160,23,0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(192,57,43,0.08) 0%, transparent 50%);
-}
-
-.hero-grid {
-  position: absolute; inset: 0;
+/* Pitch pattern */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background-image:
-    linear-gradient(rgba(212,160,23,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(212,160,23,0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(0,0,0,0.15) 60px,
+      rgba(0,0,0,0.15) 120px
+    );
+  background-size: 120px 100%;
+}
+
+.hero-pitch-lines {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  pointer-events: none;
+}
+
+.pitch-stripe {
+  height: 1px;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Center circle */
+.hero-circle {
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.hero-circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -50vw;
+  width: 100vw;
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* Gradient overlays */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(8,12,8,0.3) 0%, rgba(8,12,8,0.7) 100%),
+    linear-gradient(to bottom, rgba(8,12,8,0.8) 0%, transparent 30%, transparent 70%, rgba(8,12,8,0.9) 100%);
 }
 
 .hero-content {
   position: relative;
-  text-align: center;
   z-index: 2;
+  text-align: center;
+  padding: 0 24px;
 }
 
-.flag-strip {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin: 0 auto 40px;
-  opacity: 0.6;
-  font-size: 28px;
-}
-
-.logo-year {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(100px, 20vw, 200px);
-  line-height: 0.85;
-  letter-spacing: -4px;
-  background: linear-gradient(135deg, #F0C040 0%, #D4A017 40%, #8B6010 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: none;
-  filter: drop-shadow(0 0 60px rgba(212,160,23,0.4));
-}
-
-.logo-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(18px, 4vw, 36px);
-  font-weight: 300;
-  letter-spacing: 12px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 8px;
-}
-
-.logo-subtitle {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(12px, 2vw, 16px);
-  letter-spacing: 6px;
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(232,185,35,0.1);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  padding: 6px 16px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 4px;
   color: var(--gold);
   text-transform: uppercase;
-  margin-top: 16px;
+  margin-bottom: 24px;
 }
 
-.hero-stats {
+.hero-eyebrow .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.hero-flag-parade {
   display: flex;
-  gap: 60px;
   justify-content: center;
-  margin-top: 60px;
+  gap: 6px;
   flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto 32px;
+  font-size: 22px;
+  opacity: 0.7;
+}
+
+.hero-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(72px, 16vw, 180px);
+  line-height: 0.88;
+  letter-spacing: -3px;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.hero-title .line1 {
+  display: block;
+  color: var(--white);
+  text-shadow: 0 0 80px rgba(232,185,35,0.2);
+}
+
+.hero-title .line2 {
+  display: block;
+  font-size: clamp(36px, 8vw, 90px);
+  color: var(--gold);
+  font-weight: 200;
+  letter-spacing: 12px;
+  text-shadow: 0 0 60px rgba(232,185,35,0.5);
+}
+
+.hero-title .line3 {
+  display: block;
+  font-size: clamp(18px, 4vw, 44px);
+  color: rgba(255,255,255,0.4);
+  font-weight: 200;
+  letter-spacing: 8px;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 48px;
 }
 
 .hero-stat {
-  text-align: center;
+  padding: 0 40px;
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-.hero-stat .num {
-  font-family: 'Bebas Neue', sans-serif;
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat .n {
+  font-family: 'Oswald', sans-serif;
   font-size: 48px;
+  font-weight: 600;
   color: var(--gold);
   line-height: 1;
 }
 
-.hero-stat .label {
-  font-size: 11px;
+.hero-stat .l {
+  font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--muted);
   margin-top: 4px;
 }
 
-.scroll-hint {
+.hero-hosts {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.host-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 2px;
+}
+
+.hero-scroll {
   position: absolute;
-  bottom: 40px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -144,470 +265,558 @@ body {
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 11px;
-  letter-spacing: 3px;
+  font-size: 9px;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  animation: bounce 2s infinite;
+  animation: heroScroll 2s infinite ease-in-out;
 }
 
-.scroll-hint::after {
-  content: '';
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
+.hero-scroll svg { width: 16px; height: 16px; }
+
+@keyframes heroScroll {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(8px); opacity: 0.5; }
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(8px); }
-}
-
-/* NAV */
+/* ============ NAV ============ */
 .nav {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(10,10,15,0.95);
-  backdrop-filter: blur(20px);
+  z-index: 200;
+  background: rgba(8,12,8,0.97);
   border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
 }
 
 .nav-inner {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
+  height: 54px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-emblem {
+  width: 28px;
+  height: 28px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
 }
 
 .nav-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
-  color: var(--gold);
-  letter-spacing: 2px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--white);
+  text-transform: uppercase;
 }
 
 .nav-tabs {
   display: flex;
-  gap: 4px;
+  gap: 2px;
 }
 
 .nav-tab {
-  padding: 6px 16px;
-  border: none;
+  padding: 6px 20px;
+  border: 1px solid transparent;
   background: none;
   color: var(--muted);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 3px;
   text-transform: uppercase;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 2px;
   transition: all 0.2s;
 }
 
-.nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-.nav-tab.active { color: var(--gold); background: rgba(212,160,23,0.1); }
+.nav-tab:hover { color: var(--text); border-color: var(--border); }
+.nav-tab.active { color: var(--gold); border-color: var(--border2); background: rgba(232,185,35,0.06); }
 
-/* SEARCH */
-.search-bar {
-  padding: 40px 24px 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.search-input-wrap {
+.nav-search {
   position: relative;
-  max-width: 500px;
 }
 
-.search-input {
-  width: 100%;
-  background: var(--card-bg);
+.nav-search input {
+  background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 20px 12px 44px;
+  border-radius: 2px;
+  padding: 7px 14px 7px 34px;
   color: var(--text);
-  font-family: 'Barlow', sans-serif;
-  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  width: 220px;
   outline: none;
   transition: border-color 0.2s;
 }
 
-.search-input:focus { border-color: var(--gold); }
+.nav-search input:focus { border-color: var(--lime); }
+.nav-search input::placeholder { color: var(--muted); }
 
-.search-icon {
+.nav-search .search-icon {
   position: absolute;
-  left: 14px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--muted);
-  font-size: 18px;
+  font-size: 13px;
+  pointer-events: none;
 }
 
-.filter-pills {
+/* ============ FILTERS ============ */
+.filters-bar {
+  background: var(--dark2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
   display: flex;
+  align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 16px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.filter-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-right: 4px;
 }
 
 .pill {
   padding: 5px 14px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.08);
   background: none;
   color: var(--muted);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 2px;
   text-transform: uppercase;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.2s;
 }
 
-.pill:hover, .pill.active { border-color: var(--gold); color: var(--gold); background: rgba(212,160,23,0.08); }
+.pill:hover { color: var(--lime); border-color: rgba(126,211,33,0.3); }
+.pill.active { color: var(--lime); border-color: var(--lime); background: rgba(126,211,33,0.08); }
 
-/* MAIN CONTENT */
+/* ============ MAIN ============ */
 .main {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 40px 32px 80px;
 }
 
-/* SECTION TITLE */
-.section-header {
-  display: flex;
-  align-items: baseline;
-  gap: 20px;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 48px;
-  letter-spacing: 2px;
-  color: var(--text);
-}
-
-.section-count {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  color: var(--muted);
-  letter-spacing: 2px;
-}
-
-/* GROUP VIEW */
+/* ============ VIEWS ============ */
 .groups-view { display: none; }
 .groups-view.active { display: block; }
+.grid-view { display: none; }
+.grid-view.active { display: block; }
 
-.group-block {
-  margin-bottom: 48px;
-}
-
-.group-label {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 64px;
-  color: var(--gold);
-  opacity: 0.15;
-  line-height: 1;
-  position: absolute;
-  right: 0;
-  top: -10px;
-  letter-spacing: -2px;
-}
+/* ============ GROUP BLOCK ============ */
+.group-block { margin-bottom: 60px; }
 
 .group-header {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
 }
 
-.group-badge {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 18px;
-  width: 44px;
-  height: 44px;
+.group-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border2), transparent);
+}
+
+.group-letter {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--gold), #8B6010);
-  border-radius: 8px;
+  background: var(--gold);
   color: #000;
+  border-radius: 2px;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
-.group-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 4px;
+.group-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 5px;
   text-transform: uppercase;
-  color: var(--text);
+  color: rgba(255,255,255,0.5);
 }
 
-.group-teams-grid {
+.group-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
-/* TEAM CARD */
+/* ============ TEAM CARD ============ */
 .team-card {
-  background: var(--card-bg);
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 3px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
   position: relative;
 }
 
 .team-card:hover {
-  border-color: var(--gold);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,160,23,0.3);
+  border-color: rgba(126,211,33,0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 20px rgba(126,211,33,0.05);
 }
 
-.team-card-banner {
-  height: 6px;
-  background: linear-gradient(90deg, var(--gold), transparent);
+.card-top-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--grass-light), var(--lime), transparent);
 }
 
-.team-card-body {
-  padding: 20px;
+.card-body { padding: 18px; }
+
+.card-flag-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
-.team-flag-name {
+.card-flag {
+  font-size: 44px;
+  line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+
+.card-group-chip {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.card-country {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.card-conf {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* WORLD CUPS BADGE */
+.wc-badge {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(232,185,35,0.07);
+  border: 1px solid rgba(232,185,35,0.15);
+  border-radius: 2px;
+  margin-bottom: 12px;
 }
 
-.team-flag-emoji {
-  font-size: 40px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+.wc-badge .trophy { font-size: 13px; }
+
+.wc-badge .wc-count {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gold);
 }
 
-.team-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text);
-  line-height: 1.1;
-}
-
-.team-confederation {
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-
-.team-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.team-meta-item {
-  background: rgba(255,255,255,0.03);
-  border-radius: 6px;
-  padding: 8px 10px;
-}
-
-.team-meta-label {
+.wc-badge .wc-years {
   font-size: 10px;
   color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+.wc-badge-zero {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.06);
+}
+
+.wc-badge-zero .wc-count { color: var(--muted); }
+
+.card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.card-detail {
+  background: rgba(255,255,255,0.02);
+  border-radius: 2px;
+  padding: 7px 9px;
+}
+
+.card-detail .dk {
+  font-size: 9px;
   letter-spacing: 2px;
+  color: var(--muted);
   text-transform: uppercase;
   margin-bottom: 2px;
 }
 
-.team-meta-value {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+.card-detail .dv {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
   color: var(--text);
 }
 
-.team-matches {
-  border-top: 1px solid rgba(255,255,255,0.06);
+.card-matches {
+  border-top: 1px solid rgba(255,255,255,0.05);
   padding-top: 12px;
 }
 
-.match-row {
+.card-match {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 0;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
+  padding: 3px 0;
+  letter-spacing: 0.3px;
 }
 
-.match-dot {
-  width: 6px;
-  height: 6px;
+.card-match .m-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: var(--lime);
+  font-weight: 400;
+  min-width: 50px;
+}
+
+.card-match::before {
+  content: '';
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
-  background: var(--gold);
+  background: var(--lime);
   flex-shrink: 0;
 }
 
-.match-date {
-  color: var(--gold-light);
-  font-weight: 600;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-}
-
-.btn-detail {
+.card-btn {
   display: block;
   width: 100%;
-  margin-top: 16px;
-  padding: 10px;
-  background: rgba(212,160,23,0.08);
-  border: 1px solid rgba(212,160,23,0.2);
-  border-radius: 6px;
-  color: var(--gold);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  margin-top: 14px;
+  padding: 9px 16px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 3px;
   text-transform: uppercase;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.btn-detail:hover {
-  background: rgba(212,160,23,0.2);
-  border-color: var(--gold);
+.card-btn:hover {
+  color: var(--lime);
+  border-color: rgba(126,211,33,0.4);
+  background: rgba(126,211,33,0.04);
 }
 
-/* GRID VIEW */
-.grid-view { display: none; }
-.grid-view.active { display: block; }
+/* ============ ALL TEAMS GRID ============ */
+.grid-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.grid-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.grid-count {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
 
 .all-teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
-/* MODAL */
+/* ============ MODAL ============ */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
-  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(16px);
   z-index: 1000;
   display: none;
   align-items: flex-start;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 32px 16px 60px;
   overflow-y: auto;
 }
 
 .modal-overlay.open { display: flex; }
 
 .modal {
-  background: var(--dark2);
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 4px;
   width: 100%;
-  max-width: 800px;
-  position: relative;
+  max-width: 860px;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
-  animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform: translateY(32px) scale(0.98); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
 }
 
+/* MODAL HERO */
 .modal-hero {
   position: relative;
-  height: 200px;
-  background: linear-gradient(135deg, var(--dark3), var(--dark2));
+  min-height: 220px;
   display: flex;
   align-items: flex-end;
   padding: 32px;
   overflow: hidden;
 }
 
-.modal-hero-bg {
+.modal-hero-pitch {
   position: absolute;
   inset: 0;
-  opacity: 0.15;
-  font-size: 200px;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 60px);
+  background-color: var(--grass-dark);
+}
+
+.modal-hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 100% at 0% 100%, rgba(0,0,0,0.7), transparent);
+}
+
+.modal-flag-bg {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: 180px;
+  opacity: 0.08;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.modal-hero-content {
+  position: relative;
+  z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  overflow: hidden;
+  align-items: flex-end;
+  gap: 24px;
 }
 
-.modal-hero-flag {
-  font-size: 80px;
-  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.8));
-  position: relative;
-  z-index: 1;
+.modal-flag {
+  font-size: 72px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.8));
+  flex-shrink: 0;
 }
 
-.modal-hero-info {
-  position: relative;
-  z-index: 1;
-  margin-left: 24px;
-}
+.modal-hero-text {}
 
-.modal-country-name {
-  font-family: 'Bebas Neue', sans-serif;
+.modal-country {
+  font-family: 'Oswald', sans-serif;
   font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  color: var(--white);
   line-height: 1;
-  color: var(--text);
 }
 
-.modal-group-badge {
-  display: inline-flex;
-  align-items: center;
+.modal-chips {
+  display: flex;
   gap: 8px;
-  background: var(--gold);
-  color: #000;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin-top: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.modal-chip {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  padding: 4px 10px;
+  border-radius: 2px;
   text-transform: uppercase;
 }
 
+.chip-group { background: rgba(232,185,35,0.12); color: var(--gold); border: 1px solid rgba(232,185,35,0.25); }
+.chip-conf  { background: rgba(126,211,33,0.08); color: var(--lime); border: 1px solid rgba(126,211,33,0.2); }
+.chip-host  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.1); }
+.chip-rank  { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid rgba(255,255,255,0.08); }
+
 .modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  background: rgba(255,255,255,0.1);
-  border: none;
+  top: 16px; right: 16px;
+  width: 34px; height: 34px;
   border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
   color: var(--text);
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -616,338 +825,434 @@ body {
   transition: background 0.2s;
 }
 
-.modal-close:hover { background: rgba(255,255,255,0.2); }
+.modal-close:hover { background: rgba(255,255,255,0.15); }
 
-.modal-body {
-  padding: 32px;
-}
+/* MODAL BODY */
+.modal-body { padding: 28px 32px 32px; }
 
-.modal-sections {
+.modal-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-.modal-section h3 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 3px;
+.modal-section-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--lime);
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
 }
 
-.info-grid {
-  display: grid;
-  gap: 8px;
-}
+/* INFO TABLE */
+.info-table { display: grid; gap: 6px; }
 
 .info-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 8px 12px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 6px;
+  background: rgba(255,255,255,0.025);
+  border-radius: 2px;
 }
 
-.info-row .key {
-  font-size: 11px;
+.info-key {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--muted);
-  letter-spacing: 1px;
+}
+
+.info-val {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  text-align: right;
+}
+
+.info-val.gold { color: var(--gold); }
+.info-val.lime { color: var(--lime); }
+
+/* WORLD CUPS IN MODAL */
+.wc-modal-block {
+  background: rgba(232,185,35,0.05);
+  border: 1px solid rgba(232,185,35,0.15);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.wc-modal-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.wc-modal-trophies {
+  display: flex;
+  gap: 6px;
+}
+
+.wc-trophy {
+  font-size: 22px;
+}
+
+.wc-modal-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.wc-modal-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
   text-transform: uppercase;
 }
 
-.info-row .val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  text-align: right;
-  max-width: 60%;
+.wc-years-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wc-year-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  padding: 4px 10px;
+  background: rgba(232,185,35,0.1);
+  border: 1px solid rgba(232,185,35,0.2);
+  border-radius: 2px;
+  color: var(--gold-dark);
+}
+
+.wc-zero-text {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
 }
 
 /* MINI MAP */
 .mini-map {
-  background: rgba(255,255,255,0.03);
-  border-radius: 8px;
+  border-radius: 3px;
   overflow: hidden;
-  height: 140px;
   position: relative;
+  height: 150px;
+  background: #1a2a1a;
 }
 
 .mini-map iframe {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   border: none;
-  filter: grayscale(80%) brightness(0.6) contrast(1.2);
+  filter: saturate(0.3) brightness(0.6) contrast(1.3);
 }
 
-.mini-map-label {
+.mini-map-pin {
   position: absolute;
   bottom: 8px;
   left: 8px;
+  background: rgba(0,0,0,0.8);
+  border-radius: 2px;
+  padding: 3px 8px;
   font-size: 10px;
   letter-spacing: 2px;
-  color: var(--gold);
+  color: var(--lime);
   text-transform: uppercase;
-  background: rgba(0,0,0,0.7);
-  padding: 2px 6px;
-  border-radius: 3px;
 }
 
-/* PLAYERS LIST */
-.players-full {
-  margin-top: 24px;
-}
-
-.players-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.player-item {
+/* JERSEYS — AUTHENTIC SVG */
+.jerseys-row {
   display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.jersey-card {
+  flex: 1;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 20px 14px 14px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 6px;
-  border: 1px solid transparent;
   transition: border-color 0.2s;
 }
 
-.player-item:hover { border-color: var(--border); }
+.jersey-card:hover { border-color: rgba(126,211,33,0.3); }
 
-.player-number {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 18px;
-  color: var(--gold);
+.jersey-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.jersey-equip {
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 1px;
+}
+
+.jersey-desc {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+  max-width: 120px;
+}
+
+/* PLAYERS */
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  background: rgba(255,255,255,0.025);
+  border-radius: 2px;
+  border: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.player-card:hover { border-color: var(--border); }
+
+.player-num {
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--lime);
   width: 22px;
   text-align: center;
   flex-shrink: 0;
 }
 
-.player-info .name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+.player-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.player-info .pos {
-  font-size: 10px;
+.player-pos {
+  font-size: 9px;
+  letter-spacing: 2px;
   color: var(--muted);
-  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
 /* MATCHES */
-.matches-list {
-  display: grid;
-  gap: 8px;
-}
+.matches-list { display: grid; gap: 8px; }
 
-.match-card {
+.match-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 8px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.025);
+  border-radius: 2px;
   border: 1px solid transparent;
+  transition: border-color 0.15s;
 }
 
-.match-card:hover { border-color: var(--border); }
+.match-item:hover { border-color: var(--border); }
 
 .match-teams {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.match-vs {
-  color: var(--gold);
-  margin: 0 8px;
-}
-
-.match-datetime {
-  text-align: right;
-}
-
-.match-datetime .date {
-  font-size: 13px;
-  color: var(--gold-light);
-  font-weight: 600;
-}
-
-.match-datetime .venue {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-/* JERSEY DISPLAY */
-.jersey-row {
   display: flex;
-  gap: 16px;
-  margin-top: 24px;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
 }
 
-.jersey-card {
-  flex: 1;
-  background: rgba(255,255,255,0.03);
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
+.match-vs { color: var(--lime); margin: 0 4px; }
+
+.match-right { text-align: right; }
+
+.match-date-val {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 400;
 }
 
-.jersey-svg {
-  display: block;
-  margin: 0 auto 12px;
-}
+.match-venue { font-size: 10px; color: var(--muted); margin-top: 2px; letter-spacing: 0.5px; }
 
-.jersey-label {
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
+/* FULL WIDTH SECTION */
+.modal-full { margin-bottom: 24px; }
 
-/* FOOTER */
+/* ============ FOOTER ============ */
 .footer {
   background: var(--dark2);
   border-top: 1px solid var(--border);
-  padding: 40px 24px;
+  padding: 40px 32px;
   text-align: center;
 }
 
 .footer-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 32px;
-  color: var(--gold);
-  letter-spacing: 3px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 8px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
 }
 
-.footer-copy {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 8px;
-  letter-spacing: 1px;
+.footer-gold {
+  display: inline-block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  vertical-align: middle;
+  margin: 0 16px;
 }
 
-/* RESPONSIVE */
+.footer-copy { font-size: 11px; color: var(--muted); margin-top: 16px; letter-spacing: 2px; }
+
+/* ============ RESPONSIVE ============ */
 @media (max-width: 1100px) {
-  .group-teams-grid { grid-template-columns: repeat(2, 1fr); }
+  .group-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-  .group-teams-grid { grid-template-columns: 1fr; }
-  .modal-sections { grid-template-columns: 1fr; }
+@media (max-width: 760px) {
+  .group-grid { grid-template-columns: 1fr; }
+  .modal-cols { grid-template-columns: 1fr; }
   .players-grid { grid-template-columns: repeat(2, 1fr); }
-  .hero-stats { gap: 30px; }
+  .nav-search { display: none; }
+  .main { padding: 24px 16px 60px; }
+  .filters-bar { padding: 12px 16px; }
 }
 
-@media (max-width: 540px) {
-  .nav-tabs { display: none; }
+@media (max-width: 520px) {
+  .nav-tabs .nav-tab { padding: 5px 12px; font-size: 10px; }
   .players-grid { grid-template-columns: 1fr; }
 }
 
-/* ANIMATIONS */
-.team-card {
-  animation: fadeInUp 0.4s ease backwards;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* HIDDEN */
 .hidden { display: none !important; }
 
-/* JERSEY SVG DESIGNS */
-.jersey { transition: transform 0.3s; }
-.jersey:hover { transform: scale(1.05); }
+/* ANIM */
+.team-card {
+  animation: fadeUp 0.35s ease backwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
+<!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
+  <div class="hero-circle"></div>
+  <div class="hero-overlay"></div>
+  <div id="heroStripes" class="hero-pitch-lines"></div>
+
   <div class="hero-content">
-    <div class="flag-strip" id="flagStrip"></div>
-    <div class="logo-year">2026</div>
-    <div class="logo-title">Coupe du Monde FIFA</div>
-    <div class="logo-subtitle">Canada · États-Unis · Mexique · 11 Juin — 19 Juillet</div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="num">48</div><div class="label">Nations</div></div>
-      <div class="hero-stat"><div class="num">12</div><div class="label">Groupes</div></div>
-      <div class="hero-stat"><div class="num">104</div><div class="label">Matchs</div></div>
-      <div class="hero-stat"><div class="num">16</div><div class="label">Stades</div></div>
+    <div class="hero-eyebrow"><span class="dot"></span>Édition Officielle · 23ème Mondial<span class="dot"></span></div>
+
+    <div class="hero-flag-parade" id="heroFlags"></div>
+
+    <h1 class="hero-title">
+      <span class="line1">Coupe du Monde</span>
+      <span class="line2">FIFA</span>
+      <span class="line3">2026</span>
+    </h1>
+
+    <div class="hero-meta">
+      <div class="hero-stat"><div class="n">48</div><div class="l">Nations</div></div>
+      <div class="hero-stat"><div class="n">12</div><div class="l">Groupes</div></div>
+      <div class="hero-stat"><div class="n">104</div><div class="l">Matchs</div></div>
+      <div class="hero-stat"><div class="n">39</div><div class="l">Jours</div></div>
+    </div>
+
+    <div class="hero-hosts">
+      <div class="host-tag">🇺🇸 États-Unis</div>
+      <div class="host-tag">🇨🇦 Canada</div>
+      <div class="host-tag">🇲🇽 Mexique</div>
+      <div class="host-tag" style="color:var(--gold);border-color:rgba(232,185,35,0.3)">11 Juin → 19 Juillet 2026</div>
     </div>
   </div>
-  <div class="scroll-hint">Découvrir</div>
+
+  <div class="hero-scroll">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M8 3v10M4 9l4 4 4-4"/>
+    </svg>
+    Explorer
+  </div>
 </section>
 
-<!-- NAV -->
+<!-- ===== NAV ===== -->
 <nav class="nav">
   <div class="nav-inner">
-    <div class="nav-logo">WC2026</div>
+    <div class="nav-brand">
+      <div class="nav-emblem">⚽</div>
+      <div class="nav-logo">WC 2026</div>
+    </div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchView('groups', this)">Par Groupes</button>
-      <button class="nav-tab" onclick="switchView('grid', this)">Toutes les Équipes</button>
+      <button class="nav-tab active" onclick="switchView('groups',this)">Par Groupes</button>
+      <button class="nav-tab" onclick="switchView('grid',this)">48 Équipes</button>
+    </div>
+    <div class="nav-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Chercher équipe ou joueur..." oninput="filterTeams(this.value)" id="searchInput">
     </div>
   </div>
 </nav>
 
-<!-- SEARCH -->
-<div class="search-bar">
-  <div class="search-input-wrap">
-    <span class="search-icon">🔍</span>
-    <input class="search-input" type="text" placeholder="Rechercher une équipe ou un joueur..." oninput="filterTeams(this.value)" id="searchInput">
-  </div>
-  <div class="filter-pills" id="confPills">
-    <button class="pill active" onclick="filterConf('all', this)">Toutes</button>
-    <button class="pill" onclick="filterConf('UEFA', this)">Europe</button>
-    <button class="pill" onclick="filterConf('CAF', this)">Afrique</button>
-    <button class="pill" onclick="filterConf('AFC', this)">Asie</button>
-    <button class="pill" onclick="filterConf('CONCACAF', this)">CONCACAF</button>
-    <button class="pill" onclick="filterConf('CONMEBOL', this)">Amérique du Sud</button>
-    <button class="pill" onclick="filterConf('OFC', this)">Océanie</button>
-  </div>
+<!-- ===== FILTERS ===== -->
+<div class="filters-bar">
+  <span class="filter-label">Zone :</span>
+  <button class="pill active" onclick="filterConf('all',this)">Toutes</button>
+  <button class="pill" onclick="filterConf('UEFA',this)">🌍 Europe (16)</button>
+  <button class="pill" onclick="filterConf('CAF',this)">🌍 Afrique (10)</button>
+  <button class="pill" onclick="filterConf('AFC',this)">🌏 Asie (9)</button>
+  <button class="pill" onclick="filterConf('CONCACAF',this)">🌎 CONCACAF (6)</button>
+  <button class="pill" onclick="filterConf('CONMEBOL',this)">🌎 Am. du Sud (6)</button>
+  <button class="pill" onclick="filterConf('OFC',this)">🌏 Océanie (1)</button>
 </div>
 
-<!-- MAIN -->
+<!-- ===== MAIN ===== -->
 <main class="main">
-
-  <!-- GROUPS VIEW -->
   <div class="groups-view active" id="groupsView"></div>
-
-  <!-- GRID VIEW -->
   <div class="grid-view" id="gridView">
-    <div class="section-header">
-      <div class="section-title">48 Nations</div>
-      <div class="section-count" id="teamCount">48 équipes</div>
+    <div class="grid-header">
+      <div class="grid-title">Toutes les Nations</div>
+      <div class="grid-count" id="teamCount">48 équipes</div>
     </div>
     <div class="all-teams-grid" id="allTeamsGrid"></div>
   </div>
-
 </main>
 
-<!-- FOOTER -->
+<!-- ===== FOOTER ===== -->
 <footer class="footer">
-  <div class="footer-logo">FIFA World Cup 2026™</div>
-  <div class="footer-copy">Canada · États-Unis · Mexique · 11 Juin – 19 Juillet 2026</div>
+  <div class="footer-logo">FIFA <span class="footer-gold"></span> World Cup <span class="footer-gold"></span> 2026</div>
+  <div class="footer-copy">Canada · États-Unis · Mexique · 11 Juin – 19 Juillet 2026 · 48 Nations · 104 Matchs</div>
 </footer>
 
-<!-- MODAL -->
+<!-- ===== MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModalBtn()">✕</button>
@@ -956,721 +1261,1177 @@ body {
 </div>
 
 <script>
-// =========================================================
-// DATA — 48 ÉQUIPES COUPE DU MONDE 2026
-// =========================================================
-const TEAMS = [
-  // GROUPE A
-  { name: "Mexique", code: "MEX", flag: "🇲🇽", conf: "CONCACAF", group: "A", capital: "Mexico", pop: "128M", fifa: 16, host: true,
-    coords: [23.634, -102.552], players: [
-      {n:1,name:"Guillermo Ochoa",pos:"GK"},{n:23,name:"Luis Malagón",pos:"GK"},{n:12,name:"Carlos Acevedo",pos:"GK"},
-      {n:2,name:"Jorge Sánchez",pos:"DEF"},{n:3,name:"César Montes",pos:"DEF"},{n:4,name:"Johan Vásquez",pos:"DEF"},{n:5,name:"Diego Reyes",pos:"DEF"},{n:23,name:"Kevin Álvarez",pos:"DEF"},
-      {n:6,name:"Edson Álvarez",pos:"MID"},{n:7,name:"Héctor Herrera",pos:"MID"},{n:8,name:"Carlos Rodríguez",pos:"MID"},{n:16,name:"Erick Gutiérrez",pos:"MID"},
-      {n:9,name:"Raúl Jiménez",pos:"FWD"},{n:11,name:"Hirving Lozano",pos:"FWD"},{n:22,name:"Henry Martín",pos:"FWD"},{n:14,name:"Roberto Alvarado",pos:"FWD"}
-    ],
-    matches:[{date:"11 Juin",opp:"Afrique du Sud",venue:"Stade Azteca, Mexico"},
-             {date:"15 Juin",opp:"Corée du Sud",venue:"SoFi Stadium, LA"},
-             {date:"20 Juin",opp:"Tchéquie",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#006847","#FFFFFF"], away:["#FFFFFF","#006847"]} },
+// ====================================================
+// AUTHENTIC JERSEY SVG GENERATOR — 2026 WC Designs
+// Based on official kit descriptions
+// ====================================================
+function makeJersey(cfg) {
+  // cfg: { body, collar, sleeves, pattern, stripes, sponsor }
+  const { body='#fff', sleeve=null, collar='#fff', accent='#000',
+    trim='#000', neckType='round', pattern='plain',
+    stripes=null, hoops=null, halves=null } = cfg;
 
-  { name: "Afrique du Sud", code: "RSA", flag: "🇿🇦", conf: "CAF", group: "A", capital: "Pretoria", pop: "60M", fifa: 68, host: false,
-    coords: [-30.559, 22.937], players: [
-      {n:1,name:"Ronwen Williams",pos:"GK"},{n:22,name:"Veli Mothwa",pos:"GK"},
-      {n:2,name:"Reeve Frosler",pos:"DEF"},{n:5,name:"Thibang Phete",pos:"DEF"},{n:6,name:"Grant Kekana",pos:"DEF"},{n:3,name:"Sifiso Hlanti",pos:"DEF"},
-      {n:7,name:"Teboho Mokoena",pos:"MID"},{n:8,name:"Ethan Ntshuayi",pos:"MID"},{n:10,name:"Themba Zwane",pos:"MID"},{n:12,name:"Bongani Zungu",pos:"MID"},
-      {n:9,name:"Percy Tau",pos:"FWD"},{n:11,name:"Lyle Foster",pos:"FWD"},{n:21,name:"Evidence Makgopa",pos:"FWD"}
-    ],
-    matches:[{date:"11 Juin",opp:"Mexique",venue:"Stade Azteca, Mexico"},
-             {date:"16 Juin",opp:"Tchéquie",venue:"Q2 Stadium, Austin"},
-             {date:"21 Juin",opp:"Corée du Sud",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#007A4D","#FFB81C"], away:["#FFFFFF","#007A4D"]} },
+  const sl = sleeve || body;
 
-  { name: "Corée du Sud", code: "KOR", flag: "🇰🇷", conf: "AFC", group: "A", capital: "Séoul", pop: "52M", fifa: 25, host: false,
-    coords: [35.907, 127.766], players: [
-      {n:1,name:"Kim Seung-gyu",pos:"GK"},{n:21,name:"Jo Hyeon-woo",pos:"GK"},
-      {n:2,name:"Kim Moon-hwan",pos:"DEF"},{n:4,name:"Kim Min-jae",pos:"DEF"},{n:3,name:"Hong Chul",pos:"DEF"},{n:5,name:"Jung Seung-hyun",pos:"DEF"},
-      {n:6,name:"Hwang In-beom",pos:"MID"},{n:8,name:"Lee Jae-sung",pos:"MID"},{n:7,name:"Son Jun-ho",pos:"MID"},{n:16,name:"Jung Woo-young",pos:"MID"},
-      {n:7,name:"Son Heung-min",pos:"FWD"},{n:9,name:"Cho Gue-sung",pos:"FWD"},{n:11,name:"Hwang Hee-chan",pos:"FWD"}
-    ],
-    matches:[{date:"12 Juin",opp:"Tchéquie",venue:"Lumen Field, Seattle"},
-             {date:"15 Juin",opp:"Mexique",venue:"SoFi Stadium, LA"},
-             {date:"21 Juin",opp:"Afrique du Sud",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#C60C30","#FFFFFF"], away:["#FFFFFF","#C60C30"]} },
+  let bodyFill = body;
+  let bodyExtra = '';
 
-  { name: "Tchéquie", code: "CZE", flag: "🇨🇿", conf: "UEFA", group: "A", capital: "Prague", pop: "11M", fifa: 41, host: false,
-    coords: [49.817, 15.473], players: [
-      {n:1,name:"Jiří Pavlenka",pos:"GK"},{n:23,name:"Tomáš Vaclík",pos:"GK"},
-      {n:2,name:"Vladimír Coufal",pos:"DEF"},{n:4,name:"Tomáš Holeš",pos:"DEF"},{n:5,name:"Ondřej Čelůstka",pos:"DEF"},{n:3,name:"Jan Bořil",pos:"DEF"},
-      {n:6,name:"Tomáš Souček",pos:"MID"},{n:8,name:"Vladimír Darida",pos:"MID"},{n:10,name:"Patrik Schick",pos:"MID"},
-      {n:9,name:"Adam Hložek",pos:"FWD"},{n:11,name:"Ondřej Lingr",pos:"FWD"}
-    ],
-    matches:[{date:"12 Juin",opp:"Corée du Sud",venue:"Lumen Field, Seattle"},
-             {date:"16 Juin",opp:"Afrique du Sud",venue:"Q2 Stadium, Austin"},
-             {date:"20 Juin",opp:"Mexique",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#D7141A","#FFFFFF"], away:["#FFFFFF","#D7141A"]} },
+  if (pattern === 'stripes' && stripes) {
+    const [c1,c2] = stripes;
+    const sw = stripes[2] || 12;
+    bodyExtra = `
+      <defs>
+        <pattern id="strp_${Math.random().toString(36).slice(2)}" x="0" y="0" width="${sw*2}" height="200" patternUnits="userSpaceOnUse">
+          <rect x="0" width="${sw}" height="200" fill="${c1}"/>
+          <rect x="${sw}" width="${sw}" height="200" fill="${c2}"/>
+        </pattern>
+      </defs>`;
+    bodyFill = `url(#strp_${Math.random().toString(36).slice(2)})`;
+  }
 
-  // GROUPE B
-  { name: "Canada", code: "CAN", flag: "🇨🇦", conf: "CONCACAF", group: "B", capital: "Ottawa", pop: "38M", fifa: 42, host: true,
-    coords: [56.130, -106.346], players: [
-      {n:1,name:"Maxime Crépeau",pos:"GK"},{n:12,name:"Milan Borjan",pos:"GK"},
-      {n:5,name:"Steven Vitória",pos:"DEF"},{n:3,name:"Alistair Johnston",pos:"DEF"},{n:4,name:"Derek Cornelius",pos:"DEF"},{n:6,name:"Richie Laryea",pos:"DEF"},
-      {n:7,name:"Atiba Hutchinson",pos:"MID"},{n:8,name:"Stephen Eustáquio",pos:"MID"},{n:10,name:"Jonathan Osorio",pos:"MID"},{n:14,name:"Samuel Piette",pos:"MID"},
-      {n:9,name:"Lucas Cavallini",pos:"FWD"},{n:10,name:"Alphonso Davies",pos:"FWD"},{n:11,name:"Cyle Larin",pos:"FWD"},{n:13,name:"Jonathan David",pos:"FWD"}
-    ],
-    matches:[{date:"12 Juin",opp:"Bosnie-Herzégovine",venue:"BC Place, Vancouver"},
-             {date:"17 Juin",opp:"Qatar",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"21 Juin",opp:"Suisse",venue:"BMO Field, Toronto"}],
-    jersey: {home:["#FF0000","#FFFFFF"], away:["#FFFFFF","#FF0000"]} },
+  const id = 'j_' + Math.random().toString(36).slice(2,8);
+  let defs = `<defs>`;
+  if (pattern === 'stripes' && stripes) {
+    const sw = stripes[2] || 14;
+    defs += `<pattern id="sp_${id}" x="0" y="0" width="${sw*2}" height="200" patternUnits="userSpaceOnUse">
+      <rect width="${sw}" height="200" fill="${stripes[0]}"/>
+      <rect x="${sw}" width="${sw}" height="200" fill="${stripes[1]}"/>
+    </pattern>`;
+    bodyFill = `url(#sp_${id})`;
+  }
+  if (pattern === 'hoops' && hoops) {
+    const hw = hoops[2] || 16;
+    defs += `<pattern id="hp_${id}" x="0" y="0" width="200" height="${hw*2}" patternUnits="userSpaceOnUse">
+      <rect width="200" height="${hw}" fill="${hoops[0]}"/>
+      <rect y="${hw}" width="200" height="${hw}" fill="${hoops[1]}"/>
+    </pattern>`;
+    bodyFill = `url(#hp_${id})`;
+  }
+  if (halves) {
+    defs += `<linearGradient id="hv_${id}" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="50%" stop-color="${halves[0]}"/>
+      <stop offset="50%" stop-color="${halves[1]}"/>
+    </linearGradient>`;
+    bodyFill = `url(#hv_${id})`;
+  }
+  defs += `</defs>`;
 
-  { name: "Bosnie-Herzégovine", code: "BIH", flag: "🇧🇦", conf: "UEFA", group: "B", capital: "Sarajevo", pop: "3.5M", fifa: 60, host: false,
-    coords: [43.915, 17.679], players: [
-      {n:1,name:"Kenan Pirić",pos:"GK"},
-      {n:2,name:"Sead Kolašinac",pos:"DEF"},{n:5,name:"Ermin Bičakčić",pos:"DEF"},{n:4,name:"Ognjen Vranješ",pos:"DEF"},
-      {n:8,name:"Miralem Pjanić",pos:"MID"},{n:10,name:"Edin Višća",pos:"MID"},{n:6,name:"Muhamed Bešić",pos:"MID"},
-      {n:9,name:"Edin Džeko",pos:"FWD"},{n:11,name:"Anel Ahmedhodžić",pos:"FWD"},{n:7,name:"Rade Krunić",pos:"FWD"}
-    ],
-    matches:[{date:"12 Juin",opp:"Canada",venue:"BC Place, Vancouver"},
-             {date:"17 Juin",opp:"Suisse",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"22 Juin",opp:"Qatar",venue:"BMO Field, Toronto"}],
-    jersey: {home:["#003F87","#FFCC00"], away:["#FFFFFF","#003F87"]} },
+  // Collar shapes
+  let collarPath = '';
+  if (neckType === 'v') {
+    collarPath = `<path d="M34 14 L42 26 L50 14" fill="none" stroke="${collar}" stroke-width="3.5"/>`;
+  } else if (neckType === 'polo') {
+    collarPath = `<rect x="33" y="12" width="18" height="8" rx="2" fill="${collar}"/><rect x="36" y="12" width="12" height="4" rx="1" fill="${trim}"/>`;
+  } else {
+    collarPath = `<path d="M33 14 Q42 20 51 14" fill="none" stroke="${collar}" stroke-width="3.5"/>`;
+  }
 
-  { name: "Qatar", code: "QAT", flag: "🇶🇦", conf: "AFC", group: "B", capital: "Doha", pop: "2.9M", fifa: 58, host: false,
-    coords: [25.354, 51.183], players: [
-      {n:1,name:"Meshaal Barsham",pos:"GK"},
-      {n:2,name:"Pedro Miguel",pos:"DEF"},{n:4,name:"Bassam Al-Rawi",pos:"DEF"},{n:5,name:"Tarek Salman",pos:"DEF"},
-      {n:6,name:"Karim Boudiaf",pos:"MID"},{n:10,name:"Akram Afif",pos:"MID"},{n:8,name:"Homam Ahmed",pos:"MID"},
-      {n:9,name:"Almoez Ali",pos:"FWD"},{n:11,name:"Mohammed Muntari",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Suisse",venue:"BC Place, Vancouver"},
-             {date:"17 Juin",opp:"Canada",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"22 Juin",opp:"Bosnie-Herzégovine",venue:"BMO Field, Toronto"}],
-    jersey: {home:["#8D1B3D","#FFFFFF"], away:["#FFFFFF","#8D1B3D"]} },
-
-  { name: "Suisse", code: "SUI", flag: "🇨🇭", conf: "UEFA", group: "B", capital: "Berne", pop: "8.7M", fifa: 19, host: false,
-    coords: [46.818, 8.228], players: [
-      {n:1,name:"Yann Sommer",pos:"GK"},{n:21,name:"Gregor Kobel",pos:"GK"},
-      {n:2,name:"Silvan Widmer",pos:"DEF"},{n:4,name:"Manuel Akanji",pos:"DEF"},{n:5,name:"Nico Elvedi",pos:"DEF"},{n:3,name:"Ricardo Rodríguez",pos:"DEF"},
-      {n:8,name:"Remo Freuler",pos:"MID"},{n:10,name:"Granit Xhaka",pos:"MID"},{n:6,name:"Denis Zakaria",pos:"MID"},
-      {n:9,name:"Haris Seferović",pos:"FWD"},{n:23,name:"Xherdan Shaqiri",pos:"FWD"},{n:7,name:"Breel Embolo",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Qatar",venue:"BC Place, Vancouver"},
-             {date:"17 Juin",opp:"Bosnie-Herzégovine",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"21 Juin",opp:"Canada",venue:"BMO Field, Toronto"}],
-    jersey: {home:["#FF0000","#FFFFFF"], away:["#FFFFFF","#FF0000"]} },
-
-  // GROUPE C
-  { name: "Brésil", code: "BRA", flag: "🇧🇷", conf: "CONMEBOL", group: "C", capital: "Brasilia", pop: "215M", fifa: 5, host: false,
-    coords: [-14.235, -51.925], players: [
-      {n:1,name:"Alisson",pos:"GK"},{n:23,name:"Ederson",pos:"GK"},
-      {n:2,name:"Danilo",pos:"DEF"},{n:3,name:"Alex Sandro",pos:"DEF"},{n:4,name:"Marquinhos",pos:"DEF"},{n:14,name:"Éder Militão",pos:"DEF"},{n:6,name:"Alex Telles",pos:"DEF"},
-      {n:5,name:"Casemiro",pos:"MID"},{n:8,name:"Fred",pos:"MID"},{n:15,name:"Fabinho",pos:"MID"},{n:10,name:"Lucas Paquetá",pos:"MID"},
-      {n:9,name:"Richarlison",pos:"FWD"},{n:11,name:"Raphinha",pos:"FWD"},{n:20,name:"Vinicius Jr.",pos:"FWD"},{n:7,name:"Rodrygo",pos:"FWD"},{n:21,name:"Endrick",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Maroc",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Haïti",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Écosse",venue:"Lincoln Financial Field, Philadelphie"}],
-    jersey: {home:["#FFDF00","#009C3B"], away:["#001E62","#FFDF00"]} },
-
-  { name: "Maroc", code: "MAR", flag: "🇲🇦", conf: "CAF", group: "C", capital: "Rabat", pop: "37M", fifa: 14, host: false,
-    coords: [31.791, -7.093], players: [
-      {n:1,name:"Yassine Bounou",pos:"GK"},{n:12,name:"Munir Mohamedi",pos:"GK"},
-      {n:2,name:"Achraf Hakimi",pos:"DEF"},{n:5,name:"Romain Saïss",pos:"DEF"},{n:6,name:"Nayef Aguerd",pos:"DEF"},{n:3,name:"Noussair Mazraoui",pos:"DEF"},
-      {n:8,name:"Azzedine Ounahi",pos:"MID"},{n:4,name:"Sofyan Amrabat",pos:"MID"},{n:7,name:"Hakim Ziyech",pos:"MID"},{n:10,name:"Ilias Chair",pos:"MID"},
-      {n:9,name:"Youssef En-Nesyri",pos:"FWD"},{n:11,name:"Soufiane Rahimi",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Brésil",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Écosse",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Haïti",venue:"Lincoln Financial Field, Philadelphie"}],
-    jersey: {home:["#C1272D","#006233"], away:["#FFFFFF","#C1272D"]} },
-
-  { name: "Haïti", code: "HAI", flag: "🇭🇹", conf: "CONCACAF", group: "C", capital: "Port-au-Prince", pop: "11M", fifa: 79, host: false,
-    coords: [18.971, -72.285], players: [
-      {n:1,name:"Josué Duverger",pos:"GK"},
-      {n:2,name:"Andrew Arthur",pos:"DEF"},{n:5,name:"Kervens Belfort",pos:"DEF"},{n:4,name:"Nicolas Madsen",pos:"DEF"},
-      {n:8,name:"James Mora",pos:"MID"},{n:10,name:"Frantzdy Pierrot",pos:"MID"},{n:6,name:"Derrick Etienne",pos:"MID"},
-      {n:9,name:"Duckens Nazon",pos:"FWD"},{n:11,name:"Mathieu Chery",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Écosse",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Brésil",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Maroc",venue:"Lincoln Financial Field, Philadelphie"}],
-    jersey: {home:["#00209F","#D21034"], away:["#FFFFFF","#00209F"]} },
-
-  { name: "Écosse", code: "SCO", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", conf: "UEFA", group: "C", capital: "Édimbourg", pop: "5.5M", fifa: 39, host: false,
-    coords: [56.490, -4.202], players: [
-      {n:1,name:"Angus Gunn",pos:"GK"},{n:12,name:"Craig Gordon",pos:"GK"},
-      {n:2,name:"Anthony Ralston",pos:"DEF"},{n:5,name:"Grant Hanley",pos:"DEF"},{n:6,name:"Scott McKenna",pos:"DEF"},{n:3,name:"Andrew Robertson",pos:"DEF"},
-      {n:7,name:"John McGinn",pos:"MID"},{n:8,name:"Callum McGregor",pos:"MID"},{n:10,name:"Billy Gilmour",pos:"MID"},
-      {n:9,name:"Che Adams",pos:"FWD"},{n:11,name:"Ryan Christie",pos:"FWD"},{n:23,name:"Lawrence Shankland",pos:"FWD"}
-    ],
-    matches:[{date:"13 Juin",opp:"Haïti",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Maroc",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Brésil",venue:"Lincoln Financial Field, Philadelphie"}],
-    jersey: {home:["#003F87","#FFFFFF"], away:["#FFD700","#003F87"]} },
-
-  // GROUPE D
-  { name: "États-Unis", code: "USA", flag: "🇺🇸", conf: "CONCACAF", group: "D", capital: "Washington D.C.", pop: "335M", fifa: 13, host: true,
-    coords: [37.090, -95.712], players: [
-      {n:1,name:"Matt Turner",pos:"GK"},{n:12,name:"Ethan Horvath",pos:"GK"},
-      {n:2,name:"Sergiño Dest",pos:"DEF"},{n:3,name:"Antonee Robinson",pos:"DEF"},{n:4,name:"Walker Zimmerman",pos:"DEF"},{n:5,name:"Miles Robinson",pos:"DEF"},
-      {n:6,name:"Yunus Musah",pos:"MID"},{n:8,name:"Tyler Adams",pos:"MID"},{n:7,name:"Weston McKennie",pos:"MID"},
-      {n:9,name:"Ricardo Pepi",pos:"FWD"},{n:10,name:"Christian Pulisic",pos:"FWD"},{n:11,name:"Timothy Weah",pos:"FWD"},{n:13,name:"Folarin Balogun",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"Paraguay",venue:"SoFi Stadium, LA"},
-             {date:"19 Juin",opp:"Australie",venue:"MetLife Stadium, New York"},
-             {date:"23 Juin",opp:"Turquie",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#B22234","#FFFFFF"], away:["#FFFFFF","#B22234"]} },
-
-  { name: "Paraguay", code: "PAR", flag: "🇵🇾", conf: "CONMEBOL", group: "D", capital: "Asuncion", pop: "7.4M", fifa: 54, host: false,
-    coords: [-23.442, -58.443], players: [
-      {n:1,name:"Antony Silva",pos:"GK"},
-      {n:2,name:"Alberto Espínola",pos:"DEF"},{n:4,name:"Gustavo Gómez",pos:"DEF"},{n:5,name:"Omar Alderete",pos:"DEF"},{n:3,name:"Junior Alonso",pos:"DEF"},
-      {n:8,name:"Andrés Cubas",pos:"MID"},{n:10,name:"Miguel Almirón",pos:"MID"},{n:6,name:"Mathías Villasanti",pos:"MID"},
-      {n:9,name:"Antonio Sanabria",pos:"FWD"},{n:11,name:"Julio Enciso",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"États-Unis",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Turquie",venue:"MetLife Stadium, New York"},
-             {date:"23 Juin",opp:"Australie",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#D52B1E","#FFFFFF"], away:["#FFFFFF","#D52B1E"]} },
-
-  { name: "Australie", code: "AUS", flag: "🇦🇺", conf: "AFC", group: "D", capital: "Canberra", pop: "26M", fifa: 23, host: false,
-    coords: [-25.274, 133.775], players: [
-      {n:1,name:"Mat Ryan",pos:"GK"},{n:12,name:"Danny Vukovic",pos:"GK"},
-      {n:2,name:"Milos Degenek",pos:"DEF"},{n:5,name:"Harry Souttar",pos:"DEF"},{n:6,name:"Kye Rowles",pos:"DEF"},{n:3,name:"Aziz Behich",pos:"DEF"},
-      {n:7,name:"Aaron Mooy",pos:"MID"},{n:8,name:"Jackson Irvine",pos:"MID"},{n:10,name:"Riley McGree",pos:"MID"},
-      {n:9,name:"Adam Taggart",pos:"FWD"},{n:11,name:"Martin Boyle",pos:"FWD"},{n:20,name:"Mitchell Duke",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"Turquie",venue:"SoFi Stadium, LA"},
-             {date:"19 Juin",opp:"États-Unis",venue:"MetLife Stadium, New York"},
-             {date:"23 Juin",opp:"Paraguay",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#FFD700","#006400"], away:["#FFFFFF","#006400"]} },
-
-  { name: "Turquie", code: "TUR", flag: "🇹🇷", conf: "UEFA", group: "D", capital: "Ankara", pop: "85M", fifa: 37, host: false,
-    coords: [38.963, 35.243], players: [
-      {n:1,name:"Mert Günok",pos:"GK"},
-      {n:2,name:"Zeki Çelik",pos:"DEF"},{n:3,name:"Ferdi Kadıoğlu",pos:"DEF"},{n:4,name:"Çağlar Söyüncü",pos:"DEF"},{n:5,name:"Merih Demiral",pos:"DEF"},
-      {n:6,name:"Salih Özcan",pos:"MID"},{n:8,name:"Hakan Çalhanoğlu",pos:"MID"},{n:10,name:"Arda Güler",pos:"MID"},
-      {n:9,name:"Kerem Aktürkoğlu",pos:"FWD"},{n:7,name:"Yusuf Yazıcı",pos:"FWD"},{n:11,name:"Baris Yılmaz",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"Australie",venue:"SoFi Stadium, LA"},
-             {date:"18 Juin",opp:"Paraguay",venue:"MetLife Stadium, New York"},
-             {date:"23 Juin",opp:"États-Unis",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#E30A17","#FFFFFF"], away:["#FFFFFF","#E30A17"]} },
-
-  // GROUPE E
-  { name: "Allemagne", code: "GER", flag: "🇩🇪", conf: "UEFA", group: "E", capital: "Berlin", pop: "84M", fifa: 12, host: false,
-    coords: [51.165, 10.451], players: [
-      {n:1,name:"Marc-André ter Stegen",pos:"GK"},{n:12,name:"Kevin Trapp",pos:"GK"},
-      {n:2,name:"Joshua Kimmich",pos:"DEF"},{n:5,name:"Antonio Rüdiger",pos:"DEF"},{n:4,name:"Nico Schlotterbeck",pos:"DEF"},{n:3,name:"David Raum",pos:"DEF"},
-      {n:6,name:"Ilkay Gündoğan",pos:"MID"},{n:8,name:"Leon Goretzka",pos:"MID"},{n:7,name:"Kai Havertz",pos:"MID"},
-      {n:9,name:"Niclas Füllkrug",pos:"FWD"},{n:10,name:"Florian Wirtz",pos:"FWD"},{n:11,name:"Leroy Sané",pos:"FWD"},{n:13,name:"Thomas Müller",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"Curaçao",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"19 Juin",opp:"Côte d'Ivoire",venue:"AT&T Stadium, Dallas"},
-             {date:"23 Juin",opp:"Équateur",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#FFFFFF","#000000"], away:["#000000","#FFFFFF"]} },
-
-  { name: "Curaçao", code: "CUW", flag: "🇨🇼", conf: "CONCACAF", group: "E", capital: "Willemstad", pop: "156K", fifa: 86, host: false,
-    coords: [12.169, -68.990], players: [
-      {n:1,name:"Eloy Room",pos:"GK"},
-      {n:2,name:"Rangelo Janga",pos:"DEF"},{n:5,name:"Vito van Crooij",pos:"DEF"},{n:4,name:"Gianni Zuiverloon",pos:"DEF"},
-      {n:8,name:"Cuco Martina",pos:"MID"},{n:10,name:"Leandro Bacuna",pos:"MID"},
-      {n:9,name:"Darryl Lachman",pos:"FWD"},{n:11,name:"Geoffrey Heligers",pos:"FWD"}
-    ],
-    matches:[{date:"14 Juin",opp:"Allemagne",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"19 Juin",opp:"Équateur",venue:"AT&T Stadium, Dallas"},
-             {date:"23 Juin",opp:"Côte d'Ivoire",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#002B7F","#FFFFFF"], away:["#FFFFFF","#002B7F"]} },
-
-  { name: "Côte d'Ivoire", code: "CIV", flag: "🇨🇮", conf: "CAF", group: "E", capital: "Yamoussoukro", pop: "27M", fifa: 60, host: false,
-    coords: [7.540, -5.547], players: [
-      {n:1,name:"Yahia Fofana",pos:"GK"},
-      {n:2,name:"Serge Aurier",pos:"DEF"},{n:5,name:"Wilfried Singo",pos:"DEF"},{n:6,name:"Willy Boly",pos:"DEF"},{n:3,name:"Ghislain Konan",pos:"DEF"},
-      {n:8,name:"Seko Fofana",pos:"MID"},{n:10,name:"Franck Kessie",pos:"MID"},{n:7,name:"Ibrahim Sangaré",pos:"MID"},
-      {n:9,name:"Sébastien Haller",pos:"FWD"},{n:11,name:"Nicolas Pépé",pos:"FWD"},{n:14,name:"Simon Adingra",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Équateur",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"19 Juin",opp:"Allemagne",venue:"AT&T Stadium, Dallas"},
-             {date:"23 Juin",opp:"Curaçao",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#F77F00","#FFFFFF"], away:["#FFFFFF","#F77F00"]} },
-
-  { name: "Équateur", code: "ECU", flag: "🇪🇨", conf: "CONMEBOL", group: "E", capital: "Quito", pop: "18M", fifa: 43, host: false,
-    coords: [-1.831, -78.183], players: [
-      {n:1,name:"Hernán Galíndez",pos:"GK"},
-      {n:2,name:"Piero Hincapié",pos:"DEF"},{n:5,name:"Robert Arboleda",pos:"DEF"},{n:4,name:"Diego Palacios",pos:"DEF"},
-      {n:8,name:"Carlos Gruezo",pos:"MID"},{n:10,name:"Moisés Caicedo",pos:"MID"},{n:6,name:"Ángel Mena",pos:"MID"},
-      {n:9,name:"Enner Valencia",pos:"FWD"},{n:11,name:"Gonzalo Plata",pos:"FWD"},{n:7,name:"Jeremy Sarmiento",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Côte d'Ivoire",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"19 Juin",opp:"Curaçao",venue:"AT&T Stadium, Dallas"},
-             {date:"23 Juin",opp:"Allemagne",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#FFD100","#001489"], away:["#001489","#FFD100"]} },
-
-  // GROUPE F
-  { name: "Pays-Bas", code: "NED", flag: "🇳🇱", conf: "UEFA", group: "F", capital: "Amsterdam", pop: "17.9M", fifa: 7, host: false,
-    coords: [52.132, 5.291], players: [
-      {n:1,name:"Bart Verbruggen",pos:"GK"},{n:12,name:"Jasper Cillessen",pos:"GK"},
-      {n:2,name:"Denzel Dumfries",pos:"DEF"},{n:4,name:"Virgil van Dijk",pos:"DEF"},{n:3,name:"Matthijs de Ligt",pos:"DEF"},{n:5,name:"Nathan Aké",pos:"DEF"},
-      {n:6,name:"Frenkie de Jong",pos:"MID"},{n:8,name:"Tijjani Reijnders",pos:"MID"},{n:10,name:"Memphis Depay",pos:"MID"},
-      {n:9,name:"Wout Weghorst",pos:"FWD"},{n:11,name:"Donyell Malen",pos:"FWD"},{n:7,name:"Cody Gakpo",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Japon",venue:"MetLife Stadium, New York"},
-             {date:"20 Juin",opp:"Suède",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"24 Juin",opp:"Tunisie",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#FF6400","#FFFFFF"], away:["#FFFFFF","#FF6400"]} },
-
-  { name: "Japon", code: "JPN", flag: "🇯🇵", conf: "AFC", group: "F", capital: "Tokyo", pop: "125M", fifa: 18, host: false,
-    coords: [36.204, 138.252], players: [
-      {n:1,name:"Gonda Shuichi",pos:"GK"},
-      {n:2,name:"Yedlin",pos:"DEF"},{n:5,name:"Itakura Ko",pos:"DEF"},{n:3,name:"Doan Ritsu",pos:"DEF"},
-      {n:8,name:"Endo Wataru",pos:"MID"},{n:10,name:"Kubo Takefusa",pos:"MID"},{n:6,name:"Kamada Daichi",pos:"MID"},
-      {n:9,name:"Ueda Ayase",pos:"FWD"},{n:11,name:"Mitoma Kaoru",pos:"FWD"},{n:7,name:"Ito Junya",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Pays-Bas",venue:"MetLife Stadium, New York"},
-             {date:"20 Juin",opp:"Tunisie",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"24 Juin",opp:"Suède",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#000080","#FFFFFF"], away:["#FFFFFF","#000080"]} },
-
-  { name: "Suède", code: "SWE", flag: "🇸🇪", conf: "UEFA", group: "F", capital: "Stockholm", pop: "10.5M", fifa: 28, host: false,
-    coords: [60.128, 18.643], players: [
-      {n:1,name:"Robin Olsen",pos:"GK"},
-      {n:2,name:"Mikael Lustig",pos:"DEF"},{n:5,name:"Viktor Lindelöf",pos:"DEF"},{n:6,name:"Ludwig Augustinsson",pos:"DEF"},
-      {n:8,name:"Albin Ekdal",pos:"MID"},{n:10,name:"Emil Forsberg",pos:"MID"},{n:7,name:"Sebastian Larsson",pos:"MID"},
-      {n:9,name:"Alexander Isak",pos:"FWD"},{n:11,name:"Dejan Kulusevski",pos:"FWD"},{n:14,name:"Viktor Gyökeres",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Tunisie",venue:"MetLife Stadium, New York"},
-             {date:"20 Juin",opp:"Pays-Bas",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"24 Juin",opp:"Japon",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#006AA7","#FECC02"], away:["#FECC02","#006AA7"]} },
-
-  { name: "Tunisie", code: "TUN", flag: "🇹🇳", conf: "CAF", group: "F", capital: "Tunis", pop: "12M", fifa: 29, host: false,
-    coords: [33.886, 9.537], players: [
-      {n:1,name:"Aymen Dahmen",pos:"GK"},
-      {n:2,name:"Dylan Bronn",pos:"DEF"},{n:5,name:"Montassar Talbi",pos:"DEF"},{n:3,name:"Ali Maaloul",pos:"DEF"},
-      {n:8,name:"Anis Ben Slimane",pos:"MID"},{n:10,name:"Hannibal Mejbri",pos:"MID"},{n:6,name:"Ellyes Skhiri",pos:"MID"},
-      {n:9,name:"Wahbi Khazri",pos:"FWD"},{n:11,name:"Naim Sliti",pos:"FWD"},{n:7,name:"Youssef Msakni",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Suède",venue:"MetLife Stadium, New York"},
-             {date:"20 Juin",opp:"Japon",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"24 Juin",opp:"Pays-Bas",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#E70013","#FFFFFF"], away:["#FFFFFF","#E70013"]} },
-
-  // GROUPE G
-  { name: "Belgique", code: "BEL", flag: "🇧🇪", conf: "UEFA", group: "G", capital: "Bruxelles", pop: "11.5M", fifa: 3, host: false,
-    coords: [50.503, 4.469], players: [
-      {n:1,name:"Thibaut Courtois",pos:"GK"},{n:12,name:"Simon Mignolet",pos:"GK"},
-      {n:2,name:"Thomas Meunier",pos:"DEF"},{n:4,name:"Toby Alderweireld",pos:"DEF"},{n:5,name:"Jan Vertonghen",pos:"DEF"},{n:3,name:"Yannick Carrasco",pos:"DEF"},
-      {n:6,name:"Axel Witsel",pos:"MID"},{n:7,name:"Kevin De Bruyne",pos:"MID"},{n:10,name:"Eden Hazard",pos:"MID"},
-      {n:9,name:"Romelu Lukaku",pos:"FWD"},{n:11,name:"Dodi Lukebakio",pos:"FWD"},{n:14,name:"Leandro Trossard",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Égypte",venue:"Lumen Field, Seattle"},
-             {date:"20 Juin",opp:"Iran",venue:"SoFi Stadium, LA"},
-             {date:"24 Juin",opp:"Nouvelle-Zélande",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#000000","#C8102E"], away:["#C8102E","#000000"]} },
-
-  { name: "Égypte", code: "EGY", flag: "🇪🇬", conf: "CAF", group: "G", capital: "Le Caire", pop: "106M", fifa: 51, host: false,
-    coords: [26.820, 30.802], players: [
-      {n:1,name:"Mohamed El-Shenawy",pos:"GK"},
-      {n:2,name:"Akram Tawfik",pos:"DEF"},{n:5,name:"Ahmed Hegazi",pos:"DEF"},{n:3,name:"Omar Kamal",pos:"DEF"},
-      {n:8,name:"Tarek Hamed",pos:"MID"},{n:10,name:"Mohamed Salah",pos:"MID"},{n:6,name:"Mahmoud Trezeguet",pos:"MID"},
-      {n:9,name:"Mostafa Mohamed",pos:"FWD"},{n:11,name:"Marwan Attia",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Belgique",venue:"Lumen Field, Seattle"},
-             {date:"20 Juin",opp:"Nouvelle-Zélande",venue:"SoFi Stadium, LA"},
-             {date:"24 Juin",opp:"Iran",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#FFFFFF","#CC0000"], away:["#CC0000","#FFFFFF"]} },
-
-  { name: "Iran", code: "IRN", flag: "🇮🇷", conf: "AFC", group: "G", capital: "Téhéran", pop: "86M", fifa: 22, host: false,
-    coords: [32.427, 53.688], players: [
-      {n:1,name:"Alireza Beiranvand",pos:"GK"},
-      {n:2,name:"Sadegh Moharrami",pos:"DEF"},{n:5,name:"Majid Hosseini",pos:"DEF"},{n:4,name:"Morteza Pouraliganji",pos:"DEF"},{n:3,name:"Ehsan Hajsafi",pos:"DEF"},
-      {n:8,name:"Saeid Ezatolahi",pos:"MID"},{n:10,name:"Mehdi Taremi",pos:"MID"},{n:7,name:"Ahmad Nourollahi",pos:"MID"},
-      {n:9,name:"Sardar Azmoun",pos:"FWD"},{n:11,name:"Ali Gholizadeh",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Nouvelle-Zélande",venue:"Lumen Field, Seattle"},
-             {date:"20 Juin",opp:"Belgique",venue:"SoFi Stadium, LA"},
-             {date:"24 Juin",opp:"Égypte",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#239F40","#FFFFFF"], away:["#FFFFFF","#239F40"]} },
-
-  { name: "Nouvelle-Zélande", code: "NZL", flag: "🇳🇿", conf: "OFC", group: "G", capital: "Wellington", pop: "5.1M", fifa: 104, host: false,
-    coords: [-40.900, 174.886], players: [
-      {n:1,name:"Oliver Sail",pos:"GK"},
-      {n:2,name:"Liberato Cacace",pos:"DEF"},{n:5,name:"Michael Boxall",pos:"DEF"},{n:4,name:"Winston Reid",pos:"DEF"},
-      {n:8,name:"Ryan Thomas",pos:"MID"},{n:10,name:"Clayton Lewis",pos:"MID"},
-      {n:9,name:"Chris Wood",pos:"FWD"},{n:11,name:"Matthew Garbett",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Iran",venue:"Lumen Field, Seattle"},
-             {date:"20 Juin",opp:"Égypte",venue:"SoFi Stadium, LA"},
-             {date:"24 Juin",opp:"Belgique",venue:"Q2 Stadium, Austin"}],
-    jersey: {home:["#FFFFFF","#000000"], away:["#000000","#FFFFFF"]} },
-
-  // GROUPE H
-  { name: "Espagne", code: "ESP", flag: "🇪🇸", conf: "UEFA", group: "H", capital: "Madrid", pop: "47M", fifa: 8, host: false,
-    coords: [40.463, -3.749], players: [
-      {n:1,name:"David Raya",pos:"GK"},{n:13,name:"Unai Simón",pos:"GK"},
-      {n:2,name:"Dani Carvajal",pos:"DEF"},{n:4,name:"Aymeric Laporte",pos:"DEF"},{n:3,name:"Alejandro Balde",pos:"DEF"},{n:5,name:"Robin Le Normand",pos:"DEF"},
-      {n:6,name:"Rodri",pos:"MID"},{n:8,name:"Pedri",pos:"MID"},{n:10,name:"Gavi",pos:"MID"},{n:14,name:"Fabián Ruiz",pos:"MID"},
-      {n:9,name:"Álvaro Morata",pos:"FWD"},{n:11,name:"Ferran Torres",pos:"FWD"},{n:7,name:"Dani Olmo",pos:"FWD"},{n:19,name:"Lamine Yamal",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Cap-Vert",venue:"AT&T Stadium, Dallas"},
-             {date:"20 Juin",opp:"Arabie saoudite",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"24 Juin",opp:"Uruguay",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#C60B1E","#FFD700"], away:["#002395","#C60B1E"]} },
-
-  { name: "Cap-Vert", code: "CPV", flag: "🇨🇻", conf: "CAF", group: "H", capital: "Praia", pop: "560K", fifa: 80, host: false,
-    coords: [16.002, -24.013], players: [
-      {n:1,name:"Vozinha",pos:"GK"},
-      {n:2,name:"Stopira",pos:"DEF"},{n:5,name:"Zé Lopes",pos:"DEF"},{n:3,name:"Ponck",pos:"DEF"},
-      {n:8,name:"Jamiro Monteiro",pos:"MID"},{n:10,name:"Nuno Tavares",pos:"MID"},{n:6,name:"Ryan Mendes",pos:"MID"},
-      {n:9,name:"Djiby Fall",pos:"FWD"},{n:11,name:"Garry Rodrigues",pos:"FWD"}
-    ],
-    matches:[{date:"15 Juin",opp:"Espagne",venue:"AT&T Stadium, Dallas"},
-             {date:"20 Juin",opp:"Uruguay",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"24 Juin",opp:"Arabie saoudite",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#003893","#CF2027"], away:["#FFFFFF","#003893"]} },
-
-  { name: "Arabie saoudite", code: "KSA", flag: "🇸🇦", conf: "AFC", group: "H", capital: "Riyad", pop: "36M", fifa: 53, host: false,
-    coords: [23.885, 45.079], players: [
-      {n:1,name:"Mohammed Al-Owais",pos:"GK"},
-      {n:2,name:"Sultan Al-Ghannam",pos:"DEF"},{n:5,name:"Ali Al-Bulaihi",pos:"DEF"},{n:4,name:"Hassan Tambakti",pos:"DEF"},
-      {n:8,name:"Mohammed Kanno",pos:"MID"},{n:10,name:"Salem Al-Dawsari",pos:"MID"},{n:7,name:"Sami Al-Najei",pos:"MID"},
-      {n:9,name:"Firas Al-Buraikan",pos:"FWD"},{n:11,name:"Saleh Al-Shehri",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Uruguay",venue:"AT&T Stadium, Dallas"},
-             {date:"20 Juin",opp:"Espagne",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"24 Juin",opp:"Cap-Vert",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#007A3D","#FFFFFF"], away:["#FFFFFF","#007A3D"]} },
-
-  { name: "Uruguay", code: "URU", flag: "🇺🇾", conf: "CONMEBOL", group: "H", capital: "Montevideo", pop: "3.5M", fifa: 11, host: false,
-    coords: [-32.522, -55.765], players: [
-      {n:1,name:"Sergio Rochet",pos:"GK"},
-      {n:2,name:"Guillermo Varela",pos:"DEF"},{n:3,name:"Mathias Olivera",pos:"DEF"},{n:4,name:"Ronald Araújo",pos:"DEF"},{n:6,name:"José María Giménez",pos:"DEF"},
-      {n:5,name:"Matías Vecino",pos:"MID"},{n:8,name:"Federico Valverde",pos:"MID"},{n:10,name:"Giorgian de Arrascaeta",pos:"MID"},
-      {n:9,name:"Darwin Núñez",pos:"FWD"},{n:11,name:"Edinson Cavani",pos:"FWD"},{n:21,name:"Luis Suárez",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Arabie saoudite",venue:"AT&T Stadium, Dallas"},
-             {date:"20 Juin",opp:"Cap-Vert",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"24 Juin",opp:"Espagne",venue:"Gillette Stadium, Boston"}],
-    jersey: {home:["#75AADB","#FFFFFF"], away:["#000000","#75AADB"]} },
-
-  // GROUPE I
-  { name: "France", code: "FRA", flag: "🇫🇷", conf: "UEFA", group: "I", capital: "Paris", pop: "68M", fifa: 2, host: false,
-    coords: [46.227, 2.213], players: [
-      {n:1,name:"Mike Maignan",pos:"GK"},{n:16,name:"Alphonse Areola",pos:"GK"},
-      {n:2,name:"Benjamin Pavard",pos:"DEF"},{n:4,name:"Raphaël Varane",pos:"DEF"},{n:5,name:"Dayot Upamecano",pos:"DEF"},{n:3,name:"Theo Hernandez",pos:"DEF"},{n:21,name:"Lucas Hernandez",pos:"DEF"},
-      {n:6,name:"Eduardo Camavinga",pos:"MID"},{n:8,name:"Aurélien Tchouaméni",pos:"MID"},{n:14,name:"Adrien Rabiot",pos:"MID"},{n:7,name:"Antoine Griezmann",pos:"MID"},
-      {n:9,name:"Olivier Giroud",pos:"FWD"},{n:10,name:"Kylian Mbappé",pos:"FWD"},{n:11,name:"Ousmane Dembélé",pos:"FWD"},{n:13,name:"Marcus Thuram",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"Sénégal",venue:"Gillette Stadium, Boston"},
-             {date:"21 Juin",opp:"Irak",venue:"Lincoln Financial Field, Philadelphie"},
-             {date:"25 Juin",opp:"Norvège",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#002395","#FFFFFF"], away:["#FFFFFF","#002395"]} },
-
-  { name: "Sénégal", code: "SEN", flag: "🇸🇳", conf: "CAF", group: "I", capital: "Dakar", pop: "17M", fifa: 18, host: false,
-    coords: [14.497, -14.452], players: [
-      {n:1,name:"Edouard Mendy",pos:"GK"},
-      {n:2,name:"Bouna Sarr",pos:"DEF"},{n:5,name:"Abdou Diallo",pos:"DEF"},{n:6,name:"Kalidou Koulibaly",pos:"DEF"},{n:3,name:"Youssouf Sabaly",pos:"DEF"},
-      {n:8,name:"Pape Matar Sarr",pos:"MID"},{n:10,name:"Sadio Mané",pos:"MID"},{n:7,name:"Idrissa Gueye",pos:"MID"},
-      {n:9,name:"Bamba Dieng",pos:"FWD"},{n:11,name:"Ismaila Sarr",pos:"FWD"},{n:19,name:"Nicolas Jackson",pos:"FWD"}
-    ],
-    matches:[{date:"16 Juin",opp:"France",venue:"Gillette Stadium, Boston"},
-             {date:"21 Juin",opp:"Norvège",venue:"Lincoln Financial Field, Philadelphie"},
-             {date:"25 Juin",opp:"Irak",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#00853F","#FFFFFF"], away:["#FFFFFF","#00853F"]} },
-
-  { name: "Irak", code: "IRQ", flag: "🇮🇶", conf: "AFC", group: "I", capital: "Bagdad", pop: "43M", fifa: 70, host: false,
-    coords: [33.223, 43.679], players: [
-      {n:1,name:"Jalal Hassan",pos:"GK"},
-      {n:2,name:"Ali Adnan",pos:"DEF"},{n:5,name:"Rebin Sulaka",pos:"DEF"},{n:4,name:"Mustafa Nadhim",pos:"DEF"},
-      {n:8,name:"Amjed Attwan",pos:"MID"},{n:10,name:"Amir Al-Ammari",pos:"MID"},{n:6,name:"Bashar Resan",pos:"MID"},
-      {n:9,name:"Alaa Abbas",pos:"FWD"},{n:11,name:"Aso Toama",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Norvège",venue:"Gillette Stadium, Boston"},
-             {date:"21 Juin",opp:"France",venue:"Lincoln Financial Field, Philadelphie"},
-             {date:"25 Juin",opp:"Sénégal",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#007A3D","#FFFFFF"], away:["#FFFFFF","#007A3D"]} },
-
-  { name: "Norvège", code: "NOR", flag: "🇳🇴", conf: "UEFA", group: "I", capital: "Oslo", pop: "5.5M", fifa: 26, host: false,
-    coords: [60.472, 8.468], players: [
-      {n:1,name:"Ørjan Nyland",pos:"GK"},{n:12,name:"Rune Jarstein",pos:"GK"},
-      {n:2,name:"Omar Elabdellaoui",pos:"DEF"},{n:5,name:"Andreas Christensen",pos:"DEF"},{n:4,name:"Leo Skiri Østigård",pos:"DEF"},{n:3,name:"Birger Meling",pos:"DEF"},
-      {n:8,name:"Sander Berge",pos:"MID"},{n:7,name:"Martin Ødegaard",pos:"MID"},{n:10,name:"Alexander Sørloth",pos:"MID"},
-      {n:9,name:"Erling Haaland",pos:"FWD"},{n:11,name:"Mohamed Elyounoussi",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Irak",venue:"Gillette Stadium, Boston"},
-             {date:"21 Juin",opp:"Sénégal",venue:"Lincoln Financial Field, Philadelphie"},
-             {date:"25 Juin",opp:"France",venue:"Hard Rock Stadium, Miami"}],
-    jersey: {home:["#EF2B2D","#FFFFFF"], away:["#FFFFFF","#EF2B2D"]} },
-
-  // GROUPE J
-  { name: "Argentine", code: "ARG", flag: "🇦🇷", conf: "CONMEBOL", group: "J", capital: "Buenos Aires", pop: "46M", fifa: 1, host: false,
-    coords: [-38.416, -63.616], players: [
-      {n:1,name:"Emiliano Martínez",pos:"GK"},{n:12,name:"Gerónimo Rulli",pos:"GK"},
-      {n:2,name:"Nahuel Molina",pos:"DEF"},{n:4,name:"Gonzalo Montiel",pos:"DEF"},{n:6,name:"Germán Pezzella",pos:"DEF"},{n:3,name:"Nicolás Tagliafico",pos:"DEF"},
-      {n:5,name:"Leandro Paredes",pos:"MID"},{n:7,name:"Rodrigo De Paul",pos:"MID"},{n:20,name:"Alexis Mac Allister",pos:"MID"},{n:8,name:"Enzo Fernández",pos:"MID"},
-      {n:9,name:"Julián Álvarez",pos:"FWD"},{n:10,name:"Lionel Messi",pos:"FWD"},{n:11,name:"Ángel Di María",pos:"FWD"},{n:22,name:"Lautaro Martínez",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Algérie",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"21 Juin",opp:"Autriche",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"26 Juin",opp:"Jordanie",venue:"BC Place, Vancouver"}],
-    jersey: {home:["#75AADB","#FFFFFF"], away:["#001E62","#75AADB"]} },
-
-  { name: "Algérie", code: "ALG", flag: "🇩🇿", conf: "CAF", group: "J", capital: "Alger", pop: "45M", fifa: 31, host: false,
-    coords: [28.033, 1.659], players: [
-      {n:1,name:"Raïs M'Bolhi",pos:"GK"},
-      {n:2,name:"Youcef Atal",pos:"DEF"},{n:5,name:"Riyad Bensrhir",pos:"DEF"},{n:4,name:"Djamel Benlamri",pos:"DEF"},{n:3,name:"Ramy Bensebaini",pos:"DEF"},
-      {n:8,name:"Adlène Guedioura",pos:"MID"},{n:10,name:"Riyad Mahrez",pos:"MID"},{n:7,name:"Ismaël Bennacer",pos:"MID"},
-      {n:9,name:"Baghdad Bounedjah",pos:"FWD"},{n:11,name:"Islam Slimani",pos:"FWD"},{n:14,name:"Andy Delort",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Argentine",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Jordanie",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"26 Juin",opp:"Autriche",venue:"BC Place, Vancouver"}],
-    jersey: {home:["#FFFFFF","#006233"], away:["#006233","#FFFFFF"]} },
-
-  { name: "Autriche", code: "AUT", flag: "🇦🇹", conf: "UEFA", group: "J", capital: "Vienne", pop: "9.1M", fifa: 27, host: false,
-    coords: [47.516, 14.550], players: [
-      {n:1,name:"Daniel Bachmann",pos:"GK"},
-      {n:2,name:"Stefan Lainer",pos:"DEF"},{n:4,name:"David Alaba",pos:"DEF"},{n:5,name:"Martin Hinteregger",pos:"DEF"},
-      {n:8,name:"Florian Grillitsch",pos:"MID"},{n:10,name:"Marcel Sabitzer",pos:"MID"},{n:7,name:"Christoph Baumgartner",pos:"MID"},
-      {n:9,name:"Marko Arnautović",pos:"FWD"},{n:11,name:"Michael Gregoritsch",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Jordanie",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"21 Juin",opp:"Argentine",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"26 Juin",opp:"Algérie",venue:"BC Place, Vancouver"}],
-    jersey: {home:["#CC0000","#FFFFFF"], away:["#FFFFFF","#CC0000"]} },
-
-  { name: "Jordanie", code: "JOR", flag: "🇯🇴", conf: "AFC", group: "J", capital: "Amman", pop: "10.2M", fifa: 87, host: false,
-    coords: [30.585, 36.238], players: [
-      {n:1,name:"Yazeed Abo Layla",pos:"GK"},
-      {n:2,name:"Yazan Al-Naimat",pos:"DEF"},{n:5,name:"Ahmad Sarour",pos:"DEF"},{n:4,name:"Baha' Abdel-Rahman",pos:"DEF"},
-      {n:8,name:"Musa Al-Taamari",pos:"MID"},{n:10,name:"Ahmad Saleh",pos:"MID"},
-      {n:9,name:"Mousa Al-Taamari",pos:"FWD"},{n:11,name:"Hamza Al-Dardour",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Autriche",venue:"Mercedes-Benz Stadium, Atlanta"},
-             {date:"22 Juin",opp:"Algérie",venue:"Arrowhead Stadium, Kansas City"},
-             {date:"26 Juin",opp:"Argentine",venue:"BC Place, Vancouver"}],
-    jersey: {home:["#007A3D","#FFFFFF"], away:["#FFFFFF","#007A3D"]} },
-
-  // GROUPE K
-  { name: "Portugal", code: "POR", flag: "🇵🇹", conf: "UEFA", group: "K", capital: "Lisbonne", pop: "10.3M", fifa: 6, host: false,
-    coords: [39.399, -8.224], players: [
-      {n:1,name:"Diogo Costa",pos:"GK"},{n:12,name:"José Sá",pos:"GK"},
-      {n:2,name:"João Cancelo",pos:"DEF"},{n:4,name:"Rúben Dias",pos:"DEF"},{n:3,name:"Nuno Mendes",pos:"DEF"},{n:6,name:"Pepe",pos:"DEF"},
-      {n:8,name:"João Palhinha",pos:"MID"},{n:10,name:"Bernardo Silva",pos:"MID"},{n:7,name:"Bruno Fernandes",pos:"MID"},{n:16,name:"Vitinha",pos:"MID"},
-      {n:9,name:"André Silva",pos:"FWD"},{n:11,name:"Rafael Leão",pos:"FWD"},{n:7,name:"Cristiano Ronaldo",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"RD Congo",venue:"MetLife Stadium, New York"},
-             {date:"22 Juin",opp:"Ouzbékistan",venue:"Hard Rock Stadium, Miami"},
-             {date:"26 Juin",opp:"Colombie",venue:"Mercedes-Benz Stadium, Atlanta"}],
-    jersey: {home:["#006600","#FF0000"], away:["#FF0000","#006600"]} },
-
-  { name: "RD Congo", code: "COD", flag: "🇨🇩", conf: "CAF", group: "K", capital: "Kinshasa", pop: "100M", fifa: 55, host: false,
-    coords: [-4.038, 21.758], players: [
-      {n:1,name:"Ley Matampi",pos:"GK"},
-      {n:2,name:"Chancel Mbemba",pos:"DEF"},{n:5,name:"Ngimbi Manga",pos:"DEF"},{n:3,name:"Romain Saïss",pos:"DEF"},
-      {n:8,name:"Yoane Wissa",pos:"MID"},{n:10,name:"Cédric Bakambu",pos:"MID"},{n:6,name:"Papy Djilobodji",pos:"MID"},
-      {n:9,name:"Meschack Elia",pos:"FWD"},{n:11,name:"Britt Assombalonga",pos:"FWD"}
-    ],
-    matches:[{date:"17 Juin",opp:"Portugal",venue:"MetLife Stadium, New York"},
-             {date:"22 Juin",opp:"Colombie",venue:"Hard Rock Stadium, Miami"},
-             {date:"26 Juin",opp:"Ouzbékistan",venue:"Mercedes-Benz Stadium, Atlanta"}],
-    jersey: {home:["#007FFF","#FFD700"], away:["#FFD700","#007FFF"]} },
-
-  { name: "Ouzbékistan", code: "UZB", flag: "🇺🇿", conf: "AFC", group: "K", capital: "Tachkent", pop: "36M", fifa: 74, host: false,
-    coords: [41.377, 64.585], players: [
-      {n:1,name:"Khilola Abdullayeva",pos:"GK"},
-      {n:2,name:"Sanjar Tursunov",pos:"DEF"},{n:5,name:"Jasur Yaxshiboyev",pos:"DEF"},
-      {n:8,name:"Otabek Shukurov",pos:"MID"},{n:10,name:"Eldor Shomurodov",pos:"MID"},
-      {n:9,name:"Dostonbek Khamdamov",pos:"FWD"},{n:11,name:"Abbosbek Fayzullaev",pos:"FWD"}
-    ],
-    matches:[{date:"18 Juin",opp:"Colombie",venue:"MetLife Stadium, New York"},
-             {date:"22 Juin",opp:"Portugal",venue:"Hard Rock Stadium, Miami"},
-             {date:"26 Juin",opp:"RD Congo",venue:"Mercedes-Benz Stadium, Atlanta"}],
-    jersey: {home:["#1EB53A","#FFFFFF"], away:["#FFFFFF","#1EB53A"]} },
-
-  { name: "Colombie", code: "COL", flag: "🇨🇴", conf: "CONMEBOL", group: "K", capital: "Bogota", pop: "52M", fifa: 20, host: false,
-    coords: [4.570, -74.297], players: [
-      {n:1,name:"Camilo Vargas",pos:"GK"},
-      {n:2,name:"Santiago Arias",pos:"DEF"},{n:4,name:"Yerry Mina",pos:"DEF"},{n:3,name:"Johan Mojica",pos:"DEF"},
-      {n:8,name:"Wilmar Barrios",pos:"MID"},{n:10,name:"James Rodríguez",pos:"MID"},{n:6,name:"Mateus Uribe",pos:"MID"},
-      {n:9,name:"Falcao",pos:"FWD"},{n:11,name:"Cuadrado",pos:"FWD"},{n:7,name:"Rafael Santos Borré",pos:"FWD"}
-    ],
-    matches:[{date:"18 Juin",opp:"Ouzbékistan",venue:"MetLife Stadium, New York"},
-             {date:"22 Juin",opp:"RD Congo",venue:"Hard Rock Stadium, Miami"},
-             {date:"26 Juin",opp:"Portugal",venue:"Mercedes-Benz Stadium, Atlanta"}],
-    jersey: {home:["#FCD116","#003087"], away:["#FFFFFF","#FCD116"]} },
-
-  // GROUPE L
-  { name: "Angleterre", code: "ENG", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", conf: "UEFA", group: "L", capital: "Londres", pop: "56M", fifa: 4, host: false,
-    coords: [52.355, -1.174], players: [
-      {n:1,name:"Jordan Pickford",pos:"GK"},{n:13,name:"Aaron Ramsdale",pos:"GK"},
-      {n:2,name:"Trent Alexander-Arnold",pos:"DEF"},{n:5,name:"Harry Maguire",pos:"DEF"},{n:6,name:"John Stones",pos:"DEF"},{n:3,name:"Luke Shaw",pos:"DEF"},
-      {n:4,name:"Declan Rice",pos:"MID"},{n:8,name:"Jude Bellingham",pos:"MID"},{n:10,name:"Phil Foden",pos:"MID"},{n:7,name:"Jack Grealish",pos:"MID"},
-      {n:9,name:"Harry Kane",pos:"FWD"},{n:11,name:"Bukayo Saka",pos:"FWD"},{n:23,name:"Marcus Rashford",pos:"FWD"}
-    ],
-    matches:[{date:"18 Juin",opp:"Croatie",venue:"Lumen Field, Seattle"},
-             {date:"23 Juin",opp:"Ghana",venue:"SoFi Stadium, LA"},
-             {date:"27 Juin",opp:"Panama",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#FFFFFF","#CC0000"], away:["#CC0000","#FFFFFF"]} },
-
-  { name: "Croatie", code: "CRO", flag: "🇭🇷", conf: "UEFA", group: "L", capital: "Zagreb", pop: "4M", fifa: 10, host: false,
-    coords: [45.100, 15.200], players: [
-      {n:1,name:"Dominik Livaković",pos:"GK"},
-      {n:2,name:"Josip Juranović",pos:"DEF"},{n:5,name:"Dejan Lovren",pos:"DEF"},{n:3,name:"Borna Barišić",pos:"DEF"},{n:6,name:"Joško Gvardiol",pos:"DEF"},
-      {n:11,name:"Marcelo Brozović",pos:"MID"},{n:8,name:"Mateo Kovačić",pos:"MID"},{n:10,name:"Luka Modrić",pos:"MID"},
-      {n:9,name:"Andrej Kramarić",pos:"FWD"},{n:7,name:"Ivan Perišić",pos:"FWD"},{n:17,name:"Bruno Petković",pos:"FWD"}
-    ],
-    matches:[{date:"18 Juin",opp:"Angleterre",venue:"Lumen Field, Seattle"},
-             {date:"23 Juin",opp:"Panama",venue:"SoFi Stadium, LA"},
-             {date:"27 Juin",opp:"Ghana",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#CC0000","#FFFFFF"], away:["#FFFFFF","#003DA5"]} },
-
-  { name: "Ghana", code: "GHA", flag: "🇬🇭", conf: "CAF", group: "L", capital: "Accra", pop: "33M", fifa: 61, host: false,
-    coords: [7.946, -1.023], players: [
-      {n:1,name:"Lawrence Ati Zigi",pos:"GK"},
-      {n:2,name:"Andy Yiadom",pos:"DEF"},{n:5,name:"Daniel Amartey",pos:"DEF"},{n:3,name:"Gideon Mensah",pos:"DEF"},
-      {n:8,name:"Thomas Partey",pos:"MID"},{n:10,name:"Jordan Ayew",pos:"MID"},{n:6,name:"Mohammed Kudus",pos:"MID"},
-      {n:9,name:"Inaki Williams",pos:"FWD"},{n:11,name:"Antoine Semenyo",pos:"FWD"}
-    ],
-    matches:[{date:"19 Juin",opp:"Panama",venue:"Lumen Field, Seattle"},
-             {date:"23 Juin",opp:"Angleterre",venue:"SoFi Stadium, LA"},
-             {date:"27 Juin",opp:"Croatie",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#FFFFFF","#006B3F"], away:["#006B3F","#FFFFFF"]} },
-
-  { name: "Panama", code: "PAN", flag: "🇵🇦", conf: "CONCACAF", group: "L", capital: "Panama City", pop: "4.4M", fifa: 73, host: false,
-    coords: [8.537, -80.782], players: [
-      {n:1,name:"Luis Mejía",pos:"GK"},
-      {n:2,name:"Anibal Godoy",pos:"DEF"},{n:5,name:"Harold Cummings",pos:"DEF"},{n:3,name:"Éric Davis",pos:"DEF"},
-      {n:8,name:"Adalberto Carrasquilla",pos:"MID"},{n:10,name:"Rolando Blackburn",pos:"MID"},
-      {n:9,name:"Alfredo Stephens",pos:"FWD"},{n:11,name:"Omar Browne",pos:"FWD"}
-    ],
-    matches:[{date:"19 Juin",opp:"Ghana",venue:"Lumen Field, Seattle"},
-             {date:"23 Juin",opp:"Croatie",venue:"SoFi Stadium, LA"},
-             {date:"27 Juin",opp:"Angleterre",venue:"AT&T Stadium, Dallas"}],
-    jersey: {home:["#FFFFFF","#CC0000"], away:["#CC0000","#FFFFFF"]} },
-];
-
-// =========================================================
-// JERSEY SVG GENERATOR
-// =========================================================
-function jerseysSVG(colors, label) {
-  const [c1, c2] = colors;
-  return `<svg class="jersey" width="80" height="90" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 10 L5 25 L15 30 L15 85 L65 85 L65 30 L75 25 L60 10 C57 18 50 22 40 22 C30 22 23 18 20 10Z" fill="${c1}" stroke="${c2}" stroke-width="2"/>
-    <path d="M5 25 L15 30 L15 55 L5 50Z" fill="${c2}"/>
-    <path d="M75 25 L65 30 L65 55 L75 50Z" fill="${c2}"/>
-  </svg>`;
+  return `
+<svg width="100" height="110" viewBox="0 0 84 110" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <!-- Sleeves -->
+  <path d="M8 22 L22 16 L22 50 L8 46Z" fill="${sl}" stroke="${trim}" stroke-width="0.6"/>
+  <path d="M76 22 L62 16 L62 50 L76 46Z" fill="${sl}" stroke="${trim}" stroke-width="0.6"/>
+  <!-- Body -->
+  <path d="M22 10 L62 10 L62 95 L22 95Z" fill="${bodyFill}" stroke="${trim}" stroke-width="0.6"/>
+  <!-- Shoulders -->
+  <path d="M22 10 L8 22 L22 22Z" fill="${sl}" stroke="${trim}" stroke-width="0.6"/>
+  <path d="M62 10 L76 22 L62 22Z" fill="${sl}" stroke="${trim}" stroke-width="0.6"/>
+  <!-- Collar -->
+  ${collarPath}
+  <!-- Accent trim lines -->
+  ${accent !== trim ? `<line x1="22" y1="10" x2="22" y2="95" stroke="${accent}" stroke-width="1" opacity="0.5"/>
+  <line x1="62" y1="10" x2="62" y2="95" stroke="${accent}" stroke-width="1" opacity="0.5"/>` : ''}
+  <!-- Badge placeholder -->
+  <rect x="30" y="28" width="10" height="10" rx="2" fill="${accent}" opacity="0.4"/>
+  <!-- Fabric shine -->
+  <path d="M26 10 L26 95" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+</svg>`;
 }
 
-// =========================================================
-// RENDER FUNCTIONS
-// =========================================================
+// ====================================================
+// TEAM DATA — 48 ÉQUIPES CDM 2026
+// wcTitles: nb victoires, wcYears: années, wcEquip: équipementier
+// jersey: {home:{...}, away:{...}}
+// ====================================================
+const TEAMS = [
+// ─── GROUPE A ────────────────────────────────────────
+{ name:"Mexique", code:"MEX", flag:"🇲🇽", conf:"CONCACAF", group:"A",
+  capital:"Mexico", pop:"128M", fifa:16, host:true,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#006847", sleeve:"#006847", collar:"#FFFFFF", accent:"#CE1126", trim:"#FFFFFF", neckType:"polo" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#006847", accent:"#CE1126", trim:"#006847", neckType:"round" }
+  },
+  desc:"Maillot domicile vert national avec détails rouge et blanc, col polo élégant",
+  coords:[-102.552, 23.634],
+  players:[
+    {n:1,name:"Guillermo Ochoa",pos:"GK"},{n:12,name:"Luis Malagón",pos:"GK"},{n:23,name:"Carlos Acevedo",pos:"GK"},
+    {n:2,name:"Jorge Sánchez",pos:"DEF"},{n:3,name:"Jesús Gallardo",pos:"DEF"},{n:4,name:"Johan Vásquez",pos:"DEF"},{n:5,name:"César Montes",pos:"DEF"},{n:19,name:"Gilberto Sepúlveda",pos:"DEF"},{n:22,name:"Kevin Álvarez",pos:"DEF"},
+    {n:6,name:"Edson Álvarez",pos:"MID"},{n:7,name:"Héctor Herrera",pos:"MID"},{n:8,name:"Carlos Rodríguez",pos:"MID"},{n:16,name:"Erick Gutiérrez",pos:"MID"},{n:18,name:"Luis Romo",pos:"MID"},
+    {n:9,name:"Raúl Jiménez",pos:"FWD"},{n:10,name:"Alexis Vega",pos:"FWD"},{n:11,name:"Hirving Lozano",pos:"FWD"},{n:13,name:"Uriel Antuna",pos:"FWD"},{n:14,name:"Roberto Alvarado",pos:"FWD"},{n:17,name:"Henry Martín",pos:"FWD"},{n:20,name:"Santiago Giménez",pos:"FWD"}
+  ],
+  matches:[{date:"11 Juin",opp:"Afrique du Sud",venue:"Stade Azteca, Mexico"},{date:"15 Juin",opp:"Corée du Sud",venue:"AT&T Stadium, Dallas"},{date:"20 Juin",opp:"Tchéquie",venue:"Arrowhead Stadium, Kansas City"}]
+},
+{ name:"Afrique du Sud", code:"RSA", flag:"🇿🇦", conf:"CAF", group:"A",
+  capital:"Pretoria", pop:"60M", fifa:68, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#007A4D", sleeve:"#007A4D", collar:"#FFB81C", accent:"#FFB81C", trim:"#FFFFFF", neckType:"v" },
+    away:{ body:"#FFB81C", sleeve:"#FFB81C", collar:"#007A4D", accent:"#007A4D", trim:"#007A4D", neckType:"v" }
+  },
+  desc:"Maillot vert Bafana Bafana, col en V aux couleurs du drapeau",
+  coords:[22.937, -30.559],
+  players:[
+    {n:1,name:"Ronwen Williams",pos:"GK"},{n:22,name:"Veli Mothwa",pos:"GK"},{n:13,name:"Bruce Bvuma",pos:"GK"},
+    {n:2,name:"Reeve Frosler",pos:"DEF"},{n:3,name:"Sifiso Hlanti",pos:"DEF"},{n:4,name:"Thibang Phete",pos:"DEF"},{n:5,name:"Grant Kekana",pos:"DEF"},{n:6,name:"Rushine De Reuck",pos:"DEF"},
+    {n:7,name:"Teboho Mokoena",pos:"MID"},{n:8,name:"Ethan Ntshuayi",pos:"MID"},{n:10,name:"Themba Zwane",pos:"MID"},{n:14,name:"Bongani Zungu",pos:"MID"},{n:18,name:"Sphephelo Sithole",pos:"MID"},
+    {n:9,name:"Percy Tau",pos:"FWD"},{n:11,name:"Lyle Foster",pos:"FWD"},{n:15,name:"Monnapule Saleng",pos:"FWD"},{n:20,name:"Evidence Makgopa",pos:"FWD"},{n:21,name:"Bafana Hlongwane",pos:"FWD"}
+  ],
+  matches:[{date:"11 Juin",opp:"Mexique",venue:"Stade Azteca, Mexico"},{date:"16 Juin",opp:"Tchéquie",venue:"Q2 Stadium, Austin"},{date:"21 Juin",opp:"Corée du Sud",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Corée du Sud", code:"KOR", flag:"🇰🇷", conf:"AFC", group:"A",
+  capital:"Séoul", pop:"52M", fifa:25, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#C60C30", sleeve:"#C60C30", collar:"#003478", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#C60C30", accent:"#C60C30", trim:"#C60C30", neckType:"round" }
+  },
+  desc:"Rouge carmin vibrant, tigré de blanc. Maillot extérieur blanc épuré",
+  coords:[127.766, 35.907],
+  players:[
+    {n:1,name:"Kim Seung-gyu",pos:"GK"},{n:21,name:"Jo Hyeon-woo",pos:"GK"},{n:12,name:"Song Bum-keun",pos:"GK"},
+    {n:2,name:"Kim Moon-hwan",pos:"DEF"},{n:3,name:"Hong Chul",pos:"DEF"},{n:4,name:"Kim Min-jae",pos:"DEF"},{n:5,name:"Jung Seung-hyun",pos:"DEF"},{n:15,name:"Kim Young-gwon",pos:"DEF"},{n:23,name:"Seol Young-woo",pos:"DEF"},
+    {n:6,name:"Hwang In-beom",pos:"MID"},{n:8,name:"Lee Jae-sung",pos:"MID"},{n:14,name:"Jung Woo-young",pos:"MID"},{n:16,name:"Son Jun-ho",pos:"MID"},{n:22,name:"Lee Kang-in",pos:"MID"},
+    {n:7,name:"Son Heung-min",pos:"FWD"},{n:9,name:"Cho Gue-sung",pos:"FWD"},{n:10,name:"Lee Seung-woo",pos:"FWD"},{n:11,name:"Hwang Hee-chan",pos:"FWD"},{n:17,name:"Oh Hyeon-gyu",pos:"FWD"},{n:18,name:"Yang Hyun-jun",pos:"FWD"}
+  ],
+  matches:[{date:"12 Juin",opp:"Tchéquie",venue:"Lumen Field, Seattle"},{date:"15 Juin",opp:"Mexique",venue:"AT&T Stadium, Dallas"},{date:"21 Juin",opp:"Afrique du Sud",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Tchéquie", code:"CZE", flag:"🇨🇿", conf:"UEFA", group:"A",
+  capital:"Prague", pop:"11M", fifa:41, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#D7141A", sleeve:"#D7141A", collar:"#FFFFFF", accent:"#002984", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#D7141A", accent:"#002984", trim:"#002984", neckType:"round" }
+  },
+  desc:"Rouge sang avec accents bleu nuit, style moderne Puma",
+  coords:[15.473, 49.817],
+  players:[
+    {n:1,name:"Jiří Pavlenka",pos:"GK"},{n:12,name:"Tomáš Vaclík",pos:"GK"},{n:23,name:"Matěj Kovář",pos:"GK"},
+    {n:2,name:"Vladimír Coufal",pos:"DEF"},{n:3,name:"Jan Bořil",pos:"DEF"},{n:4,name:"Tomáš Holeš",pos:"DEF"},{n:5,name:"David Jurásek",pos:"DEF"},{n:6,name:"Robin Hranáč",pos:"DEF"},{n:15,name:"Ondřej Čelůstka",pos:"DEF"},
+    {n:7,name:"Patrik Schick",pos:"MID"},{n:8,name:"Vladimír Darida",pos:"MID"},{n:10,name:"Tomáš Souček",pos:"MID"},{n:16,name:"Jakub Jankto",pos:"MID"},{n:20,name:"Lukáš Provod",pos:"MID"},
+    {n:9,name:"Adam Hložek",pos:"FWD"},{n:11,name:"Ondřej Lingr",pos:"FWD"},{n:14,name:"Matěj Jurásek",pos:"FWD"},{n:17,name:"Jan Kuchta",pos:"FWD"},{n:18,name:"Václav Černý",pos:"FWD"}
+  ],
+  matches:[{date:"12 Juin",opp:"Corée du Sud",venue:"Lumen Field, Seattle"},{date:"16 Juin",opp:"Afrique du Sud",venue:"Q2 Stadium, Austin"},{date:"20 Juin",opp:"Mexique",venue:"Arrowhead Stadium, Kansas City"}]
+},
+// ─── GROUPE B ────────────────────────────────────────
+{ name:"Canada", code:"CAN", flag:"🇨🇦", conf:"CONCACAF", group:"B",
+  capital:"Ottawa", pop:"38M", fifa:42, host:true,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FF0000", sleeve:"#FF0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#FF0000", accent:"#FF0000", trim:"#FF0000", neckType:"round" }
+  },
+  desc:"Rouge canadien intense, feuille d'érable brodée. Maillot extérieur blanc pur",
+  coords:[-106.346, 56.130],
+  players:[
+    {n:1,name:"Maxime Crépeau",pos:"GK"},{n:12,name:"Milan Borjan",pos:"GK"},{n:18,name:"Dayne St. Clair",pos:"GK"},
+    {n:2,name:"Alistair Johnston",pos:"DEF"},{n:3,name:"Richie Laryea",pos:"DEF"},{n:4,name:"Steven Vitória",pos:"DEF"},{n:5,name:"Derek Cornelius",pos:"DEF"},{n:6,name:"Kamal Miller",pos:"DEF"},{n:22,name:"Alphonso Davies",pos:"DEF"},
+    {n:7,name:"Atiba Hutchinson",pos:"MID"},{n:8,name:"Jonathan Osorio",pos:"MID"},{n:10,name:"Stephen Eustáquio",pos:"MID"},{n:14,name:"Samuel Piette",pos:"MID"},{n:21,name:"Mark-Anthony Kaye",pos:"MID"},
+    {n:9,name:"Lucas Cavallini",pos:"FWD"},{n:11,name:"Cyle Larin",pos:"FWD"},{n:13,name:"Jonathan David",pos:"FWD"},{n:15,name:"Liam Millar",pos:"FWD"},{n:17,name:"Tajon Buchanan",pos:"FWD"}
+  ],
+  matches:[{date:"12 Juin",opp:"Bosnie-Herzégovine",venue:"BC Place, Vancouver"},{date:"17 Juin",opp:"Qatar",venue:"Arrowhead Stadium, Kansas City"},{date:"21 Juin",opp:"Suisse",venue:"BMO Field, Toronto"}]
+},
+{ name:"Bosnie-Herzégovine", code:"BIH", flag:"🇧🇦", conf:"UEFA", group:"B",
+  capital:"Sarajevo", pop:"3.5M", fifa:60, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Macron",
+  jersey:{
+    home:{ body:"#003F87", sleeve:"#003F87", collar:"#FFCC00", accent:"#FFCC00", trim:"#FFCC00", neckType:"v" },
+    away:{ body:"#FFCC00", sleeve:"#FFCC00", collar:"#003F87", accent:"#003F87", trim:"#003F87", neckType:"v" }
+  },
+  desc:"Bleu royal avec étoiles dorées du drapeau national en décoration",
+  coords:[17.679, 43.915],
+  players:[
+    {n:1,name:"Kenan Pirić",pos:"GK"},{n:12,name:"Ibrahim Šehić",pos:"GK"},{n:23,name:"Anel Hadžić",pos:"GK"},
+    {n:2,name:"Sead Kolašinac",pos:"DEF"},{n:3,name:"Ognjen Vranješ",pos:"DEF"},{n:4,name:"Ermin Bičakčić",pos:"DEF"},{n:5,name:"Sasa Kolasic",pos:"DEF"},{n:19,name:"Anel Ahmedhodžić",pos:"DEF"},
+    {n:6,name:"Muhamed Bešić",pos:"MID"},{n:8,name:"Miralem Pjanić",pos:"MID"},{n:10,name:"Edin Višća",pos:"MID"},{n:16,name:"Rade Krunić",pos:"MID"},{n:20,name:"Haris Hajradinović",pos:"MID"},
+    {n:7,name:"Edin Džeko",pos:"FWD"},{n:9,name:"Kramer Ibisevic",pos:"FWD"},{n:11,name:"Zajko Zeba",pos:"FWD"},{n:14,name:"Jure Ivković",pos:"FWD"},{n:17,name:"Kemal Ademi",pos:"FWD"}
+  ],
+  matches:[{date:"12 Juin",opp:"Canada",venue:"BC Place, Vancouver"},{date:"17 Juin",opp:"Suisse",venue:"Arrowhead Stadium, Kansas City"},{date:"22 Juin",opp:"Qatar",venue:"BMO Field, Toronto"}]
+},
+{ name:"Qatar", code:"QAT", flag:"🇶🇦", conf:"AFC", group:"B",
+  capital:"Doha", pop:"2.9M", fifa:58, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#8D1B3D", sleeve:"#8D1B3D", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#8D1B3D", accent:"#8D1B3D", trim:"#8D1B3D", neckType:"round" }
+  },
+  desc:"Bordeaux profond, couleur emblématique du drapeau qatari",
+  coords:[51.183, 25.354],
+  players:[
+    {n:1,name:"Meshaal Barsham",pos:"GK"},{n:22,name:"Yousuf Hassan",pos:"GK"},{n:13,name:"Saad Al-Sheeb",pos:"GK"},
+    {n:2,name:"Pedro Miguel",pos:"DEF"},{n:3,name:"Homam Ahmed",pos:"DEF"},{n:4,name:"Bassam Al-Rawi",pos:"DEF"},{n:5,name:"Tarek Salman",pos:"DEF"},{n:21,name:"Ismaeel Mohammed",pos:"DEF"},
+    {n:6,name:"Karim Boudiaf",pos:"MID"},{n:8,name:"Ali Assadalla",pos:"MID"},{n:10,name:"Akram Afif",pos:"MID"},{n:14,name:"Hassan Al-Haydos",pos:"MID"},{n:19,name:"Jassem Gaber",pos:"MID"},
+    {n:7,name:"Abdelkarim Hassan",pos:"FWD"},{n:9,name:"Almoez Ali",pos:"FWD"},{n:11,name:"Mohammed Muntari",pos:"FWD"},{n:17,name:"Yusuf Abdurisag",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Suisse",venue:"BC Place, Vancouver"},{date:"17 Juin",opp:"Canada",venue:"Arrowhead Stadium, Kansas City"},{date:"22 Juin",opp:"Bosnie-Herzégovine",venue:"BMO Field, Toronto"}]
+},
+{ name:"Suisse", code:"SUI", flag:"🇨🇭", conf:"UEFA", group:"B",
+  capital:"Berne", pop:"8.7M", fifa:19, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#FF0000", sleeve:"#FF0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#FF0000", accent:"#FF0000", trim:"#FF0000", neckType:"round" }
+  },
+  desc:"Rouge croix suisse, sobre et élégant. Puma signature",
+  coords:[8.228, 46.818],
+  players:[
+    {n:1,name:"Yann Sommer",pos:"GK"},{n:12,name:"Jonas Omlin",pos:"GK"},{n:21,name:"Gregor Kobel",pos:"GK"},
+    {n:2,name:"Silvan Widmer",pos:"DEF"},{n:3,name:"Ricardo Rodríguez",pos:"DEF"},{n:4,name:"Manuel Akanji",pos:"DEF"},{n:5,name:"Nico Elvedi",pos:"DEF"},{n:13,name:"Fabian Schär",pos:"DEF"},{n:22,name:"Yanick Brecher",pos:"DEF"},
+    {n:6,name:"Denis Zakaria",pos:"MID"},{n:8,name:"Remo Freuler",pos:"MID"},{n:10,name:"Granit Xhaka",pos:"MID"},{n:15,name:"Djibril Sow",pos:"MID"},{n:23,name:"Xherdan Shaqiri",pos:"MID"},
+    {n:7,name:"Breel Embolo",pos:"FWD"},{n:9,name:"Haris Seferović",pos:"FWD"},{n:11,name:"Ruben Vargas",pos:"FWD"},{n:14,name:"Fabian Rieder",pos:"FWD"},{n:17,name:"Dan Ndoye",pos:"FWD"},{n:25,name:"Zeki Amdouni",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Qatar",venue:"BC Place, Vancouver"},{date:"17 Juin",opp:"Bosnie-Herzégovine",venue:"Arrowhead Stadium, Kansas City"},{date:"21 Juin",opp:"Canada",venue:"BMO Field, Toronto"}]
+},
+// ─── GROUPE C ────────────────────────────────────────
+{ name:"Brésil", code:"BRA", flag:"🇧🇷", conf:"CONMEBOL", group:"C",
+  capital:"Brasilia", pop:"215M", fifa:5, host:false,
+  wcTitles:5, wcYears:[1958,1962,1970,1994,2002],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FFDF00", sleeve:"#FFDF00", collar:"#009C3B", accent:"#009C3B", trim:"#002776", neckType:"round" },
+    away:{ body:"#001E62", sleeve:"#001E62", collar:"#FFDF00", accent:"#FFDF00", trim:"#009C3B", neckType:"round" }
+  },
+  desc:"Jaune canari iconique, vert et bleu. Le maillot le plus célèbre au monde",
+  coords:[-51.925, -14.235],
+  players:[
+    {n:1,name:"Alisson",pos:"GK"},{n:23,name:"Ederson",pos:"GK"},{n:12,name:"Weverton",pos:"GK"},
+    {n:2,name:"Danilo",pos:"DEF"},{n:3,name:"Alex Sandro",pos:"DEF"},{n:4,name:"Marquinhos",pos:"DEF"},{n:6,name:"Alex Telles",pos:"DEF"},{n:14,name:"Éder Militão",pos:"DEF"},{n:16,name:"Gabriel Magalhães",pos:"DEF"},
+    {n:5,name:"Casemiro",pos:"MID"},{n:8,name:"Fred",pos:"MID"},{n:10,name:"Lucas Paquetá",pos:"MID"},{n:15,name:"Fabinho",pos:"MID"},{n:17,name:"Bruno Guimarães",pos:"MID"},
+    {n:7,name:"Rodrygo",pos:"FWD"},{n:9,name:"Richarlison",pos:"FWD"},{n:11,name:"Raphinha",pos:"FWD"},{n:18,name:"Gabriel Martinelli",pos:"FWD"},{n:20,name:"Vinicius Jr.",pos:"FWD"},{n:21,name:"Endrick",pos:"FWD"},{n:22,name:"Neymar Jr.",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Maroc",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Haïti",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Écosse",venue:"Lincoln Financial Field, Philadelphie"}]
+},
+{ name:"Maroc", code:"MAR", flag:"🇲🇦", conf:"CAF", group:"C",
+  capital:"Rabat", pop:"37M", fifa:14, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#C1272D", sleeve:"#C1272D", collar:"#006233", accent:"#FFFFFF", trim:"#006233", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#C1272D", accent:"#C1272D", trim:"#006233", neckType:"round" }
+  },
+  desc:"Maillot rouge aux broderies géométriques berbères sur les épaules",
+  coords:[-7.093, 31.791],
+  players:[
+    {n:1,name:"Yassine Bounou",pos:"GK"},{n:12,name:"Ahmed Tagnaouti",pos:"GK"},{n:23,name:"Anas Zniti",pos:"GK"},
+    {n:2,name:"Achraf Hakimi",pos:"DEF"},{n:3,name:"Noussair Mazraoui",pos:"DEF"},{n:4,name:"Romain Saïss",pos:"DEF"},{n:5,name:"Nayef Aguerd",pos:"DEF"},{n:6,name:"Badr Benoun",pos:"DEF"},{n:22,name:"Yahya Attiyat-Allah",pos:"DEF"},
+    {n:7,name:"Hakim Ziyech",pos:"MID"},{n:8,name:"Azzedine Ounahi",pos:"MID"},{n:10,name:"Ilias Chair",pos:"MID"},{n:14,name:"Sofyan Amrabat",pos:"MID"},{n:16,name:"Bilal El Khannouss",pos:"MID"},
+    {n:9,name:"Youssef En-Nesyri",pos:"FWD"},{n:11,name:"Sofiane Boufal",pos:"FWD"},{n:17,name:"Soufiane Rahimi",pos:"FWD"},{n:19,name:"Abdessamad Ezzalzouli",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Brésil",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Écosse",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Haïti",venue:"Lincoln Financial Field, Philadelphie"}]
+},
+{ name:"Haïti", code:"HAI", flag:"🇭🇹", conf:"CONCACAF", group:"C",
+  capital:"Port-au-Prince", pop:"11M", fifa:79, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Reebok",
+  jersey:{
+    home:{ body:"#00209F", sleeve:"#00209F", collar:"#D21034", accent:"#D21034", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#00209F", accent:"#D21034", trim:"#00209F", neckType:"round" }
+  },
+  desc:"Bleu et rouge bicolore haïtien, premier mondial pour cette génération",
+  coords:[-72.285, 18.971],
+  players:[
+    {n:1,name:"Josué Duverger",pos:"GK"},{n:18,name:"Herve Sanon",pos:"GK"},
+    {n:2,name:"Andrew Arthur",pos:"DEF"},{n:4,name:"Nicolas Madsen",pos:"DEF"},{n:5,name:"Kervens Belfort",pos:"DEF"},{n:19,name:"Ryley Hébert",pos:"DEF"},
+    {n:6,name:"Derrick Etienne",pos:"MID"},{n:7,name:"James Mora",pos:"MID"},{n:8,name:"Frantzdy Pierrot",pos:"MID"},{n:10,name:"Mathieu Chery",pos:"MID"},{n:14,name:"Steeven Saba",pos:"MID"},
+    {n:9,name:"Duckens Nazon",pos:"FWD"},{n:11,name:"Ronaldo Léon",pos:"FWD"},{n:17,name:"Carlens Arcus",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Écosse",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Brésil",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Maroc",venue:"Lincoln Financial Field, Philadelphie"}]
+},
+{ name:"Écosse", code:"SCO", flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", conf:"UEFA", group:"C",
+  capital:"Édimbourg", pop:"5.5M", fifa:39, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#003F87", sleeve:"#003F87", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFD700", sleeve:"#FFD700", collar:"#003F87", accent:"#003F87", trim:"#003F87", neckType:"round" }
+  },
+  desc:"Bleu Saltire profond avec croix de Saint-André en texture dans le tissu",
+  coords:[-4.202, 56.490],
+  players:[
+    {n:1,name:"Angus Gunn",pos:"GK"},{n:12,name:"Craig Gordon",pos:"GK"},{n:23,name:"Liam Kelly",pos:"GK"},
+    {n:2,name:"Anthony Ralston",pos:"DEF"},{n:3,name:"Andrew Robertson",pos:"DEF"},{n:4,name:"Scott McKenna",pos:"DEF"},{n:5,name:"Grant Hanley",pos:"DEF"},{n:22,name:"Liam Cooper",pos:"DEF"},
+    {n:6,name:"Billy Gilmour",pos:"MID"},{n:7,name:"John McGinn",pos:"MID"},{n:8,name:"Callum McGregor",pos:"MID"},{n:14,name:"Stuart Armstrong",pos:"MID"},{n:15,name:"Kenny McLean",pos:"MID"},
+    {n:9,name:"Che Adams",pos:"FWD"},{n:10,name:"Ryan Christie",pos:"FWD"},{n:11,name:"Ryan Fraser",pos:"FWD"},{n:17,name:"Lawrence Shankland",pos:"FWD"},{n:20,name:"Lyndon Dykes",pos:"FWD"}
+  ],
+  matches:[{date:"13 Juin",opp:"Haïti",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Maroc",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Brésil",venue:"Lincoln Financial Field, Philadelphie"}]
+},
+// ─── GROUPE D ────────────────────────────────────────
+{ name:"États-Unis", code:"USA", flag:"🇺🇸", conf:"CONCACAF", group:"D",
+  capital:"Washington D.C.", pop:"335M", fifa:13, host:true,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#B22234", sleeve:"#B22234", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#3C3B6E", neckType:"polo" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#B22234", accent:"#3C3B6E", trim:"#B22234", neckType:"polo" }
+  },
+  desc:"Rouge sang avec motif étoiles intégré, col polo élégant. Maillot extérieur blanc Stars & Stripes",
+  coords:[-95.712, 37.090],
+  players:[
+    {n:1,name:"Matt Turner",pos:"GK"},{n:12,name:"Ethan Horvath",pos:"GK"},{n:18,name:"Patrick Schulte",pos:"GK"},
+    {n:2,name:"Sergiño Dest",pos:"DEF"},{n:3,name:"Antonee Robinson",pos:"DEF"},{n:4,name:"Walker Zimmerman",pos:"DEF"},{n:5,name:"Tim Ream",pos:"DEF"},{n:15,name:"Joe Scally",pos:"DEF"},{n:22,name:"DeJuan Jones",pos:"DEF"},
+    {n:6,name:"Yunus Musah",pos:"MID"},{n:7,name:"Weston McKennie",pos:"MID"},{n:8,name:"Tyler Adams",pos:"MID"},{n:13,name:"Brendan Aaronson",pos:"MID"},{n:17,name:"Luca de la Torre",pos:"MID"},
+    {n:9,name:"Ricardo Pepi",pos:"FWD"},{n:10,name:"Christian Pulisic",pos:"FWD"},{n:11,name:"Timothy Weah",pos:"FWD"},{n:14,name:"Folarin Balogun",pos:"FWD"},{n:16,name:"Josh Sargent",pos:"FWD"},{n:20,name:"Jordan Morris",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"Paraguay",venue:"SoFi Stadium, Los Angeles"},{date:"19 Juin",opp:"Australie",venue:"MetLife Stadium, New York"},{date:"23 Juin",opp:"Turquie",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Paraguay", code:"PAR", flag:"🇵🇾", conf:"CONMEBOL", group:"D",
+  capital:"Asuncion", pop:"7.4M", fifa:54, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#D52B1E", sleeve:"#D52B1E", collar:"#FFFFFF", accent:"#002B7F", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#D52B1E", accent:"#D52B1E", trim:"#002B7F", neckType:"round" }
+  },
+  desc:"Rouge et blanc paraguayen, étoile nationale sur la poitrine",
+  coords:[-58.443, -23.442],
+  players:[
+    {n:1,name:"Antony Silva",pos:"GK"},{n:12,name:"Alfredo Aguilar",pos:"GK"},
+    {n:2,name:"Alberto Espínola",pos:"DEF"},{n:3,name:"Junior Alonso",pos:"DEF"},{n:4,name:"Gustavo Gómez",pos:"DEF"},{n:5,name:"Omar Alderete",pos:"DEF"},{n:22,name:"Santiago Arzamendia",pos:"DEF"},
+    {n:6,name:"Mathías Villasanti",pos:"MID"},{n:8,name:"Andrés Cubas",pos:"MID"},{n:10,name:"Miguel Almirón",pos:"MID"},{n:16,name:"Gastón Giménez",pos:"MID"},{n:20,name:"Ángel Romero",pos:"MID"},
+    {n:7,name:"Óscar Romero",pos:"FWD"},{n:9,name:"Antonio Sanabria",pos:"FWD"},{n:11,name:"Julio Enciso",pos:"FWD"},{n:14,name:"Jorge Benitez",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"États-Unis",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Turquie",venue:"MetLife Stadium, New York"},{date:"23 Juin",opp:"Australie",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Australie", code:"AUS", flag:"🇦🇺", conf:"AFC", group:"D",
+  capital:"Canberra", pop:"26M", fifa:23, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FFD700", sleeve:"#006400", collar:"#006400", accent:"#006400", trim:"#006400", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#FFD700", accent:"#006400", trim:"#006400", neckType:"round" }
+  },
+  desc:"Jaune Socceroos vibrant avec manches vertes, design innovant Nike",
+  coords:[133.775, -25.274],
+  players:[
+    {n:1,name:"Mat Ryan",pos:"GK"},{n:12,name:"Danny Vukovic",pos:"GK"},{n:13,name:"Joe Gauci",pos:"GK"},
+    {n:2,name:"Milos Degenek",pos:"DEF"},{n:3,name:"Aziz Behich",pos:"DEF"},{n:4,name:"Kye Rowles",pos:"DEF"},{n:5,name:"Harry Souttar",pos:"DEF"},{n:19,name:"Nathaniel Atkinson",pos:"DEF"},
+    {n:6,name:"Ajdin Hrustic",pos:"MID"},{n:7,name:"Aaron Mooy",pos:"MID"},{n:8,name:"Jackson Irvine",pos:"MID"},{n:10,name:"Riley McGree",pos:"MID"},{n:14,name:"Keanu Baccus",pos:"MID"},
+    {n:9,name:"Adam Taggart",pos:"FWD"},{n:11,name:"Martin Boyle",pos:"FWD"},{n:15,name:"Jamie Maclaren",pos:"FWD"},{n:20,name:"Mitchell Duke",pos:"FWD"},{n:21,name:"Kusini Yengi",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"Turquie",venue:"SoFi Stadium, Los Angeles"},{date:"19 Juin",opp:"États-Unis",venue:"MetLife Stadium, New York"},{date:"23 Juin",opp:"Paraguay",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Turquie", code:"TUR", flag:"🇹🇷", conf:"UEFA", group:"D",
+  capital:"Ankara", pop:"85M", fifa:37, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#E30A17", sleeve:"#E30A17", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#E30A17", accent:"#E30A17", trim:"#E30A17", neckType:"round" }
+  },
+  desc:"Rouge croissant, demi-lune brodée en creux dans le tissu",
+  coords:[35.243, 38.963],
+  players:[
+    {n:1,name:"Mert Günok",pos:"GK"},{n:12,name:"Uğurcan Çakır",pos:"GK"},{n:23,name:"Altay Bayındır",pos:"GK"},
+    {n:2,name:"Zeki Çelik",pos:"DEF"},{n:3,name:"Ferdi Kadıoğlu",pos:"DEF"},{n:4,name:"Çağlar Söyüncü",pos:"DEF"},{n:5,name:"Merih Demiral",pos:"DEF"},{n:19,name:"Ridvan Yılmaz",pos:"DEF"},
+    {n:6,name:"Salih Özcan",pos:"MID"},{n:7,name:"Yusuf Yazıcı",pos:"MID"},{n:8,name:"Hakan Çalhanoğlu",pos:"MID"},{n:10,name:"Arda Güler",pos:"MID"},{n:16,name:"Baris Yılmaz",pos:"MID"},
+    {n:9,name:"Kerem Aktürkoğlu",pos:"FWD"},{n:11,name:"Cengiz Ünder",pos:"FWD"},{n:14,name:"Cenk Tosun",pos:"FWD"},{n:17,name:"Berardi",pos:"FWD"},{n:20,name:"Yunus Akgün",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"Australie",venue:"SoFi Stadium, Los Angeles"},{date:"18 Juin",opp:"Paraguay",venue:"MetLife Stadium, New York"},{date:"23 Juin",opp:"États-Unis",venue:"Gillette Stadium, Boston"}]
+},
+// ─── GROUPE E ────────────────────────────────────────
+{ name:"Allemagne", code:"GER", flag:"🇩🇪", conf:"UEFA", group:"E",
+  capital:"Berlin", pop:"84M", fifa:12, host:false,
+  wcTitles:4, wcYears:[1954,1974,1990,2014],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#000000", collar:"#000000", accent:"#000000", trim:"#000000", neckType:"round" },
+    away:{ body:"#000000", sleeve:"#000000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" }
+  },
+  desc:"Blanc immaculé avec manches noires, last Adidas kit. Maillot extérieur noir intégral 'furtif'",
+  coords:[10.451, 51.165],
+  players:[
+    {n:1,name:"Marc-André ter Stegen",pos:"GK"},{n:12,name:"Kevin Trapp",pos:"GK"},{n:22,name:"Oliver Baumann",pos:"GK"},
+    {n:2,name:"Joshua Kimmich",pos:"DEF"},{n:3,name:"David Raum",pos:"DEF"},{n:4,name:"Nico Schlotterbeck",pos:"DEF"},{n:5,name:"Antonio Rüdiger",pos:"DEF"},{n:16,name:"Benjamin Henrichs",pos:"DEF"},{n:23,name:"Thilo Kehrer",pos:"DEF"},
+    {n:6,name:"Ilkay Gündoğan",pos:"MID"},{n:8,name:"Leon Goretzka",pos:"MID"},{n:14,name:"Jamal Musiala",pos:"MID"},{n:18,name:"Jonas Hofmann",pos:"MID"},{n:19,name:"Leroy Sané",pos:"MID"},
+    {n:7,name:"Kai Havertz",pos:"FWD"},{n:9,name:"Niclas Füllkrug",pos:"FWD"},{n:10,name:"Florian Wirtz",pos:"FWD"},{n:11,name:"Thomas Müller",pos:"FWD"},{n:13,name:"Serge Gnabry",pos:"FWD"},{n:25,name:"Deniz Undav",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"Curaçao",venue:"Arrowhead Stadium, Kansas City"},{date:"19 Juin",opp:"Côte d'Ivoire",venue:"AT&T Stadium, Dallas"},{date:"23 Juin",opp:"Équateur",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Curaçao", code:"CUW", flag:"🇨🇼", conf:"CONCACAF", group:"E",
+  capital:"Willemstad", pop:"156K", fifa:86, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Hummel",
+  jersey:{
+    home:{ body:"#002B7F", sleeve:"#002B7F", collar:"#FFFFFF", accent:"#F9E526", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#002B7F", accent:"#F9E526", trim:"#002B7F", neckType:"round" }
+  },
+  desc:"Bleu marine profond, étoiles dorées et blanc du drapeau néerlandais caraïbe",
+  coords:[-68.990, 12.169],
+  players:[
+    {n:1,name:"Eloy Room",pos:"GK"},{n:12,name:"Cody Gakpo (N/A)",pos:"GK"},
+    {n:2,name:"Gianni Zuiverloon",pos:"DEF"},{n:5,name:"Cuco Martina",pos:"DEF"},{n:6,name:"Vito van Crooij",pos:"DEF"},
+    {n:8,name:"Leandro Bacuna",pos:"MID"},{n:10,name:"Rangelo Janga",pos:"MID"},{n:14,name:"Jurien Gaari",pos:"MID"},
+    {n:9,name:"Darryl Lachman",pos:"FWD"},{n:11,name:"Geoffrey Heligers",pos:"FWD"},{n:7,name:"Felitciano Zschusschen",pos:"FWD"}
+  ],
+  matches:[{date:"14 Juin",opp:"Allemagne",venue:"Arrowhead Stadium, Kansas City"},{date:"19 Juin",opp:"Équateur",venue:"AT&T Stadium, Dallas"},{date:"23 Juin",opp:"Côte d'Ivoire",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Côte d'Ivoire", code:"CIV", flag:"🇨🇮", conf:"CAF", group:"E",
+  capital:"Yamoussoukro", pop:"27M", fifa:60, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#F77F00", sleeve:"#F77F00", collar:"#FFFFFF", accent:"#009A44", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#F77F00", accent:"#009A44", trim:"#009A44", neckType:"round" }
+  },
+  desc:"Orange vibrant des Éléphants, motif wax doré en sublimation sur les épaules",
+  coords:[-5.547, 7.540],
+  players:[
+    {n:1,name:"Yahia Fofana",pos:"GK"},{n:12,name:"Badra Ali Sangaré",pos:"GK"},
+    {n:2,name:"Serge Aurier",pos:"DEF"},{n:3,name:"Ghislain Konan",pos:"DEF"},{n:4,name:"Willy Boly",pos:"DEF"},{n:5,name:"Wilfried Singo",pos:"DEF"},{n:6,name:"Odilon Kossounou",pos:"DEF"},
+    {n:7,name:"Ibrahim Sangaré",pos:"MID"},{n:8,name:"Seko Fofana",pos:"MID"},{n:10,name:"Franck Kessie",pos:"MID"},{n:15,name:"Jean-Michaël Seri",pos:"MID"},
+    {n:9,name:"Sébastien Haller",pos:"FWD"},{n:11,name:"Simon Adingra",pos:"FWD"},{n:14,name:"Nicolas Pépé",pos:"FWD"},{n:17,name:"Max Gradel",pos:"FWD"},{n:21,name:"Jonathan Bamba",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Équateur",venue:"Arrowhead Stadium, Kansas City"},{date:"19 Juin",opp:"Allemagne",venue:"AT&T Stadium, Dallas"},{date:"23 Juin",opp:"Curaçao",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Équateur", code:"ECU", flag:"🇪🇨", conf:"CONMEBOL", group:"E",
+  capital:"Quito", pop:"18M", fifa:43, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Marathon",
+  jersey:{
+    home:{ body:"#FFD100", sleeve:"#FFD100", collar:"#001489", accent:"#001489", trim:"#E30613", neckType:"v" },
+    away:{ body:"#001489", sleeve:"#001489", collar:"#FFD100", accent:"#FFD100", trim:"#E30613", neckType:"v" }
+  },
+  desc:"Jaune or et bleu tricolore équatorien, Marathon signature andine",
+  coords:[-78.183, -1.831],
+  players:[
+    {n:1,name:"Hernán Galíndez",pos:"GK"},{n:12,name:"Alexander Domínguez",pos:"GK"},
+    {n:2,name:"Piero Hincapié",pos:"DEF"},{n:3,name:"Diego Palacios",pos:"DEF"},{n:4,name:"Robert Arboleda",pos:"DEF"},{n:5,name:"Félix Torres",pos:"DEF"},{n:22,name:"Angelo Preciado",pos:"DEF"},
+    {n:6,name:"Ángel Mena",pos:"MID"},{n:7,name:"Jeremy Sarmiento",pos:"MID"},{n:8,name:"Carlos Gruezo",pos:"MID"},{n:10,name:"Moisés Caicedo",pos:"MID"},{n:14,name:"Alan Franco",pos:"MID"},
+    {n:9,name:"Enner Valencia",pos:"FWD"},{n:11,name:"Gonzalo Plata",pos:"FWD"},{n:17,name:"Kevin Rodríguez",pos:"FWD"},{n:20,name:"Fidel Martínez",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Côte d'Ivoire",venue:"Arrowhead Stadium, Kansas City"},{date:"19 Juin",opp:"Curaçao",venue:"AT&T Stadium, Dallas"},{date:"23 Juin",opp:"Allemagne",venue:"Q2 Stadium, Austin"}]
+},
+// ─── GROUPE F ────────────────────────────────────────
+{ name:"Pays-Bas", code:"NED", flag:"🇳🇱", conf:"UEFA", group:"F",
+  capital:"Amsterdam", pop:"17.9M", fifa:7, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FF6400", sleeve:"#FF6400", collar:"#000000", accent:"#000000", trim:"#000000", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#FF6400", accent:"#FF6400", trim:"#FF6400", neckType:"round" }
+  },
+  desc:"Orange intense saturé à finition irisée, détails noirs. Écusson KNVB en nacre",
+  coords:[5.291, 52.132],
+  players:[
+    {n:1,name:"Bart Verbruggen",pos:"GK"},{n:12,name:"Mark Flekken",pos:"GK"},{n:16,name:"Jasper Cillessen",pos:"GK"},
+    {n:2,name:"Denzel Dumfries",pos:"DEF"},{n:3,name:"Nathan Aké",pos:"DEF"},{n:4,name:"Virgil van Dijk",pos:"DEF"},{n:5,name:"Matthijs de Ligt",pos:"DEF"},{n:22,name:"Jurriën Timber",pos:"DEF"},
+    {n:6,name:"Frenkie de Jong",pos:"MID"},{n:8,name:"Tijjani Reijnders",pos:"MID"},{n:10,name:"Memphis Depay",pos:"MID"},{n:14,name:"Teun Koopmeiners",pos:"MID"},{n:15,name:"Marten de Roon",pos:"MID"},
+    {n:7,name:"Cody Gakpo",pos:"FWD"},{n:9,name:"Wout Weghorst",pos:"FWD"},{n:11,name:"Donyell Malen",pos:"FWD"},{n:17,name:"Noa Lang",pos:"FWD"},{n:23,name:"Brian Brobbey",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Japon",venue:"MetLife Stadium, New York"},{date:"20 Juin",opp:"Suède",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"24 Juin",opp:"Tunisie",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Japon", code:"JPN", flag:"🇯🇵", conf:"AFC", group:"F",
+  capital:"Tokyo", pop:"125M", fifa:18, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#000080", sleeve:"#000080", collar:"#FFFFFF", accent:"#BC002D", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#000080", accent:"#BC002D", trim:"#000080", neckType:"round" }
+  },
+  desc:"Bleu marine profond avec motif origami discret, écusson Adidas doré",
+  coords:[138.252, 36.204],
+  players:[
+    {n:1,name:"Gonda Shuichi",pos:"GK"},{n:12,name:"Zion Suzuki",pos:"GK"},{n:23,name:"Osako Yuya",pos:"GK"},
+    {n:2,name:"Yamane Miki",pos:"DEF"},{n:3,name:"Nakayama Yuta",pos:"DEF"},{n:4,name:"Itakura Ko",pos:"DEF"},{n:5,name:"Taniguchi Shogo",pos:"DEF"},{n:22,name:"Machida Kyogo",pos:"DEF"},
+    {n:6,name:"Endo Wataru",pos:"MID"},{n:7,name:"Doan Ritsu",pos:"MID"},{n:8,name:"Kamada Daichi",pos:"MID"},{n:10,name:"Kubo Takefusa",pos:"MID"},{n:14,name:"Morita Hidemasa",pos:"MID"},
+    {n:9,name:"Ueda Ayase",pos:"FWD"},{n:11,name:"Mitoma Kaoru",pos:"FWD"},{n:15,name:"Ito Junya",pos:"FWD"},{n:16,name:"Furuhashi Kyogo",pos:"FWD"},{n:20,name:"Asano Takuma",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Pays-Bas",venue:"MetLife Stadium, New York"},{date:"20 Juin",opp:"Tunisie",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"24 Juin",opp:"Suède",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Suède", code:"SWE", flag:"🇸🇪", conf:"UEFA", group:"F",
+  capital:"Stockholm", pop:"10.5M", fifa:28, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#006AA7", sleeve:"#006AA7", collar:"#FECC02", accent:"#FECC02", trim:"#FECC02", neckType:"v" },
+    away:{ body:"#FECC02", sleeve:"#FECC02", collar:"#006AA7", accent:"#006AA7", trim:"#006AA7", neckType:"v" }
+  },
+  desc:"Bleu roi avec croix scandinave jaune, inspiration graphique suédoise classique",
+  coords:[18.643, 60.128],
+  players:[
+    {n:1,name:"Robin Olsen",pos:"GK"},{n:12,name:"Karl-Johan Johnsson",pos:"GK"},
+    {n:2,name:"Mikael Lustig",pos:"DEF"},{n:3,name:"Ludwig Augustinsson",pos:"DEF"},{n:4,name:"Carl Starfelt",pos:"DEF"},{n:5,name:"Viktor Lindelöf",pos:"DEF"},{n:6,name:"Pontus Jansson",pos:"DEF"},
+    {n:7,name:"Sebastian Larsson",pos:"MID"},{n:8,name:"Albin Ekdal",pos:"MID"},{n:10,name:"Emil Forsberg",pos:"MID"},{n:14,name:"Mattias Svanberg",pos:"MID"},{n:21,name:"Dejan Kulusevski",pos:"MID"},
+    {n:9,name:"Alexander Isak",pos:"FWD"},{n:11,name:"Jordan Larsson",pos:"FWD"},{n:17,name:"Robin Quaison",pos:"FWD"},{n:19,name:"Viktor Gyökeres",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Tunisie",venue:"MetLife Stadium, New York"},{date:"20 Juin",opp:"Pays-Bas",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"24 Juin",opp:"Japon",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Tunisie", code:"TUN", flag:"🇹🇳", conf:"CAF", group:"F",
+  capital:"Tunis", pop:"12M", fifa:29, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Kappa",
+  jersey:{
+    home:{ body:"#E70013", sleeve:"#E70013", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#E70013", accent:"#E70013", trim:"#E70013", neckType:"round" }
+  },
+  desc:"Rouge Carthage avec croissant brodé, Kappa 2026",
+  coords:[9.537, 33.886],
+  players:[
+    {n:1,name:"Aymen Dahmen",pos:"GK"},{n:12,name:"Mouez Hassen",pos:"GK"},
+    {n:2,name:"Dylan Bronn",pos:"DEF"},{n:3,name:"Ali Maaloul",pos:"DEF"},{n:4,name:"Montassar Talbi",pos:"DEF"},{n:5,name:"Yassine Meriah",pos:"DEF"},{n:19,name:"Mohamed Drager",pos:"DEF"},
+    {n:6,name:"Ellyes Skhiri",pos:"MID"},{n:8,name:"Anis Ben Slimane",pos:"MID"},{n:10,name:"Hannibal Mejbri",pos:"MID"},{n:14,name:"Ferjani Sassi",pos:"MID"},{n:17,name:"Ayman Yahia",pos:"MID"},
+    {n:7,name:"Youssef Msakni",pos:"FWD"},{n:9,name:"Wahbi Khazri",pos:"FWD"},{n:11,name:"Naim Sliti",pos:"FWD"},{n:20,name:"Seifeddine Jaziri",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Suède",venue:"MetLife Stadium, New York"},{date:"20 Juin",opp:"Japon",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"24 Juin",opp:"Pays-Bas",venue:"Hard Rock Stadium, Miami"}]
+},
+// ─── GROUPE G ────────────────────────────────────────
+{ name:"Belgique", code:"BEL", flag:"🇧🇪", conf:"UEFA", group:"G",
+  capital:"Bruxelles", pop:"11.5M", fifa:3, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#000000", sleeve:"#000000", collar:"#C8102E", accent:"#C8102E", trim:"#F4E400", neckType:"round" },
+    away:{ body:"#C8102E", sleeve:"#C8102E", collar:"#000000", accent:"#F4E400", trim:"#000000", neckType:"round" }
+  },
+  desc:"Noir ébène avec garnitures rouge sang et accents dorés, style Dark Devils",
+  coords:[4.469, 50.503],
+  players:[
+    {n:1,name:"Thibaut Courtois",pos:"GK"},{n:12,name:"Simon Mignolet",pos:"GK"},{n:13,name:"Koen Casteels",pos:"GK"},
+    {n:2,name:"Thomas Meunier",pos:"DEF"},{n:3,name:"Yannick Carrasco",pos:"DEF"},{n:4,name:"Toby Alderweireld",pos:"DEF"},{n:5,name:"Jan Vertonghen",pos:"DEF"},{n:6,name:"Arthur Theate",pos:"DEF"},{n:15,name:"Timothy Castagne",pos:"DEF"},
+    {n:7,name:"Kevin De Bruyne",pos:"MID"},{n:8,name:"Youri Tielemans",pos:"MID"},{n:10,name:"Eden Hazard",pos:"MID"},{n:14,name:"Axel Witsel",pos:"MID"},{n:18,name:"Amadou Onana",pos:"MID"},
+    {n:9,name:"Romelu Lukaku",pos:"FWD"},{n:11,name:"Dodi Lukebakio",pos:"FWD"},{n:16,name:"Leandro Trossard",pos:"FWD"},{n:19,name:"Loïs Openda",pos:"FWD"},{n:23,name:"Johan Bakayoko",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Égypte",venue:"Lumen Field, Seattle"},{date:"20 Juin",opp:"Iran",venue:"SoFi Stadium, Los Angeles"},{date:"24 Juin",opp:"Nouvelle-Zélande",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Égypte", code:"EGY", flag:"🇪🇬", conf:"CAF", group:"G",
+  capital:"Le Caire", pop:"106M", fifa:51, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#CC0000", sleeve:"#CC0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#CC0000", accent:"#CC0000", trim:"#CC0000", neckType:"round" }
+  },
+  desc:"Rouge pharaonique, aigle de Saladin doré brodé sur la poitrine",
+  coords:[30.802, 26.820],
+  players:[
+    {n:1,name:"Mohamed El-Shenawy",pos:"GK"},{n:12,name:"Ibrahim Adel",pos:"GK"},
+    {n:2,name:"Akram Tawfik",pos:"DEF"},{n:3,name:"Omar Kamal",pos:"DEF"},{n:4,name:"Ahmed Hegazi",pos:"DEF"},{n:5,name:"Mohamed Abdelmonem",pos:"DEF"},{n:23,name:"Ahmed Fatouh",pos:"DEF"},
+    {n:6,name:"Tarek Hamed",pos:"MID"},{n:7,name:"Amr El-Sulaya",pos:"MID"},{n:8,name:"Mahmoud Trezeguet",pos:"MID"},{n:10,name:"Mohamed Salah",pos:"MID"},{n:17,name:"Hamdi Fathi",pos:"MID"},
+    {n:9,name:"Mostafa Mohamed",pos:"FWD"},{n:11,name:"Omar Marmoush",pos:"FWD"},{n:14,name:"Mahmoud Hassan",pos:"FWD"},{n:19,name:"Marwan Attia",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Belgique",venue:"Lumen Field, Seattle"},{date:"20 Juin",opp:"Nouvelle-Zélande",venue:"SoFi Stadium, Los Angeles"},{date:"24 Juin",opp:"Iran",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Iran", code:"IRN", flag:"🇮🇷", conf:"AFC", group:"G",
+  capital:"Téhéran", pop:"86M", fifa:22, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Meyba",
+  jersey:{
+    home:{ body:"#239F40", sleeve:"#239F40", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#DA0000", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#239F40", accent:"#DA0000", trim:"#239F40", neckType:"round" }
+  },
+  desc:"Vert vif avec motif perse subtil, détails rouge et blanc du drapeau",
+  coords:[53.688, 32.427],
+  players:[
+    {n:1,name:"Alireza Beiranvand",pos:"GK"},{n:12,name:"Payam Niazmand",pos:"GK"},
+    {n:2,name:"Sadegh Moharrami",pos:"DEF"},{n:3,name:"Ehsan Hajsafi",pos:"DEF"},{n:4,name:"Morteza Pouraliganji",pos:"DEF"},{n:5,name:"Majid Hosseini",pos:"DEF"},{n:19,name:"Milad Mohammadi",pos:"DEF"},
+    {n:6,name:"Ahmad Nourollahi",pos:"MID"},{n:8,name:"Saeid Ezatolahi",pos:"MID"},{n:9,name:"Mehdi Torabi",pos:"MID"},{n:10,name:"Mehdi Taremi",pos:"MID"},{n:14,name:"Ali Gholizadeh",pos:"MID"},
+    {n:7,name:"Sardar Azmoun",pos:"FWD"},{n:11,name:"Kaveh Rezaei",pos:"FWD"},{n:17,name:"Allahyar Sayyadmanesh",pos:"FWD"},{n:20,name:"Karim Ansarifard",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Nouvelle-Zélande",venue:"Lumen Field, Seattle"},{date:"20 Juin",opp:"Belgique",venue:"SoFi Stadium, Los Angeles"},{date:"24 Juin",opp:"Égypte",venue:"Q2 Stadium, Austin"}]
+},
+{ name:"Nouvelle-Zélande", code:"NZL", flag:"🇳🇿", conf:"OFC", group:"G",
+  capital:"Wellington", pop:"5.1M", fifa:104, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#000000", collar:"#000000", accent:"#000000", trim:"#000000", neckType:"round" },
+    away:{ body:"#000000", sleeve:"#FFFFFF", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" }
+  },
+  desc:"Blanc All Whites avec manches noires, fougère argentée brodée",
+  coords:[174.886, -40.900],
+  players:[
+    {n:1,name:"Oliver Sail",pos:"GK"},{n:12,name:"Stefan Marinovic",pos:"GK"},
+    {n:2,name:"Liberato Cacace",pos:"DEF"},{n:4,name:"Winston Reid",pos:"DEF"},{n:5,name:"Michael Boxall",pos:"DEF"},{n:16,name:"Tommy Smith",pos:"DEF"},
+    {n:6,name:"Ben Old",pos:"MID"},{n:7,name:"Ryan Thomas",pos:"MID"},{n:8,name:"Joe Bell",pos:"MID"},{n:10,name:"Clayton Lewis",pos:"MID"},{n:14,name:"Matthew Garbett",pos:"MID"},
+    {n:9,name:"Chris Wood",pos:"FWD"},{n:11,name:"Hamish Watson",pos:"FWD"},{n:17,name:"Kosta Barbarouses",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Iran",venue:"Lumen Field, Seattle"},{date:"20 Juin",opp:"Égypte",venue:"SoFi Stadium, Los Angeles"},{date:"24 Juin",opp:"Belgique",venue:"Q2 Stadium, Austin"}]
+},
+// ─── GROUPE H ────────────────────────────────────────
+{ name:"Espagne", code:"ESP", flag:"🇪🇸", conf:"UEFA", group:"H",
+  capital:"Madrid", pop:"47M", fifa:8, host:false,
+  wcTitles:1, wcYears:[2010],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#C60B1E", sleeve:"#002395", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#002395", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#C60B1E", accent:"#C60B1E", trim:"#FFD700", neckType:"round" }
+  },
+  desc:"Rouge profond avec manches bleu marine, 3 bandes Adidas en pointillés drapeau",
+  coords:[-3.749, 40.463],
+  players:[
+    {n:1,name:"David Raya",pos:"GK"},{n:13,name:"Unai Simón",pos:"GK"},{n:23,name:"Álvaro Fernández",pos:"GK"},
+    {n:2,name:"Dani Carvajal",pos:"DEF"},{n:3,name:"Alejandro Balde",pos:"DEF"},{n:4,name:"Aymeric Laporte",pos:"DEF"},{n:5,name:"Robin Le Normand",pos:"DEF"},{n:20,name:"Pedro Porro",pos:"DEF"},{n:24,name:"Pau Cubarsí",pos:"DEF"},
+    {n:6,name:"Rodri",pos:"MID"},{n:7,name:"Dani Olmo",pos:"MID"},{n:8,name:"Fabián Ruiz",pos:"MID"},{n:10,name:"Gavi",pos:"MID"},{n:16,name:"Pedri",pos:"MID"},{n:26,name:"Martín Zubimendi",pos:"MID"},
+    {n:9,name:"Álvaro Morata",pos:"FWD"},{n:11,name:"Ferran Torres",pos:"FWD"},{n:19,name:"Lamine Yamal",pos:"FWD"},{n:21,name:"Mikel Oyarzabal",pos:"FWD"},{n:22,name:"Nico Williams",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Cap-Vert",venue:"AT&T Stadium, Dallas"},{date:"20 Juin",opp:"Arabie saoudite",venue:"Arrowhead Stadium, Kansas City"},{date:"24 Juin",opp:"Uruguay",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Cap-Vert", code:"CPV", flag:"🇨🇻", conf:"CAF", group:"H",
+  capital:"Praia", pop:"560K", fifa:80, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Hummel",
+  jersey:{
+    home:{ body:"#003893", sleeve:"#003893", collar:"#CF2027", accent:"#CF2027", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#003893", accent:"#CF2027", trim:"#003893", neckType:"round" }
+  },
+  desc:"Bleu et rouge atlantique, 1ère Coupe du Monde pour les Tubarões Azuis",
+  coords:[-24.013, 16.002],
+  players:[
+    {n:1,name:"Vozinha",pos:"GK"},{n:12,name:"Jovane Rodrigues",pos:"GK"},
+    {n:2,name:"Stopira",pos:"DEF"},{n:3,name:"Ponck",pos:"DEF"},{n:5,name:"Zé Lopes",pos:"DEF"},{n:15,name:"Jeffrey Fortes",pos:"DEF"},
+    {n:6,name:"Ryan Mendes",pos:"MID"},{n:8,name:"Jamiro Monteiro",pos:"MID"},{n:10,name:"Nuno Tavares",pos:"MID"},{n:14,name:"Kenny Rocha",pos:"MID"},
+    {n:7,name:"Garry Rodrigues",pos:"FWD"},{n:9,name:"Djiby Fall",pos:"FWD"},{n:11,name:"Julio Tavares",pos:"FWD"},{n:17,name:"Koffi Kouamé",pos:"FWD"}
+  ],
+  matches:[{date:"15 Juin",opp:"Espagne",venue:"AT&T Stadium, Dallas"},{date:"20 Juin",opp:"Uruguay",venue:"Arrowhead Stadium, Kansas City"},{date:"24 Juin",opp:"Arabie saoudite",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Arabie saoudite", code:"KSA", flag:"🇸🇦", conf:"AFC", group:"H",
+  capital:"Riyad", pop:"36M", fifa:53, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#007A3D", sleeve:"#007A3D", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#007A3D", accent:"#007A3D", trim:"#007A3D", neckType:"round" }
+  },
+  desc:"Vert islamique avec palm tree et sabres en broderie argentée",
+  coords:[45.079, 23.885],
+  players:[
+    {n:1,name:"Mohammed Al-Owais",pos:"GK"},{n:12,name:"Fawaz Al-Qarni",pos:"GK"},
+    {n:2,name:"Sultan Al-Ghannam",pos:"DEF"},{n:3,name:"Yasser Al-Shahrani",pos:"DEF"},{n:4,name:"Hassan Tambakti",pos:"DEF"},{n:5,name:"Ali Al-Bulaihi",pos:"DEF"},{n:21,name:"Abdulelah Al-Amri",pos:"DEF"},
+    {n:6,name:"Mohammed Kanno",pos:"MID"},{n:7,name:"Sami Al-Najei",pos:"MID"},{n:8,name:"Nasser Al-Dawsari",pos:"MID"},{n:10,name:"Salem Al-Dawsari",pos:"MID"},{n:17,name:"Hattan Bahebri",pos:"MID"},
+    {n:9,name:"Firas Al-Buraikan",pos:"FWD"},{n:11,name:"Saleh Al-Shehri",pos:"FWD"},{n:14,name:"Abdullah Al-Hamdan",pos:"FWD"},{n:20,name:"Mohammed Al-Buraik",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Uruguay",venue:"AT&T Stadium, Dallas"},{date:"20 Juin",opp:"Espagne",venue:"Arrowhead Stadium, Kansas City"},{date:"24 Juin",opp:"Cap-Vert",venue:"Gillette Stadium, Boston"}]
+},
+{ name:"Uruguay", code:"URU", flag:"🇺🇾", conf:"CONMEBOL", group:"H",
+  capital:"Montevideo", pop:"3.5M", fifa:11, host:false,
+  wcTitles:2, wcYears:[1930,1950],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#75AADB", sleeve:"#75AADB", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#000000", neckType:"polo" },
+    away:{ body:"#000000", sleeve:"#000000", collar:"#75AADB", accent:"#75AADB", trim:"#FFFFFF", neckType:"polo" }
+  },
+  desc:"Celeste iconique, soleil de mai brodé, col polo élégant Puma",
+  coords:[-55.765, -32.522],
+  players:[
+    {n:1,name:"Sergio Rochet",pos:"GK"},{n:12,name:"Santiago Mele",pos:"GK"},{n:23,name:"Guillermo Varela",pos:"DEF"},
+    {n:2,name:"Martín Cáceres",pos:"DEF"},{n:3,name:"Mathias Olivera",pos:"DEF"},{n:4,name:"Ronald Araújo",pos:"DEF"},{n:6,name:"José María Giménez",pos:"DEF"},{n:16,name:"Sebastián Coates",pos:"DEF"},
+    {n:5,name:"Matías Vecino",pos:"MID"},{n:7,name:"Nicolás De la Cruz",pos:"MID"},{n:8,name:"Federico Valverde",pos:"MID"},{n:10,name:"Giorgian de Arrascaeta",pos:"MID"},{n:14,name:"Rodrigo Bentancur",pos:"MID"},
+    {n:9,name:"Darwin Núñez",pos:"FWD"},{n:11,name:"Maxi Gómez",pos:"FWD"},{n:17,name:"Agustín Canobbio",pos:"FWD"},{n:18,name:"Facundo Torres",pos:"FWD"},{n:21,name:"Luis Suárez",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Arabie saoudite",venue:"AT&T Stadium, Dallas"},{date:"20 Juin",opp:"Cap-Vert",venue:"Arrowhead Stadium, Kansas City"},{date:"24 Juin",opp:"Espagne",venue:"Gillette Stadium, Boston"}]
+},
+// ─── GROUPE I ────────────────────────────────────────
+{ name:"France", code:"FRA", flag:"🇫🇷", conf:"UEFA", group:"I",
+  capital:"Paris", pop:"68M", fifa:2, host:false,
+  wcTitles:2, wcYears:[1998,2018],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#002395", sleeve:"#002395", collar:"#FFFFFF", accent:"#B5986A", trim:"#FFFFFF", neckType:"polo" },
+    away:{ body:"#4DB8A0", sleeve:"#4DB8A0", collar:"#000000", accent:"#B5986A", trim:"#000000", neckType:"round" }
+  },
+  desc:"Bleu royal avec touches cuivre métallisé, motif couronne Statue de la Liberté. Extérieur vert menthe inédit",
+  coords:[2.213, 46.227],
+  players:[
+    {n:1,name:"Mike Maignan",pos:"GK"},{n:16,name:"Alphonse Areola",pos:"GK"},{n:23,name:"Brice Samba",pos:"GK"},
+    {n:2,name:"Benjamin Pavard",pos:"DEF"},{n:3,name:"Théo Hernandez",pos:"DEF"},{n:4,name:"Raphaël Varane",pos:"DEF"},{n:5,name:"Dayot Upamecano",pos:"DEF"},{n:21,name:"Lucas Hernandez",pos:"DEF"},{n:22,name:"Jonathan Clauss",pos:"DEF"},
+    {n:6,name:"Eduardo Camavinga",pos:"MID"},{n:7,name:"Antoine Griezmann",pos:"MID"},{n:8,name:"Aurélien Tchouaméni",pos:"MID"},{n:14,name:"Adrien Rabiot",pos:"MID"},{n:18,name:"Khéphren Thuram",pos:"MID"},
+    {n:9,name:"Olivier Giroud",pos:"FWD"},{n:10,name:"Kylian Mbappé",pos:"FWD"},{n:11,name:"Ousmane Dembélé",pos:"FWD"},{n:13,name:"Marcus Thuram",pos:"FWD"},{n:15,name:"Randal Kolo Muani",pos:"FWD"},{n:17,name:"Bradley Barcola",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"Sénégal",venue:"Gillette Stadium, Boston"},{date:"21 Juin",opp:"Irak",venue:"Lincoln Financial Field, Philadelphie"},{date:"25 Juin",opp:"Norvège",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Sénégal", code:"SEN", flag:"🇸🇳", conf:"CAF", group:"I",
+  capital:"Dakar", pop:"17M", fifa:18, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#00853F", sleeve:"#00853F", collar:"#FFFFFF", accent:"#FFCD00", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#00853F", accent:"#FFCD00", trim:"#00853F", neckType:"round" }
+  },
+  desc:"Vert baobab avec étoile dorée, motif tissage traditionnel sur les épaules",
+  coords:[-14.452, 14.497],
+  players:[
+    {n:1,name:"Edouard Mendy",pos:"GK"},{n:16,name:"Alfred Gomis",pos:"GK"},{n:23,name:"Seny Dieng",pos:"GK"},
+    {n:2,name:"Bouna Sarr",pos:"DEF"},{n:3,name:"Youssouf Sabaly",pos:"DEF"},{n:5,name:"Abdou Diallo",pos:"DEF"},{n:6,name:"Kalidou Koulibaly",pos:"DEF"},{n:19,name:"Formose Mendy",pos:"DEF"},
+    {n:4,name:"Idrissa Gueye",pos:"MID"},{n:7,name:"Pape Matar Sarr",pos:"MID"},{n:8,name:"Nampalys Mendy",pos:"MID"},{n:10,name:"Sadio Mané",pos:"MID"},{n:14,name:"Cheikhou Kouyaté",pos:"MID"},
+    {n:9,name:"Bamba Dieng",pos:"FWD"},{n:11,name:"Ismaila Sarr",pos:"FWD"},{n:18,name:"Nicolas Jackson",pos:"FWD"},{n:20,name:"Habib Diallo",pos:"FWD"}
+  ],
+  matches:[{date:"16 Juin",opp:"France",venue:"Gillette Stadium, Boston"},{date:"21 Juin",opp:"Norvège",venue:"Lincoln Financial Field, Philadelphie"},{date:"25 Juin",opp:"Irak",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Irak", code:"IRQ", flag:"🇮🇶", conf:"AFC", group:"I",
+  capital:"Bagdad", pop:"43M", fifa:70, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Hummel",
+  jersey:{
+    home:{ body:"#007A3D", sleeve:"#007A3D", collar:"#FFFFFF", accent:"#CE1126", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#007A3D", accent:"#CE1126", trim:"#007A3D", neckType:"round" }
+  },
+  desc:"Vert islamique avec étoile rouge et inscriptions en calligraphie arabe",
+  coords:[43.679, 33.223],
+  players:[
+    {n:1,name:"Jalal Hassan",pos:"GK"},{n:12,name:"Mohammed Hameed",pos:"GK"},
+    {n:2,name:"Ali Adnan",pos:"DEF"},{n:4,name:"Mustafa Nadhim",pos:"DEF"},{n:5,name:"Rebin Sulaka",pos:"DEF"},{n:15,name:"Ahmed Ibrahim",pos:"DEF"},
+    {n:6,name:"Bashar Resan",pos:"MID"},{n:8,name:"Amjed Attwan",pos:"MID"},{n:10,name:"Amir Al-Ammari",pos:"MID"},{n:14,name:"Safaa Hadi",pos:"MID"},
+    {n:7,name:"Hammadi Ahmed",pos:"FWD"},{n:9,name:"Alaa Abbas",pos:"FWD"},{n:11,name:"Aso Toama",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Norvège",venue:"Gillette Stadium, Boston"},{date:"21 Juin",opp:"France",venue:"Lincoln Financial Field, Philadelphie"},{date:"25 Juin",opp:"Sénégal",venue:"Hard Rock Stadium, Miami"}]
+},
+{ name:"Norvège", code:"NOR", flag:"🇳🇴", conf:"UEFA", group:"I",
+  capital:"Oslo", pop:"5.5M", fifa:26, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#EF2B2D", sleeve:"#EF2B2D", collar:"#FFFFFF", accent:"#002868", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#000000", sleeve:"#000000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" }
+  },
+  desc:"Rouge scandinave avec croix norvégienne intégrée. Extérieur noir 'furtif' embossé",
+  coords:[8.468, 60.472],
+  players:[
+    {n:1,name:"Ørjan Nyland",pos:"GK"},{n:12,name:"Rune Jarstein",pos:"GK"},{n:23,name:"André Hansen",pos:"GK"},
+    {n:2,name:"Omar Elabdellaoui",pos:"DEF"},{n:3,name:"Birger Meling",pos:"DEF"},{n:4,name:"Leo Skiri Østigård",pos:"DEF"},{n:5,name:"Andreas Christensen",pos:"DEF"},{n:22,name:"Stian Gregersen",pos:"DEF"},
+    {n:6,name:"Sander Berge",pos:"MID"},{n:7,name:"Martin Ødegaard",pos:"MID"},{n:8,name:"Mathias Normann",pos:"MID"},{n:10,name:"Alexander Sørloth",pos:"MID"},{n:14,name:"Fredrik Aursnes",pos:"MID"},
+    {n:9,name:"Erling Haaland",pos:"FWD"},{n:11,name:"Mohamed Elyounoussi",pos:"FWD"},{n:15,name:"Ola Solbakken",pos:"FWD"},{n:17,name:"Antonio Nusa",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Irak",venue:"Gillette Stadium, Boston"},{date:"21 Juin",opp:"Sénégal",venue:"Lincoln Financial Field, Philadelphie"},{date:"25 Juin",opp:"France",venue:"Hard Rock Stadium, Miami"}]
+},
+// ─── GROUPE J ────────────────────────────────────────
+{ name:"Argentine", code:"ARG", flag:"🇦🇷", conf:"CONMEBOL", group:"J",
+  capital:"Buenos Aires", pop:"46M", fifa:1, host:false,
+  wcTitles:3, wcYears:[1978,1986,2022],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#75AADB", sleeve:"#75AADB", collar:"#FFFFFF", accent:"#002776", trim:"#FFFFFF", neckType:"round", pattern:"stripes", stripes:["#75AADB","#FFFFFF",16] },
+    away:{ body:"#002776", sleeve:"#002776", collar:"#75AADB", accent:"#75AADB", trim:"#75AADB", neckType:"round" }
+  },
+  desc:"Rayures celeste et blanc iconiques. Maillot gardien Adidas design épuré",
+  coords:[-63.616, -38.416],
+  players:[
+    {n:1,name:"Emiliano Martínez",pos:"GK"},{n:12,name:"Geronimo Rulli",pos:"GK"},{n:23,name:"Juan Musso",pos:"GK"},
+    {n:2,name:"Nahuel Molina",pos:"DEF"},{n:3,name:"Nicolás Tagliafico",pos:"DEF"},{n:4,name:"Gonzalo Montiel",pos:"DEF"},{n:5,name:"Lisandro Martínez",pos:"DEF"},{n:6,name:"Germán Pezzella",pos:"DEF"},{n:13,name:"Cristian Romero",pos:"DEF"},{n:26,name:"Nicolás Otamendi",pos:"DEF"},
+    {n:7,name:"Rodrigo De Paul",pos:"MID"},{n:8,name:"Enzo Fernández",pos:"MID"},{n:14,name:"Exequiel Palacios",pos:"MID"},{n:15,name:"Alexis Mac Allister",pos:"MID"},{n:20,name:"Giovani Lo Celso",pos:"MID"},
+    {n:9,name:"Julián Álvarez",pos:"FWD"},{n:10,name:"Lionel Messi",pos:"FWD"},{n:11,name:"Lautaro Martínez",pos:"FWD"},{n:16,name:"Franco Mastantuono",pos:"FWD"},{n:19,name:"Nicolás Paz",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Algérie",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"21 Juin",opp:"Autriche",venue:"Arrowhead Stadium, Kansas City"},{date:"26 Juin",opp:"Jordanie",venue:"BC Place, Vancouver"}]
+},
+{ name:"Algérie", code:"ALG", flag:"🇩🇿", conf:"CAF", group:"J",
+  capital:"Alger", pop:"45M", fifa:31, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Puma",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#007A3D", accent:"#D21034", trim:"#007A3D", neckType:"polo" },
+    away:{ body:"#007A3D", sleeve:"#007A3D", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#D21034", neckType:"polo" }
+  },
+  desc:"Blanc immaculé avec croissant rouge et étoile verte en broderie sur le torse",
+  coords:[1.659, 28.033],
+  players:[
+    {n:1,name:"Raïs M'Bolhi",pos:"GK"},{n:16,name:"Alexandre Oukidja",pos:"GK"},{n:23,name:"Mehdi Zemmamouche",pos:"GK"},
+    {n:2,name:"Youcef Atal",pos:"DEF"},{n:3,name:"Ramy Bensebaini",pos:"DEF"},{n:4,name:"Djamel Benlamri",pos:"DEF"},{n:5,name:"Mohamed Fares",pos:"DEF"},{n:15,name:"Aissa Mandi",pos:"DEF"},
+    {n:6,name:"Adlène Guedioura",pos:"MID"},{n:7,name:"Ismaël Bennacer",pos:"MID"},{n:8,name:"Nabil Bentaleb",pos:"MID"},{n:10,name:"Riyad Mahrez",pos:"MID"},{n:14,name:"Sofiane Feghouli",pos:"MID"},
+    {n:9,name:"Islam Slimani",pos:"FWD"},{n:11,name:"Baghdad Bounedjah",pos:"FWD"},{n:17,name:"Andy Delort",pos:"FWD"},{n:18,name:"Yacine Brahimi",pos:"FWD"},{n:20,name:"Farid Boulaya",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Argentine",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Jordanie",venue:"Arrowhead Stadium, Kansas City"},{date:"26 Juin",opp:"Autriche",venue:"BC Place, Vancouver"}]
+},
+{ name:"Autriche", code:"AUT", flag:"🇦🇹", conf:"UEFA", group:"J",
+  capital:"Vienne", pop:"9.1M", fifa:27, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#CC0000", sleeve:"#CC0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#CC0000", accent:"#CC0000", trim:"#CC0000", neckType:"round" }
+  },
+  desc:"Rouge autrichien, Adler impérial en sublimation sur la poitrine",
+  coords:[14.550, 47.516],
+  players:[
+    {n:1,name:"Patrick Pentz",pos:"GK"},{n:12,name:"Daniel Bachmann",pos:"GK"},{n:23,name:"Tobias Lawal",pos:"GK"},
+    {n:2,name:"Stefan Posch",pos:"DEF"},{n:3,name:"Philipp Mwene",pos:"DEF"},{n:4,name:"David Alaba",pos:"DEF"},{n:5,name:"Kevin Danso",pos:"DEF"},{n:14,name:"Maximilian Wöber",pos:"DEF"},
+    {n:6,name:"Nicolas Seiwald",pos:"MID"},{n:7,name:"Christoph Baumgartner",pos:"MID"},{n:8,name:"Florian Grillitsch",pos:"MID"},{n:10,name:"Marcel Sabitzer",pos:"MID"},{n:18,name:"Konrad Laimer",pos:"MID"},
+    {n:9,name:"Marko Arnautović",pos:"FWD"},{n:11,name:"Michael Gregoritsch",pos:"FWD"},{n:17,name:"Patrick Wimmer",pos:"FWD"},{n:20,name:"Karim Adeyemi",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Jordanie",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"21 Juin",opp:"Argentine",venue:"Arrowhead Stadium, Kansas City"},{date:"26 Juin",opp:"Algérie",venue:"BC Place, Vancouver"}]
+},
+{ name:"Jordanie", code:"JOR", flag:"🇯🇴", conf:"AFC", group:"J",
+  capital:"Amman", pop:"10.2M", fifa:87, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Kelme",
+  jersey:{
+    home:{ body:"#007A3D", sleeve:"#007A3D", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#007A3D", accent:"#007A3D", trim:"#007A3D", neckType:"round" }
+  },
+  desc:"Vert jordanien avec sept branches étoile du drapeau. Kelme design",
+  coords:[36.238, 30.585],
+  players:[
+    {n:1,name:"Yazeed Abo Layla",pos:"GK"},{n:12,name:"Mohammad Shalan",pos:"GK"},
+    {n:2,name:"Yazan Al-Naimat",pos:"DEF"},{n:4,name:"Baha' Abdel-Rahman",pos:"DEF"},{n:5,name:"Ahmad Sarour",pos:"DEF"},{n:15,name:"Osama Rashid",pos:"DEF"},
+    {n:8,name:"Ahmad Saleh",pos:"MID"},{n:10,name:"Musa Al-Taamari",pos:"MID"},{n:14,name:"Hassan Abdel-Fattah",pos:"MID"},
+    {n:7,name:"Mousa Al-Taamari",pos:"FWD"},{n:9,name:"Hamza Al-Dardour",pos:"FWD"},{n:11,name:"Khaled Al-Sahouri",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Autriche",venue:"Mercedes-Benz Stadium, Atlanta"},{date:"22 Juin",opp:"Algérie",venue:"Arrowhead Stadium, Kansas City"},{date:"26 Juin",opp:"Argentine",venue:"BC Place, Vancouver"}]
+},
+// ─── GROUPE K ────────────────────────────────────────
+{ name:"Portugal", code:"POR", flag:"🇵🇹", conf:"UEFA", group:"K",
+  capital:"Lisbonne", pop:"10.3M", fifa:6, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#006600", sleeve:"#006600", collar:"#FF0000", accent:"#FF0000", trim:"#FF0000", neckType:"round" },
+    away:{ body:"#FF0000", sleeve:"#FF0000", collar:"#006600", accent:"#006600", trim:"#006600", neckType:"round" }
+  },
+  desc:"Vert national avec col rouge, aigle national en broderie dorée",
+  coords:[-8.224, 39.399],
+  players:[
+    {n:1,name:"Diogo Costa",pos:"GK"},{n:12,name:"José Sá",pos:"GK"},{n:22,name:"Rui Patrício",pos:"GK"},
+    {n:2,name:"João Cancelo",pos:"DEF"},{n:3,name:"Nuno Mendes",pos:"DEF"},{n:4,name:"Rúben Dias",pos:"DEF"},{n:5,name:"Danilo Pereira",pos:"DEF"},{n:21,name:"Diogo Dalot",pos:"DEF"},{n:24,name:"Gonçalo Inácio",pos:"DEF"},
+    {n:6,name:"Vítor Ferreira",pos:"MID"},{n:7,name:"Bruno Fernandes",pos:"MID"},{n:8,name:"João Palhinha",pos:"MID"},{n:10,name:"Bernardo Silva",pos:"MID"},{n:16,name:"Vitinha",pos:"MID"},{n:23,name:"Rúben Neves",pos:"MID"},
+    {n:9,name:"André Silva",pos:"FWD"},{n:11,name:"Rafael Leão",pos:"FWD"},{n:14,name:"Pedro Neto",pos:"FWD"},{n:15,name:"Gonçalo Ramos",pos:"FWD"},{n:17,name:"Francisco Trincão",pos:"FWD"},{n:7,name:"Cristiano Ronaldo",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"RD Congo",venue:"MetLife Stadium, New York"},{date:"22 Juin",opp:"Ouzbékistan",venue:"Hard Rock Stadium, Miami"},{date:"26 Juin",opp:"Colombie",venue:"Mercedes-Benz Stadium, Atlanta"}]
+},
+{ name:"RD Congo", code:"COD", flag:"🇨🇩", conf:"CAF", group:"K",
+  capital:"Kinshasa", pop:"100M", fifa:55, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Kappa",
+  jersey:{
+    home:{ body:"#007FFF", sleeve:"#007FFF", collar:"#FFD700", accent:"#FFD700", trim:"#CE1126", neckType:"round" },
+    away:{ body:"#FFD700", sleeve:"#FFD700", collar:"#007FFF", accent:"#007FFF", trim:"#CE1126", neckType:"round" }
+  },
+  desc:"Bleu cobalt avec étoile dorée et rouge du drapeau congolais",
+  coords:[21.758, -4.038],
+  players:[
+    {n:1,name:"Ley Matampi",pos:"GK"},{n:12,name:"Joël Kiassumbua",pos:"GK"},
+    {n:2,name:"Chancel Mbemba",pos:"DEF"},{n:3,name:"Marcel Tisserand",pos:"DEF"},{n:5,name:"Ngimbi Manga",pos:"DEF"},{n:19,name:"Christian Luyindama",pos:"DEF"},
+    {n:6,name:"Papy Djilobodji",pos:"MID"},{n:8,name:"Yoane Wissa",pos:"MID"},{n:10,name:"Cédric Bakambu",pos:"MID"},{n:14,name:"Trésor Mputu",pos:"MID"},
+    {n:7,name:"Jonathan Bolingi",pos:"FWD"},{n:9,name:"Meschack Elia",pos:"FWD"},{n:11,name:"Britt Assombalonga",pos:"FWD"}
+  ],
+  matches:[{date:"17 Juin",opp:"Portugal",venue:"MetLife Stadium, New York"},{date:"22 Juin",opp:"Colombie",venue:"Hard Rock Stadium, Miami"},{date:"26 Juin",opp:"Ouzbékistan",venue:"Mercedes-Benz Stadium, Atlanta"}]
+},
+{ name:"Ouzbékistan", code:"UZB", flag:"🇺🇿", conf:"AFC", group:"K",
+  capital:"Tachkent", pop:"36M", fifa:74, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"7Saber",
+  jersey:{
+    home:{ body:"#1EB53A", sleeve:"#1EB53A", collar:"#FFFFFF", accent:"#CE1126", trim:"#FFFFFF", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#1EB53A", accent:"#CE1126", trim:"#1EB53A", neckType:"round" }
+  },
+  desc:"Vert et blanc ouzbek, motif croissant traditionnel, marque locale 7Saber",
+  coords:[64.585, 41.377],
+  players:[
+    {n:1,name:"Otabek Shukurov",pos:"GK"},{n:12,name:"Jasurbek Jaloliddinov",pos:"GK"},
+    {n:2,name:"Sanjar Tursunov",pos:"DEF"},{n:4,name:"Jasur Yaxshiboyev",pos:"DEF"},{n:5,name:"Eldorbek Sobirov",pos:"DEF"},{n:15,name:"Sherzod Nasimov",pos:"DEF"},
+    {n:6,name:"Jaloliddin Masharipov",pos:"MID"},{n:7,name:"Abbosbek Fayzullaev",pos:"MID"},{n:8,name:"Khusan Khusanov",pos:"MID"},{n:10,name:"Eldor Shomurodov",pos:"MID"},
+    {n:9,name:"Dostonbek Khamdamov",pos:"FWD"},{n:11,name:"Bobir Abdixoliqov",pos:"FWD"},{n:14,name:"Temur Juraev",pos:"FWD"}
+  ],
+  matches:[{date:"18 Juin",opp:"Colombie",venue:"MetLife Stadium, New York"},{date:"22 Juin",opp:"Portugal",venue:"Hard Rock Stadium, Miami"},{date:"26 Juin",opp:"RD Congo",venue:"Mercedes-Benz Stadium, Atlanta"}]
+},
+{ name:"Colombie", code:"COL", flag:"🇨🇴", conf:"CONMEBOL", group:"K",
+  capital:"Bogota", pop:"52M", fifa:20, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Adidas",
+  jersey:{
+    home:{ body:"#FCD116", sleeve:"#FCD116", collar:"#003087", accent:"#003087", trim:"#CE1126", neckType:"round" },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#FCD116", accent:"#003087", trim:"#CE1126", neckType:"round" }
+  },
+  desc:"Jaune soleil Cafetero, bleu et rouge tricolore, motif orchidée nationale",
+  coords:[-74.297, 4.570],
+  players:[
+    {n:1,name:"Camilo Vargas",pos:"GK"},{n:12,name:"David Ospina",pos:"GK"},{n:23,name:"Santiago Bueno",pos:"GK"},
+    {n:2,name:"Santiago Arias",pos:"DEF"},{n:3,name:"Johan Mojica",pos:"DEF"},{n:4,name:"Yerry Mina",pos:"DEF"},{n:5,name:"Jhon Lucumí",pos:"DEF"},{n:18,name:"Daniel Muñoz",pos:"DEF"},
+    {n:6,name:"Mateus Uribe",pos:"MID"},{n:7,name:"Juan Cuadrado",pos:"MID"},{n:8,name:"Wilmar Barrios",pos:"MID"},{n:10,name:"James Rodríguez",pos:"MID"},{n:16,name:"Gustavo Puerta",pos:"MID"},
+    {n:9,name:"Rafael Santos Borré",pos:"FWD"},{n:11,name:"Luis Díaz",pos:"FWD"},{n:13,name:"John Córdoba",pos:"FWD"},{n:15,name:"Jhon Arias",pos:"FWD"},{n:19,name:"Alfredo Morelos",pos:"FWD"}
+  ],
+  matches:[{date:"18 Juin",opp:"Ouzbékistan",venue:"MetLife Stadium, New York"},{date:"22 Juin",opp:"RD Congo",venue:"Hard Rock Stadium, Miami"},{date:"26 Juin",opp:"Portugal",venue:"Mercedes-Benz Stadium, Atlanta"}]
+},
+// ─── GROUPE L ────────────────────────────────────────
+{ name:"Angleterre", code:"ENG", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", conf:"UEFA", group:"L",
+  capital:"Londres", pop:"56M", fifa:4, host:false,
+  wcTitles:1, wcYears:[1966],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#CC0000", accent:"#CC0000", trim:"#CC0000", neckType:"polo" },
+    away:{ body:"#CC0000", sleeve:"#CC0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#FFFFFF", neckType:"polo" }
+  },
+  desc:"Blanc Three Lions classique, St George's Cross en sublimation polo Nike",
+  coords:[-1.174, 52.355],
+  players:[
+    {n:1,name:"Jordan Pickford",pos:"GK"},{n:13,name:"Aaron Ramsdale",pos:"GK"},{n:23,name:"Sam Johnstone",pos:"GK"},
+    {n:2,name:"Trent Alexander-Arnold",pos:"DEF"},{n:3,name:"Luke Shaw",pos:"DEF"},{n:5,name:"Harry Maguire",pos:"DEF"},{n:6,name:"John Stones",pos:"DEF"},{n:12,name:"Kieran Trippier",pos:"DEF"},{n:17,name:"Marc Guehi",pos:"DEF"},
+    {n:4,name:"Declan Rice",pos:"MID"},{n:7,name:"Jack Grealish",pos:"MID"},{n:8,name:"Jude Bellingham",pos:"MID"},{n:10,name:"Phil Foden",pos:"MID"},{n:14,name:"Conor Gallagher",pos:"MID"},
+    {n:9,name:"Harry Kane",pos:"FWD"},{n:11,name:"Bukayo Saka",pos:"FWD"},{n:19,name:"Ollie Watkins",pos:"FWD"},{n:20,name:"Anthony Gordon",pos:"FWD"},{n:25,name:"Cole Palmer",pos:"FWD"}
+  ],
+  matches:[{date:"18 Juin",opp:"Croatie",venue:"Lumen Field, Seattle"},{date:"23 Juin",opp:"Ghana",venue:"SoFi Stadium, Los Angeles"},{date:"27 Juin",opp:"Panama",venue:"AT&T Stadium, Dallas"}]
+},
+{ name:"Croatie", code:"CRO", flag:"🇭🇷", conf:"UEFA", group:"L",
+  capital:"Zagreb", pop:"4M", fifa:10, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#CC0000", sleeve:"#CC0000", collar:"#FFFFFF", accent:"#FFFFFF", trim:"#003DA5", neckType:"round", pattern:"stripes", stripes:["#CC0000","#FFFFFF",12] },
+    away:{ body:"#FFFFFF", sleeve:"#FFFFFF", collar:"#CC0000", accent:"#CC0000", trim:"#003DA5", neckType:"round" }
+  },
+  desc:"Damier rouge et blanc iconique. Nike 2026 avec écusson fédération brodé",
+  coords:[15.200, 45.100],
+  players:[
+    {n:1,name:"Dominik Livaković",pos:"GK"},{n:12,name:"Ivica Ivušić",pos:"GK"},{n:23,name:"Ivo Grbić",pos:"GK"},
+    {n:2,name:"Josip Juranović",pos:"DEF"},{n:3,name:"Borna Barišić",pos:"DEF"},{n:5,name:"Dejan Lovren",pos:"DEF"},{n:6,name:"Joško Gvardiol",pos:"DEF"},{n:19,name:"Šime Vrsaljko",pos:"DEF"},
+    {n:7,name:"Ivan Perišić",pos:"MID"},{n:8,name:"Mateo Kovačić",pos:"MID"},{n:10,name:"Luka Modrić",pos:"MID"},{n:11,name:"Marcelo Brozović",pos:"MID"},{n:15,name:"Mario Pašalić",pos:"MID"},
+    {n:9,name:"Andrej Kramarić",pos:"FWD"},{n:14,name:"Marko Livaja",pos:"FWD"},{n:17,name:"Bruno Petković",pos:"FWD"},{n:18,name:"Ante Budimir",pos:"FWD"}
+  ],
+  matches:[{date:"18 Juin",opp:"Angleterre",venue:"Lumen Field, Seattle"},{date:"23 Juin",opp:"Panama",venue:"SoFi Stadium, Los Angeles"},{date:"27 Juin",opp:"Ghana",venue:"AT&T Stadium, Dallas"}]
+},
+{ name:"Ghana", code:"GHA", flag:"🇬🇭", conf:"CAF", group:"L",
+  capital:"Accra", pop:"33M", fifa:61, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Nike",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#000000", collar:"#000000", accent:"#006B3F", trim:"#000000", neckType:"round" },
+    away:{ body:"#006B3F", sleeve:"#006B3F", collar:"#FFD700", accent:"#CE1126", trim:"#FFFFFF", neckType:"round" }
+  },
+  desc:"Blanc Black Stars avec manches noires et étoile noire centrale emblématique",
+  coords:[-1.023, 7.946],
+  players:[
+    {n:1,name:"Lawrence Ati Zigi",pos:"GK"},{n:12,name:"Joe Wollacott",pos:"GK"},
+    {n:2,name:"Andy Yiadom",pos:"DEF"},{n:3,name:"Gideon Mensah",pos:"DEF"},{n:5,name:"Daniel Amartey",pos:"DEF"},{n:6,name:"Alexander Djiku",pos:"DEF"},{n:16,name:"Tariq Lamptey",pos:"DEF"},
+    {n:7,name:"Jordan Ayew",pos:"MID"},{n:8,name:"Thomas Partey",pos:"MID"},{n:10,name:"André Ayew",pos:"MID"},{n:11,name:"Mohammed Kudus",pos:"MID"},{n:14,name:"Joseph Paintsil",pos:"MID"},
+    {n:9,name:"Inaki Williams",pos:"FWD"},{n:17,name:"Antoine Semenyo",pos:"FWD"},{n:18,name:"Elisha Owusu",pos:"FWD"},{n:20,name:"Osman Bukari",pos:"FWD"}
+  ],
+  matches:[{date:"19 Juin",opp:"Panama",venue:"Lumen Field, Seattle"},{date:"23 Juin",opp:"Angleterre",venue:"SoFi Stadium, Los Angeles"},{date:"27 Juin",opp:"Croatie",venue:"AT&T Stadium, Dallas"}]
+},
+{ name:"Panama", code:"PAN", flag:"🇵🇦", conf:"CONCACAF", group:"L",
+  capital:"Panama City", pop:"4.4M", fifa:73, host:false,
+  wcTitles:0, wcYears:[],
+  equip:"Reebok",
+  jersey:{
+    home:{ body:"#FFFFFF", sleeve:"#CC0000", collar:"#002D62", accent:"#CC0000", trim:"#002D62", neckType:"round" },
+    away:{ body:"#CC0000", sleeve:"#FFFFFF", collar:"#002D62", accent:"#FFFFFF", trim:"#002D62", neckType:"round" }
+  },
+  desc:"Blanc et rouge Canal du Panama, bleu marine, Reebok signature",
+  coords:[-80.782, 8.537],
+  players:[
+    {n:1,name:"Luis Mejía",pos:"GK"},{n:12,name:"César Samudio",pos:"GK"},
+    {n:2,name:"Édgar Bárcenas",pos:"DEF"},{n:3,name:"Éric Davis",pos:"DEF"},{n:5,name:"Harold Cummings",pos:"DEF"},{n:6,name:"Anibal Godoy",pos:"DEF"},{n:22,name:"Fidel Escobar",pos:"DEF"},
+    {n:7,name:"Edgar Davis",pos:"MID"},{n:8,name:"Adalberto Carrasquilla",pos:"MID"},{n:10,name:"Rolando Blackburn",pos:"MID"},{n:14,name:"Ismael Díaz",pos:"MID"},
+    {n:9,name:"Alfredo Stephens",pos:"FWD"},{n:11,name:"Omar Browne",pos:"FWD"},{n:17,name:"Alberto Quintero",pos:"FWD"}
+  ],
+  matches:[{date:"19 Juin",opp:"Ghana",venue:"Lumen Field, Seattle"},{date:"23 Juin",opp:"Croatie",venue:"SoFi Stadium, Los Angeles"},{date:"27 Juin",opp:"Angleterre",venue:"AT&T Stadium, Dallas"}]
+},
+];
+
+// ====================================================
+// STATE
+// ====================================================
 let currentConf = 'all';
 let searchQuery = '';
 let currentView = 'groups';
+const GROUPS = ['A','B','C','D','E','F','G','H','I','J','K','L'];
 
-const groups = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+// ====================================================
+// HERO
+// ====================================================
+// Pitch stripes
+const stripeContainer = document.getElementById('heroStripes');
+for(let i = 0; i < 20; i++) {
+  const d = document.createElement('div');
+  d.className = 'pitch-stripe';
+  stripeContainer.appendChild(d);
+}
 
-function getTeamsFiltered() {
+// Flags
+const flagDiv = document.getElementById('heroFlags');
+TEAMS.slice(0, 24).forEach(t => {
+  const s = document.createElement('span');
+  s.textContent = t.flag;
+  flagDiv.appendChild(s);
+});
+
+// ====================================================
+// HELPERS
+// ====================================================
+function confLabel(c) {
+  return {UEFA:'Europe',CAF:'Afrique',AFC:'Asie',CONCACAF:'CONCACAF',CONMEBOL:'Amér. du Sud',OFC:'Océanie'}[c]||c;
+}
+
+function posLabel(p) {
+  return {GK:'Gardien',DEF:'Défenseur',MID:'Milieu',FWD:'Attaquant'}[p]||p;
+}
+
+function getFiltered() {
   return TEAMS.filter(t => {
     const matchConf = currentConf === 'all' || t.conf === currentConf;
-    const matchSearch = !searchQuery ||
-      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.capital.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.players.some(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q ||
+      t.name.toLowerCase().includes(q) ||
+      t.capital.toLowerCase().includes(q) ||
+      t.players.some(p => p.name.toLowerCase().includes(q));
     return matchConf && matchSearch;
   });
 }
 
-function renderTeamCard(team, delay = 0) {
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${team.coords[1]-10},${team.coords[0]-8},${team.coords[1]+10},${team.coords[0]+8}&layer=mapnik&marker=${team.coords[0]},${team.coords[1]}`;
-  const stars = team.host ? '<span style="color:var(--gold);font-size:10px;letter-spacing:2px;"> ★ HÔTE</span>' : '';
-  const topPlayers = team.players.slice(0, 3).map(p => `${p.name} (${p.pos})`).join(', ');
-  return `
-  <div class="team-card" onclick="openModal('${team.code}')" style="animation-delay:${delay}ms" data-team="${team.code}">
-    <div class="team-card-banner"></div>
-    <div class="team-card-body">
-      <div class="team-flag-name">
-        <div class="team-flag-emoji">${team.flag}</div>
-        <div>
-          <div class="team-name">${team.name}${stars}</div>
-          <div class="team-confederation">${confLabel(team.conf)} · FIFA #${team.fifa}</div>
-        </div>
+// ====================================================
+// WORLD CUPS BADGE
+// ====================================================
+function wcBadgeHtml(team) {
+  if (team.wcTitles === 0) {
+    return `<div class="wc-badge wc-badge-zero">
+      <span class="trophy">🏆</span>
+      <span class="wc-count">0</span>
+      <span class="wc-years">Titre(s) mondial</span>
+    </div>`;
+  }
+  return `<div class="wc-badge">
+    <span class="trophy">🏆</span>
+    <span class="wc-count">${team.wcTitles}</span>
+    <span class="wc-years">${team.wcYears.join(' · ')}</span>
+  </div>`;
+}
+
+// ====================================================
+// JERSEY SVG — Authentic 2026 designs
+// ====================================================
+function renderJersey(cfg, size = 90) {
+  const {body='#fff',sleeve=null,collar='#fff',accent='#000',trim='#000',neckType='round',pattern='plain',stripes=null} = cfg;
+  const sl = sleeve || body;
+  const id = 'j' + Math.random().toString(36).slice(2,8);
+
+  let bodyFill = body;
+  let defs = '';
+  if (pattern === 'stripes' && stripes) {
+    const sw = stripes[2] || 14;
+    defs = `<defs><pattern id="${id}" x="0" y="0" width="${sw*2}" height="200" patternUnits="userSpaceOnUse">
+      <rect width="${sw}" height="200" fill="${stripes[0]}"/>
+      <rect x="${sw}" width="${sw}" height="200" fill="${stripes[1]}"/>
+    </pattern></defs>`;
+    bodyFill = `url(#${id})`;
+  }
+
+  let collarSvg = '';
+  if (neckType === 'v') {
+    collarSvg = `<path d="M32 13 L42 27 L52 13" fill="none" stroke="${collar}" stroke-width="4"/>`;
+  } else if (neckType === 'polo') {
+    collarSvg = `<rect x="31" y="10" width="22" height="9" rx="3" fill="${collar}"/>
+    <rect x="34" y="10" width="16" height="5" rx="1" fill="${trim}"/>`;
+  } else {
+    collarSvg = `<path d="M32 14 Q42 22 52 14" fill="none" stroke="${collar}" stroke-width="4"/>`;
+  }
+
+  const w = size * 0.95;
+  const h = size * 1.1;
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 84 100" xmlns="http://www.w3.org/2000/svg">
+    ${defs}
+    <!-- Left sleeve -->
+    <path d="M6 21 L21 15 L21 52 L6 46Z" fill="${sl}" stroke="${trim}" stroke-width="0.8"/>
+    <!-- Right sleeve -->
+    <path d="M78 21 L63 15 L63 52 L78 46Z" fill="${sl}" stroke="${trim}" stroke-width="0.8"/>
+    <!-- Body -->
+    <rect x="21" y="9" width="42" height="87" rx="2" fill="${bodyFill}" stroke="${trim}" stroke-width="0.8"/>
+    <!-- Left shoulder -->
+    <path d="M21 9 L6 21 L21 21Z" fill="${sl}" stroke="${trim}" stroke-width="0.8"/>
+    <!-- Right shoulder -->
+    <path d="M63 9 L78 21 L63 21Z" fill="${sl}" stroke="${trim}" stroke-width="0.8"/>
+    <!-- Collar -->
+    ${collarSvg}
+    <!-- Badge -->
+    <rect x="28" y="27" width="11" height="12" rx="2" fill="${accent}" opacity="0.35"/>
+    <!-- Fabric highlight -->
+    <path d="M26 12 L26 93" stroke="rgba(255,255,255,0.07)" stroke-width="3"/>
+    <!-- Sleeve accent stripe -->
+    <line x1="6" y1="30" x2="21" y2="28" stroke="${accent}" stroke-width="1.5" opacity="0.6"/>
+    <line x1="78" y1="30" x2="63" y2="28" stroke="${accent}" stroke-width="1.5" opacity="0.6"/>
+  </svg>`;
+}
+
+// ====================================================
+// RENDER CARD
+// ====================================================
+function renderCard(team, delay = 0) {
+  const hostLabel = team.host ? ' <span style="color:var(--gold);font-size:10px;letter-spacing:1.5px">★ HÔTE</span>' : '';
+  const matchRows = team.matches.slice(0,2).map(m =>
+    `<div class="card-match"><span class="m-date">${m.date}</span>vs ${m.opp}</div>`
+  ).join('');
+
+  return `<div class="team-card" onclick="openModal('${team.code}')" style="animation-delay:${delay}ms" data-code="${team.code}" data-conf="${team.conf}" data-group="${team.group}">
+    <div class="card-top-bar"></div>
+    <div class="card-body">
+      <div class="card-flag-row">
+        <div class="card-flag">${team.flag}</div>
+        <div class="card-group-chip">GRP ${team.group}</div>
       </div>
-      <div class="team-meta">
-        <div class="team-meta-item">
-          <div class="team-meta-label">Capitale</div>
-          <div class="team-meta-value">${team.capital}</div>
-        </div>
-        <div class="team-meta-item">
-          <div class="team-meta-label">Groupe</div>
-          <div class="team-meta-value" style="color:var(--gold)">Groupe ${team.group}</div>
-        </div>
-        <div class="team-meta-item">
-          <div class="team-meta-label">Population</div>
-          <div class="team-meta-value">${team.pop}</div>
-        </div>
-        <div class="team-meta-item">
-          <div class="team-meta-label">Joueurs</div>
-          <div class="team-meta-value">${team.players.length} appelés</div>
-        </div>
+      <div class="card-country">${team.name}${hostLabel}</div>
+      <div class="card-conf">${confLabel(team.conf)} · FIFA #${team.fifa}</div>
+      ${wcBadgeHtml(team)}
+      <div class="card-details">
+        <div class="card-detail"><div class="dk">Capitale</div><div class="dv">${team.capital}</div></div>
+        <div class="card-detail"><div class="dk">Population</div><div class="dv">${team.pop}</div></div>
+        <div class="card-detail"><div class="dk">Équipementier</div><div class="dv">${team.equip}</div></div>
+        <div class="card-detail"><div class="dk">Joueurs</div><div class="dv">${team.players.length} conv.</div></div>
       </div>
-      <div class="team-matches">
-        ${team.matches.slice(0,2).map(m => `
-          <div class="match-row">
-            <div class="match-dot"></div>
-            <span class="match-date">${m.date}</span>
-            <span style="margin-left:4px">vs ${m.opp}</span>
-          </div>
-        `).join('')}
-      </div>
-      <button class="btn-detail">Voir l'équipe →</button>
+      <div class="card-matches">${matchRows}</div>
+      <button class="card-btn">Voir l'équipe complète →</button>
     </div>
   </div>`;
 }
 
-function confLabel(conf) {
-  const labels = {UEFA:'Europe',CAF:'Afrique',AFC:'Asie',CONCACAF:'CONCACAF',CONMEBOL:'Am. du Sud',OFC:'Océanie'};
-  return labels[conf] || conf;
-}
-
-function renderGroupsView() {
+// ====================================================
+// RENDER GROUPS VIEW
+// ====================================================
+function renderGroups() {
   const container = document.getElementById('groupsView');
-  const filtered = getTeamsFiltered();
+  const filtered = getFiltered();
   let html = '';
-  groups.forEach(g => {
-    const groupTeams = filtered.filter(t => t.group === g);
-    if (!groupTeams.length) return;
-    html += `
-    <div class="group-block">
+  GROUPS.forEach(g => {
+    const gTeams = filtered.filter(t => t.group === g);
+    if (!gTeams.length) return;
+    html += `<div class="group-block">
       <div class="group-header">
-        <div class="group-badge">${g}</div>
-        <div class="group-name">Groupe ${g}</div>
-        <div style="margin-left:auto;font-size:12px;color:var(--muted);letter-spacing:2px">${groupTeams.length} équipe${groupTeams.length>1?'s':''}</div>
+        <div class="group-letter">${g}</div>
+        <div class="group-title">Groupe ${g}</div>
       </div>
-      <div class="group-teams-grid">
-        ${groupTeams.map((t,i) => renderTeamCard(t, i * 80)).join('')}
+      <div class="group-grid">
+        ${gTeams.map((t,i) => renderCard(t, i*60)).join('')}
       </div>
     </div>`;
   });
-  container.innerHTML = html || '<div style="text-align:center;color:var(--muted);padding:60px;font-size:18px">Aucune équipe trouvée</div>';
+  container.innerHTML = html || `<div style="text-align:center;padding:80px;color:var(--muted);font-family:'Oswald',sans-serif;letter-spacing:4px;font-size:18px">AUCUN RÉSULTAT</div>`;
 }
 
-function renderGridView() {
+// ====================================================
+// RENDER GRID VIEW
+// ====================================================
+function renderGrid() {
   const container = document.getElementById('allTeamsGrid');
   const count = document.getElementById('teamCount');
-  const filtered = getTeamsFiltered();
+  const filtered = getFiltered();
   count.textContent = `${filtered.length} équipe${filtered.length > 1 ? 's' : ''}`;
-  container.innerHTML = filtered.map((t,i) => renderTeamCard(t, i * 30)).join('');
+  container.innerHTML = filtered.map((t,i) => renderCard(t, i*25)).join('');
 }
 
+// ====================================================
+// SWITCH VIEW / FILTERS
+// ====================================================
 function switchView(view, btn) {
   currentView = view;
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('groupsView').classList.toggle('active', view === 'groups');
   document.getElementById('gridView').classList.toggle('active', view === 'grid');
-  if (view === 'groups') renderGroupsView();
-  else renderGridView();
+  rerender();
 }
 
 function filterConf(conf, btn) {
@@ -1686,96 +2447,137 @@ function filterTeams(q) {
 }
 
 function rerender() {
-  if (currentView === 'groups') renderGroupsView();
-  else renderGridView();
+  if (currentView === 'groups') renderGroups();
+  else renderGrid();
 }
 
-// =========================================================
+// ====================================================
 // MODAL
-// =========================================================
+// ====================================================
 function openModal(code) {
-  const team = TEAMS.find(t => t.code === code);
-  if (!team) return;
+  const t = TEAMS.find(x => x.code === code);
+  if (!t) return;
 
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${team.coords[1]-15},${team.coords[0]-10},${team.coords[1]+15},${team.coords[0]+10}&layer=mapnik&marker=${team.coords[0]},${team.coords[1]}`;
+  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${t.coords[0]-18},${t.coords[1]-12},${t.coords[0]+18},${t.coords[1]+12}&layer=mapnik&marker=${t.coords[1]},${t.coords[0]}`;
+
+  // World cup block
+  let wcBlock;
+  if (t.wcTitles > 0) {
+    const trophies = '🏆'.repeat(t.wcTitles);
+    const yearTags = t.wcYears.map(y => `<span class="wc-year-tag">${y}</span>`).join('');
+    wcBlock = `<div class="wc-modal-block modal-full">
+      <div class="wc-modal-top">
+        <div class="wc-modal-trophies">${trophies}</div>
+        <div>
+          <div class="wc-modal-title">${t.wcTitles} Titre${t.wcTitles>1?'s':''} mondial${t.wcTitles>1?'aux':''}</div>
+          <div class="wc-modal-label">Champions du monde</div>
+        </div>
+      </div>
+      <div class="wc-years-list">${yearTags}</div>
+    </div>`;
+  } else {
+    wcBlock = `<div class="wc-modal-block modal-full" style="opacity:0.6">
+      <div class="wc-modal-top">
+        <div style="font-size:22px;opacity:0.3">🏆</div>
+        <div>
+          <div class="wc-modal-title" style="color:var(--muted)">0 titre</div>
+          <div class="wc-modal-label">Jamais sacré champion du monde</div>
+        </div>
+      </div>
+      <div class="wc-zero-text">En quête de leur premier sacre...</div>
+    </div>`;
+  }
+
+  const playerRows = t.players.map(p => `
+    <div class="player-card">
+      <div class="player-num">${p.n}</div>
+      <div>
+        <div class="player-name">${p.name}</div>
+        <div class="player-pos">${posLabel(p.pos)}</div>
+      </div>
+    </div>`).join('');
+
+  const matchRows = t.matches.map(m => `
+    <div class="match-item">
+      <div class="match-teams">
+        <span>${t.flag}</span>
+        <span>${t.name}</span>
+        <span class="match-vs">vs</span>
+        <span>${m.opp}</span>
+      </div>
+      <div class="match-right">
+        <div class="match-date-val">📅 ${m.date} 2026</div>
+        <div class="match-venue">📍 ${m.venue}</div>
+      </div>
+    </div>`).join('');
+
+  const hostChip = t.host ? `<span class="modal-chip chip-host">★ Pays Hôte</span>` : '';
 
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-hero">
-      <div class="modal-hero-bg">${team.flag}</div>
-      <div class="modal-hero-flag">${team.flag}</div>
-      <div class="modal-hero-info">
-        <div class="modal-country-name">${team.name}</div>
-        <div class="modal-group-badge">⚽ Groupe ${team.group} · ${confLabel(team.conf)}</div>
-        ${team.host ? '<div style="margin-top:6px;font-size:12px;color:var(--gold);letter-spacing:2px">★ PAYS HÔTE</div>' : ''}
+      <div class="modal-hero-pitch"></div>
+      <div class="modal-hero-glow"></div>
+      <div class="modal-flag-bg">${t.flag}</div>
+      <div class="modal-hero-content">
+        <div class="modal-flag">${t.flag}</div>
+        <div class="modal-hero-text">
+          <div class="modal-country">${t.name}</div>
+          <div class="modal-chips">
+            <span class="modal-chip chip-group">Groupe ${t.group}</span>
+            <span class="modal-chip chip-conf">${confLabel(t.conf)}</span>
+            <span class="modal-chip chip-rank">FIFA #${t.fifa}</span>
+            ${hostChip}
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-body">
 
-      <div class="modal-sections">
-        <div class="modal-section">
-          <h3>Informations pays</h3>
-          <div class="info-grid">
-            <div class="info-row"><span class="key">Capitale</span><span class="val">${team.capital}</span></div>
-            <div class="info-row"><span class="key">Population</span><span class="val">${team.pop}</span></div>
-            <div class="info-row"><span class="key">Confédération</span><span class="val">${confLabel(team.conf)}</span></div>
-            <div class="info-row"><span class="key">Classement FIFA</span><span class="val" style="color:var(--gold)">#${team.fifa}</span></div>
+      ${wcBlock}
+
+      <div class="modal-cols">
+        <div>
+          <div class="modal-section-title">Informations</div>
+          <div class="info-table">
+            <div class="info-row"><span class="info-key">Capitale</span><span class="info-val">${t.capital}</span></div>
+            <div class="info-row"><span class="info-key">Population</span><span class="info-val">${t.pop}</span></div>
+            <div class="info-row"><span class="info-key">Équipementier</span><span class="info-val lime">${t.equip}</span></div>
+            <div class="info-row"><span class="info-key">Titres CDM</span><span class="info-val gold">${t.wcTitles > 0 ? t.wcTitles + '🏆' : '—'}</span></div>
           </div>
         </div>
-        <div class="modal-section">
-          <h3>Localisation</h3>
+        <div>
+          <div class="modal-section-title">Localisation</div>
           <div class="mini-map">
             <iframe src="${mapUrl}" allowfullscreen loading="lazy"></iframe>
-            <div class="mini-map-label">📍 ${team.capital}</div>
+            <div class="mini-map-pin">📍 ${t.capital}</div>
           </div>
         </div>
       </div>
 
-      <div class="modal-section" style="margin-bottom:24px">
-        <h3>Maillots</h3>
-        <div class="jersey-row">
+      <div class="modal-full" style="margin-bottom:24px">
+        <div class="modal-section-title">Maillots 2026 — ${t.equip}</div>
+        <div class="jerseys-row">
           <div class="jersey-card">
-            ${jerseysSVG(team.jersey.home, 'Domicile')}
+            ${renderJersey(t.jersey.home, 100)}
             <div class="jersey-label">Domicile</div>
+            <div class="jersey-desc">${t.desc ? t.desc.split('.')[0] : ''}</div>
           </div>
           <div class="jersey-card">
-            ${jerseysSVG(team.jersey.away, 'Extérieur')}
+            ${renderJersey(t.jersey.away, 100)}
             <div class="jersey-label">Extérieur</div>
+            <div class="jersey-desc">${t.desc ? (t.desc.split('.')[1] || 'Design extérieur alternatif').trim() : ''}</div>
           </div>
         </div>
       </div>
 
-      <div class="modal-section" style="margin-bottom:24px">
-        <h3>Calendrier de phase de groupes</h3>
-        <div class="matches-list">
-          ${team.matches.map(m => `
-            <div class="match-card">
-              <div class="match-teams">
-                ${team.flag} <span>${team.name}</span>
-                <span class="match-vs">vs</span>
-                <span>${m.opp}</span>
-              </div>
-              <div class="match-datetime">
-                <div class="date">📅 ${m.date} 2026</div>
-                <div class="venue">📍 ${m.venue}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
+      <div class="modal-full" style="margin-bottom:24px">
+        <div class="modal-section-title">Calendrier Phase de Groupes</div>
+        <div class="matches-list">${matchRows}</div>
       </div>
 
-      <div class="modal-section players-full">
-        <h3>Sélection — ${team.players.length} joueurs appelés</h3>
-        <div class="players-grid">
-          ${team.players.map(p => `
-            <div class="player-item">
-              <div class="player-number">${p.n}</div>
-              <div class="player-info">
-                <div class="name">${p.name}</div>
-                <div class="pos">${posLabel(p.pos)}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
+      <div class="modal-full">
+        <div class="modal-section-title">Effectif — ${t.players.length} joueurs convoqués</div>
+        <div class="players-grid">${playerRows}</div>
       </div>
 
     </div>
@@ -1785,13 +2587,8 @@ function openModal(code) {
   document.body.style.overflow = 'hidden';
 }
 
-function posLabel(pos) {
-  const l = {GK:'Gardien',DEF:'Défenseur',MID:'Milieu',FWD:'Attaquant'};
-  return l[pos] || pos;
-}
-
 function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModalBtn();
+  if (e.target.id === 'modalOverlay') closeModalBtn();
 }
 
 function closeModalBtn() {
@@ -1799,24 +2596,13 @@ function closeModalBtn() {
   document.body.style.overflow = '';
 }
 
-// =========================================================
-// FLAG STRIP
-// =========================================================
-const strip = document.getElementById('flagStrip');
-TEAMS.slice(0, 24).forEach(t => {
-  const span = document.createElement('span');
-  span.textContent = t.flag;
-  strip.appendChild(span);
-});
-
-// =========================================================
-// INIT
-// =========================================================
-renderGroupsView();
-renderGridView();
-
-// ESC to close modal
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalBtn(); });
+
+// ====================================================
+// INIT
+// ====================================================
+renderGroups();
+renderGrid();
 </script>
 </body>
 </html>
