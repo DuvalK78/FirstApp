@@ -1,629 +1,402 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flag Quiz — Coupe du Monde 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flag Quiz · CDM 2026</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&family=DM+Mono&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0f; --card: #0f0f1a; --border: #1e1e2e;
+    --gold: #c8a84b; --green: #2a9d5c; --red: #e63946;
+    --orange: #f4a261; --muted: #555; --text: #fff;
+  }
   body {
-    min-height: 100vh;
-    background: #0a0a0f;
+    background: var(--bg); color: var(--text);
     font-family: 'Bebas Neue', Impact, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 16px;
-    color: #fff;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 24px 16px;
   }
+  #progress-bar-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: #1a1a2e; z-index: 100; }
+  #progress-bar { height: 100%; width: 0%; background: var(--gold); transition: width 0.5s ease; }
 
-  /* Progress bar */
-  #progress-bar-wrap {
-    width: 100%; height: 3px;
-    background: #1a1a2e;
-    position: fixed; top: 0; left: 0; z-index: 10;
-  }
-  #progress-bar {
-    height: 100%; width: 0%;
-    background: #c8a84b;
-    transition: width 0.5s ease;
-  }
-
-  .card {
-    background: #0f0f1a;
-    border: 1px solid #1e1e2e;
-    border-radius: 8px;
-    padding: 28px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 480px;
-  }
-
-  .big-title {
-    font-size: clamp(32px, 8vw, 56px);
-    color: #fff;
-    margin: 0 0 4px;
-    letter-spacing: 4px;
-    line-height: 1;
-  }
-
-  .gold {
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: #c8a84b;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .muted {
-    font-family: 'DM Sans', sans-serif;
-    color: #555;
-    font-size: 12px;
-    margin: 6px 0 0;
-    text-align: center;
-  }
-
-  .btn {
-    background: #c8a84b;
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    padding: 11px;
-    font-size: 14px;
-    letter-spacing: 2px;
-    font-family: 'Bebas Neue', Impact, sans-serif;
-    cursor: pointer;
-    font-weight: 700;
-    width: 100%;
-  }
-  .btn:hover { background: #d9b95e; }
-
-  .btn-ghost {
-    background: transparent;
-    color: #666;
-    border: 1px solid #2a2a3a;
-    border-radius: 4px;
-    padding: 11px 16px;
-    font-size: 14px;
-    letter-spacing: 2px;
-    font-family: 'Bebas Neue', Impact, sans-serif;
-    cursor: pointer;
-  }
-  .btn-ghost:hover { border-color: #444; color: #999; }
-
-  /* Home */
-  .count-options {
-    display: flex; gap: 10px; margin-bottom: 24px;
-    flex-wrap: wrap; justify-content: center;
-  }
-  .count-btn {
-    background: transparent;
-    color: #888;
-    border: 1px solid #2a2a3a;
-    border-radius: 4px;
-    padding: 10px 22px;
-    font-size: 20px;
-    font-family: 'Bebas Neue', Impact, sans-serif;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .count-btn.active {
-    background: #c8a84b;
-    color: #000;
-    border-color: transparent;
-  }
-
-  .hint-legend {
-    width: 100%;
-    display: flex; flex-direction: column; gap: 5px;
-    margin-bottom: 20px;
-  }
-  .hint-row {
-    display: flex; align-items: center; gap: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; color: #555;
-  }
-  .pts-label {
-    font-family: 'Bebas Neue', Impact, sans-serif;
-    font-size: 14px; color: #c8a84b; min-width: 36px;
-  }
-
-  /* Game */
-  #game-header {
-    display: flex; justify-content: space-between;
-    width: 100%; max-width: 480px;
-    padding: 20px 0 8px;
-  }
-
-  #flag-display {
-    font-size: clamp(80px, 20vw, 110px);
-    line-height: 1;
-    transition: filter 0.3s;
-    margin-bottom: 4px;
-  }
-
-  .dots {
-    display: flex; gap: 6px; margin-bottom: 12px;
-  }
-  .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #1e1e2e;
-    border: 1px solid #333;
-    transition: background 0.2s;
-  }
-  .dot.used { background: #e63946; }
-
-  .hints-area {
-    width: 100%;
-    display: flex; flex-direction: column; gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .hint-box {
-    display: flex; align-items: center; gap: 10px;
-    background: #140f00;
-    border: 1px solid #f4a26122;
-    border-radius: 4px;
-    padding: 8px 12px;
-    width: 100%;
-  }
-  .hint-box .hint-icon { font-size: 16px; }
-  .hint-box .hint-label {
-    font-family: 'DM Sans', sans-serif;
-    color: #555; font-size: 11px; min-width: 58px;
-  }
-  .hint-box .hint-value {
-    font-family: monospace;
-    font-size: 14px; letter-spacing: 3px; color: #f4a261;
-  }
-  .hint-box .hint-value.capital {
-    font-family: 'DM Sans', sans-serif;
-    letter-spacing: 0;
-  }
-
-  .feedback {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 700; margin-bottom: 6px;
-  }
-  .feedback.correct { color: #2a9d5c; }
-  .feedback.revealed { color: #e63946; }
-
-  #answer-input {
-    width: 100%;
-    background: #111118;
-    border: 1px solid #2a2a3a;
-    border-radius: 4px;
-    padding: 12px 16px;
-    color: #fff;
-    font-size: 16px;
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    margin-bottom: 10px;
-  }
-  #answer-input:focus { border-color: #c8a84b44; }
-
-  .action-row { display: flex; gap: 8px; width: 100%; }
-  .action-row .btn { flex: 1; }
-
-  /* History */
-  #history {
-    display: flex; gap: 4px; flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 14px;
-    max-width: 480px; width: 100%;
-  }
-
-  /* Results */
-  .result-list {
-    width: 100%; max-height: 320px;
-    overflow-y: auto; margin-bottom: 16px;
-  }
-  .result-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 12px;
-    margin-bottom: 3px; border-radius: 2px;
-    font-family: 'DM Sans', sans-serif; font-size: 14px;
-  }
-  .result-item .r-flag { font-size: 22px; }
-  .result-item .r-name { flex: 1; }
-  .result-item .r-pts {
-    font-family: 'Bebas Neue', Impact, sans-serif;
-    font-size: 16px; color: #c8a84b;
-  }
-
-  .result-actions { display: flex; gap: 10px; width: 100%; }
-  .result-actions .btn { flex: 1; }
-  .result-actions .btn-ghost { flex: 1; }
-
-  .screen { display: none; flex-direction: column; align-items: center; width: 100%; }
+  .screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 480px; }
   .screen.active { display: flex; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 28px 22px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .big-title { font-size: clamp(32px, 8vw, 56px); letter-spacing: 4px; line-height: 1; margin-bottom: 4px; }
+  .gold { color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 13px; letter-spacing: 4px; }
+  .muted { color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 12px; text-align: center; margin-top: 6px; }
+
+  .count-wrap { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; justify-content: center; }
+  .count-btn { background: transparent; color: #888; border: 1px solid #2a2a3a; border-radius: 4px; padding: 10px 22px; font-size: 20px; font-family: 'Bebas Neue', Impact, sans-serif; cursor: pointer; transition: all 0.15s; }
+  .count-btn.selected { background: var(--gold); color: #000; border-color: transparent; }
+
+  .legend { width: 100%; display: flex; flex-direction: column; gap: 5px; margin-bottom: 20px; }
+  .legend-row { display: flex; align-items: center; gap: 10px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted); }
+  .legend-pts { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 14px; color: var(--gold); min-width: 40px; }
+  .legend-pts.zero { color: var(--red); }
+
+  .btn { background: var(--gold); color: #000; border: none; border-radius: 4px; padding: 12px; font-size: 14px; letter-spacing: 2px; font-family: 'Bebas Neue', Impact, sans-serif; cursor: pointer; font-weight: 700; width: 100%; }
+  .btn-ghost { background: transparent; color: #666; border: 1px solid #2a2a3a; border-radius: 4px; padding: 12px 16px; font-size: 14px; letter-spacing: 2px; font-family: 'Bebas Neue', Impact, sans-serif; cursor: pointer; }
+  .btn-hint { background: #1a1208; color: var(--orange); border: 1px solid #f4a26144; border-radius: 4px; padding: 12px 16px; font-size: 13px; letter-spacing: 2px; font-family: 'Bebas Neue', Impact, sans-serif; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  .btn-hint:hover { background: #261a0a; }
+  .btn-hint:disabled { opacity: 0.3; cursor: default; }
+  .btn-row { display: flex; gap: 8px; width: 100%; }
+
+  #game-header { display: flex; justify-content: space-between; width: 100%; max-width: 480px; padding: 20px 0 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; }
+  #game-counter { color: var(--muted); }
+  #game-score { color: var(--gold); font-weight: 700; }
+
+  #flag-display { font-size: clamp(80px, 20vw, 110px); line-height: 1; margin-bottom: 4px; transition: filter 0.3s; }
+  #flag-display.correct { filter: drop-shadow(0 0 24px #2a9d5c99); }
+  #flag-display.wrong   { filter: drop-shadow(0 0 24px #e6394699); }
+
+  #dots { display: flex; gap: 6px; margin-bottom: 12px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #1e1e2e; border: 1px solid #333; transition: background 0.2s; }
+  .dot.used { background: var(--red); }
+
+  #hints { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .hint-box { display: flex; align-items: center; gap: 10px; background: #140f00; border: 1px solid #f4a26122; border-radius: 4px; padding: 8px 12px; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
+  .hint-icon { font-size: 16px; }
+  .hint-label { font-family: 'DM Sans', sans-serif; color: #555; font-size: 11px; min-width: 58px; }
+  .hint-val { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 2px; color: var(--orange); }
+  .hint-val.plain { font-family: 'DM Sans', sans-serif; letter-spacing: 0; }
+
+  #feedback { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; min-height: 24px; text-align: center; }
+
+  #answer-input { width: 100%; background: #111118; border: 1px solid #2a2a3a; border-radius: 4px; padding: 12px 16px; color: #fff; font-size: 16px; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 10px; }
+  #answer-input:focus { border-color: var(--gold); }
+
+  #history { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; margin-top: 14px; max-width: 480px; width: 100%; min-height: 24px; }
+
+  #results-list { width: 100%; max-height: 320px; overflow-y: auto; margin-bottom: 16px; }
+  .result-row { display: flex; align-items: center; gap: 10px; padding: 7px 12px; margin-bottom: 3px; border-radius: 2px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+  .result-flag { font-size: 22px; }
+  .result-name { flex: 1; }
+  .result-pts { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 16px; color: var(--gold); }
 </style>
 </head>
 <body>
-
 <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
 
-<!-- HOME -->
+<!-- ACCUEIL -->
 <div id="screen-home" class="screen active">
-  <div class="card" style="max-width:380px">
+  <div class="card">
     <div style="font-size:52px;margin-bottom:4px">🧀</div>
     <h1 class="big-title">FLAG QUIZ</h1>
     <p class="gold" style="margin-bottom:20px">COUPE DU MONDE 2026</p>
-
     <p class="muted" style="margin-bottom:12px">Combien de drapeaux ?</p>
-    <div class="count-options" id="count-options">
+    <div class="count-wrap">
       <button class="count-btn" data-n="6">6</button>
-      <button class="count-btn active" data-n="12">12</button>
+      <button class="count-btn selected" data-n="12">12</button>
       <button class="count-btn" data-n="24">24</button>
       <button class="count-btn" data-n="48">48</button>
     </div>
-
-    <div class="hint-legend">
-      <div class="hint-row"><span class="pts-label">5 pts</span><span>Trouvé du premier coup</span></div>
-      <div class="hint-row"><span class="pts-label">4 pts</span><span>Après indice longueur</span></div>
-      <div class="hint-row"><span class="pts-label">3 pts</span><span>Après indice capitale</span></div>
-      <div class="hint-row"><span class="pts-label">2 pts</span><span>Après indice initiales</span></div>
-      <div class="hint-row"><span class="pts-label">1 pt</span><span>Après indice fin du mot</span></div>
-      <div class="hint-row"><span class="pts-label" style="color:#e63946">0 pt</span><span>Pas trouvé</span></div>
+    <div class="legend">
+      <div class="legend-row"><span class="legend-pts">6 pts</span><span>Trouvé sans indice</span></div>
+      <div class="legend-row"><span class="legend-pts">5 pts</span><span>Après indice longueur</span></div>
+      <div class="legend-row"><span class="legend-pts">4 pts</span><span>Après indice capitale</span></div>
+      <div class="legend-row"><span class="legend-pts">3 pts</span><span>Après indice continent</span></div>
+      <div class="legend-row"><span class="legend-pts">2 pts</span><span>Après indice initiales</span></div>
+      <div class="legend-row"><span class="legend-pts">1 pt</span><span>Après indice fin du mot</span></div>
+      <div class="legend-row"><span class="legend-pts zero">0 pt</span><span>Pas trouvé</span></div>
     </div>
-
-    <button class="btn" id="start-btn">JOUER</button>
+    <button class="btn" onclick="startGame()">JOUER</button>
   </div>
 </div>
 
-<!-- GAME -->
+<!-- JEU -->
 <div id="screen-game" class="screen">
   <div id="game-header">
-    <span class="muted" id="counter-label"></span>
-    <span style="font-family:'DM Sans',sans-serif;color:#c8a84b;font-size:13px;font-weight:700" id="score-label"></span>
+    <span id="game-counter">1 / 12</span>
+    <span id="game-score">0 / 72 pts</span>
   </div>
-
   <div class="card">
-    <div id="flag-display"></div>
-    <div class="dots" id="dots"></div>
-    <div class="hints-area" id="hints-area"></div>
+    <div id="flag-display">🏳</div>
+    <div id="dots"></div>
+    <div id="hints"></div>
     <div id="feedback"></div>
-    <div id="input-area">
-      <input type="text" id="answer-input" placeholder="Quel pays ?" autocomplete="off" autocorrect="off" spellcheck="false" />
-      <div class="action-row">
-        <button class="btn" id="validate-btn">VALIDER</button>
-        <button class="btn-ghost" id="skip-btn">PASSER</button>
-      </div>
+    <input id="answer-input" type="text" placeholder="Quel pays ?" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div class="btn-row">
+      <button class="btn" style="flex:1" onclick="checkAnswer()">VALIDER</button>
+      <button class="btn-hint" id="btn-hint" onclick="showNextHint()">💡 INDICE</button>
+      <button class="btn-ghost" onclick="skip()">PASSER</button>
     </div>
   </div>
-
   <div id="history"></div>
 </div>
 
-<!-- DONE -->
+<!-- RÉSULTATS -->
 <div id="screen-done" class="screen">
-  <div class="card" style="max-width:500px">
+  <div class="card" style="max-width:500px;width:100%">
     <div id="done-emoji" style="font-size:52px"></div>
     <h1 class="big-title" id="done-score"></h1>
-    <p class="gold" style="font-size:12px;letter-spacing:5px;margin-bottom:4px" id="done-pct"></p>
-    <p class="muted" style="margin-bottom:20px" id="done-label"></p>
-    <div class="result-list" id="result-list"></div>
-    <div class="result-actions">
-      <button class="btn" id="replay-btn">REJOUER</button>
-      <button class="btn-ghost" id="menu-btn">MENU</button>
+    <p class="gold" id="done-pct" style="font-size:12px;letter-spacing:5px;margin-bottom:4px"></p>
+    <p class="muted" id="done-label" style="margin-bottom:20px"></p>
+    <div id="results-list"></div>
+    <div class="btn-row">
+      <button class="btn" style="flex:1" onclick="startGame()">REJOUER</button>
+      <button class="btn-ghost" style="flex:1" onclick="showScreen('home')">MENU</button>
     </div>
   </div>
 </div>
 
 <script>
 const ALL_TEAMS = [
-  { flag:"🇺🇸", name:"États-Unis", capital:"Washington D.C.", aliases:["etats-unis","etats unis","usa","us","united states","amerique"] },
-  { flag:"🇲🇽", name:"Mexique", capital:"Mexico City", aliases:["mexico"] },
-  { flag:"🇨🇦", name:"Canada", capital:"Ottawa", aliases:[] },
-  { flag:"🇭🇹", name:"Haïti", capital:"Port-au-Prince", aliases:["haiti"] },
-  { flag:"🇵🇦", name:"Panama", capital:"Panama City", aliases:[] },
-  { flag:"🇨🇼", name:"Curaçao", capital:"Willemstad", aliases:["curacao"] },
-  { flag:"🇦🇷", name:"Argentine", capital:"Buenos Aires", aliases:["argentina"] },
-  { flag:"🇧🇷", name:"Brésil", capital:"Brasília", aliases:["bresil","brazil","brasil"] },
-  { flag:"🇨🇴", name:"Colombie", capital:"Bogotá", aliases:["colombia"] },
-  { flag:"🇺🇾", name:"Uruguay", capital:"Montevideo", aliases:[] },
-  { flag:"🇪🇨", name:"Équateur", capital:"Quito", aliases:["equateur","ecuador"] },
-  { flag:"🇵🇾", name:"Paraguay", capital:"Asunción", aliases:[] },
-  { flag:"🇫🇷", name:"France", capital:"Paris", aliases:["les bleus"] },
-  { flag:"🇪🇸", name:"Espagne", capital:"Madrid", aliases:["spain","espana"] },
-  { flag:"🇩🇪", name:"Allemagne", capital:"Berlin", aliases:["germany","deutschland"] },
-  { flag:"🇵🇹", name:"Portugal", capital:"Lisbonne", aliases:[] },
-  { flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", name:"Angleterre", capital:"Londres", aliases:["england","angletterre"] },
-  { flag:"🇳🇱", name:"Pays-Bas", capital:"Amsterdam", aliases:["pays bas","hollande","netherlands","holland"] },
-  { flag:"🇧🇪", name:"Belgique", capital:"Bruxelles", aliases:["belgium"] },
-  { flag:"🇭🇷", name:"Croatie", capital:"Zagreb", aliases:["croatia"] },
-  { flag:"🇨🇭", name:"Suisse", capital:"Berne", aliases:["switzerland","swiss"] },
-  { flag:"🇦🇹", name:"Autriche", capital:"Vienne", aliases:["austria"] },
-  { flag:"🇹🇷", name:"Turquie", capital:"Ankara", aliases:["turkey","turkiye"] },
-  { flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", name:"Écosse", capital:"Édimbourg", aliases:["ecosse","scotland"] },
-  { flag:"🇳🇴", name:"Norvège", capital:"Oslo", aliases:["norvege","norway"] },
-  { flag:"🇸🇪", name:"Suède", capital:"Stockholm", aliases:["suede","sweden"] },
-  { flag:"🇧🇦", name:"Bosnie-Herzégovine", capital:"Sarajevo", aliases:["bosnie","bosnie herzegovine","bosnia"] },
-  { flag:"🇨🇿", name:"Tchéquie", capital:"Prague", aliases:["tcheque","tchequie","czech republic","czech"] },
-  { flag:"🇲🇦", name:"Maroc", capital:"Rabat", aliases:["morocco"] },
-  { flag:"🇸🇳", name:"Sénégal", capital:"Dakar", aliases:["senegal"] },
-  { flag:"🇩🇿", name:"Algérie", capital:"Alger", aliases:["algerie","algeria"] },
-  { flag:"🇬🇭", name:"Ghana", capital:"Accra", aliases:[] },
-  { flag:"🇨🇮", name:"Côte d'Ivoire", capital:"Yamoussoukro", aliases:["cote d ivoire","cote divoire","ivory coast","cote ivoire"] },
-  { flag:"🇪🇬", name:"Égypte", capital:"Le Caire", aliases:["egypte","egypt"] },
-  { flag:"🇿🇦", name:"Afrique du Sud", capital:"Pretoria", aliases:["afrique du sud","south africa"] },
-  { flag:"🇨🇻", name:"Cap-Vert", capital:"Praia", aliases:["cap vert","cape verde","cabo verde"] },
-  { flag:"🇹🇳", name:"Tunisie", capital:"Tunis", aliases:["tunisia"] },
-  { flag:"🇨🇩", name:"RD Congo", capital:"Kinshasa", aliases:["rd congo","rdc","congo","dr congo"] },
-  { flag:"🇯🇵", name:"Japon", capital:"Tokyo", aliases:["japan"] },
-  { flag:"🇰🇷", name:"Corée du Sud", capital:"Séoul", aliases:["coree du sud","south korea","korea"] },
-  { flag:"🇮🇷", name:"Iran", capital:"Téhéran", aliases:[] },
-  { flag:"🇦🇺", name:"Australie", capital:"Canberra", aliases:["australia"] },
-  { flag:"🇸🇦", name:"Arabie Saoudite", capital:"Riyad", aliases:["arabie saoudite","saudi arabia","arabie"] },
-  { flag:"🇶🇦", name:"Qatar", capital:"Doha", aliases:[] },
-  { flag:"🇯🇴", name:"Jordanie", capital:"Amman", aliases:["jordan"] },
-  { flag:"🇺🇿", name:"Ouzbékistan", capital:"Tachkent", aliases:["ouzbekistan","uzbekistan"] },
-  { flag:"🇮🇶", name:"Irak", capital:"Bagdad", aliases:["iraq"] },
-  { flag:"🇳🇿", name:"Nouvelle-Zélande", capital:"Wellington", aliases:["nouvelle zelande","new zealand","nz"] },
+  { flag:"🇺🇸", name:"États-Unis",         capital:"Washington D.C.", continent:"Amérique du Nord", aliases:["etats-unis","etats unis","usa","us","united states","amerique"] },
+  { flag:"🇲🇽", name:"Mexique",             capital:"Mexico City",     continent:"Amérique du Nord", aliases:["mexico"] },
+  { flag:"🇨🇦", name:"Canada",              capital:"Ottawa",          continent:"Amérique du Nord", aliases:[] },
+  { flag:"🇭🇹", name:"Haïti",              capital:"Port-au-Prince",  continent:"Amérique du Nord", aliases:["haiti"] },
+  { flag:"🇵🇦", name:"Panama",              capital:"Panama City",     continent:"Amérique du Nord", aliases:[] },
+  { flag:"🇨🇼", name:"Curaçao",            capital:"Willemstad",      continent:"Amérique du Nord", aliases:["curacao"] },
+  { flag:"🇦🇷", name:"Argentine",           capital:"Buenos Aires",    continent:"Amérique du Sud",  aliases:["argentina"] },
+  { flag:"🇧🇷", name:"Brésil",             capital:"Brasília",        continent:"Amérique du Sud",  aliases:["bresil","brazil","brasil"] },
+  { flag:"🇨🇴", name:"Colombie",            capital:"Bogotá",          continent:"Amérique du Sud",  aliases:["colombia"] },
+  { flag:"🇺🇾", name:"Uruguay",             capital:"Montevideo",      continent:"Amérique du Sud",  aliases:[] },
+  { flag:"🇪🇨", name:"Équateur",           capital:"Quito",           continent:"Amérique du Sud",  aliases:["equateur","ecuador"] },
+  { flag:"🇵🇾", name:"Paraguay",            capital:"Asunción",        continent:"Amérique du Sud",  aliases:[] },
+  { flag:"🇫🇷", name:"France",              capital:"Paris",           continent:"Europe",           aliases:["les bleus"] },
+  { flag:"🇪🇸", name:"Espagne",             capital:"Madrid",          continent:"Europe",           aliases:["spain","espana"] },
+  { flag:"🇩🇪", name:"Allemagne",           capital:"Berlin",          continent:"Europe",           aliases:["germany","deutschland"] },
+  { flag:"🇵🇹", name:"Portugal",            capital:"Lisbonne",        continent:"Europe",           aliases:[] },
+  { flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", name:"Angleterre",          capital:"Londres",          continent:"Europe",           aliases:["england"] },
+  { flag:"🇳🇱", name:"Pays-Bas",           capital:"Amsterdam",       continent:"Europe",           aliases:["pays bas","hollande","netherlands","holland"] },
+  { flag:"🇧🇪", name:"Belgique",            capital:"Bruxelles",       continent:"Europe",           aliases:["belgium"] },
+  { flag:"🇭🇷", name:"Croatie",             capital:"Zagreb",          continent:"Europe",           aliases:["croatia"] },
+  { flag:"🇨🇭", name:"Suisse",              capital:"Berne",           continent:"Europe",           aliases:["switzerland","swiss"] },
+  { flag:"🇦🇹", name:"Autriche",            capital:"Vienne",          continent:"Europe",           aliases:["austria"] },
+  { flag:"🇹🇷", name:"Turquie",             capital:"Ankara",          continent:"Europe",           aliases:["turkey","turkiye"] },
+  { flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿", name:"Écosse",             capital:"Édimbourg",        continent:"Europe",           aliases:["ecosse","scotland"] },
+  { flag:"🇳🇴", name:"Norvège",             capital:"Oslo",            continent:"Europe",           aliases:["norvege","norway"] },
+  { flag:"🇸🇪", name:"Suède",              capital:"Stockholm",       continent:"Europe",           aliases:["suede","sweden"] },
+  { flag:"🇧🇦", name:"Bosnie-Herzégovine", capital:"Sarajevo",        continent:"Europe",           aliases:["bosnie","bosnie herzegovine","bosnia"] },
+  { flag:"🇨🇿", name:"Tchéquie",           capital:"Prague",          continent:"Europe",           aliases:["tcheque","tchequie","czech republic","czech"] },
+  { flag:"🇲🇦", name:"Maroc",               capital:"Rabat",           continent:"Afrique",          aliases:["morocco"] },
+  { flag:"🇸🇳", name:"Sénégal",            capital:"Dakar",           continent:"Afrique",          aliases:["senegal"] },
+  { flag:"🇩🇿", name:"Algérie",            capital:"Alger",           continent:"Afrique",          aliases:["algerie","algeria"] },
+  { flag:"🇬🇭", name:"Ghana",               capital:"Accra",           continent:"Afrique",          aliases:[] },
+  { flag:"🇨🇮", name:"Côte d'Ivoire",     capital:"Yamoussoukro",    continent:"Afrique",          aliases:["cote d ivoire","cote divoire","ivory coast","cote ivoire"] },
+  { flag:"🇪🇬", name:"Égypte",             capital:"Le Caire",        continent:"Afrique",          aliases:["egypte","egypt"] },
+  { flag:"🇿🇦", name:"Afrique du Sud",      capital:"Pretoria",        continent:"Afrique",          aliases:["afrique du sud","south africa"] },
+  { flag:"🇨🇻", name:"Cap-Vert",           capital:"Praia",           continent:"Afrique",          aliases:["cap vert","cape verde","cabo verde"] },
+  { flag:"🇹🇳", name:"Tunisie",             capital:"Tunis",           continent:"Afrique",          aliases:["tunisia"] },
+  { flag:"🇨🇩", name:"RD Congo",            capital:"Kinshasa",        continent:"Afrique",          aliases:["rd congo","rdc","congo","dr congo"] },
+  { flag:"🇯🇵", name:"Japon",               capital:"Tokyo",           continent:"Asie",             aliases:["japan"] },
+  { flag:"🇰🇷", name:"Corée du Sud",        capital:"Séoul",           continent:"Asie",             aliases:["coree du sud","south korea","korea"] },
+  { flag:"🇮🇷", name:"Iran",                capital:"Téhéran",         continent:"Asie",             aliases:[] },
+  { flag:"🇦🇺", name:"Australie",           capital:"Canberra",        continent:"Océanie",          aliases:["australia"] },
+  { flag:"🇸🇦", name:"Arabie Saoudite",     capital:"Riyad",           continent:"Asie",             aliases:["arabie saoudite","saudi arabia","arabie"] },
+  { flag:"🇶🇦", name:"Qatar",               capital:"Doha",            continent:"Asie",             aliases:[] },
+  { flag:"🇯🇴", name:"Jordanie",            capital:"Amman",           continent:"Asie",             aliases:["jordan"] },
+  { flag:"🇺🇿", name:"Ouzbékistan",        capital:"Tachkent",        continent:"Asie",             aliases:["ouzbekistan","uzbekistan"] },
+  { flag:"🇮🇶", name:"Irak",               capital:"Bagdad",          continent:"Asie",             aliases:["iraq"] },
+  { flag:"🇳🇿", name:"Nouvelle-Zélande",   capital:"Wellington",      continent:"Océanie",          aliases:["nouvelle zelande","new zealand","nz"] },
 ];
 
-const MAX_WRONG = 4;
-const PTS = [5, 4, 3, 2, 1];
+// 5 indices → 6 niveaux de pts : 6 5 4 3 2 1 → 0 si pas trouvé
+const HINTS = [
+  { icon:"📏", label:"Longueur",   val: t => `<span class="hint-val">${hintLength(t.name)}</span>` },
+  { icon:"🏛️", label:"Capitale",  val: t => `<span class="hint-val plain">${t.capital}</span>` },
+  { icon:"🌍", label:"Continent",  val: t => `<span class="hint-val plain">${t.continent}</span>` },
+  { icon:"🔤", label:"Initiales",  val: t => `<span class="hint-val">${hintInitials(t.name)}</span>` },
+  { icon:"🔚", label:"Fin du mot", val: t => `<span class="hint-val">${hintEnding(t.name)}</span>` },
+];
+// hintLevel = nombre d'indices affichés (0..5)
+// pts = 6 - hintLevel si trouvé, 0 sinon
 
-// State
-let count = 12;
-let queue = [];
-let idx = 0;
-let wrongCount = 0;
-let phase = "playing"; // playing | correct | revealed
-let score = 0;
-let results = [];
+let queue=[], idx=0, hintLevel=0, score=0, results=[], locked=false, selectedCount=12;
 
-// ── Helpers ──────────────────────────────────────────────────
-function normalize(str) {
-  return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]/g, "").trim();
+function normalize(s) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]/g,"").trim();
 }
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function shuffle(a) {
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}
+  return b;
 }
 function hintLength(name) {
-  return name.split(/[\s\-']+/).map(w => Array.from(w).map(() => "﹏").join(" ")).join("  ·  ");
+  return name.split(/[\s\-']+/).map(w=>[...w].map(()=>"﹏").join(" ")).join("  ·  ");
 }
 function hintInitials(name) {
-  return name.split(/[\s\-']+/).map(w => {
-    const l = Array.from(w);
-    return l[0].toUpperCase() + l.slice(1).map(() => "_").join("");
-  }).join("-");
+  return name.split(/[\s\-']+/).map(w=>{const l=[...w];return l[0].toUpperCase()+l.slice(1).map(()=>"_").join("");}).join("-");
 }
 function hintEnding(name) {
-  return name.split(/[\s\-']+/).map(w => {
-    const l = Array.from(w);
-    if (l.length <= 2) return w;
-    return l.slice(0, l.length - 2).map(() => "_").join("") + l.slice(-2).join("").toLowerCase();
+  return name.split(/[\s\-']+/).map(w=>{
+    const l=[...w];if(l.length<=2)return w;
+    return l.slice(0,-2).map(()=>"_").join("")+l.slice(-2).join("").toLowerCase();
   }).join("-");
 }
 
-// ── Screen switching ──────────────────────────────────────────
 function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById("screen-" + id).classList.add("active");
-  document.getElementById("progress-bar").style.width = "0%";
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
 }
 
-// ── Home ──────────────────────────────────────────────────────
-document.querySelectorAll(".count-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".count-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    count = parseInt(btn.dataset.n);
+document.querySelectorAll('.count-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.count-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedCount=parseInt(btn.dataset.n);
   });
 });
-document.getElementById("start-btn").addEventListener("click", startGame);
-document.getElementById("replay-btn").addEventListener("click", startGame);
-document.getElementById("menu-btn").addEventListener("click", () => showScreen("home"));
 
-// ── Game logic ────────────────────────────────────────────────
 function startGame() {
-  queue = shuffle(ALL_TEAMS).slice(0, count);
-  idx = 0;
-  score = 0;
-  results = [];
-  showScreen("game");
-  renderTurn();
+  queue=shuffle(ALL_TEAMS).slice(0,selectedCount);
+  idx=0; hintLevel=0; score=0; results=[]; locked=false;
+  document.getElementById('history').innerHTML='';
+  document.getElementById('progress-bar').style.width='0%';
+  showScreen('game');
+  renderCard();
 }
 
-function renderTurn() {
-  const current = queue[idx];
-  const maxScore = queue.length * 5;
-  wrongCount = 0;
-  phase = "playing";
+function renderCard() {
+  const t=queue[idx];
+  const maxScore=queue.length*6;
+  document.getElementById('progress-bar').style.width=(idx/queue.length*100)+'%';
+  document.getElementById('game-counter').textContent=`${idx+1} / ${queue.length}`;
+  document.getElementById('game-score').textContent=`${score} / ${maxScore} pts`;
 
-  // Header
-  document.getElementById("counter-label").textContent = `${idx + 1} / ${queue.length}`;
-  document.getElementById("score-label").textContent = `${score} / ${maxScore} pts`;
+  const flagEl=document.getElementById('flag-display');
+  flagEl.textContent=t.flag; flagEl.className='';
 
-  // Progress bar
-  document.getElementById("progress-bar").style.width = `${(idx / queue.length) * 100}%`;
-
-  // Flag
-  const flagEl = document.getElementById("flag-display");
-  flagEl.textContent = current.flag;
-  flagEl.style.filter = "none";
-
-  // Dots
-  renderDots();
-
-  // Hints
-  document.getElementById("hints-area").innerHTML = "";
-
-  // Feedback
-  document.getElementById("feedback").innerHTML = "";
-
-  // Input
-  const inputArea = document.getElementById("input-area");
-  inputArea.style.display = "";
-  const inp = document.getElementById("answer-input");
-  inp.value = "";
-  inp.disabled = false;
-  setTimeout(() => inp.focus(), 60);
-
-  // History
-  renderHistory();
-}
-
-function renderDots() {
-  const el = document.getElementById("dots");
-  el.innerHTML = "";
-  for (let i = 0; i < MAX_WRONG; i++) {
-    const d = document.createElement("div");
-    d.className = "dot" + (i < wrongCount ? " used" : "");
-    el.appendChild(d);
+  // dots : un par essai raté (hintLevel peut avancer sans rater)
+  // on affiche plutôt les indices restants sous forme de dots
+  const dotsEl=document.getElementById('dots');
+  dotsEl.innerHTML='';
+  for(let i=0;i<HINTS.length;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i<hintLevel?' used':'');
+    dotsEl.appendChild(d);
   }
-}
 
-function renderHints() {
-  const current = queue[idx];
-  const area = document.getElementById("hints-area");
-  area.innerHTML = "";
-  if (wrongCount >= 1) area.appendChild(makeHint("📏", "Longueur", hintLength(current.name)));
-  if (wrongCount >= 2) area.appendChild(makeHint("🏛️", "Capitale", current.capital, true));
-  if (wrongCount >= 3) area.appendChild(makeHint("🔤", "Initiales", hintInitials(current.name)));
-  if (wrongCount >= 4) area.appendChild(makeHint("🔚", "Fin du mot", hintEnding(current.name)));
-}
-
-function makeHint(icon, label, value, isCapital = false) {
-  const box = document.createElement("div");
-  box.className = "hint-box";
-  box.innerHTML = `
-    <span class="hint-icon">${icon}</span>
-    <span class="hint-label">${label}</span>
-    <span class="hint-value${isCapital ? " capital" : ""}">${value}</span>
-  `;
-  return box;
-}
-
-function advance(pts) {
-  const current = queue[idx];
-  results.push({ team: current, pts, wrongCount });
-  score += pts;
-
-  // Glow
-  const flagEl = document.getElementById("flag-display");
-  flagEl.style.filter = pts > 0
-    ? "drop-shadow(0 0 24px #2a9d5c99)"
-    : "drop-shadow(0 0 24px #e6394699)";
-
-  // Disable input
-  document.getElementById("answer-input").disabled = true;
-  document.getElementById("input-area").style.display = "none";
-
-  renderHistory();
-
-  const next = idx + 1;
-  const maxScore = queue.length * 5;
-  document.getElementById("score-label").textContent = `${score} / ${maxScore} pts`;
-
-  if (next >= queue.length) {
-    setTimeout(() => showDone(), 1100);
-  } else {
-    setTimeout(() => {
-      idx = next;
-      renderTurn();
-    }, 1100);
+  // indices déjà révélés
+  const hintsEl=document.getElementById('hints');
+  hintsEl.innerHTML='';
+  for(let i=0;i<hintLevel;i++){
+    const h=HINTS[i];
+    const box=document.createElement('div');
+    box.className='hint-box';
+    box.innerHTML=`<span class="hint-icon">${h.icon}</span><span class="hint-label">${h.label}</span>${h.val(t)}`;
+    hintsEl.appendChild(box);
   }
+
+  // bouton indice
+  const btnHint=document.getElementById('btn-hint');
+  btnHint.disabled=(hintLevel>=HINTS.length);
+
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').style.color='';
+  const input=document.getElementById('answer-input');
+  input.value=''; input.style.display=''; input.style.opacity='1';
+  document.querySelector('.btn-row').style.display='';
+  locked=false;
+  setTimeout(()=>input.focus(),50);
+}
+
+function showNextHint() {
+  if(locked||hintLevel>=HINTS.length) return;
+  hintLevel++;
+  const t=queue[idx];
+  const h=HINTS[hintLevel-1];
+  const hintsEl=document.getElementById('hints');
+  const box=document.createElement('div');
+  box.className='hint-box';
+  box.innerHTML=`<span class="hint-icon">${h.icon}</span><span class="hint-label">${h.label}</span>${h.val(t)}`;
+  hintsEl.appendChild(box);
+
+  // update dots
+  const dots=document.getElementById('dots').querySelectorAll('.dot');
+  dots.forEach((d,i)=>{ d.className='dot'+(i<hintLevel?' used':''); });
+
+  // disable bouton si plus d'indices
+  document.getElementById('btn-hint').disabled=(hintLevel>=HINTS.length);
+  document.getElementById('answer-input').focus();
 }
 
 function checkAnswer() {
-  if (phase !== "playing") return;
-  const inp = document.getElementById("answer-input");
-  const val = inp.value.trim();
-  if (!val) return;
-  const current = queue[idx];
-  const norm = normalize(val);
-  const isCorrect = norm === normalize(current.name) || current.aliases.map(normalize).includes(norm);
+  if(locked) return;
+  const input=document.getElementById('answer-input');
+  const val=input.value.trim(); if(!val) return;
+  const t=queue[idx];
+  const norm=normalize(val);
+  const isCorrect=norm===normalize(t.name)||t.aliases.map(normalize).includes(norm);
 
-  if (isCorrect) {
-    const pts = PTS[wrongCount] ?? 1;
-    phase = "correct";
-    const fb = document.getElementById("feedback");
-    fb.className = "feedback correct";
-    fb.innerHTML = `✓ ${current.name} — <span style="color:#c8a84b">+${pts} pts</span>`;
+  if(isCorrect){
+    const pts=Math.max(6-hintLevel, 1);
+    showFeedback(true,t.name,pts);
     advance(pts);
   } else {
-    wrongCount++;
-    inp.value = "";
-    renderDots();
-    renderHints();
-    if (wrongCount >= MAX_WRONG) {
-      phase = "revealed";
-      const fb = document.getElementById("feedback");
-      fb.className = "feedback revealed";
-      fb.innerHTML = `✗ C'était : <span style="color:#fff">${current.name}</span>`;
-      advance(0);
-    }
+    input.value='';
+    // shake animation
+    input.style.borderColor='var(--red)';
+    setTimeout(()=>{ input.style.borderColor=''; input.focus(); },500);
   }
 }
 
-function skipQuestion() {
-  if (phase !== "playing") return;
-  const current = queue[idx];
-  phase = "revealed";
-  const fb = document.getElementById("feedback");
-  fb.className = "feedback revealed";
-  fb.innerHTML = `✗ C'était : <span style="color:#fff">${current.name}</span>`;
+function skip() {
+  if(locked) return;
+  showFeedback(false,queue[idx].name,0);
   advance(0);
 }
 
-function renderHistory() {
-  const el = document.getElementById("history");
-  el.innerHTML = "";
-  results.forEach(r => {
-    const span = document.createElement("span");
-    span.title = `${r.team.name} — ${r.pts} pts`;
-    span.style.fontSize = "16px";
-    span.textContent = r.pts === 5 ? "🟢" : r.pts === 0 ? "🔴" : "🟡";
-    el.appendChild(span);
-  });
+function showFeedback(correct,name,pts) {
+  locked=true;
+  const flagEl=document.getElementById('flag-display');
+  flagEl.classList.add(correct?'correct':'wrong');
+  const fb=document.getElementById('feedback');
+  if(correct){
+    fb.style.color='var(--green)';
+    fb.textContent=`✓ ${name} — +${pts} pt${pts>1?'s':''}`;
+  } else {
+    fb.style.color='var(--red)';
+    fb.textContent=`✗ C'était : ${name}`;
+  }
+  document.getElementById('answer-input').style.display='none';
+  document.querySelector('.btn-row').style.display='none';
 }
 
-// ── Done ──────────────────────────────────────────────────────
-function showDone() {
-  showScreen("done");
-  const maxScore = queue.length * 5;
-  const pct = maxScore ? Math.round((score / maxScore) * 100) : 0;
-  const emoji = pct === 100 ? "🏆" : pct >= 80 ? "⭐" : pct >= 50 ? "💪" : "📚";
-  const label = pct === 100 ? "PARFAIT !" : pct >= 80 ? "EXCELLENT !" : pct >= 50 ? "PAS MAL !" : "À RETRAVAILLER";
-
-  document.getElementById("done-emoji").textContent = emoji;
-  document.getElementById("done-score").innerHTML = `${score} <span style="color:#444;font-size:0.5em">/ ${maxScore}</span>`;
-  document.getElementById("done-pct").textContent = pct + "%";
-  document.getElementById("done-label").textContent = label;
-
-  const list = document.getElementById("result-list");
-  list.innerHTML = "";
-  results.forEach(r => {
-    const item = document.createElement("div");
-    item.className = "result-item";
-    const bg = r.pts === 5 ? "#0d2b1a" : r.pts === 0 ? "#2b0d0d" : "#1a1208";
-    const border = r.pts === 5 ? "#2a9d5c" : r.pts === 0 ? "#e63946" : "#f4a261";
-    const nameColor = r.pts === 5 ? "#2a9d5c" : r.pts === 0 ? "#e63946" : "#f4a261";
-    item.style.cssText = `background:${bg};border-left:3px solid ${border};`;
-    item.innerHTML = `
-      <span class="r-flag">${r.team.flag}</span>
-      <span class="r-name" style="color:${nameColor}">${r.team.name}</span>
-      <span class="r-pts">${r.pts} pt${r.pts !== 1 ? "s" : ""}</span>
-    `;
-    list.appendChild(item);
-  });
+function advance(pts) {
+  const t=queue[idx];
+  score+=pts; results.push({team:t,pts,hintLevel});
+  const dot=document.createElement('span');
+  dot.title=`${t.name} — ${pts} pts`;
+  dot.style.fontSize='16px';
+  dot.textContent=pts===6?'🟢':pts===0?'🔴':'🟡';
+  document.getElementById('history').appendChild(dot);
+  const next=idx+1;
+  setTimeout(()=>{
+    if(next>=queue.length){ showResults(); }
+    else { idx=next; hintLevel=0; renderCard(); }
+  },1200);
 }
 
-// ── Events ────────────────────────────────────────────────────
-document.getElementById("validate-btn").addEventListener("click", checkAnswer);
-document.getElementById("skip-btn").addEventListener("click", skipQuestion);
-document.getElementById("answer-input").addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(); });
+function showResults() {
+  document.getElementById('progress-bar').style.width='100%';
+  const maxScore=queue.length*6;
+  const pct=Math.round(score/maxScore*100);
+  const emoji=pct===100?'🏆':pct>=80?'⭐':pct>=50?'💪':'📚';
+  const label=pct===100?'PARFAIT !':pct>=80?'EXCELLENT !':pct>=50?'PAS MAL !':'À RETRAVAILLER';
+  document.getElementById('done-emoji').textContent=emoji;
+  document.getElementById('done-score').textContent=`${score} / ${maxScore}`;
+  document.getElementById('done-pct').textContent=pct+'%';
+  document.getElementById('done-label').textContent=label;
+  const list=document.getElementById('results-list');
+  list.innerHTML='';
+  results.forEach(r=>{
+    const row=document.createElement('div');
+    row.className='result-row';
+    const bg=r.pts===6?'#0d2b1a':r.pts===0?'#2b0d0d':'#1a1208';
+    const col=r.pts===6?'var(--green)':r.pts===0?'var(--red)':'var(--orange)';
+    row.style.cssText=`background:${bg};border-left:3px solid ${col}`;
+    row.innerHTML=`<span class="result-flag">${r.team.flag}</span><span class="result-name" style="color:${col}">${r.team.name}</span><span class="result-pts">${r.pts} pt${r.pts!==1?'s':''}</span>`;
+    list.appendChild(row);
+  });
+  showScreen('done');
+}
+
+document.getElementById('answer-input').addEventListener('keydown',e=>{ if(e.key==='Enter') checkAnswer(); });
 </script>
 </body>
 </html>
