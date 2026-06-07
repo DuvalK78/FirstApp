@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Capitales — Coupe du Monde 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00C97A;
+    --green-dark: #009A5E;
+    --red: #FF3B3B;
+    --red-bg: #2a1010;
+    --green-bg: #0d2a1a;
+    --bg: #0a0f0d;
+    --surface: #111915;
+    --surface2: #182218;
+    --border: rgba(0,201,122,0.15);
+    --text: #e8f5ef;
+    --muted: #6b8c78;
+    --accent: #FFD600;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 10%, rgba(0,201,122,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,201,122,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { width: 100%; max-width: 560px; position: relative; z-index: 1; }
+
+  /* HEADER */
+  .site-header { text-align: center; margin-bottom: 2.5rem; }
+  .site-header .eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--green); font-weight: 500; margin-bottom: 8px;
+  }
+  .site-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 8vw, 64px);
+    line-height: 0.95;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .site-header h1 span { color: var(--green); }
+  .site-header p { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+  /* MODE SELECTOR */
+  .mode-row { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+  .mode-btn {
+    flex: 1; padding: 9px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--surface);
+    color: var(--muted); font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: all 0.2s; font-weight: 500;
+  }
+  .mode-btn:hover { border-color: var(--green); color: var(--text); }
+  .mode-btn.active { background: rgba(0,201,122,0.12); border-color: var(--green); color: var(--green); }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px; text-align: center;
+  }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--text); line-height: 1; }
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--red); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 3px; background: var(--surface2);
+    border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--green);
+    border-radius: 2px; transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* QUESTION CARD */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.75rem; margin-bottom: 1rem;
+    animation: slideUp 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+  .q-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 10px; }
+  .country-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px; line-height: 1; color: var(--text);
+    display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem;
+  }
+  .country-name .flag { font-size: 36px; line-height: 1; }
+
+  /* OPTIONS QCM */
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .opt {
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    font-weight: 400;
+    position: relative;
+    overflow: hidden;
+  }
+  .opt:hover:not(:disabled) { background: rgba(0,201,122,0.08); border-color: rgba(0,201,122,0.4); }
+  .opt.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); font-weight: 500; }
+  .opt.wrong { background: var(--red-bg); border-color: var(--red); color: #ff8080; }
+  .opt.reveal { background: var(--green-bg); border-color: var(--green); color: var(--green); font-weight: 500; }
+  .opt:disabled { cursor: default; opacity: 0.8; }
+  .opt.correct::before, .opt.reveal::before { content: '✓ '; }
+  .opt.wrong::before { content: '✗ '; }
+
+  /* INPUT MODE */
+  .input-row { display: flex; gap: 8px; }
+  .answer-input {
+    flex: 1; padding: 13px 14px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface2); color: var(--text);
+    font-size: 14px; font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.15s;
+  }
+  .answer-input:focus { border-color: var(--green); }
+  .answer-input.correct { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+  .answer-input.wrong { border-color: var(--red); background: var(--red-bg); color: #ff8080; }
+  .answer-input::placeholder { color: var(--muted); }
+
+  /* FEEDBACK */
+  .feedback { margin-top: 12px; font-size: 13px; min-height: 18px; color: var(--muted); }
+  .feedback.ok { color: var(--green); }
+  .feedback.ko { color: #ff8080; }
+
+  /* ACTIONS */
+  .actions { display: flex; gap: 8px; }
+  .btn {
+    flex: 1; padding: 11px;
+    border: 1px solid var(--border);
+    border-radius: 10px; background: var(--surface);
+    color: var(--muted); font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer; transition: all 0.15s; font-weight: 500;
+  }
+  .btn:hover { background: var(--surface2); color: var(--text); }
+  .btn.primary {
+    background: var(--green); border-color: var(--green);
+    color: #000; font-weight: 600;
+  }
+  .btn.primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+
+  /* RESULT */
+  .result {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
+    animation: slideUp 0.35s cubic-bezier(.4,0,.2,1);
+  }
+  .result-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px; line-height: 1; color: var(--green);
+    margin-bottom: 4px;
+  }
+  .result-total { font-size: 14px; color: var(--muted); margin-bottom: 1rem; }
+  .result-bar {
+    height: 6px; background: var(--surface2);
+    border-radius: 3px; margin: 0 auto 1.5rem; max-width: 200px; overflow: hidden;
+  }
+  .result-bar-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.8s 0.3s cubic-bezier(.4,0,.2,1); }
+  .result-msg { font-size: 18px; font-weight: 500; margin-bottom: 1.75rem; color: var(--text); }
+  .result-detail { font-size: 13px; color: var(--muted); margin-bottom: 2rem; }
+  .result-detail span { color: var(--text); font-weight: 500; }
+
+  /* SCREEN MANAGEMENT */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; margin-bottom: 1rem;
+  }
+  .start-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--green); margin-bottom: 10px; letter-spacing: 0.05em; }
+  .start-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .start-card li { font-size: 14px; color: var(--muted); padding-left: 16px; position: relative; }
+  .start-card li::before { content: '→'; position: absolute; left: 0; color: var(--green); }
+  .nb-row { display: flex; align-items: center; gap: 12px; margin-top: 1rem; }
+  .nb-row label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .nb-row input[type=range] { flex: 1; accent-color: var(--green); }
+  .nb-row span { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--green); min-width: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site-header">
+    <div class="eyebrow">FIFA World Cup 2026</div>
+    <h1>QUIZ<br><span>CAPITALES</span></h1>
+    <p>48 nations. Connais-tu leurs capitales ?</p>
+  </header>
+
+  <!-- START -->
+  <div id="screen-start" class="screen active">
+    <div class="start-card">
+      <h2>Comment jouer</h2>
+      <ul>
+        <li>Un pays qualifié s'affiche — trouve sa capitale</li>
+        <li>Mode QCM : 4 choix possibles</li>
+        <li>Mode Saisie : tape directement la réponse</li>
+        <li>Chaque bonne réponse = 1 point</li>
+      </ul>
+      <div class="nb-row">
+        <label>Questions :</label>
+        <input type="range" id="nb-range" min="5" max="48" value="20" step="1" oninput="document.getElementById('nb-val').textContent=this.value">
+        <span id="nb-val">20</span>
+      </div>
+    </div>
+    <div class="mode-row">
+      <button class="mode-btn active" id="mode-qcm" onclick="setMode('qcm')">⊞ QCM</button>
+      <button class="mode-btn" id="mode-input" onclick="setMode('input')">⌨ Saisie libre</button>
+    </div>
+    <div class="actions">
+      <button class="btn primary" onclick="startQuiz()">Commencer →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="s-current">1/20</div><div class="stat-lbl">Question</div></div>
+      <div class="stat"><div class="stat-num green" id="s-score">0</div><div class="stat-lbl">Bonnes</div></div>
+      <div class="stat"><div class="stat-num red" id="s-wrong">0</div><div class="stat-lbl">Erreurs</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div class="card" id="question-card">
+      <div class="q-label">Quelle est la capitale de ce pays ?</div>
+      <div class="country-name"><span class="flag" id="q-flag">🌍</span><span id="q-country">Pays</span></div>
+      <div id="q-body"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="actions" id="actions">
+      <button class="btn" onclick="skip()">Passer</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result" class="screen">
+    <div class="result">
+      <div class="result-score" id="r-score">0</div>
+      <div class="result-total" id="r-total">/ 20 questions</div>
+      <div class="result-bar"><div class="result-bar-fill" id="r-bar" style="width:0%"></div></div>
+      <div class="result-msg" id="r-msg">Bien joué !</div>
+      <div class="result-detail">
+        <span id="r-correct">0</span> bonne(s) réponse(s) —
+        <span id="r-wrong">0</span> erreur(s) —
+        <span id="r-skipped">0</span> passée(s)
+      </div>
+      <div class="mode-row">
+        <button class="mode-btn" id="rm-qcm" onclick="setMode('qcm')">⊞ QCM</button>
+        <button class="mode-btn" id="rm-input" onclick="setMode('input')">⌨ Saisie libre</button>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="showStart()">← Accueil</button>
+        <button class="btn primary" onclick="startQuiz()">Rejouer →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TEAMS = [
+  {country:"Allemagne",flag:"🇩🇪",capital:"Berlin"},
+  {country:"Argentine",flag:"🇦🇷",capital:"Buenos Aires"},
+  {country:"Australie",flag:"🇦🇺",capital:"Canberra"},
+  {country:"Belgique",flag:"🇧🇪",capital:"Bruxelles"},
+  {country:"Brésil",flag:"🇧🇷",capital:"Brasília"},
+  {country:"Cameroun",flag:"🇨🇲",capital:"Yaoundé"},
+  {country:"Canada",flag:"🇨🇦",capital:"Ottawa"},
+  {country:"Chili",flag:"🇨🇱",capital:"Santiago"},
+  {country:"Côte d'Ivoire",flag:"🇨🇮",capital:"Yamoussoukro"},
+  {country:"Croatie",flag:"🇭🇷",capital:"Zagreb"},
+  {country:"Danemark",flag:"🇩🇰",capital:"Copenhague"},
+  {country:"Équateur",flag:"🇪🇨",capital:"Quito"},
+  {country:"Espagne",flag:"🇪🇸",capital:"Madrid"},
+  {country:"États-Unis",flag:"🇺🇸",capital:"Washington D.C."},
+  {country:"France",flag:"🇫🇷",capital:"Paris"},
+  {country:"Ghana",flag:"🇬🇭",capital:"Accra"},
+  {country:"Iran",flag:"🇮🇷",capital:"Téhéran"},
+  {country:"Japon",flag:"🇯🇵",capital:"Tokyo"},
+  {country:"Maroc",flag:"🇲🇦",capital:"Rabat"},
+  {country:"Mexique",flag:"🇲🇽",capital:"Mexico"},
+  {country:"Nigeria",flag:"🇳🇬",capital:"Abuja"},
+  {country:"Pays-Bas",flag:"🇳🇱",capital:"Amsterdam"},
+  {country:"Pérou",flag:"🇵🇪",capital:"Lima"},
+  {country:"Portugal",flag:"🇵🇹",capital:"Lisbonne"},
+  {country:"Qatar",flag:"🇶🇦",capital:"Doha"},
+  {country:"Roumanie",flag:"🇷🇴",capital:"Bucarest"},
+  {country:"Sénégal",flag:"🇸🇳",capital:"Dakar"},
+  {country:"Serbie",flag:"🇷🇸",capital:"Belgrade"},
+  {country:"Slovaquie",flag:"🇸🇰",capital:"Bratislava"},
+  {country:"Suisse",flag:"🇨🇭",capital:"Berne"},
+  {country:"Tunisie",flag:"🇹🇳",capital:"Tunis"},
+  {country:"Uruguay",flag:"🇺🇾",capital:"Montevideo"},
+  {country:"Venezuela",flag:"🇻🇪",capital:"Caracas"},
+  {country:"Angleterre",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",capital:"Londres"},
+  {country:"Écosse",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",capital:"Édimbourg"},
+  {country:"Autriche",flag:"🇦🇹",capital:"Vienne"},
+  {country:"Hongrie",flag:"🇭🇺",capital:"Budapest"},
+  {country:"Turquie",flag:"🇹🇷",capital:"Ankara"},
+  {country:"Ukraine",flag:"🇺🇦",capital:"Kyiv"},
+  {country:"Colombie",flag:"🇨🇴",capital:"Bogotá"},
+  {country:"Paraguay",flag:"🇵🇾",capital:"Asunción"},
+  {country:"Algérie",flag:"🇩🇿",capital:"Alger"},
+  {country:"Afrique du Sud",flag:"🇿🇦",capital:"Pretoria"},
+  {country:"Arabie saoudite",flag:"🇸🇦",capital:"Riyad"},
+  {country:"Corée du Sud",flag:"🇰🇷",capital:"Séoul"},
+  {country:"Nouvelle-Zélande",flag:"🇳🇿",capital:"Wellington"},
+  {country:"Panama",flag:"🇵🇦",capital:"Panama City"},
+  {country:"Honduras",flag:"🇭🇳",capital:"Tegucigalpa"},
+];
+
+let mode = 'qcm';
+let questions = [], current = 0, score = 0, wrongs = 0, skipped = 0, answered = false;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function setMode(m) {
+  mode = m;
+  ['qcm','input'].forEach(x => {
+    document.getElementById('mode-'+x)?.classList.toggle('active', x===m);
+    document.getElementById('rm-'+x)?.classList.toggle('active', x===m);
+  });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showStart() { showScreen('screen-start'); }
+
+function startQuiz() {
+  const nb = parseInt(document.getElementById('nb-range').value);
+  questions = shuffle(TEAMS).slice(0, nb).map(t => ({
+    country: t.country, flag: t.flag, capital: t.capital,
+    options: shuffle([t.capital, ...shuffle(TEAMS.filter(x => x.capital !== t.capital)).slice(0,3).map(x => x.capital)])
+  }));
+  current = 0; score = 0; wrongs = 0; skipped = 0; answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (current >= questions.length) { showResult(); return; }
+  answered = false;
+  const q = questions[current];
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('s-current').textContent = `${current+1}/${questions.length}`;
+  document.getElementById('s-score').textContent = score;
+  document.getElementById('s-wrong').textContent = wrongs;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('q-flag').textContent = q.flag;
+  document.getElementById('q-country').textContent = q.country;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+
+  const body = document.getElementById('q-body');
+  if (mode === 'qcm') {
+    body.innerHTML = `<div class="options">${q.options.map(o =>
+      `<button class="opt" onclick="checkQcm(this,'${o.replace(/'/g,"\\'")}','${q.capital.replace(/'/g,"\\'")}')>${o}</button>`
+    ).join('')}</div>`;
+  } else {
+    body.innerHTML = `<div class="input-row">
+      <input class="answer-input" id="ans" type="text" placeholder="Entrez la capitale…" autocomplete="off"
+        onkeydown="if(event.key==='Enter')checkInput('${q.capital.replace(/'/g,"\\'")}')">
+      <button class="btn primary" style="flex:0 0 auto;width:auto;padding:11px 18px" onclick="checkInput('${q.capital.replace(/'/g,"\\'")}')">OK</button>
+    </div>`;
+    setTimeout(() => document.getElementById('ans')?.focus(), 50);
+  }
+
+  const act = document.getElementById('actions');
+  act.innerHTML = `<button class="btn" onclick="skip()">Passer</button>`;
+
+  // Re-animate card
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+}
+
+function checkQcm(btn, chosen, correct) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(b => { b.disabled = true; if (b.textContent === correct) b.classList.add('reveal'); });
+  const fb = document.getElementById('feedback');
+  if (chosen === correct) {
+    btn.classList.remove('reveal'); btn.classList.add('correct');
+    score++; fb.textContent = '✓ Bonne réponse !'; fb.className = 'feedback ok';
+  } else {
+    btn.classList.add('wrong');
+    wrongs++; fb.textContent = `✗ C'était : ${correct}`; fb.className = 'feedback ko';
+  }
+  document.getElementById('s-score').textContent = score;
+  document.getElementById('s-wrong').textContent = wrongs;
+  document.getElementById('actions').innerHTML = `<button class="btn" onclick="skip()">Passer</button><button class="btn primary" onclick="next()">Suivant →</button>`;
+}
+
+function normalize(s) { return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\s.\-]/g,''); }
+
+function checkInput(correct) {
+  if (answered) return;
+  const inp = document.getElementById('ans');
+  const val = inp.value.trim();
+  if (!val) return;
+  answered = true;
+  inp.disabled = true;
+  const fb = document.getElementById('feedback');
+  if (normalize(val) === normalize(correct)) {
+    inp.classList.add('correct');
+    score++; fb.textContent = '✓ Bonne réponse !'; fb.className = 'feedback ok';
+  } else {
+    inp.classList.add('wrong');
+    wrongs++; fb.textContent = `✗ C'était : ${correct}`; fb.className = 'feedback ko';
+  }
+  document.getElementById('s-score').textContent = score;
+  document.getElementById('s-wrong').textContent = wrongs;
+  document.getElementById('actions').innerHTML = `<button class="btn" onclick="skip()">Passer</button><button class="btn primary" onclick="next()">Suivant →</button>`;
+}
+
+function next() { current++; renderQuestion(); }
+function skip() { if (!answered) skipped++; current++; renderQuestion(); }
+
+function showResult() {
+  showScreen('screen-result');
+  const nb = questions.length;
+  const pct = Math.round((score / nb) * 100);
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-total').textContent = `/ ${nb} questions`;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrongs;
+  document.getElementById('r-skipped').textContent = skipped;
+  const msgs = [
+    [90, '🏆 Incroyable ! Tu es un géographe hors pair !'],
+    [70, '⚽ Très bien ! Tu connais les nations du monde.'],
+    [50, '🌍 Pas mal ! Quelques capitales à réviser.'],
+    [0,  '📚 Il va falloir revoir ta géographie !'],
+  ];
+  document.getElementById('r-msg').textContent = msgs.find(([t]) => pct >= t)[1];
+  // Animate bar after render
+  setTimeout(() => { document.getElementById('r-bar').style.width = pct + '%'; }, 50);
+  // Sync mode buttons
+  ['qcm','input'].forEach(x => document.getElementById('rm-'+x)?.classList.toggle('active', x===mode));
+}
+</script>
+</body>
+</html>
