@@ -1,11 +1,157 @@
-Index
 <!DOCTYPE html>
 <html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Football Universe</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+    url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1920&q=80");
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    text-align:center;
+}
+
+h1{
+    font-size:4rem;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:4px;
+    text-shadow:0 0 20px rgba(255,255,255,.4);
+}
+
+.subtitle{
+    color:#cfcfcf;
+    margin-bottom:50px;
+    font-size:1.1rem;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    text-decoration:none;
+    color:white;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:35px 20px;
+    transition:.35s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    background:rgba(255,255,255,0.15);
+    box-shadow:0 0 25px rgba(0,255,120,.35);
+}
+
+.icon{
+    font-size:3rem;
+    margin-bottom:15px;
+}
+
+.card h2{
+    margin-bottom:10px;
+}
+
+.card p{
+    color:#d6d6d6;
+    font-size:.95rem;
+}
+
+.back{
+    display:inline-block;
+    margin-top:40px;
+    padding:12px 30px;
+    border-radius:30px;
+    text-decoration:none;
+    color:white;
+    background:#1db954;
+    transition:.3s;
+}
+
+.back:hover{
+    transform:scale(1.05);
+}
+
+.footer{
+    margin-top:30px;
+    color:#999;
+    font-size:.8rem;
+}
+</style>
+</head>
+
 <body>
-<a href="indexWorldCup.html">World Cup</a>
-<a href="Quizz.html">Quizz</a>
-<a href="Quiz-cdm2026.html">Quizz 2</a>
-<a href="Quizz-capitales.html">Quizz Capitales</a>
-<a href="../../../index.html">Retour</a>
+
+<div class="container">
+
+    <h1>⚽ Football Universe</h1>
+    <p class="subtitle">
+        Explore le monde du football, des Coupes du Monde aux quiz de culture générale.
+    </p>
+
+    <div class="grid">
+
+        <a href="indexWorldCup.html" class="card">
+            <div class="icon">🏆</div>
+            <h2>World Cup</h2>
+            <p>Découvre l'univers de la Coupe du Monde et son histoire.</p>
+        </a>
+
+        <a href="Quizz.html" class="card">
+            <div class="icon">🧠</div>
+            <h2>Quiz Football</h2>
+            <p>Teste tes connaissances sur les clubs, joueurs et compétitions.</p>
+        </a>
+
+        <a href="Quiz-cdm2026.html" class="card">
+            <div class="icon">🌎</div>
+            <h2>Quiz CDM 2026</h2>
+            <p>Spécial Coupe du Monde 2026 : nations, stades et records.</p>
+        </a>
+
+        <a href="Quizz-capitales.html" class="card">
+            <div class="icon">📍</div>
+            <h2>Capitales</h2>
+            <p>Relie les pays du football à leurs capitales.</p>
+        </a>
+
+    </div>
+
+    <a href="../../../index.html" class="back">
+        ← Retour au Portfolio
+    </a>
+
+    <div class="footer">
+        Football Universe © 2026
+    </div>
+
+</div>
+
 </body>
 </html>
