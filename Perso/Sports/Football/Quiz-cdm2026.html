@@ -6,21 +6,23 @@
 <title>Quiz CDM 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --gold:#F5C518; --gold2:#c99a00;
-  --bg:#101624; --card:#1b2336; --card2:#232c42;
-  --green:#27ae60; --red:#e74c3c; --blue:#2980b9;
-  --text:#eef0fa; --muted:#8892b0;
+:root{
+  --gold:#F5C518;--gold2:#c99a00;
+  --bg:#101624;--card:#1b2336;--card2:#232c42;
+  --green:#27ae60;--red:#e74c3c;--blue:#3a8fd8;
+  --text:#eef0fa;--muted:#8892b0;
   --r:14px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+html{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text)}
+body{min-height:100%;overflow-x:hidden}
 
 /* ===== SCREENS ===== */
-.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100vh}
 .screen.active{display:flex}
-#menu-screen{overflow-y:auto;display:none;flex-direction:column;align-items:center;background:radial-gradient(ellipse at 30% 10%,#1e2d50,var(--bg) 65%);padding:20px 16px 50px}
-#menu-screen.active{display:flex}
+#menu-screen{background:radial-gradient(ellipse at 30% 10%,#1e2d50,var(--bg) 65%);align-items:center;padding:20px 16px 50px;overflow-y:auto}
+#game-screen{height:100vh;overflow:hidden;position:fixed;inset:0}
+#result-screen{background:radial-gradient(ellipse at 50% 0%,#1e2d50,var(--bg) 55%);align-items:center;padding:22px 14px 50px}
 
 /* ===== MENU ===== */
 .logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,9vw,3.6rem);color:var(--gold);letter-spacing:3px;text-align:center;text-shadow:0 0 30px rgba(245,197,24,.35);margin-bottom:2px}
@@ -39,67 +41,73 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .go-btn{width:100%;max-width:430px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1020;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;border:none;border-radius:var(--r);padding:15px;cursor:pointer;box-shadow:0 4px 22px rgba(245,197,24,.28);margin-top:4px;transition:.15s}
 .go-btn:active{transform:scale(.97)}
 
-/* ===== GAME SCREEN ===== */
-#game-screen{background:var(--bg)}
-.ghdr{background:var(--card);border-bottom:1px solid rgba(255,255,255,.06);padding:8px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+/* ===== GAME ===== */
+#game-screen{display:none;flex-direction:column}
+#game-screen.active{display:flex}
+
+.ghdr{background:var(--card);border-bottom:1px solid rgba(255,255,255,.06);padding:8px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0;z-index:10}
 .hscore{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);line-height:1;min-width:55px}
 .hscore span{font-size:.65rem;color:var(--muted);display:block;font-family:'Nunito',sans-serif;font-weight:700;letter-spacing:1px}
 .hprog{flex:1}
 .hbar{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
-.hfill{height:100%;background:var(--gold);border-radius:3px;transition:width .4s ease;width:0}
+.hfill{height:100%;background:var(--gold);border-radius:3px;transition:width .4s}
 .hinfo{font-size:.68rem;color:var(--muted);margin-top:3px;text-align:right}
 .htimer{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;min-width:36px;text-align:center;color:var(--text)}
 .htimer.urg{color:var(--red);animation:blink .45s infinite alternate}
 @keyframes blink{from{opacity:1}to{opacity:.35}}
 
+/* Country panel */
 .cpanel{background:var(--card);padding:8px 12px 7px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;text-align:center}
 .clbl{font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
 .cname-row{display:flex;align-items:center;justify-content:center;gap:9px}
 .cflag{font-size:1.7rem}
 .cname{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5.5vw,2rem);color:var(--text);letter-spacing:2px}
-.chint{font-size:.72rem;color:var(--muted);margin-top:2px}
+.chint{font-size:.72rem;color:var(--muted);margin-top:2px;min-height:1em}
 
-/* MAP WRAPPER */
-#map-wrap{flex:1;position:relative;overflow:hidden;background:#152236;cursor:crosshair;touch-action:none}
-#map-svg{width:100%;height:100%;display:block}
+/* Map area */
+#map-wrap{flex:1;position:relative;overflow:hidden;background:#152236;touch-action:none;-webkit-user-select:none;user-select:none}
+#map-svg{position:absolute;transform-origin:0 0}
+#map-svg path{stroke:#0d1a2a;stroke-width:.4;transition:fill .12s;cursor:default}
+#map-svg path.hl-target{stroke:#5bc8fa;stroke-width:2;fill:#2a6aaa!important}
+#map-svg path.hl-correct{stroke:#27ae60;stroke-width:1.8;fill:#1a6035!important}
+#map-svg path.hl-wrong{stroke:#e74c3c;stroke-width:1.4;fill:#6a1a1a!important}
 
-/* country paths */
-#map-svg path{stroke:#0d1a2a;stroke-width:.4;transition:fill .12s}
-#map-svg path.hl-target{stroke:#5bc8fa;stroke-width:1.8;fill:#2a5a8a !important}
-#map-svg path.hl-correct{stroke:#27ae60;stroke-width:1.6;fill:#1a5c35 !important}
-#map-svg path.hl-wrong{stroke:#e74c3c;stroke-width:1.2;fill:#5a1a1a !important}
-#map-svg path:hover{opacity:.85}
+/* Pin marker */
+#pin{position:absolute;pointer-events:none;display:none;transform:translate(-50%,-100%);z-index:30;font-size:1.8rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.7))}
 
-/* Zoom hint */
-#zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:var(--muted);font-size:.65rem;padding:4px 8px;border-radius:6px;pointer-events:none}
+/* Validate button */
+#validate-zone{position:absolute;bottom:0;left:0;right:0;z-index:20;padding:10px 14px;background:linear-gradient(to top,rgba(10,14,25,.98) 60%,transparent);display:none;flex-direction:column;align-items:center;gap:6px}
+#validate-zone.show{display:flex}
+.validate-info{font-size:.75rem;color:var(--muted);text-align:center}
+.validate-info strong{color:var(--text)}
+#btn-validate{width:100%;max-width:380px;background:linear-gradient(135deg,var(--green),#1a8a45);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;border:none;border-radius:12px;padding:14px;cursor:pointer;box-shadow:0 4px 20px rgba(39,174,96,.4);transition:.15s}
+#btn-validate:active{transform:scale(.97)}
+#btn-validate-cancel{background:none;border:none;color:var(--muted);font-size:.75rem;font-family:'Nunito',sans-serif;cursor:pointer;padding:2px 10px}
+
+/* Instructions overlay */
+#instructions{position:absolute;top:0;left:0;right:0;z-index:25;background:rgba(10,14,25,.88);padding:10px 14px;text-align:center;font-size:.78rem;color:var(--muted);pointer-events:none;transition:opacity .3s}
+#instructions strong{color:var(--gold)}
 
 /* Feedback */
-#fb{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity .18s;z-index:50}
+#fb{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity .18s;z-index:50}
 #fb.show{opacity:1}
-.fb-txt{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.7rem,7vw,2.6rem);letter-spacing:2px;text-shadow:0 2px 12px rgba(0,0,0,.9)}
+.fb-txt{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,7vw,2.8rem);letter-spacing:2px;text-shadow:0 2px 14px rgba(0,0,0,.95)}
 .fb-pts{font-family:'Bebas Neue',sans-serif;font-size:clamp(1rem,3.5vw,1.4rem);color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.8)}
 
-/* Drag panel */
-#drag-panel{display:none;background:var(--card);border-top:1px solid rgba(255,255,255,.07);padding:9px 12px;text-align:center;flex-shrink:0}
-.dpill{display:inline-block;background:var(--gold);color:#0d1020;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px;padding:7px 22px;border-radius:28px;cursor:grab;user-select:none;box-shadow:0 3px 14px rgba(245,197,24,.38);touch-action:none}
-.dhint{font-size:.68rem;color:var(--muted);margin-top:4px}
-#drag-ghost{display:none;position:fixed;z-index:300;background:var(--gold);color:#0d1020;font-family:'Bebas Neue',sans-serif;font-size:1rem;padding:5px 14px;border-radius:20px;pointer-events:none;transform:translate(-50%,-50%);box-shadow:0 4px 18px rgba(0,0,0,.5)}
+/* Zoom buttons */
+#zoom-btns{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:5px;z-index:15}
+.zbtn{width:36px;height:36px;background:rgba(27,35,54,.9);border:1px solid rgba(255,255,255,.15);border-radius:9px;color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:.15s;-webkit-user-select:none;user-select:none}
+.zbtn:active{transform:scale(.88)}
 
-/* Zoom controls */
-#zoom-btns{position:absolute;bottom:44px;right:8px;display:flex;flex-direction:column;gap:4px;z-index:20}
-.zbtn{width:34px;height:34px;background:rgba(27,35,54,.88);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--text);font-size:1.2rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:.15s}
-.zbtn:active{transform:scale(.9)}
-
-/* RESULT */
-#result-screen{overflow-y:auto;background:radial-gradient(ellipse at 50% 0%,#1e2d50,var(--bg) 55%);align-items:center;padding:22px 14px 50px}
+/* ===== RESULT ===== */
 .rtitle{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,7vw,2.8rem);color:var(--gold);letter-spacing:3px;text-align:center;margin-bottom:2px}
 .rbig{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,12vw,4.2rem);color:var(--text);letter-spacing:2px;text-align:center;line-height:1}
 .rgrade{font-size:.85rem;color:var(--muted);text-align:center;margin-bottom:16px}
 #rmap-wrap{width:100%;max-width:500px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);margin-bottom:12px}
 #rmap{width:100%;display:block}
 #rmap path{fill:#2a3d55;stroke:#1a2a3a;stroke-width:.4}
-#rmap path.hl-correct{fill:#1a5c35;stroke:#27ae60;stroke-width:1.2}
-#rmap path.hl-wrong{fill:#5a1a1a;stroke:#e74c3c;stroke-width:1}
+#rmap path.hl-correct{fill:#1a6035;stroke:#27ae60;stroke-width:1.2}
+#rmap path.hl-wrong{fill:#6a1a1a;stroke:#e74c3c;stroke-width:1}
 .legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
 .litem{display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--muted)}
 .ldot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
@@ -107,11 +115,11 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 .ritem{background:var(--card);border-radius:9px;padding:9px 12px;display:flex;align-items:center;gap:9px;font-size:.8rem}
 .ritem .rflg{font-size:1.1rem}
 .ritem .rnm{flex:1;font-weight:700}
-.ritem .rdist{font-size:.68rem;color:var(--muted);min-width:58px;text-align:right}
-.ritem .rpt{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;min-width:38px;text-align:right}
-.rpt.g{color:var(--green)} .rpt.o{color:var(--gold)} .rpt.b{color:var(--red)}
+.ritem .rdist{font-size:.68rem;color:var(--muted);min-width:62px;text-align:right}
+.ritem .rpt{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;min-width:40px;text-align:right}
+.rpt.g{color:var(--green)}.rpt.o{color:var(--gold)}.rpt.b{color:var(--red)}
 .rdot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.rdot.g{background:var(--green)} .rdot.o{background:var(--gold)} .rdot.b{background:var(--red)}
+.rdot.g{background:var(--green)}.rdot.o{background:var(--gold)}.rdot.b{background:var(--red)}
 .rbtns{display:flex;gap:10px;width:100%;max-width:500px}
 .rbtn{flex:1;padding:13px;border-radius:var(--r);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;cursor:pointer;border:none;transition:.15s}
 .rbtn.pri{background:var(--gold);color:#0d1020}
@@ -120,8 +128,8 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
 </head>
 <body>
 
-<!-- MENU -->
-<div id="menu-screen" class="active">
+<!-- ===== MENU ===== -->
+<div id="menu-screen" class="screen active">
   <div style="font-size:2rem;margin-bottom:6px">⚽</div>
   <div class="logo">Quiz CDM 2026</div>
   <div class="logo-sub">Place les pays qualifiés sur la carte !</div>
@@ -134,15 +142,10 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
       <button class="obtn" data-v="24"><span class="oi">🟠</span>24 pays<span class="od">Normal</span></button>
     </div>
     <div style="margin-top:7px">
-      <button class="obtn" data-v="48" style="width:100%;display:block"><span class="oi" style="display:inline">🔴</span> 48 pays — Tous les qualifiés !<span class="od">Mode champion</span></button>
-    </div>
-  </div>
-
-  <div class="scard">
-    <h3>🎮 Mode de jeu</h3>
-    <div class="ogrid" id="g-mode">
-      <button class="obtn sel" data-v="click"><span class="oi">👆</span>Clic<span class="od">Tape sur la carte</span></button>
-      <button class="obtn" data-v="drag"><span class="oi">✋</span>Glisser<span class="od">Glisse le pays</span></button>
+      <button class="obtn" data-v="48" style="width:100%;display:block">
+        <span class="oi" style="display:inline">🔴</span> 48 pays — Tous les qualifiés !
+        <span class="od">Mode champion</span>
+      </button>
     </div>
   </div>
 
@@ -153,7 +156,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
       <button class="obtn" data-v="medium"><span class="oi">😐</span>Normal<span class="od">Continent indiqué</span></button>
       <button class="obtn" data-v="hard"><span class="oi">😤</span>Difficile<span class="od">Aucun indice</span></button>
     </div>
-    <div class="ibox" id="diff-info"><strong>😊 Facile :</strong> Le pays à trouver est surligné sur la carte, et son continent est indiqué.</div>
+    <div class="ibox" id="diff-info"><strong>😊 Facile :</strong> Le pays est surligné en bleu sur la carte et son continent est indiqué.</div>
   </div>
 
   <div class="scard">
@@ -176,7 +179,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
   <button class="go-btn" id="btn-start">⚽ JOUER !</button>
 </div>
 
-<!-- GAME -->
+<!-- ===== GAME ===== -->
 <div id="game-screen" class="screen">
   <div class="ghdr">
     <div class="hscore"><span>SCORE</span><span id="h-score">0</span></div>
@@ -186,6 +189,7 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
     </div>
     <div class="htimer" id="h-timer" style="display:none">-</div>
   </div>
+
   <div class="cpanel">
     <div class="clbl">Où se trouve ce pays ?</div>
     <div class="cname-row">
@@ -194,33 +198,46 @@ html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color
     </div>
     <div class="chint" id="c-hint"></div>
   </div>
+
   <div id="map-wrap">
-    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500"></svg>
+    <div id="pin">📍</div>
+
+    <!-- Instructions -->
+    <div id="instructions"><strong>Navigue</strong> librement · Quand tu es prêt, <strong>tape sur le pays</strong> pour planter le drapeau</div>
+
+    <!-- Validate zone (appears after tap) -->
+    <div id="validate-zone">
+      <div class="validate-info" id="validate-info">Tu as choisi : <strong id="chosen-country">—</strong></div>
+      <button id="btn-validate">✅ VALIDER CE PAYS !</button>
+      <button id="btn-validate-cancel">↩ Changer de position</button>
+    </div>
+
+    <!-- Zoom buttons -->
     <div id="zoom-btns">
       <button class="zbtn" id="btn-zi">+</button>
       <button class="zbtn" id="btn-zo">−</button>
-      <button class="zbtn" id="btn-zr" style="font-size:.65rem;font-family:'Nunito',sans-serif">🌍</button>
+      <button class="zbtn" id="btn-zr" style="font-size:.7rem">🌍</button>
     </div>
-    <div id="zoom-hint">Pince pour zoomer • Double-tape pour recentrer</div>
-    <div id="fb"><div class="fb-txt" id="fb-txt"></div><div class="fb-pts" id="fb-pts"></div></div>
-  </div>
-  <div id="drag-panel">
-    <div class="dpill" id="drag-pill">-</div>
-    <div class="dhint">Glisse ce pays sur la carte ⬆️</div>
+
+    <!-- Feedback -->
+    <div id="fb">
+      <div class="fb-txt" id="fb-txt"></div>
+      <div class="fb-pts" id="fb-pts"></div>
+    </div>
   </div>
 </div>
-<div id="drag-ghost"></div>
 
-<!-- RESULT -->
+<!-- ===== RESULT ===== -->
 <div id="result-screen" class="screen">
   <div class="rtitle">🏆 Résultats</div>
   <div class="rbig" id="r-score">0</div>
   <div class="rgrade" id="r-grade"></div>
   <div id="rmap-wrap"><svg id="rmap" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg"></svg></div>
   <div class="legend">
-    <div class="litem"><div class="ldot" style="background:var(--green)"></div> Bien placé</div>
-    <div class="litem"><div class="ldot" style="background:var(--gold)"></div> Assez proche</div>
-    <div class="litem"><div class="ldot" style="background:var(--red)"></div> Raté</div>
+    <div class="litem"><div class="ldot" style="background:var(--green)"></div>Bien placé</div>
+    <div class="litem"><div class="ldot" style="background:var(--gold)"></div>Assez proche</div>
+    <div class="litem"><div class="ldot" style="background:var(--red)"></div>Raté</div>
   </div>
   <div class="rlist" id="r-list"></div>
   <div class="rbtns">
@@ -248,7 +265,7 @@ const COUNTRIES=[
   {id:"at",fr:"Autriche",en:"Austria",flag:"🇦🇹",cont:"Europe"},
   {id:"be",fr:"Belgique",en:"Belgium",flag:"🇧🇪",cont:"Europe"},
   {id:"ba",fr:"Bosnie",en:"Bosnia",flag:"🇧🇦",cont:"Europe"},
-  {id:"tr",fr:"Turquie",en:"Türkiye",flag:"🇹🇷",cont:"Europe/Asie"},
+  {id:"tr",fr:"Turquie",en:"Türkiye",flag:"🇹🇷",cont:"Europe / Asie"},
   {id:"cz",fr:"Tchéquie",en:"Czech Republic",flag:"🇨🇿",cont:"Europe"},
   {id:"se",fr:"Suède",en:"Sweden",flag:"🇸🇪",cont:"Europe"},
   {id:"ma",fr:"Maroc",en:"Morocco",flag:"🇲🇦",cont:"Afrique"},
@@ -282,7 +299,6 @@ const COUNTRIES=[
   {id:"iq",fr:"Irak",en:"Iraq",flag:"🇮🇶",cont:"Asie"}
 ];
 
-// alpha-2 -> ISO numeric (for TopoJSON matching)
 const A2_ISO={
   us:"840",ca:"124",mx:"484",gb:"826",fr:"250",hr:"191",pt:"620",no:"578",
   de:"276",nl:"528",es:"724",ch:"756",at:"040",be:"056",ba:"070",tr:"792",
@@ -291,7 +307,7 @@ const A2_ISO={
   au:"036",qa:"634",sa:"682",pa:"591",ht:"332",cw:"531",ar:"032",br:"076",
   uy:"858",ec:"218",co:"170",py:"600",nz:"554",cd:"180",iq:"368"
 };
-// Centroids (lon, lat)
+
 const CTR={
   us:[-100,38],ca:[-96,60],mx:[-102,23],gb:[-2,52],fr:[2,46],hr:[15.5,45.1],
   pt:[-8,39.5],no:[10,62],de:[10.5,51.2],nl:[5.3,52.1],es:[-3.7,40.4],
@@ -304,109 +320,88 @@ const CTR={
   ec:[-78,-1.8],co:[-74,4],py:[-58,-23],nz:[174,-41],cd:[24,-4],iq:[44,33]
 };
 
-// Continent fill colors (clearer/lighter)
-const CONT_FILL={
-  "Europe":"#2a4a7a","Asia":"#2a6060","Africa":"#6a4820",
-  "North America":"#2a5530","South America":"#4a2a6a","Oceania":"#1a4a6a",
-  "default":"#2a3d55"
-};
-function getCF(cont){
-  if(!cont) return CONT_FILL.default;
-  if(cont.includes("Europe")) return CONT_FILL["Europe"];
-  if(cont.includes("Asie")||cont.includes("Asia")) return CONT_FILL["Asia"];
-  if(cont.includes("Afrique")||cont.includes("Africa")) return CONT_FILL["Africa"];
-  if(cont.includes("Nord")||cont.includes("North")||cont.includes("centrale")||cont.includes("Caraïbes")) return CONT_FILL["North America"];
-  if(cont.includes("Sud")||cont.includes("South")) return CONT_FILL["South America"];
-  if(cont.includes("Océanie")||cont.includes("Oceania")) return CONT_FILL["Oceania"];
-  return CONT_FILL.default;
-}
-
-// ISO numeric -> continent (approximate)
-function isoToCont(n){
-  n=parseInt(n);
-  const EU=[8,20,40,56,70,100,112,191,196,203,208,233,246,250,276,300,348,352,372,380,428,440,442,470,492,496,498,528,578,616,620,642,703,705,724,752,756,804,826,833];
-  const AS=[4,48,50,64,116,144,156,162,356,360,364,368,376,392,400,408,410,414,418,422,458,462,496,512,524,586,634,682,702,704,760,764,792,800,860,887];
-  const AF=[12,24,72,108,120,132,140,148,174,180,204,226,231,232,262,266,270,288,324,384,404,430,434,450,454,466,478,480,504,508,516,562,566,646,686,706,710,716,729,768,788,800,818,834,894];
-  const NA=[28,44,52,84,124,188,192,212,214,222,308,320,332,340,388,484,558,591,600,630,659,662,670,740,780,796];
+// Continent fill colors (readable)
+function getCF(iso){
+  const n=parseInt(iso);
+  const EU=[8,20,40,56,70,100,112,191,196,203,208,233,246,250,276,300,348,352,372,380,428,440,442,470,492,498,528,578,616,620,642,703,705,724,752,756,804,826,833];
+  const AS=[4,48,50,64,116,144,156,356,360,364,368,376,392,400,408,410,414,418,422,458,462,496,512,524,586,634,682,702,704,760,764,792,860,887];
+  const AF=[12,24,72,108,120,132,140,148,174,180,204,226,231,232,262,266,270,288,324,384,404,430,434,450,454,466,478,480,504,508,516,562,566,646,686,706,710,716,729,768,788,818,834,894];
   const SA=[32,68,76,152,170,218,600,604,858,862];
-  const OC=[36,90,242,598,882,554,548,598];
-  if(EU.includes(n)) return "Europe";
-  if(AS.includes(n)) return "Asia";
-  if(AF.includes(n)) return "Africa";
-  if(SA.includes(n)) return "South America";
-  if(NA.includes(n)) return "North America";
-  if(OC.includes(n)) return "Oceania";
-  return "default";
+  const NA=[28,44,52,84,124,188,192,212,214,222,308,320,332,340,388,484,558,591,630,659,662,670,780,796];
+  const OC=[36,90,242,554,598,882];
+  if(EU.includes(n)) return "#264a82";
+  if(AS.includes(n)) return "#1a5c5c";
+  if(AF.includes(n)) return "#6a4010";
+  if(SA.includes(n)) return "#4a206a";
+  if(NA.includes(n)) return "#1a5030";
+  if(OC.includes(n)) return "#0a4060";
+  return "#2a3d55";
 }
 
 // ==================== STATE ====================
-let S={count:12,mode:"click",diff:"easy",timer:"none",lang:"fr"};
+let S={count:12,diff:"easy",timer:"none",lang:"fr"};
 let G={queue:[],cur:0,score:0,tval:0,tint:null,results:[],locked:false};
 let topoData=null;
+let pathEls={}; // iso -> [path elements]
 
-// Viewport (pan/zoom)
-let VP={x:0,y:0,scale:1,minScale:.5,maxScale:8};
+// Pan/zoom state
 const BASE_W=1000,BASE_H=500;
+let vp={x:0,y:0,scale:1};
+let isPanning=false,panLast={x:0,y:0},panMoved=false;
+let isPinching=false,pinchLast=0;
+// Pending answer (tap but not validated yet)
+let pending={active:false,lon:0,lat:0,iso:null,svgX:0,svgY:0};
 
-// ==================== MENU OPTIONS ====================
-function bindGroup(gid,key,extra){
-  const el=document.getElementById(gid);
-  el.querySelectorAll('.obtn').forEach(b=>{
+// ==================== MENU ====================
+function bindGroup(gid,key,cb){
+  document.querySelectorAll('#'+gid+' .obtn').forEach(b=>{
     b.addEventListener('click',()=>{
-      el.querySelectorAll('.obtn').forEach(x=>x.classList.remove('sel'));
+      document.querySelectorAll('#'+gid+' .obtn').forEach(x=>x.classList.remove('sel'));
       b.classList.add('sel');
-      const v=isNaN(b.dataset.v)?b.dataset.v:parseInt(b.dataset.v);
-      S[key]=v;
-      if(extra) extra(v);
+      S[key]=isNaN(b.dataset.v)?b.dataset.v:parseInt(b.dataset.v);
+      if(cb) cb(S[key]);
     });
   });
 }
-// count group: also handle the 48 button outside grid
-document.querySelectorAll('#g-count .obtn').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('#g-count .obtn').forEach(x=>x.classList.remove('sel'));
-    b.classList.add('sel');
-    S.count=parseInt(b.dataset.v);
-  });
-});
-bindGroup('g-mode','mode');
+bindGroup('g-count','count');
 bindGroup('g-diff','diff',v=>{
-  const msgs={
-    easy:'<strong>😊 Facile :</strong> Le pays est surligné sur la carte, son continent est indiqué, et la carte zoome automatiquement dessus.',
+  const m={easy:'<strong>😊 Facile :</strong> Le pays est surligné en bleu + continent indiqué.',
     medium:'<strong>😐 Normal :</strong> Le continent est indiqué mais le pays n\'est pas surligné.',
-    hard:'<strong>😤 Difficile :</strong> Carte vierge, aucun indice !'
-  };
-  document.getElementById('diff-info').innerHTML=msgs[v]||'';
+    hard:'<strong>😤 Difficile :</strong> Carte vierge, aucun indice !'};
+  document.getElementById('diff-info').innerHTML=m[v]||'';
 });
 bindGroup('g-timer','timer');
 bindGroup('g-lang','lang');
+
 document.getElementById('btn-start').addEventListener('click',startGame);
 document.getElementById('btn-menu').addEventListener('click',()=>showScreen('menu'));
 document.getElementById('btn-retry').addEventListener('click',startGame);
+document.getElementById('btn-validate').addEventListener('click',validateAnswer);
+document.getElementById('btn-validate-cancel').addEventListener('click',cancelPending);
+document.getElementById('btn-zi').addEventListener('click',()=>{zoom(1.4);});
+document.getElementById('btn-zo').addEventListener('click',()=>{zoom(1/1.4);});
+document.getElementById('btn-zr').addEventListener('click',resetView);
 
-// ==================== TOPO LOAD ====================
+// ==================== TOPO ====================
 async function loadTopo(){
-  if(topoData) return topoData;
-  const r=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
-  topoData=await r.json();
-  return topoData;
+  if(topoData) return;
+  try{
+    const r=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    topoData=await r.json();
+  }catch(e){console.warn('topo load failed',e);}
 }
 
-// ==================== MAP RENDER ====================
-let pathElements={}; // iso -> [path elements]
-
-function renderMap(svgId, interactive){
+function buildMap(svgId, interactive){
   const svg=document.getElementById(svgId);
-  if(!topoData){svg.innerHTML='<text x="500" y="250" fill="#8892b0" text-anchor="middle" font-size="20" font-family="Nunito">Chargement…</text>';return;}
-
+  if(!topoData){svg.innerHTML='<rect width="1000" height="500" fill="#152236"/><text x="500" y="250" fill="#8892b0" text-anchor="middle" font-size="22" font-family="Nunito">Chargement de la carte…</text>';return;}
   const topo=topoData;
-  const sc=topo.transform.scale, tr=topo.transform.translate;
+  const sc=topo.transform.scale,tr=topo.transform.translate;
 
   function decodeArc(i){
-    const rev=i<0; if(rev)i=~i;
-    const raw=topo.arcs[i]; let x=0,y=0; const pts=[];
-    for(const [dx,dy] of raw){x+=dx;y+=dy;pts.push([x,y]);}
-    if(rev) pts.reverse();
+    const rev=i<0;if(rev)i=~i;
+    const raw=topo.arcs[i];let x=0,y=0;const pts=[];
+    for(const[dx,dy]of raw){x+=dx;y+=dy;pts.push([x,y]);}
+    if(rev)pts.reverse();
     return pts;
   }
   function ringsToD(rings){
@@ -415,8 +410,8 @@ function renderMap(svgId, interactive){
       let pts=[],first=true;
       for(const ai of ring){const ap=decodeArc(ai);if(!first)ap.shift();pts=pts.concat(ap);first=false;}
       pts.forEach((p,j)=>{
-        const lon=p[0]*sc[0]+tr[0], lat=p[1]*sc[1]+tr[1];
-        const x=(lon+180)*(BASE_W/360), y=(90-lat)*(BASE_H/180);
+        const lon=p[0]*sc[0]+tr[0],lat=p[1]*sc[1]+tr[1];
+        const x=(lon+180)*(BASE_W/360),y=(90-lat)*(BASE_H/180);
         d+=(j===0?'M':'L')+x.toFixed(1)+','+y.toFixed(1);
       });
       d+='Z';
@@ -425,365 +420,246 @@ function renderMap(svgId, interactive){
   }
 
   let html='';
-  const geos=topo.objects.countries.geometries;
-  for(const geo of geos){
+  for(const geo of topo.objects.countries.geometries){
     let d='';
     if(geo.type==='Polygon') d=ringsToD(geo.arcs);
     else if(geo.type==='MultiPolygon') geo.arcs.forEach(r=>{d+=ringsToD(r);});
     if(!d) continue;
-    const cont=isoToCont(geo.id);
-    const fill=getCF(cont);
-    html+=`<path d="${d}" data-iso="${geo.id}" data-cont="${cont}" style="fill:${fill}"/>`;
+    html+=`<path d="${d}" data-iso="${geo.id}" style="fill:${getCF(geo.id)}"/>`;
   }
   svg.innerHTML=html;
 
   if(interactive){
-    // build iso->paths index
-    pathElements={};
+    pathEls={};
     svg.querySelectorAll('path').forEach(p=>{
       const iso=p.dataset.iso;
-      if(!pathElements[iso]) pathElements[iso]=[];
-      pathElements[iso].push(p);
+      if(!pathEls[iso])pathEls[iso]=[];
+      pathEls[iso].push(p);
     });
   }
 }
 
-// ==================== PAN/ZOOM ====================
-let panning=false, lastPan={x:0,y:0};
-let pinching=false, lastPinchDist=0;
-
-function initViewport(){
-  VP={x:0,y:0,scale:1,minScale:.5,maxScale:8};
-  applyVP();
-}
+// ==================== VIEWPORT ====================
 function applyVP(){
-  const svg=document.getElementById('map-svg');
   const wrap=document.getElementById('map-wrap');
-  const cw=wrap.clientWidth, ch=wrap.clientHeight;
-  // fit map in container
-  const baseScaleX=cw/BASE_W, baseScaleY=ch/BASE_H;
-  const baseScale=Math.min(baseScaleX,baseScaleY);
-  const totalScale=baseScale*VP.scale;
-  const mw=BASE_W*totalScale, mh=BASE_H*totalScale;
-  const ox=(cw-mw)/2+VP.x, oy=(ch-mh)/2+VP.y;
-  svg.setAttribute('viewBox',`0 0 ${BASE_W} ${BASE_H}`);
+  const cw=wrap.clientWidth,ch=wrap.clientHeight;
+  const bs=Math.min(cw/BASE_W,ch/BASE_H);
+  const ts=bs*vp.scale;
+  const mw=BASE_W*ts,mh=BASE_H*ts;
+  const ox=(cw-mw)/2+vp.x,oy=(ch-mh)/2+vp.y;
+  const svg=document.getElementById('map-svg');
   svg.style.width=mw+'px';
   svg.style.height=mh+'px';
-  svg.style.position='absolute';
   svg.style.left=ox+'px';
   svg.style.top=oy+'px';
+  svg.style.position='absolute';
+  // move pin if pending
+  if(pending.active) placePinAt(pending.svgX,pending.svgY);
 }
 
 function clampVP(){
   const wrap=document.getElementById('map-wrap');
-  const cw=wrap.clientWidth, ch=wrap.clientHeight;
+  const cw=wrap.clientWidth,ch=wrap.clientHeight;
   const bs=Math.min(cw/BASE_W,ch/BASE_H);
-  const mw=BASE_W*bs*VP.scale, mh=BASE_H*bs*VP.scale;
-  const maxX=Math.max(0,(mw-cw)/2+50), maxY=Math.max(0,(mh-ch)/2+50);
-  VP.x=Math.max(-maxX,Math.min(maxX,VP.x));
-  VP.y=Math.max(-maxY,Math.min(maxY,VP.y));
+  const mw=BASE_W*bs*vp.scale,mh=BASE_H*bs*vp.scale;
+  const maxX=Math.max(0,(mw-cw)*0.6),maxY=Math.max(0,(mh-ch)*0.6);
+  vp.x=Math.max(-maxX,Math.min(maxX,vp.x));
+  vp.y=Math.max(-maxY,Math.min(maxY,vp.y));
 }
 
-function setupMapEvents(){
+function zoom(factor,cx,cy){
   const wrap=document.getElementById('map-wrap');
-  // Touch
-  wrap.addEventListener('touchstart',e=>{
-    if(S.mode==='drag') return;
-    if(e.touches.length===2){pinching=true;lastPinchDist=pinchDist(e);panning=false;}
-    else if(e.touches.length===1){panning=true;lastPan={x:e.touches[0].clientX,y:e.touches[0].clientY};}
-  },{passive:true});
-  wrap.addEventListener('touchmove',e=>{
-    if(S.mode==='drag') return;
-    if(pinching&&e.touches.length===2){
-      const d=pinchDist(e);
-      const ratio=d/lastPinchDist;
-      VP.scale=Math.max(VP.minScale,Math.min(VP.maxScale,VP.scale*ratio));
-      lastPinchDist=d;
-      clampVP(); applyVP();
-    } else if(panning&&e.touches.length===1){
-      VP.x+=e.touches[0].clientX-lastPan.x;
-      VP.y+=e.touches[0].clientY-lastPan.y;
-      lastPan={x:e.touches[0].clientX,y:e.touches[0].clientY};
-      clampVP(); applyVP();
-    }
-  },{passive:true});
-  wrap.addEventListener('touchend',e=>{
-    if(e.touches.length<2) pinching=false;
-    if(e.touches.length===0) panning=false;
-  });
-  // Double tap to reset
-  let lastTap=0;
-  wrap.addEventListener('touchend',e=>{
-    if(S.mode==='drag') return;
-    const now=Date.now();
-    if(now-lastTap<300){VP.x=0;VP.y=0;VP.scale=1;clampVP();applyVP();}
-    lastTap=now;
-  });
-  // Mouse
-  wrap.addEventListener('mousedown',e=>{panning=true;lastPan={x:e.clientX,y:e.clientY};});
-  wrap.addEventListener('mousemove',e=>{
-    if(!panning) return;
-    VP.x+=e.clientX-lastPan.x; VP.y+=e.clientY-lastPan.y;
-    lastPan={x:e.clientX,y:e.clientY};
-    clampVP(); applyVP();
-  });
-  wrap.addEventListener('mouseup',()=>panning=false);
-  wrap.addEventListener('mouseleave',()=>panning=false);
-  wrap.addEventListener('wheel',e=>{
-    e.preventDefault();
-    const factor=e.deltaY<0?1.15:0.87;
-    VP.scale=Math.max(VP.minScale,Math.min(VP.maxScale,VP.scale*factor));
-    clampVP(); applyVP();
-  },{passive:false});
-  // Click (only if not panned)
-  let downPos={x:0,y:0};
-  wrap.addEventListener('mousedown',e=>{downPos={x:e.clientX,y:e.clientY};});
-  wrap.addEventListener('mouseup',e=>{
-    if(S.mode==='drag') return;
-    const dx=e.clientX-downPos.x, dy=e.clientY-downPos.y;
-    if(Math.sqrt(dx*dx+dy*dy)>8) return;
-    onMapTap(e.clientX,e.clientY);
-  });
-  wrap.addEventListener('touchend',e=>{
-    if(pinching||S.mode==='drag') return;
-    if(e.changedTouches.length===1&&e.touches.length===0){
-      const t=e.changedTouches[0];
-      const dx=t.clientX-lastPan.x, dy=t.clientY-lastPan.y;
-      if(Math.sqrt(dx*dx+dy*dy)>12) return;
-      onMapTap(t.clientX,t.clientY);
-    }
-  });
-  // Zoom buttons
-  document.getElementById('btn-zi').addEventListener('click',()=>{VP.scale=Math.min(VP.maxScale,VP.scale*1.4);clampVP();applyVP();});
-  document.getElementById('btn-zo').addEventListener('click',()=>{VP.scale=Math.max(VP.minScale,VP.scale/1.4);clampVP();applyVP();});
-  document.getElementById('btn-zr').addEventListener('click',()=>{VP.x=0;VP.y=0;VP.scale=1;applyVP();});
+  const cw=wrap.clientWidth,ch=wrap.clientHeight;
+  cx=cx??cw/2; cy=cy??ch/2;
+  const oldScale=vp.scale;
+  vp.scale=Math.max(0.5,Math.min(10,vp.scale*factor));
+  // zoom toward point
+  const sf=vp.scale/oldScale;
+  vp.x=(vp.x-cx)*sf+cx;
+  vp.y=(vp.y-cy)*sf+cy;
+  clampVP();applyVP();
 }
 
-function pinchDist(e){
-  const a=e.touches[0],b=e.touches[1];
-  return Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
+function resetView(){
+  vp={x:0,y:0,scale:1};applyVP();
 }
 
-// Convert screen coord -> SVG viewBox coord
-function screenToSVG(cx,cy){
+function svgCoords(cx,cy){
   const wrap=document.getElementById('map-wrap');
-  const cw=wrap.clientWidth, ch=wrap.clientHeight;
+  const cw=wrap.clientWidth,ch=wrap.clientHeight;
   const bs=Math.min(cw/BASE_W,ch/BASE_H);
-  const totalScale=bs*VP.scale;
-  const mw=BASE_W*totalScale;
-  const mh=BASE_H*totalScale;
-  const ox=(cw-mw)/2+VP.x;
-  const oy=(ch-mh)/2+VP.y;
-  const svgX=(cx-ox)/totalScale;
-  const svgY=(cy-oy)/totalScale;
-  return [svgX,svgY];
+  const ts=bs*vp.scale;
+  const ox=(cw-BASE_W*ts)/2+vp.x;
+  const oy=(ch-BASE_H*ts)/2+vp.y;
+  return [(cx-ox)/ts,(cy-oy)/ts];
 }
 
-function svgToLonLat(sx,sy){
-  return [(sx/BASE_W)*360-180, 90-(sy/BASE_H)*180];
+function svgToLL(sx,sy){
+  return [(sx/BASE_W)*360-180,90-(sy/BASE_H)*180];
 }
 
-function lonLatToSVG(lon,lat){
+function llToSvg(lon,lat){
   return [(lon+180)*(BASE_W/360),(90-lat)*(BASE_H/180)];
 }
 
-// Zoom to a region (lon,lat center + radius in degrees)
-function zoomToRegion(lon,lat,radius){
+function svgToScreen(sx,sy){
   const wrap=document.getElementById('map-wrap');
-  const cw=wrap.clientWidth, ch=wrap.clientHeight;
-  const [sx,sy]=lonLatToSVG(lon,lat);
+  const cw=wrap.clientWidth,ch=wrap.clientHeight;
   const bs=Math.min(cw/BASE_W,ch/BASE_H);
-  // desired: region of 2*radius degrees fills ~60% of screen
-  const pxRadius=radius*(BASE_W/360)*bs;
-  const targetPx=Math.min(cw,ch)*0.35;
-  VP.scale=Math.max(1.5,Math.min(VP.maxScale,targetPx/pxRadius));
-  // center on point
-  const totalScale=bs*VP.scale;
-  VP.x=cw/2-sx*totalScale-(cw-BASE_W*bs)/2;
-  VP.y=ch/2-sy*totalScale-(ch-BASE_H*bs)/2;
-  // actually: recalc properly
-  VP.x=(cw/2)-(cw-BASE_W*bs)/2-sx*totalScale;
-  VP.y=(ch/2)-(ch-BASE_H*bs)/2-sy*totalScale;
-  clampVP(); applyVP();
+  const ts=bs*vp.scale;
+  const ox=(cw-BASE_W*ts)/2+vp.x;
+  const oy=(ch-BASE_H*ts)/2+vp.y;
+  return [sx*ts+ox, sy*ts+oy];
 }
 
-// ==================== GAME LOGIC ====================
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+// ==================== MAP EVENTS ====================
+function initMapEvents(){
+  const wrap=document.getElementById('map-wrap');
 
-async function startGame(){
-  showScreen('game');
-  G={queue:shuffle([...COUNTRIES]).slice(0,S.count),cur:0,score:0,tval:0,tint:null,results:[],locked:false};
-  document.getElementById('h-score').textContent='0';
+  // Touch events
+  wrap.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      isPinching=true; isPanning=false;
+      pinchLast=pinchD(e);
+    } else {
+      isPanning=true; isPinching=false; panMoved=false;
+      panLast={x:e.touches[0].clientX,y:e.touches[0].clientY};
+    }
+  },{passive:true});
 
-  // Load topo if needed
-  if(!topoData){
-    document.getElementById('c-name').textContent='Chargement…';
-    await loadTopo();
-  }
+  wrap.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(isPinching&&e.touches.length===2){
+      const d=pinchD(e);
+      const mid=pinchMid(e);
+      zoom(d/pinchLast,mid.x,mid.y);
+      pinchLast=d;
+    } else if(isPanning&&e.touches.length===1){
+      const dx=e.touches[0].clientX-panLast.x;
+      const dy=e.touches[0].clientY-panLast.y;
+      if(Math.abs(dx)>3||Math.abs(dy)>3) panMoved=true;
+      vp.x+=dx; vp.y+=dy;
+      panLast={x:e.touches[0].clientX,y:e.touches[0].clientY};
+      clampVP(); applyVP();
+    }
+  },{passive:false});
 
-  // Render map
-  const svg=document.getElementById('map-svg');
-  svg.innerHTML='';
-  pathElements={};
-  initViewport();
-  setupMapEvents();
-  renderMap('map-svg',true);
+  wrap.addEventListener('touchend',e=>{
+    if(e.touches.length<2) isPinching=false;
+    if(e.touches.length===0){
+      if(isPanning&&!panMoved&&!G.locked){
+        const t=e.changedTouches[0];
+        onTap(t.clientX,t.clientY);
+      }
+      isPanning=false;
+    }
+  },{passive:true});
 
-  updateHUD();
-  showCurrent();
-}
-
-function showScreen(name){
-  ['menu','game','result'].forEach(n=>{
-    const el=document.getElementById(n+'-screen');
-    if(n===name){el.classList.add('active');el.style.display='flex';}
-    else{el.classList.remove('active');el.style.display='none';}
+  // Mouse events (desktop)
+  wrap.addEventListener('mousedown',e=>{
+    isPanning=true; panMoved=false;
+    panLast={x:e.clientX,y:e.clientY};
   });
-}
-
-function getISO(countryId){
-  // Find by id (alpha-2)
-  return A2_ISO[countryId]||null;
-}
-
-function clearMapClasses(){
-  document.querySelectorAll('#map-svg path').forEach(p=>{
-    p.classList.remove('hl-target','hl-correct','hl-wrong');
+  wrap.addEventListener('mousemove',e=>{
+    if(!isPanning) return;
+    const dx=e.clientX-panLast.x,dy=e.clientY-panLast.y;
+    if(Math.abs(dx)>3||Math.abs(dy)>3) panMoved=true;
+    vp.x+=dx; vp.y+=dy;
+    panLast={x:e.clientX,y:e.clientY};
+    clampVP(); applyVP();
   });
+  wrap.addEventListener('mouseup',e=>{
+    if(isPanning&&!panMoved&&!G.locked) onTap(e.clientX,e.clientY);
+    isPanning=false;
+  });
+  wrap.addEventListener('mouseleave',()=>{isPanning=false;});
+  wrap.addEventListener('wheel',e=>{
+    e.preventDefault();
+    zoom(e.deltaY<0?1.15:0.87,e.clientX,e.clientY);
+  },{passive:false});
 }
 
-function showCurrent(){
-  if(G.cur>=G.queue.length){endGame();return;}
+function pinchD(e){
+  const a=e.touches[0],b=e.touches[1];
+  return Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
+}
+function pinchMid(e){
+  return{x:(e.touches[0].clientX+e.touches[1].clientX)/2,y:(e.touches[0].clientY+e.touches[1].clientY)/2};
+}
+
+// ==================== TAP & VALIDATE ====================
+function onTap(cx,cy){
   if(G.locked) return;
-  clearMapClasses();
+  const[sx,sy]=svgCoords(cx,cy);
+  // bounds check
+  if(sx<0||sx>BASE_W||sy<0||sy>BASE_H) return;
+  const[lon,lat]=svgToLL(sx,sy);
 
-  // Reset continent fill colors for all paths
-  document.querySelectorAll('#map-svg path').forEach(p=>{
-    if(!p.classList.contains('hl-correct')&&!p.classList.contains('hl-wrong')){
-      const fill=getCF(isoToCont(parseInt(p.dataset.iso)));
-      if(S.diff==='easy') p.style.fill=fill;
-      else p.style.fill='#2a3d55';
-    }
-  });
-
-  const c=G.queue[G.cur];
-  document.getElementById('c-flag').textContent=c.flag;
-  document.getElementById('c-name').textContent=S.lang==='fr'?c.fr:c.en;
-
-  const hint=document.getElementById('c-hint');
-  if(S.diff==='easy'||S.diff==='medium') hint.textContent='Continent : '+c.cont;
-  else hint.textContent='';
-
-  // Highlight target on easy
-  if(S.diff==='easy'){
-    const iso=getISO(c.id);
-    if(iso&&pathElements[iso]) pathElements[iso].forEach(p=>{p.classList.add('hl-target');p.style.fill='';});
-  }
-
-  // Zoom to region
-  const ctr=CTR[c.id];
-  if(ctr){
-    const radiusMap={
-      us:35,ca:35,mx:15,br:25,au:30,ru:40,
-      cn:25,in:15,ar:20,default:10
-    };
-    const rad=radiusMap[c.id]||radiusMap.default;
-    if(S.diff!=='hard'){
-      // zoom to country area
-      setTimeout(()=>zoomToRegion(ctr[0],ctr[1],rad),80);
-    }
-  }
-
-  // Drag mode
-  if(S.mode==='drag'){
-    document.getElementById('drag-panel').style.display='block';
-    const pill=document.getElementById('drag-pill');
-    pill.textContent=(S.lang==='fr'?c.fr:c.en)+' '+c.flag;
-    initDrag(pill);
-  } else {
-    document.getElementById('drag-panel').style.display='none';
-  }
-
-  // Timer per country
-  clearInterval(G.tint);
-  const htimer=document.getElementById('h-timer');
-  if(S.timer==='per'){
-    G.tval=30; htimer.style.display='block';
-    htimer.textContent='30'; htimer.classList.remove('urg');
-    G.tint=setInterval(()=>{
-      G.tval--;
-      htimer.textContent=G.tval;
-      htimer.classList.toggle('urg',G.tval<=8);
-      if(G.tval<=0){clearInterval(G.tint);handleAnswer(0,0,true);}
-    },1000);
-  } else if(S.timer==='global'&&G.cur===0){
-    G.tval=300; htimer.style.display='block';
-    htimer.classList.remove('urg');
-    G.tint=setInterval(()=>{
-      G.tval--;
-      const m=Math.floor(G.tval/60),s=G.tval%60;
-      htimer.textContent=G.tval<60?G.tval:`${m}:${String(s).padStart(2,'0')}`;
-      htimer.classList.toggle('urg',G.tval<=15);
-      if(G.tval<=0){clearInterval(G.tint);endGame();}
-    },1000);
-  } else if(S.timer==='none'){
-    htimer.style.display='none';
-  }
-
-  updateHUD();
-}
-
-function onMapTap(cx,cy){
-  if(G.locked||G.cur>=G.queue.length) return;
+  // Find which path was tapped
   const el=document.elementFromPoint(cx,cy);
-  const path=el&&(el.tagName==='path'?el:el.closest('path'));
-  const isoClicked=path?path.dataset.iso:null;
-  const [sx,sy]=screenToSVG(cx,cy);
-  const [lon,lat]=svgToLonLat(sx,sy);
-  handleAnswer(lon,lat,false,isoClicked);
+  const path=el&&(el.tagName==='path'?el:el.closest&&el.closest('path'));
+  const iso=path?path.dataset.iso:null;
+
+  // Get country name at this ISO
+  let tapName='Ocean';
+  if(iso){
+    // Find if it's a known country from our list
+    const found=COUNTRIES.find(c=>A2_ISO[c.id]===iso);
+    if(found) tapName=S.lang==='fr'?found.fr:found.en;
+    else tapName='Pays non qualifié';
+  }
+
+  pending={active:true,lon,lat,iso,svgX:sx,svgY:sy};
+  placePinAt(sx,sy);
+
+  document.getElementById('chosen-country').textContent=tapName;
+  document.getElementById('validate-zone').classList.add('show');
+  document.getElementById('instructions').style.opacity='0';
 }
 
-function haversine(lo1,la1,lo2,la2){
-  const R=6371,r=Math.PI/180;
-  const dLa=(la2-la1)*r,dLo=(lo2-lo1)*r;
-  const a=Math.sin(dLa/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin(dLo/2)**2;
-  return R*2*Math.asin(Math.sqrt(a));
+function placePinAt(sx,sy){
+  const[scx,scy]=svgToScreen(sx,sy);
+  const pin=document.getElementById('pin');
+  const wrap=document.getElementById('map-wrap');
+  const wr=wrap.getBoundingClientRect();
+  pin.style.left=(scx-wr.left)+'px';
+  pin.style.top=(scy-wr.top)+'px';
+  pin.style.display='block';
 }
 
-function calcScore(km){
-  if(km<50)  return 1000;
-  if(km<300) return Math.round(1000-(km/300)*200);
-  if(km<1000)return Math.round(800-((km-300)/700)*300);
-  if(km<3000)return Math.round(500-((km-1000)/2000)*300);
-  if(km<7000)return Math.round(200-((km-3000)/4000)*180);
-  return 10;
+function cancelPending(){
+  pending.active=false;
+  document.getElementById('pin').style.display='none';
+  document.getElementById('validate-zone').classList.remove('show');
+  document.getElementById('instructions').style.opacity='1';
 }
 
-function handleAnswer(lon,lat,timeout,isoClicked){
-  if(G.locked) return;
+function validateAnswer(){
+  if(!pending.active||G.locked) return;
+  document.getElementById('validate-zone').classList.remove('show');
+  document.getElementById('pin').style.display='none';
+  document.getElementById('instructions').style.opacity='0';
   G.locked=true;
   clearInterval(G.tint);
 
   const c=G.queue[G.cur];
   const ctr=CTR[c.id]||[0,0];
-  const targetISO=getISO(c.id);
+  const targetISO=A2_ISO[c.id];
 
-  let km,pts,correct;
-  if(timeout){km=99999;pts=0;correct=false;}
-  else if(isoClicked&&targetISO&&String(isoClicked)===String(targetISO)){
-    km=0;pts=1000;correct=true;
+  let km,pts;
+  if(pending.iso&&targetISO&&String(pending.iso)===String(targetISO)){
+    km=0;pts=1000;
   } else {
-    km=haversine(lon,lat,ctr[0],ctr[1]);
+    km=haversine(pending.lon,pending.lat,ctr[0],ctr[1]);
     pts=calcScore(km);
-    correct=km<400;
   }
-
+  const correct=pts>=500;
   G.score+=pts;
   G.results.push({c,km,pts,correct});
 
   // Color paths
-  if(targetISO&&pathElements[targetISO]){
-    pathElements[targetISO].forEach(p=>{
+  if(targetISO&&pathEls[targetISO]){
+    pathEls[targetISO].forEach(p=>{
       p.classList.remove('hl-target');
       p.classList.add(correct?'hl-correct':'hl-wrong');
       p.style.fill='';
@@ -792,35 +668,150 @@ function handleAnswer(lon,lat,timeout,isoClicked){
 
   // Feedback
   let txt,color;
-  if(timeout){txt='⏰ Temps écoulé !';color='#e74c3c';}
-  else if(km<50){txt='🎯 Parfait !';color='#27ae60';}
+  if(km===0){txt='🎯 Parfait !';color='#27ae60';}
   else if(km<300){txt='🔥 Excellent !';color='#2ecc71';}
   else if(km<1000){txt='👍 Bien joué !';color='#F5C518';}
   else if(km<3000){txt='🤔 Presque…';color='#e67e22';}
   else{txt='😅 Loin !';color='#e74c3c';}
 
-  const fbe=document.getElementById('fb');
   document.getElementById('fb-txt').textContent=txt;
   document.getElementById('fb-txt').style.color=color;
   const distStr=km>0?(km<1000?Math.round(km)+'km':Math.round(km/100)/10+' 000km'):'';
-  document.getElementById('fb-pts').textContent=timeout?'':`+${pts} pts${distStr?' · '+distStr:''}`;
-  fbe.classList.add('show');
+  document.getElementById('fb-pts').textContent=`+${pts} pts${distStr?' · '+distStr:''}`;
+  document.getElementById('fb').classList.add('show');
+
   updateHUD();
 
   setTimeout(()=>{
-    fbe.classList.remove('show');
-    G.cur++;
-    G.locked=false;
+    document.getElementById('fb').classList.remove('show');
+    G.cur++;G.locked=false;
     if(G.cur>=G.queue.length) endGame();
     else showCurrent();
-  },1700);
+  },1800);
+}
+
+// ==================== GAME ====================
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+async function startGame(){
+  showScreen('game');
+  G={queue:shuffle([...COUNTRIES]).slice(0,S.count),cur:0,score:0,tval:0,tint:null,results:[],locked:false};
+  pending={active:false};
+
+  if(!topoData){
+    document.getElementById('c-name').textContent='Chargement…';
+    await loadTopo();
+  }
+  vp={x:0,y:0,scale:1};
+  buildMap('map-svg',true);
+  applyVP();
+  initMapEvents();
+  updateHUD();
+  showCurrent();
+}
+
+function showScreen(n){
+  ['menu','game','result'].forEach(s=>{
+    const el=document.getElementById(s+'-screen');
+    el.classList.remove('active');
+    el.style.display='none';
+  });
+  const el=document.getElementById(n+'-screen');
+  el.classList.add('active');
+  el.style.display='flex';
+}
+
+function showCurrent(){
+  if(G.cur>=G.queue.length){endGame();return;}
+  cancelPending();
+
+  // Reset non-answered paths to base color
+  document.querySelectorAll('#map-svg path').forEach(p=>{
+    if(!p.classList.contains('hl-correct')&&!p.classList.contains('hl-wrong')){
+      p.classList.remove('hl-target');
+      p.style.fill=getCF(p.dataset.iso);
+    }
+  });
+
+  const c=G.queue[G.cur];
+  document.getElementById('c-flag').textContent=c.flag;
+  document.getElementById('c-name').textContent=S.lang==='fr'?c.fr:c.en;
+  const hint=document.getElementById('c-hint');
+  if(S.diff!=='hard') hint.textContent='🌍 Continent : '+c.cont;
+  else hint.textContent='';
+
+  // Highlight target on easy
+  if(S.diff==='easy'){
+    const iso=A2_ISO[c.id];
+    if(iso&&pathEls[iso]) pathEls[iso].forEach(p=>{p.classList.add('hl-target');p.style.fill='';});
+  }
+
+  document.getElementById('instructions').style.opacity='1';
+
+  // Timer
+  clearInterval(G.tint);
+  const htimer=document.getElementById('h-timer');
+  if(S.timer==='per'){
+    G.tval=30;htimer.style.display='block';htimer.classList.remove('urg');
+    G.tint=setInterval(()=>{
+      G.tval--;htimer.textContent=G.tval;
+      htimer.classList.toggle('urg',G.tval<=8);
+      if(G.tval<=0){clearInterval(G.tint);forceTimeout();}
+    },1000);
+    htimer.textContent='30';
+  } else if(S.timer==='global'&&G.cur===0){
+    G.tval=300;htimer.style.display='block';htimer.classList.remove('urg');
+    G.tint=setInterval(()=>{
+      G.tval--;
+      const m=~~(G.tval/60),s=G.tval%60;
+      htimer.textContent=G.tval<60?G.tval:`${m}:${String(s).padStart(2,'0')}`;
+      htimer.classList.toggle('urg',G.tval<=15);
+      if(G.tval<=0){clearInterval(G.tint);endGame();}
+    },1000);
+    htimer.textContent='5:00';
+  } else if(S.timer==='none'){htimer.style.display='none';}
+
+  updateHUD();
+}
+
+function forceTimeout(){
+  if(G.locked) return;
+  G.locked=true;
+  cancelPending();
+  const c=G.queue[G.cur];
+  G.results.push({c,km:99999,pts:0,correct:false});
+  document.getElementById('fb-txt').textContent='⏰ Temps écoulé !';
+  document.getElementById('fb-txt').style.color='#e74c3c';
+  document.getElementById('fb-pts').textContent='';
+  document.getElementById('fb').classList.add('show');
+  updateHUD();
+  setTimeout(()=>{
+    document.getElementById('fb').classList.remove('show');
+    G.cur++;G.locked=false;
+    if(G.cur>=G.queue.length) endGame();
+    else showCurrent();
+  },1600);
 }
 
 function updateHUD(){
   document.getElementById('h-score').textContent=G.score;
-  const pct=(G.cur/G.queue.length)*100;
-  document.getElementById('h-fill').style.width=pct+'%';
-  document.getElementById('h-info').textContent=`${G.cur} / ${G.queue.length}`;
+  document.getElementById('h-fill').style.width=(G.cur/G.queue.length*100)+'%';
+  document.getElementById('h-info').textContent=G.cur+' / '+G.queue.length;
+}
+
+function haversine(lo1,la1,lo2,la2){
+  const R=6371,r=Math.PI/180;
+  const a=Math.sin((la2-la1)*r/2)**2+Math.cos(la1*r)*Math.cos(la2*r)*Math.sin((lo2-lo1)*r/2)**2;
+  return R*2*Math.asin(Math.sqrt(a));
+}
+
+function calcScore(km){
+  if(km<50)   return 1000;
+  if(km<300)  return Math.round(1000-(km/300)*200);
+  if(km<1000) return Math.round(800-((km-300)/700)*300);
+  if(km<3000) return Math.round(500-((km-1000)/2000)*300);
+  if(km<7000) return Math.round(200-((km-3000)/4000)*180);
+  return 10;
 }
 
 // ==================== END ====================
@@ -830,89 +821,40 @@ function endGame(){
   const pct=Math.round(G.score/max*100);
   showScreen('result');
   document.getElementById('r-score').textContent=G.score+' pts';
+  const grades=['🌍 La carte résiste… mais tu progresses !','😅 Encore un peu de révision !','👍 Pas mal du tout !','⭐ Très bien ! Tu t\'y connais !','🏆 Champion du monde ! Géographe hors pair !'];
+  const gi=pct>=90?4:pct>=70?3:pct>=50?2:pct>=25?1:0;
+  document.getElementById('r-grade').textContent=grades[gi]+' ('+pct+'%)';
 
-  let grade;
-  if(pct>=90) grade='🏆 Champion du monde ! Géographe hors pair !';
-  else if(pct>=70) grade='⭐ Très bien ! Tu t\'y connais !';
-  else if(pct>=50) grade='👍 Pas mal ! Encore un peu de révision ?';
-  else if(pct>=25) grade='😅 Il faut réviser un peu… mais c\'est fun !';
-  else grade='🌍 La carte du monde résiste… mais tu progresses !';
-  document.getElementById('r-grade').textContent=grade+' ('+pct+'%)';
-
-  // Result map
   if(topoData){
-    renderMap('rmap',false);
+    buildMap('rmap',false);
     G.results.forEach(r=>{
-      const iso=getISO(r.c.id);
+      const iso=A2_ISO[r.c.id];
       if(!iso) return;
       document.querySelectorAll(`#rmap path[data-iso="${iso}"]`).forEach(p=>{
         p.classList.add(r.pts>=500?'hl-correct':'hl-wrong');
+        p.style.fill='';
       });
     });
   }
 
-  // List
   const list=document.getElementById('r-list');
   list.innerHTML='';
   G.results.forEach(r=>{
     const cls=r.pts>=600?'g':r.pts>=250?'o':'b';
     const nm=S.lang==='fr'?r.c.fr:r.c.en;
-    const dist=r.km>0?(r.km<1000?Math.round(r.km)+'km':Math.round(r.km/100)/10+' 000km'):'🎯 Parfait !';
+    const dist=r.pts===0?'Temps écoulé':r.km===0?'🎯 Parfait !':r.km<1000?Math.round(r.km)+'km':Math.round(r.km/100)/10+' 000km';
     list.innerHTML+=`<div class="ritem">
       <div class="rdot ${cls}"></div>
       <span class="rflg">${r.c.flag}</span>
       <span class="rnm">${nm}</span>
-      <span class="rdist">${r.pts===0?'Temps écoulé':dist}</span>
+      <span class="rdist">${dist}</span>
       <span class="rpt ${cls}">+${r.pts}</span>
     </div>`;
   });
 }
 
-// ==================== DRAG MODE ====================
-let dragging=false,dragStarted=false,dragStartPos={x:0,y:0};
-function initDrag(pill){
-  pill.ontouchstart=pill.onmousedown=e=>{
-    e.preventDefault();
-    dragging=true;dragStarted=false;
-    const t=e.touches?e.touches[0]:e;
-    dragStartPos={x:t.clientX,y:t.clientY};
-    const ghost=document.getElementById('drag-ghost');
-    ghost.textContent=pill.textContent;
-    ghost.style.display='block';
-    moveDragGhost(t.clientX,t.clientY);
-  };
-  document.ontouchmove=document.onmousemove=e=>{
-    if(!dragging) return;
-    if(e.cancelable) e.preventDefault();
-    const t=e.touches?e.touches[0]:e;
-    dragStarted=true;
-    moveDragGhost(t.clientX,t.clientY);
-  };
-  document.ontouchend=document.onmouseup=e=>{
-    if(!dragging) return;
-    dragging=false;
-    document.getElementById('drag-ghost').style.display='none';
-    if(!dragStarted) return;
-    const t=e.changedTouches?e.changedTouches[0]:e;
-    const wrap=document.getElementById('map-wrap');
-    const wr=wrap.getBoundingClientRect();
-    if(t.clientX<wr.left||t.clientX>wr.right||t.clientY<wr.top||t.clientY>wr.bottom) return;
-    const el=document.elementFromPoint(t.clientX,t.clientY);
-    const path=el&&(el.tagName==='path'?el:el.closest('path'));
-    const iso=path?path.dataset.iso:null;
-    const [sx,sy]=screenToSVG(t.clientX,t.clientY);
-    const [lon,lat]=svgToLonLat(sx,sy);
-    handleAnswer(lon,lat,false,iso);
-  };
-}
-function moveDragGhost(cx,cy){
-  const g=document.getElementById('drag-ghost');
-  g.style.left=cx+'px'; g.style.top=cy+'px';
-}
-
 // ==================== INIT ====================
-showScreen('menu');
-loadTopo(); // preload in background
+loadTopo();
 </script>
 </body>
 </html>
