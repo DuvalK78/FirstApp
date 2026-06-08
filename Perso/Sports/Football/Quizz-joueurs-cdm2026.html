@@ -107,13 +107,11 @@
   .submit-input-btn:hover { opacity: 0.85; }
   .submit-input-btn:disabled { opacity: 0.5; cursor: default; }
 
-  .feedback-box { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius); font-size: 13px; line-height: 1.5; display: none; }
-  .feedback-box.show { display: block; }
+  .feedback-box { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius); font-size: 13px; line-height: 1.5; }
   .feedback-box.correct-fb { background: rgba(29,158,117,0.15); border: 1px solid rgba(93,202,165,0.3); color: var(--teal-light); }
   .feedback-box.wrong-fb { background: rgba(226,75,74,0.12); border: 1px solid rgba(226,75,74,0.3); color: #f99; }
 
-  .next-btn { margin-top: 14px; width: 100%; padding: 13px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; display: none; transition: all .15s; }
-  .next-btn.show { display: block; }
+  .next-btn { margin-top: 14px; width: 100%; padding: 13px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; }
   .next-btn:hover { background: var(--purple); border-color: var(--purple); }
 
   .combo-display { text-align: center; font-size: 12px; font-weight: 600; color: var(--amber); min-height: 18px; margin-bottom: 6px; }
@@ -245,8 +243,8 @@
       <input type="text" class="quiz-input" id="free-input" placeholder="Ta r&#233;ponse&#8230;">
       <button class="submit-input-btn" id="submit-btn">OK</button>
     </div>
-    <div class="feedback-box" id="feedback-box"></div>
-    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Question suivante &#8594;</button>
+    <div class="feedback-box" id="feedback-box" style="display:none"></div>
+    <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Question suivante &#8594;</button>
   </div>
 </div>
 
@@ -638,9 +636,11 @@ function renderQuestion(){
   /* reset feedback/next */
   var fb=document.getElementById('feedback-box');
   fb.className='feedback-box';
+  fb.style.display='none';
   fb.textContent='';
   var nb=document.getElementById('next-btn');
-  nb.className='next-btn';
+  nb.style.display='none';
+  nb.textContent='Question suivante \u2192';
 
   /* reset zones */
   document.getElementById('answers-zone').innerHTML='';
@@ -771,10 +771,11 @@ function showCombo(){
 
 function showFeedback(isCorrect,q){
   var fb=document.getElementById('feedback-box');
-  fb.className='feedback-box show '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.className='feedback-box '+(isCorrect?'correct-fb':'wrong-fb');
+  fb.style.display='block';
   fb.textContent=(isCorrect?'\u2705 Correct\u00a0! ':'\u274c Rat\u00e9. ')+q.explain;
   var nb=document.getElementById('next-btn');
-  nb.className='next-btn show';
+  nb.style.display='block';
   nb.textContent=idx<questions.length-1?'Question suivante \u2192':'Voir les r\u00e9sultats \u2192';
 }
 
