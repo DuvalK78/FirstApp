@@ -1,55 +1,359 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formula 1 Info</title>
-    <link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet" href="F1.css">
-	<script src="F1.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formula 1 — Saison 2026</title>
+  <style>
+    /* ── BASE ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #FF0000;
+      font-family: Verdana, sans-serif;
+      margin: 0;
+      padding-bottom: 60px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 28px 20px 18px;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 3px solid #000;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-shadow: 2px 2px 0 #000;
+    }
+    header h1 span { color: #000; }
+    header p {
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    /* ── GRID ── */
+    .buttons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 24px 20px;
+    }
+
+    /* ── BUTTON ── */
+    button.info-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 160px;
+    }
+    button.info-button:hover,
+    button.info-button.active {
+      background-color: #CC0000;
+      color: #fff;
+      box-shadow: 0 6px 8px rgba(0,0,0,0.25);
+      transform: translateY(-2px);
+      border-color: #fff;
+    }
+    button.info-button h4 {
+      font-size: 13px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.3;
+    }
+    button.info-button .chassis-tag {
+      font-size: 10px;
+      margin-top: 4px;
+      opacity: 0.75;
+      font-weight: normal;
+    }
+
+    /* ── MESSAGE PANEL ── */
+    #message1 {
+      display: none;
+      text-align: center;
+      margin: 0 auto 20px;
+      padding: 24px 20px;
+      background-color: rgba(255,255,255,0.92);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      max-width: 640px;
+      font-family: Verdana, sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #00085C;
+      animation: slideIn 0.25s ease;
+    }
+    #message1.visible { display: block; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #message1 h2 {
+      font-size: 20px;
+      color: #CC0000;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    #message1 .chassis-name {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    #message1 .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      text-align: left;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    #message1 .stat-item { border-bottom: 1px solid #e0e0e0; padding-bottom: 6px; }
+    #message1 .stat-item span {
+      font-weight: bold;
+      color: #FF0000;
+    }
+
+    #message1 .drivers-row {
+      margin: 12px 0 6px;
+      font-size: 13px;
+    }
+    #message1 .drivers-row strong { color: #CC0000; }
+
+    #message1 img {
+      display: block;
+      margin: 16px auto 0;
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #F02D57;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      background-color: #f1f1f1;
+      z-index: 1000;
+      border-top: 2px solid #CC0000;
+    }
+    footer a {
+      color: #00085C;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    footer a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-    <div class="buttons-container">
-            <button class="info-button" data-text="Entrée en Championnat: 1950 Titres Mondiaux écuries: 16 Victoires: 246 Pole Position: 250 Machine: Ferrari SF-24 Pilotes: Charles Leclerc #16 Carlos Sainz #55 Équipementier: Puma" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/ferrari.png">
-            <h4>Scuderia Ferrari</h4>
-        </button>
-            <button class="info-button" data-text="Entrée en Championnat: 1978 Titres Mondiaux écuries: 9 Victoires: 114 Pole Position: 128 Machine: Williams FW46 Pilotes: Alexander Albon #23 Logan Sargeant #45 Équipementier: Puma" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/williams.png">
-            <h4>Williams Racing</h4>
-        </button>
-            <button class="info-button" data-text="Entrée en Championnat: 1966 Titres Mondiaux écuries: 8 Victoires: 184 Pole Position: 157 Machine : MCL38 Pilotes: Lando Norris #4 Oscar Piastri #81 Équipementier: Sparco" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/mclaren.png">
-            <h4>Mclaren F1 Team</h4>
-        </button>
-              <button class="info-button" data-text="Entrée en Championnat: 1970 Titres Mondiaux écuries: 8 Victoires: 116 Pole Position: 129 Machine : W-15 Pilotes: Lewis Hamilton #44 George Russel #63 Équipementier: Puma" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/mercedes.png">
-            <h4>Mercedes-AMG Petronas F1 Team</h4>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 1997 Titres Mondiaux écuries: 6 Victoires: 118 Pole Position: 103 Machine : RB-20 Pilotes: Max Verstappen #1 Sergio Pérez #11 Équipementier: Castore" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/red-bull-racing.png">
-            <h4>Oracle RedBull Racing</h4>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 1986 Titres Mondiaux écuries: 2 Victoires: 21 Pole Position: 20 Machine : A524 Pilotes: Pierre Gasly #10 Esteban Ocon #31 Équipementier: Alpinestars" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/alpine.png">
-            <h4>BWT Alpine F1 Team</h4>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 1985 Titres Mondiaux écuries: 0 Victoires: 2 Pole Position: 1 Machine : VCARB 1 Pilotes: Yuki Tsunoda #22 Daniel Ricciardo #3 Équipementier: Alpinestars" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/rb.png">
-            <h4>Visa Cash App RB Formula One Team</h4>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 1993 Titres Mondiaux écuries: 0 Victoires: 1 Pole Position: 1 Machine : C44 Pilotes: Guanyu Zhou #24 Valterri Bottas #77 Équipementier: Puma" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/kick-sauber.png">
-            <h4>Stake F1 Team Kick Sauber</g>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 2018 Titres Mondiaux écuries: 0 Victoires: 1 Pole Position: 1 Machine : AMR24 Pilotes: Fernando Alonso #14 Lance Stroll #18 Équipementier: Alpinestars" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/aston-martin.png">
-            <h4>Aston Martin Aramco Cognizant F1 Team</h4>
-      </button>
-      <button class="info-button" data-text="Entrée en Championnat: 2016 Titres Mondiaux écuries: 0 Victoires: 0 Pole Position: 1 Machine : VF-24 Pilotes: Kevin Magnussen #20 Nico Hulkenberg #27 Équipementier: Alpinestars" data-img="https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2024/haas.png">
-            <h4>MoneyGram Haas F1 Team</h4>
-      </button>
-    </div>
-    <div id="message1"></div>
-	<div class="nav-links mt-4">
-        <a href="../../../Websitesindex.html" class="btn btn-primary">Retour à la sélection des sites</a>
-    </div>
-	
-  <footer>
-        <a href="https://www.formula1.com/" target="_blank">Visitez le site officiel de la Formula One</a>
-    </footer>
-    <script src="script.js"></script>
-</body>
-  </html>
 
+<header>
+  <h1>Formula <span>1</span> — Saison 2026</h1>
+  <p>11 écuries · 22 pilotes · Clique sur une équipe pour voir les infos</p>
+</header>
+
+<div class="buttons-container" id="buttons-container">
+  <!-- injecté par JS -->
+</div>
+
+<div id="message1"></div>
+
+<footer>
+  <a href="https://www.formula1.com/" target="_blank">Visitez le site officiel de la Formula One</a>
+</footer>
+
+<script>
+const TEAMS = [
+  {
+    name: "Scuderia Ferrari HP",
+    short: "Ferrari",
+    chassis: "SF-26",
+    entree: 1950,
+    titres: 16,
+    victoires: 248,
+    poles: 251,
+    drivers: [{ num: 16, name: "Charles Leclerc" }, { num: 44, name: "Lewis Hamilton" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/ferrari.png"
+  },
+  {
+    name: "McLaren Mastercard F1 Team",
+    short: "McLaren",
+    chassis: "MCL39",
+    entree: 1966,
+    titres: 10,
+    victoires: 203,
+    poles: 160,
+    drivers: [{ num: 1, name: "Lando Norris" }, { num: 81, name: "Oscar Piastri" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/mclaren.png"
+  },
+  {
+    name: "Oracle Red Bull Racing",
+    short: "Red Bull",
+    chassis: "RB22",
+    entree: 1997,
+    titres: 6,
+    victoires: 130,
+    poles: 103,
+    drivers: [{ num: 3, name: "Max Verstappen" }, { num: 6, name: "Isack Hadjar" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/red-bull-racing.png"
+  },
+  {
+    name: "Mercedes-AMG PETRONAS F1",
+    short: "Mercedes",
+    chassis: "W16",
+    entree: 1970,
+    titres: 8,
+    victoires: 136,
+    poles: 136,
+    drivers: [{ num: 63, name: "George Russell" }, { num: 12, name: "Kimi Antonelli" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/mercedes.png"
+  },
+  {
+    name: "Atlassian Williams F1 Team",
+    short: "Williams",
+    chassis: "FW47",
+    entree: 1978,
+    titres: 9,
+    victoires: 114,
+    poles: 128,
+    drivers: [{ num: 23, name: "Alexander Albon" }, { num: 55, name: "Carlos Sainz" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/williams.png"
+  },
+  {
+    name: "BWT Alpine Formula One Team",
+    short: "Alpine",
+    chassis: "A526",
+    entree: 1986,
+    titres: 2,
+    victoires: 21,
+    poles: 20,
+    drivers: [{ num: 10, name: "Pierre Gasly" }, { num: 43, name: "Franco Colapinto" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/alpine.png"
+  },
+  {
+    name: "Visa Cash App Racing Bulls",
+    short: "Racing Bulls",
+    chassis: "VCARB 03",
+    entree: 1985,
+    titres: 0,
+    victoires: 2,
+    poles: 1,
+    drivers: [{ num: 30, name: "Liam Lawson" }, { num: 41, name: "Arvid Lindblad" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/rb.png"
+  },
+  {
+    name: "Audi Revolut F1 Team",
+    short: "Audi",
+    chassis: "R26",
+    entree: 2026,
+    titres: 0,
+    victoires: 0,
+    poles: 0,
+    drivers: [{ num: 27, name: "Nico Hülkenberg" }, { num: 5, name: "Gabriel Bortoleto" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/kick-sauber.png"
+  },
+  {
+    name: "Aston Martin Aramco F1 Team",
+    short: "Aston Martin",
+    chassis: "AMR26",
+    entree: 2018,
+    titres: 0,
+    victoires: 1,
+    poles: 1,
+    drivers: [{ num: 14, name: "Fernando Alonso" }, { num: 18, name: "Lance Stroll" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/aston-martin.png"
+  },
+  {
+    name: "TGR Haas F1 Team",
+    short: "Haas",
+    chassis: "VF-26",
+    entree: 2016,
+    titres: 0,
+    victoires: 0,
+    poles: 1,
+    drivers: [{ num: 31, name: "Esteban Ocon" }, { num: 87, name: "Oliver Bearman" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/haas.png"
+  },
+  {
+    name: "Cadillac Formula 1 Team",
+    short: "Cadillac",
+    chassis: "MAC-26",
+    entree: 2026,
+    titres: 0,
+    victoires: 0,
+    poles: 0,
+    drivers: [{ num: 11, name: "Sergio Pérez" }, { num: 77, name: "Valtteri Bottas" }],
+    img: "https://media.formula1.com/d_team_car_fallback_image.png/content/dam/fom-website/teams/2025/kick-sauber.png"
+  }
+];
+
+const container = document.getElementById("buttons-container");
+const panel     = document.getElementById("message1");
+let activeIndex = null;
+
+TEAMS.forEach((t, i) => {
+  const btn = document.createElement("button");
+  btn.className = "info-button";
+  btn.innerHTML = `<h4>${t.short}</h4><div class="chassis-tag">${t.chassis}</div>`;
+  btn.addEventListener("click", () => {
+    if (activeIndex === i) {
+      // fermer
+      panel.classList.remove("visible");
+      btn.classList.remove("active");
+      activeIndex = null;
+      return;
+    }
+    document.querySelectorAll(".info-button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeIndex = i;
+    renderPanel(t);
+    panel.classList.add("visible");
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  container.appendChild(btn);
+});
+
+function renderPanel(t) {
+  panel.innerHTML = `
+    <h2>${t.short}</h2>
+    <div class="chassis-name">${t.name} — ${t.chassis}</div>
+    <div class="stats-grid">
+      <div class="stat-item">Entrée en championnat<br><span>${t.entree}</span></div>
+      <div class="stat-item">Titres constructeurs<br><span>${t.titres}</span></div>
+      <div class="stat-item">Victoires<br><span>${t.victoires}</span></div>
+      <div class="stat-item">Poles position<br><span>${t.poles}</span></div>
+    </div>
+    <div class="drivers-row">
+      <strong>#${t.drivers[0].num}</strong> ${t.drivers[0].name}
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <strong>#${t.drivers[1].num}</strong> ${t.drivers[1].name}
+    </div>
+    <img src="${t.img}" alt="${t.name}" onerror="this.style.display='none'" />
+  `;
+}
+</script>
+</body>
+</html>
