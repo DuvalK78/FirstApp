@@ -3,844 +3,736 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz CdM 2026 – Joueurs</title>
+<title>Quiz CdM 2026</title>
 <style>
-  :root {
-    --bg: #0f0f13;
-    --surface: #1a1a24;
-    --surface2: #22222f;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --text: #f0f0f5;
-    --muted: #888899;
-    --purple: #7f77dd;
-    --purple-light: #aeaaee;
-    --teal: #1d9e75;
-    --teal-light: #5dcaa5;
-    --coral: #d85a30;
-    --amber: #ef9f27;
-    --red: #e24b4a;
-    --radius: 10px;
-    --radius-lg: 14px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; overflow-x: hidden; }
+:root {
+  --bg: #0f0f13; --surface: #1a1a24; --surface2: #22222f;
+  --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.18);
+  --text: #f0f0f5; --muted: #888899;
+  --purple: #7f77dd; --purple-light: #aeaaee;
+  --teal: #1d9e75; --teal-light: #5dcaa5;
+  --red: #e24b4a; --amber: #ef9f27; --coral: #d85a30;
+  --r: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
-  .header { text-align: center; padding: 2.5rem 1rem 1.5rem; }
-  .header-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 5px 14px; font-size: 12px; color: var(--purple-light); margin-bottom: 12px; font-weight: 500; }
-  .header h1 { font-size: clamp(22px, 5vw, 34px); font-weight: 700; color: #fff; margin-bottom: 6px; }
-  .header p { color: var(--muted); font-size: 14px; }
+/* ---- PAGES ---- */
+.page { display: none; max-width: 680px; margin: 0 auto; padding: 1rem 1rem 3rem; }
+.page.active { display: block; }
 
-  #menu { max-width: 740px; margin: 0 auto; padding: 0 1rem 3rem; }
-  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 1.75rem 0 0.75rem; }
+/* ---- HEADER ---- */
+.header { text-align: center; padding: 2rem 1rem 1.5rem; }
+.badge { display: inline-block; background: var(--surface2); border: 1px solid var(--border2); border-radius: 20px; padding: 4px 14px; font-size: 12px; color: var(--purple-light); margin-bottom: 12px; }
+h1 { font-size: clamp(22px,5vw,34px); font-weight: 700; color: #fff; margin-bottom: 6px; }
+.subtitle { color: var(--muted); font-size: 14px; }
 
-  .mode-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-  .mode-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg); padding: 18px 14px; cursor: pointer; transition: all .2s; text-align: center; }
-  .mode-card:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-2px); }
-  .mode-card.selected { border-color: var(--purple); background: rgba(127,119,221,0.12); }
-  .mode-card .icon { font-size: 24px; margin-bottom: 8px; }
-  .mode-card .name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .mode-card .desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+/* ---- SECTION LABEL ---- */
+.slabel { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin: 1.75rem 0 0.75rem; }
 
-  .diff-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-  .diff-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 12px; cursor: pointer; text-align: center; transition: all .2s; }
-  .diff-card:hover { border-color: var(--border2); }
-  .diff-card.selected { border-color: var(--amber); background: rgba(239,159,39,0.1); }
-  .diff-card .dlabel { font-size: 13px; font-weight: 600; }
-  .diff-card .dpts { font-size: 11px; color: var(--muted); margin-top: 3px; }
-  .diff-card[data-diff="easy"] .dlabel { color: var(--teal-light); }
-  .diff-card[data-diff="medium"] .dlabel { color: var(--amber); }
-  .diff-card[data-diff="hard"] .dlabel { color: var(--coral); }
+/* ---- CARDS GRILLES ---- */
+.mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media(min-width:500px){ .mode-grid { grid-template-columns: repeat(4, 1fr); } }
+.mode-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 12px; cursor: pointer; text-align: center; transition: all .2s; user-select: none; }
+.mode-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.mode-card.sel { border-color: var(--purple); background: rgba(127,119,221,0.12); }
+.mode-card .icon { font-size: 22px; margin-bottom: 8px; }
+.mode-card .name { font-size: 13px; font-weight: 600; }
+.mode-card .desc { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
 
-  .qty-row { display: flex; align-items: center; gap: 14px; }
-  .qty-row label { font-size: 13px; color: var(--muted); white-space: nowrap; }
-  .qty-row input[type=range] { flex: 1; accent-color: var(--purple); }
-  .qty-val { font-size: 14px; font-weight: 600; color: var(--purple-light); min-width: 28px; text-align: right; }
+.diff-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.diff-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 10px; cursor: pointer; text-align: center; transition: all .2s; user-select: none; }
+.diff-card:hover { border-color: var(--border2); }
+.diff-card.sel { border-color: var(--amber); background: rgba(239,159,39,0.1); }
+.diff-card[data-d="easy"] .dlabel { color: var(--teal-light); }
+.diff-card[data-d="medium"] .dlabel { color: var(--amber); }
+.diff-card[data-d="hard"] .dlabel { color: var(--coral); }
+.dlabel { font-size: 13px; font-weight: 600; }
+.dpts { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-  .start-btn { display: block; width: 100%; margin-top: 2rem; padding: 16px; background: var(--purple); border: none; border-radius: var(--radius); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity .2s, transform .15s; }
-  .start-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-  .start-btn:active { transform: scale(0.98); }
+.qty-row { display: flex; align-items: center; gap: 14px; }
+.qty-row label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.qty-row input { flex: 1; accent-color: var(--purple); }
+.qty-val { font-size: 14px; font-weight: 600; color: var(--purple-light); min-width: 28px; text-align: right; }
 
-  #quiz { display: none; max-width: 680px; margin: 0 auto; padding: 0 1rem 3rem; }
+/* ---- BOUTONS PRIMAIRES ---- */
+.btn-primary { display: block; width: 100%; margin-top: 2rem; padding: 15px; background: var(--purple); border: none; border-radius: var(--r); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+.btn-primary:hover { opacity: 0.85; }
 
-  .progress-bar-wrap { margin: 1.5rem 0; }
-  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .progress-track { height: 4px; background: var(--surface2); border-radius: 2px; }
-  .progress-fill { height: 4px; background: var(--purple); border-radius: 2px; transition: width .4s; }
+/* ---- BARRE PROGRESS ---- */
+.prog-wrap { margin: 1.5rem 0 1rem; }
+.prog-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.prog-track { height: 5px; background: var(--surface2); border-radius: 3px; }
+.prog-fill { height: 5px; background: var(--purple); border-radius: 3px; transition: width .4s; }
 
-  .score-bar { display: flex; gap: 10px; margin-bottom: 1.5rem; }
-  .score-chip { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; text-align: center; }
-  .score-chip .sc-val { font-size: 20px; font-weight: 700; color: var(--purple-light); }
-  .score-chip .sc-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+/* ---- SCORE BAR ---- */
+.score-bar { display: flex; gap: 10px; margin-bottom: 1rem; }
+.score-chip { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 10px; text-align: center; }
+.sc-val { font-size: 20px; font-weight: 700; color: var(--purple-light); }
+.sc-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 20px; margin-bottom: 16px; }
-  .question-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .q-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .q-badge.easy { background: rgba(29,158,117,0.2); color: var(--teal-light); }
-  .q-badge.medium { background: rgba(239,159,39,0.2); color: var(--amber); }
-  .q-badge.hard { background: rgba(216,90,48,0.2); color: var(--coral); }
-  .q-pts { font-size: 11px; color: var(--muted); margin-left: auto; }
-  .q-type-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-  .question-text { font-size: 15px; font-weight: 500; line-height: 1.55; color: var(--text); white-space: pre-wrap; }
+.combo { text-align: center; min-height: 20px; font-size: 12px; font-weight: 600; color: var(--amber); margin-bottom: 8px; }
 
-  .answers { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
-  .answer-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 13px 16px; text-align: left; color: var(--text); font-size: 14px; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 10px; width: 100%; }
-  .answer-btn .ab-letter { width: 24px; height: 24px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
-  .answer-btn:hover:not(:disabled) { border-color: var(--border2); background: rgba(127,119,221,0.08); }
-  .answer-btn.correct { border-color: var(--teal); background: rgba(29,158,117,0.15); }
-  .answer-btn.correct .ab-letter { background: var(--teal); color: #fff; border-color: var(--teal); }
-  .answer-btn.wrong { border-color: var(--red); background: rgba(226,75,74,0.15); }
-  .answer-btn.wrong .ab-letter { background: var(--red); color: #fff; border-color: var(--red); }
-  .answer-btn:disabled { cursor: default; opacity: 0.85; }
+/* ---- QUESTION CARD ---- */
+.qcard { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 18px; }
+.qmeta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.qbadge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.qbadge.easy { background: rgba(29,158,117,0.2); color: var(--teal-light); }
+.qbadge.medium { background: rgba(239,159,39,0.2); color: var(--amber); }
+.qbadge.hard { background: rgba(216,90,48,0.2); color: var(--coral); }
+.qtype { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.qpts { font-size: 11px; color: var(--muted); margin-left: auto; }
+.qtext { font-size: 15px; font-weight: 500; line-height: 1.55; white-space: pre-wrap; }
 
-  .tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-  .tf-btn { padding: 18px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; transition: all .15s; }
-  .tf-btn:hover:not(:disabled) { border-color: var(--border2); }
-  .tf-btn.correct { border-color: var(--teal); background: rgba(29,158,117,0.15); color: var(--teal-light); }
-  .tf-btn.wrong { border-color: var(--red); background: rgba(226,75,74,0.15); color: #f99; }
-  .tf-btn:disabled { cursor: default; }
+/* ---- RÉPONSES QCM ---- */
+.ans-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.ans-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 14px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-size: 14px; text-align: left; cursor: pointer; transition: border-color .15s, background .15s; }
+.ans-btn:hover:not(:disabled) { border-color: var(--border2); }
+.ans-btn:disabled { cursor: default; opacity: .9; }
+.ans-letter { width: 26px; height: 26px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+.ans-btn.correct { border-color: var(--teal); background: rgba(29,158,117,0.15); }
+.ans-btn.correct .ans-letter { background: var(--teal); color: #fff; border-color: var(--teal); }
+.ans-btn.wrong { border-color: var(--red); background: rgba(226,75,74,0.15); }
+.ans-btn.wrong .ans-letter { background: var(--red); color: #fff; border-color: var(--red); }
 
-  .input-row { display: flex; gap: 8px; margin-top: 14px; }
-  .quiz-input { flex: 1; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 12px 14px; color: var(--text); font-size: 14px; outline: none; transition: border-color .2s; }
-  .quiz-input:focus { border-color: var(--purple); }
-  .submit-input-btn { background: var(--purple); border: none; border-radius: var(--radius); color: #fff; font-size: 13px; font-weight: 600; padding: 0 18px; cursor: pointer; transition: opacity .2s; }
-  .submit-input-btn:hover { opacity: 0.85; }
-  .submit-input-btn:disabled { opacity: 0.5; cursor: default; }
+/* ---- VRAI/FAUX ---- */
+.tf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.tf-btn { padding: 18px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface2); color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; transition: all .15s; }
+.tf-btn:hover:not(:disabled) { border-color: var(--border2); }
+.tf-btn:disabled { cursor: default; }
+.tf-btn.correct { border-color: var(--teal); background: rgba(29,158,117,0.15); color: var(--teal-light); }
+.tf-btn.wrong { border-color: var(--red); background: rgba(226,75,74,0.15); color: #f99; }
 
-  .feedback-box { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius); font-size: 13px; line-height: 1.5; }
-  .feedback-box.correct-fb { background: rgba(29,158,117,0.15); border: 1px solid rgba(93,202,165,0.3); color: var(--teal-light); }
-  .feedback-box.wrong-fb { background: rgba(226,75,74,0.12); border: 1px solid rgba(226,75,74,0.3); color: #f99; }
+/* ---- SAISIE LIBRE ---- */
+.free-row { display: flex; gap: 8px; margin-top: 14px; }
+.free-input { flex: 1; background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--r); padding: 12px 14px; color: var(--text); font-size: 14px; outline: none; }
+.free-input:focus { border-color: var(--purple); }
+.free-input:disabled { opacity: .7; }
+.free-submit { background: var(--purple); border: none; border-radius: var(--r); color: #fff; font-size: 14px; font-weight: 600; padding: 0 18px; cursor: pointer; }
+.free-submit:disabled { opacity: .5; cursor: default; }
 
-  .next-btn { margin-top: 14px; width: 100%; padding: 13px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; }
-  .next-btn:hover { background: var(--purple); border-color: var(--purple); }
+/* ---- FEEDBACK ---- */
+.feedback { margin-top: 12px; padding: 12px 14px; border-radius: var(--r); font-size: 13px; line-height: 1.5; }
+.feedback.ok { background: rgba(29,158,117,0.15); border: 1px solid rgba(93,202,165,0.3); color: var(--teal-light); }
+.feedback.ko { background: rgba(226,75,74,0.12); border: 1px solid rgba(226,75,74,0.3); color: #f99; }
 
-  .combo-display { text-align: center; font-size: 12px; font-weight: 600; color: var(--amber); min-height: 18px; margin-bottom: 6px; }
+/* ---- BOUTON SUIVANT ---- */
+.next-btn { width: 100%; margin-top: 14px; padding: 14px; background: var(--surface2); border: 1.5px solid var(--border2); border-radius: var(--r); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s, border-color .15s; }
+.next-btn:hover { background: var(--purple); border-color: var(--purple); }
 
-  #results { display: none; max-width: 600px; margin: 0 auto; padding: 1rem 1rem 3rem; text-align: center; }
-  .result-trophy { font-size: 64px; margin: 2rem 0 1rem; }
-  .result-title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
-  .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
-  .result-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 2rem; }
-  .rstat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 10px; }
-  .rstat .rv { font-size: 22px; font-weight: 700; color: var(--purple-light); }
-  .rstat .rl { font-size: 11px; color: var(--muted); margin-top: 3px; }
-  .grade-badge { display: inline-block; padding: 8px 24px; border-radius: 24px; font-size: 15px; font-weight: 700; margin-bottom: 1.5rem; }
-  .grade-S { background: rgba(239,159,39,0.2); color: var(--amber); border: 1px solid rgba(239,159,39,0.4); }
-  .grade-A { background: rgba(29,158,117,0.2); color: var(--teal-light); border: 1px solid rgba(93,202,165,0.4); }
-  .grade-B { background: rgba(55,138,221,0.2); color: #7bb8f5; border: 1px solid rgba(55,138,221,0.4); }
-  .grade-C { background: rgba(127,119,221,0.2); color: var(--purple-light); border: 1px solid rgba(127,119,221,0.4); }
-  .grade-D { background: rgba(216,90,48,0.2); color: #f4946b; border: 1px solid rgba(216,90,48,0.4); }
-  .review-list { text-align: left; margin-bottom: 2rem; }
-  .review-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
-  .ri-top { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
-  .ri-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-  .ri-question { font-size: 13px; font-weight: 500; flex: 1; }
-  .ri-pts { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; }
-  .ri-pts.got { background: rgba(29,158,117,0.2); color: var(--teal-light); }
-  .ri-pts.miss { background: rgba(226,75,74,0.15); color: #f99; }
-  .ri-answer { font-size: 12px; color: var(--muted); }
-  .ri-correct-label { color: var(--teal-light); }
-  .restart-btn { display: inline-block; padding: 14px 36px; background: var(--purple); border: none; border-radius: var(--radius); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity .2s; margin-right: 10px; }
-  .restart-btn:hover { opacity: 0.85; }
-  .menu-btn { display: inline-block; padding: 14px 28px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); color: var(--text); font-size: 15px; font-weight: 500; cursor: pointer; transition: all .15s; }
-  .menu-btn:hover { border-color: var(--purple-light); }
-
-  @media (max-width: 480px) {
-    .result-stats { grid-template-columns: 1fr 1fr; }
-    .diff-grid { grid-template-columns: 1fr; }
-    .mode-grid { grid-template-columns: 1fr 1fr; }
-  }
+/* ---- RÉSULTATS ---- */
+.res-trophy { font-size: 64px; text-align: center; margin: 1.5rem 0 0.75rem; }
+.res-title { font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.res-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 1.5rem; }
+.grade { display: inline-block; padding: 7px 22px; border-radius: 24px; font-size: 14px; font-weight: 700; margin: 0 auto 1.5rem; display: block; text-align: center; width: fit-content; margin: 0 auto 1.5rem; }
+.grade-S { background: rgba(239,159,39,0.2); color: var(--amber); border: 1px solid rgba(239,159,39,0.4); }
+.grade-A { background: rgba(29,158,117,0.2); color: var(--teal-light); border: 1px solid rgba(93,202,165,0.4); }
+.grade-B { background: rgba(55,138,221,0.2); color: #7bb8f5; border: 1px solid rgba(55,138,221,0.4); }
+.grade-C { background: rgba(127,119,221,0.2); color: var(--purple-light); border: 1px solid rgba(127,119,221,0.4); }
+.grade-D { background: rgba(216,90,48,0.2); color: #f4946b; border: 1px solid rgba(216,90,48,0.4); }
+.res-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.5rem; }
+.rstat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 8px; text-align: center; }
+.rv { font-size: 22px; font-weight: 700; color: var(--purple-light); }
+.rl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.review-title { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.review-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 10px 12px; margin-bottom: 8px; }
+.ri-row { display: flex; align-items: flex-start; gap: 8px; }
+.ri-q { font-size: 13px; font-weight: 500; flex: 1; }
+.ri-pts { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 8px; flex-shrink: 0; }
+.ri-pts.got { background: rgba(29,158,117,0.2); color: var(--teal-light); }
+.ri-pts.miss { background: rgba(226,75,74,0.15); color: #f99; }
+.ri-ans { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.ri-ans span { color: var(--teal-light); }
+.res-btns { display: flex; gap: 10px; margin-top: 1.5rem; }
+.res-btns button { flex: 1; padding: 13px; border-radius: var(--r); font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-replay { background: var(--purple); border: none; color: #fff; }
+.btn-menu { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); }
 </style>
 </head>
 <body>
 
+<!-- ===================== MENU ===================== -->
 <div class="header">
-  <div class="header-badge">&#127942; FIFA World Cup 2026</div>
+  <div class="badge">&#127942; FIFA World Cup 2026</div>
   <h1>Quiz Joueurs CdM 2026</h1>
-  <p>48 nations &middot; 1&nbsp;248 joueurs &middot; Prouve tes connaissances</p>
+  <p class="subtitle">48 nations &middot; 1&thinsp;248 joueurs &middot; Prouve tes connaissances</p>
 </div>
 
-<!-- MENU -->
-<div id="menu">
-  <div class="section-label">Mode de jeu</div>
+<div id="page-menu" class="page active">
+  <div class="slabel">Mode de jeu</div>
   <div class="mode-grid">
-    <div class="mode-card selected" data-mode="qcm" onclick="selectMode(this)">
+    <div class="mode-card sel" data-mode="qcm" onclick="selMode(this)">
       <div class="icon">&#127919;</div>
       <div class="name">QCM</div>
-      <div class="desc">4 choix par question</div>
+      <div class="desc">4 choix</div>
     </div>
-    <div class="mode-card" data-mode="truefalse" onclick="selectMode(this)">
+    <div class="mode-card" data-mode="tf" onclick="selMode(this)">
       <div class="icon">&#9878;&#65039;</div>
       <div class="name">Vrai / Faux</div>
-      <div class="desc">Instinct ou connaissance ?</div>
+      <div class="desc">Instinct pur</div>
     </div>
-    <div class="mode-card" data-mode="blind" onclick="selectMode(this)">
+    <div class="mode-card" data-mode="free" onclick="selMode(this)">
       <div class="icon">&#128289;</div>
       <div class="name">Saisie libre</div>
-      <div class="desc">&#201;cris la r&#233;ponse</div>
+      <div class="desc">Tape la r&eacute;ponse</div>
     </div>
-    <div class="mode-card" data-mode="mixed" onclick="selectMode(this)">
+    <div class="mode-card" data-mode="mixed" onclick="selMode(this)">
       <div class="icon">&#127922;</div>
       <div class="name">Mixte</div>
-      <div class="desc">Les 3 modes m&#233;lang&#233;s</div>
+      <div class="desc">Tout m&eacute;lang&eacute;</div>
     </div>
   </div>
 
-  <div class="section-label">Difficult&#233;</div>
+  <div class="slabel">Difficult&eacute;</div>
   <div class="diff-grid">
-    <div class="diff-card" data-diff="easy" onclick="selectDiff(this)">
-      <div class="dlabel">D&#233;butant</div>
-      <div class="dpts">1 pt / question</div>
-    </div>
-    <div class="diff-card selected" data-diff="medium" onclick="selectDiff(this)">
-      <div class="dlabel">Amateur</div>
-      <div class="dpts">2 pts / question</div>
-    </div>
-    <div class="diff-card" data-diff="hard" onclick="selectDiff(this)">
-      <div class="dlabel">Expert</div>
-      <div class="dpts">3 pts / question</div>
-    </div>
+    <div class="diff-card" data-d="easy" onclick="selDiff(this)"><div class="dlabel">D&eacute;butant</div><div class="dpts">1 pt</div></div>
+    <div class="diff-card sel" data-d="medium" onclick="selDiff(this)"><div class="dlabel">Amateur</div><div class="dpts">2 pts</div></div>
+    <div class="diff-card" data-d="hard" onclick="selDiff(this)"><div class="dlabel">Expert</div><div class="dpts">3 pts</div></div>
   </div>
 
-  <div class="section-label" style="margin-top:1.5rem">Nombre de questions</div>
+  <div class="slabel" style="margin-top:1.5rem">Nombre de questions</div>
   <div class="qty-row">
     <label>Questions :</label>
-    <input type="range" min="5" max="30" step="5" value="10" id="qty-range" oninput="document.getElementById('qty-display').textContent=this.value">
-    <span class="qty-val" id="qty-display">10</span>
+    <input type="range" min="5" max="30" step="5" value="10" oninput="document.getElementById('qty-v').textContent=this.value; G.numQ=+this.value">
+    <span class="qty-val" id="qty-v">10</span>
   </div>
 
-  <button class="start-btn" onclick="startQuiz()">&#9654; &nbsp;Lancer le quiz</button>
+  <button class="btn-primary" onclick="startQuiz()">&#9654;&nbsp; Lancer le quiz</button>
 </div>
 
-<!-- QUIZ -->
-<div id="quiz">
-  <div class="progress-bar-wrap">
-    <div class="progress-meta">
-      <span id="q-counter">Question 1 / 10</span>
-      <span id="timer-display"></span>
-    </div>
-    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+<!-- ===================== QUIZ ===================== -->
+<div id="page-quiz" class="page">
+  <div class="prog-wrap">
+    <div class="prog-meta"><span id="q-counter">1 / 10</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
   </div>
   <div class="score-bar">
-    <div class="score-chip"><div class="sc-val" id="score-display">0</div><div class="sc-lbl">Points</div></div>
-    <div class="score-chip"><div class="sc-val" id="correct-display">0</div><div class="sc-lbl">Bonnes r&#233;ponses</div></div>
-    <div class="score-chip"><div class="sc-val" id="streak-display">0</div><div class="sc-lbl">S&#233;rie</div></div>
+    <div class="score-chip"><div class="sc-val" id="sc-score">0</div><div class="sc-lbl">Points</div></div>
+    <div class="score-chip"><div class="sc-val" id="sc-correct">0</div><div class="sc-lbl">Bonnes r&eacute;p.</div></div>
+    <div class="score-chip"><div class="sc-val" id="sc-streak">0</div><div class="sc-lbl">S&eacute;rie</div></div>
   </div>
-  <div class="combo-display" id="combo-msg"></div>
-  <div class="question-card" id="qcard">
-    <div class="question-meta">
-      <span class="q-badge" id="q-diff-badge">Moyen</span>
-      <span class="q-type-badge" id="q-type-badge">QCM</span>
-      <span class="q-pts" id="q-pts-label">2 pts</span>
+  <div class="combo" id="combo"></div>
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="qbadge" id="q-diff">D&eacute;butant</span>
+      <span class="qtype" id="q-type">QCM</span>
+      <span class="qpts" id="q-pts">2 pts</span>
     </div>
-    <div class="question-text" id="question-text">Chargement&#8230;</div>
-    <div class="answers" id="answers-zone"></div>
-    <div class="tf-row" id="tf-zone" style="display:none">
-      <button class="tf-btn" id="tf-true">&#9989; Vrai</button>
-      <button class="tf-btn" id="tf-false">&#10060; Faux</button>
+    <div class="qtext" id="q-text"></div>
+    <!-- Zone QCM -->
+    <div class="ans-list" id="zone-qcm"></div>
+    <!-- Zone TF -->
+    <div class="tf-row" id="zone-tf" style="display:none">
+      <button class="tf-btn" id="btn-vrai">&#9989; Vrai</button>
+      <button class="tf-btn" id="btn-faux">&#10060; Faux</button>
     </div>
-    <div class="input-row" id="input-zone" style="display:none">
-      <input type="text" class="quiz-input" id="free-input" placeholder="Ta r&#233;ponse&#8230;">
-      <button class="submit-input-btn" id="submit-btn">OK</button>
+    <!-- Zone libre -->
+    <div class="free-row" id="zone-free" style="display:none">
+      <input type="text" class="free-input" id="free-inp" placeholder="Ta r&eacute;ponse&hellip;">
+      <button class="free-submit" id="free-ok">OK</button>
     </div>
-    <div class="feedback-box" id="feedback-box" style="display:none"></div>
-    <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">Question suivante &#8594;</button>
+    <!-- Feedback -->
+    <div id="feedback" style="display:none" class="feedback ok"></div>
+    <!-- Bouton suivant -->
+    <button class="next-btn" id="btn-next" style="display:none" onclick="nextQ()">Question suivante &#8594;</button>
   </div>
 </div>
 
-<!-- RESULTS -->
-<div id="results">
-  <div class="result-trophy" id="res-trophy">&#127942;</div>
-  <div class="result-title" id="res-title">Bravo !</div>
-  <div class="result-sub" id="res-sub"></div>
-  <div class="grade-badge grade-A" id="res-grade">Grade A</div>
-  <div class="result-stats">
-    <div class="rstat"><div class="rv" id="rs-score">0</div><div class="rl">Points</div></div>
-    <div class="rstat"><div class="rv" id="rs-correct">0</div><div class="rl">Bonnes r&#233;p.</div></div>
-    <div class="rstat"><div class="rv" id="rs-pct">0%</div><div class="rl">R&#233;ussite</div></div>
+<!-- ===================== RÉSULTATS ===================== -->
+<div id="page-results" class="page">
+  <div class="res-trophy" id="r-trophy"></div>
+  <div class="res-title" id="r-title"></div>
+  <div class="res-sub" id="r-sub"></div>
+  <div class="grade" id="r-grade"></div>
+  <div class="res-stats">
+    <div class="rstat"><div class="rv" id="r-score">0</div><div class="rl">Points</div></div>
+    <div class="rstat"><div class="rv" id="r-correct">0/0</div><div class="rl">Bonnes r&eacute;p.</div></div>
+    <div class="rstat"><div class="rv" id="r-pct">0%</div><div class="rl">R&eacute;ussite</div></div>
   </div>
-  <div class="review-list" id="review-list"></div>
-  <div>
-    <button class="restart-btn" onclick="restartSame()">&#128260; Rejouer</button>
-    <button class="menu-btn" onclick="goMenu()">&#8592; Menu</button>
+  <div class="review-title">D&eacute;tail des r&eacute;ponses</div>
+  <div id="r-review"></div>
+  <div class="res-btns">
+    <button class="btn-replay" onclick="replayQuiz()">&#128260; Rejouer</button>
+    <button class="btn-menu" onclick="goMenu()">&#8592; Menu</button>
   </div>
 </div>
 
 <script>
-/* ===== BANQUE DE QUESTIONS =====
-   Chaque question a : diff, type, q, explain
-   QCM  : answers[] (strings), correct (index int)
-   TF   : correct (boolean)
-   FREE : correct (string), aliases[] (strings)
-*/
-var ALL_Q = [
-  /* === EASY QCM === */
-  {diff:'easy',type:'qcm',
-   q:"Lionel Messi repr\u00e9sente quelle s\u00e9lection \u00e0 la CdM 2026\u00a0?",
-   answers:["Argentine","Espagne","Br\u00e9sil","Italie"],correct:0,
-   explain:"Messi (38 ans) dispute sa 6\u00e8me Coupe du Monde avec l'Argentine, championne en titre."},
+// ============================================================
+// ÉTAT GLOBAL — tout dans G, jamais de variable volante
+// ============================================================
+var G = {
+  mode: 'qcm',
+  diff: 'medium',
+  numQ: 10,
+  questions: [],   // liste des questions dans l'ordre de la session
+  idx: 0,          // index courant
+  score: 0,
+  correct: 0,
+  streak: 0,
+  history: [],
+  locked: false    // bloque les clics une fois répondu
+};
 
-  {diff:'easy',type:'qcm',
-   q:"Cristiano Ronaldo joue pour quelle nation en 2026\u00a0?",
-   answers:["Espagne","Portugal","Italie","France"],correct:1,
-   explain:"CR7 dispute sa 6\u00e8me Coupe du Monde avec le Portugal, un record absolu."},
-
-  {diff:'easy',type:'qcm',
-   q:"Kylian Mbapp\u00e9 est le capitaine de quelle \u00e9quipe nationale\u00a0?",
-   answers:["Belgique","Espagne","France","S\u00e9n\u00e9gal"],correct:2,
-   explain:"Mbapp\u00e9 est le capitaine de l'\u00e9quipe de France, sacr\u00e9e championne du monde en 2018."},
-
-  {diff:'easy',type:'qcm',
-   q:"Erling Haaland repr\u00e9sente quelle s\u00e9lection pour sa premi\u00e8re CdM\u00a0?",
-   answers:["Danemark","Su\u00e8de","Allemagne","Norv\u00e8ge"],correct:3,
-   explain:"2026 est la premi\u00e8re Coupe du Monde d'Haaland avec la Norv\u00e8ge."},
-
-  {diff:'easy',type:'qcm',
-   q:"En 2026, Messi joue en club pour\u00a0:",
-   answers:["FC Barcelone","PSG","Inter Miami CF","Al-Nassr"],correct:2,
-   explain:"Messi \u00e9volue \u00e0 l'Inter Miami en MLS depuis 2023, il a m\u00eame sign\u00e9 une prolongation jusqu'en 2028."},
-
-  {diff:'easy',type:'qcm',
-   q:"Cristiano Ronaldo joue pour quel club depuis janvier 2023\u00a0?",
-   answers:["Al-Hilal","Al-Nassr","Al-Ahli","Manchester United"],correct:1,
-   explain:"CR7 a sign\u00e9 \u00e0 Al-Nassr en Arabie Saoudite en janvier 2023, ouvrant la voie \u00e0 de nombreuses stars."},
-
-  {diff:'easy',type:'qcm',
-   q:"Harry Kane est la star offensive de quelle nation\u00a0?",
-   answers:["Irlande","Angleterre","Galles","\u00c9cosse"],correct:1,
-   explain:"Harry Kane est l'attaquant vedette et buteur r\u00e9cord des Three Lions anglais."},
-
-  {diff:'easy',type:'qcm',
-   q:"Achraf Hakimi joue pour quelle nation africaine\u00a0?",
-   answers:["Alg\u00e9rie","Tunisie","Maroc","S\u00e9n\u00e9gal"],correct:2,
-   explain:"Hakimi (PSG) est l'un des meilleurs lat\u00e9raux du monde et joue pour le Maroc."},
-
-  {diff:'easy',type:'qcm',
-   q:"Kevin De Bruyne joue (ou a jou\u00e9) principalement pour quel club anglais\u00a0?",
-   answers:["Chelsea","Liverpool","Manchester City","Arsenal"],correct:2,
-   explain:"De Bruyne est une l\u00e9gende de Manchester City, l'un des meilleurs milieux de l'histoire du club."},
-
-  /* === EASY TF === */
-  {diff:'easy',type:'tf',
-   q:"Vinicius Junior joue pour le Br\u00e9sil.",
-   correct:true,
-   explain:"Exact\u00a0! Vinicius Junior est l'attaquant principal du Br\u00e9sil, \u00e9galement star du Real Madrid."},
-
-  {diff:'easy',type:'tf',
-   q:"Lamine Yamal est fran\u00e7ais.",
-   correct:false,
-   explain:"Faux\u00a0! Lamine Yamal est espagnol, n\u00e9 en 2007. Il joue pour la Roja et le FC Barcelone."},
-
-  {diff:'easy',type:'tf',
-   q:"Pedri est un milieu de terrain espagnol.",
-   correct:true,
-   explain:"Oui\u00a0! Pedri (FC Barcelone) est l'un des meilleurs milieux de la s\u00e9lection espagnole."},
-
-  {diff:'easy',type:'tf',
-   q:"La CdM 2026 est la premi\u00e8re \u00e0 r\u00e9unir 48 \u00e9quipes.",
-   correct:true,
-   explain:"Exact\u00a0! 2026 est la premi\u00e8re \u00e9dition \u00e0 48 \u00e9quipes et 1\u00a0248 joueurs, un record historique."},
-
-  /* === MEDIUM QCM === */
-  {diff:'medium',type:'qcm',
-   q:"En 2026, Kylian Mbapp\u00e9 joue pour quel club\u00a0?",
-   answers:["PSG","Real Madrid","Bayern Munich","Manchester City"],correct:1,
-   explain:"Mbapp\u00e9 a sign\u00e9 au Real Madrid en 2024 apr\u00e8s avoir pass\u00e9 des ann\u00e9es au PSG."},
-
-  {diff:'medium',type:'qcm',
-   q:"Combien de fois Messi a-t-il remport\u00e9 le Ballon d'Or\u00a0?",
-   answers:["6 fois","7 fois","8 fois","9 fois"],correct:2,
-   explain:"Messi d\u00e9tient le record absolu avec 8 Ballons d'Or tout au long de sa carri\u00e8re."},
-
-  {diff:'medium',type:'qcm',
-   q:"Quel joueur a remport\u00e9 le Ballon d'Or 2025\u00a0?",
-   answers:["Vinicius Junior","Kylian Mbapp\u00e9","Ousmane Demb\u00e9l\u00e9","Rodri"],correct:2,
-   explain:"Ousmane Demb\u00e9l\u00e9 a remport\u00e9 le Ballon d'Or 2025 apr\u00e8s une saison remarquable avec le PSG (34 buts, Ligue des Champions)."},
-
-  {diff:'medium',type:'qcm',
-   q:"Christian Pulisic joue pour quel club en Serie A\u00a0?",
-   answers:["Juventus","Inter Milan","AC Milan","Roma"],correct:2,
-   explain:"Pulisic, capitaine des USA, joue \u00e0 l'AC Milan depuis 2023 et r\u00e9alise des saisons tr\u00e8s solides."},
-
-  {diff:'medium',type:'qcm',
-   q:"Lors de quelle Coupe du Monde Mbapp\u00e9 a-t-il remport\u00e9 le titre\u00a0?",
-   answers:["2014","2018","2022","2026"],correct:1,
-   explain:"Mbapp\u00e9 \u00e9tait champion du monde en 2018 avec la France en Russie. En 2022, la France \u00e9chouait en finale face \u00e0 l'Argentine."},
-
-  {diff:'medium',type:'qcm',
-   q:"Raphinha (Br\u00e9sil) joue pour quel club espagnol en 2026\u00a0?",
-   answers:["Real Madrid","Atl\u00e9tico Madrid","FC Barcelone","S\u00e9ville FC"],correct:2,
-   explain:"Raphinha joue au FC Barcelone depuis 2022, auteur d'une saison monstre 2024-25 avec 34 buts et 22 passes d."},
-
-  {diff:'medium',type:'qcm',
-   q:"Combien de Ligues des Champions Cristiano Ronaldo a-t-il remport\u00e9es au total\u00a0?",
-   answers:["3","4","5","6"],correct:2,
-   explain:"CR7 a remport\u00e9 5 LDC\u00a0: 1 avec Manchester United (2008) et 4 avec le Real Madrid."},
-
-  {diff:'medium',type:'qcm',
-   q:"Combien d'\u00e9quipes participent \u00e0 la CdM 2026\u00a0?",
-   answers:["32","40","48","64"],correct:2,
-   explain:"La CdM 2026 accueille 48 \u00e9quipes pour la premi\u00e8re fois, ce qui repr\u00e9sente 1\u00a0248 joueurs au total."},
-
-  {diff:'medium',type:'qcm',
-   q:"Dans combien de pays se joue la CdM 2026\u00a0?",
-   answers:["1","2","3","4"],correct:2,
-   explain:"La CdM 2026 est co-organis\u00e9e par les \u00c9tats-Unis, le Canada et le Mexique."},
-
-  {diff:'medium',type:'qcm',
-   q:"Quelle s\u00e9lection d\u00e9fend son titre de championne du monde en 2026\u00a0?",
-   answers:["France","Br\u00e9sil","Argentine","Allemagne"],correct:2,
-   explain:"L'Argentine a remport\u00e9 la CdM 2022 au Qatar, battant la France en finale aux tirs au but."},
-
-  {diff:'medium',type:'qcm',
-   q:"Quelle s\u00e9lection a remport\u00e9 l'Euro 2024\u00a0?",
-   answers:["France","Angleterre","Espagne","Portugal"],correct:2,
-   explain:"L'Espagne a remport\u00e9 l'Euro 2024 en Allemagne avec notamment Lamine Yamal et Rodri."},
-
-  /* === MEDIUM TF === */
-  {diff:'medium',type:'tf',
-   q:"Bruno Fernandes et Cristiano Ronaldo font partie de la m\u00eame s\u00e9lection nationale (Portugal).",
-   correct:true,
-   explain:"Correct\u00a0! Bruno Fernandes et CR7 jouent tous deux pour le Portugal \u00e0 la CdM 2026."},
-
-  {diff:'medium',type:'tf',
-   q:"Jude Bellingham joue pour l'\u00e9quipe nationale d'Angleterre.",
-   correct:true,
-   explain:"Oui\u00a0! Bellingham (Real Madrid) est l'une des vedettes de la s\u00e9lection anglaise."},
-
-  {diff:'medium',type:'tf',
-   q:"Erling Haaland a d\u00e9j\u00e0 jou\u00e9 une Coupe du Monde avant 2026.",
-   correct:false,
-   explain:"Faux\u00a0! 2026 est la toute premi\u00e8re Coupe du Monde d'Haaland. La Norv\u00e8ge ne s'\u00e9tait pas qualifi\u00e9e pour 2022."},
-
-  /* === MEDIUM FREE === */
-  {diff:'medium',type:'free',
-   q:"Rodri (Espagne) joue pour quel club anglais\u00a0?",
-   correct:"Manchester City",
-   aliases:["man city","mancity","manchester city","city"],
-   explain:"Rodri est le milieu d\u00e9fensif de Manchester City et Ballon d'Or 2024."},
-
-  /* === HARD QCM === */
-  {diff:'hard',type:'qcm',
-   q:"Combien de buts Messi a-t-il marqu\u00e9s en Coupe du Monde\u00a0?",
-   answers:["9","11","13","15"],correct:2,
-   explain:"Messi d\u00e9tient le record partag\u00e9 avec 13 buts en phases finales de Coupe du Monde."},
-
-  {diff:'hard',type:'qcm',
-   q:"Quel joueur marocain du PSG est consid\u00e9r\u00e9 parmi les meilleurs lat\u00e9raux du monde\u00a0?",
-   answers:["Hakim Ziyech","Sofiane Boufal","Achraf Hakimi","Noussair Mazraoui"],correct:2,
-   explain:"Achraf Hakimi est le lat\u00e9ral droit du Maroc et du PSG, l'un des tous meilleurs mondiaux \u00e0 son poste."},
-
-  {diff:'hard',type:'qcm',
-   q:"Erling Haaland \u00e9volue dans quel championnat avec son club\u00a0?",
-   answers:["Bundesliga","Premier League","La Liga","Serie A"],correct:1,
-   explain:"Haaland joue en Premier League avec Manchester City depuis 2022 et y est le meilleur buteur de l'histoire."},
-
-  {diff:'hard',type:'qcm',
-   q:"Jo\u00e3o Neves (Portugal) joue pour quel club depuis 2024\u00a0?",
-   answers:["Sporting CP","Benfica","PSG","Manchester United"],correct:2,
-   explain:"Jo\u00e3o Neves a rejoint le PSG en 2024, l'un des grands espoirs du football mondial."},
-
-  {diff:'hard',type:'qcm',
-   q:"Quelle est la particularit\u00e9 historique commune \u00e0 Messi, Ronaldo et Ochoa \u00e0 la CdM 2026\u00a0?",
-   answers:["Ils jouent au m\u00eame club","C'est leur 6\u00e8me participation","Ils ont le m\u00eame \u00e2ge","Ils ont tous gagn\u00e9 la CdM"],correct:1,
-   explain:"Messi, Ronaldo et le gardien mexicain Guillermo Ochoa disputent tous leur 6\u00e8me Coupe du Monde, un record absolu."},
-
-  {diff:'hard',type:'qcm',
-   q:"Qui est le capitaine de la s\u00e9lection am\u00e9ricaine (USMNT) \u00e0 la CdM 2026\u00a0?",
-   answers:["Tyler Adams","Gio Reyna","Christian Pulisic","Weston McKennie"],correct:2,
-   explain:"Christian Pulisic (AC Milan) est le capitaine et visage de la s\u00e9lection am\u00e9ricaine, \u00e9toile du tournoi \u00e0 domicile."},
-
-  {diff:'hard',type:'qcm',
-   q:"Quel attaquant br\u00e9silien, n\u00e9 en 2006, est une \u00e9toile montante \u00e0 la CdM 2026\u00a0?",
-   answers:["Gabriel Jesus","Rodrygo","Endrick","Gabriel Martinelli"],correct:2,
-   explain:"Endrick, n\u00e9 en 2006, est l'un des talents les plus prometteurs du Br\u00e9sil et du football mondial."},
-
-  {diff:'hard',type:'qcm',
-   q:"Combien de joueurs participent au total \u00e0 la CdM 2026\u00a0?",
-   answers:["736","992","1\u00a0248","1\u00a0400"],correct:2,
-   explain:"Avec 48 \u00e9quipes de 26 joueurs chacune, on compte exactement 1\u00a0248 joueurs au total."},
-
-  {diff:'hard',type:'qcm',
-   q:"Quel joueur espagnol a remport\u00e9 le Ballon d'Or 2024\u00a0?",
-   answers:["Lamine Yamal","Pedri","Rodri","Dani Olmo"],correct:2,
-   explain:"Rodri (Manchester City) a remport\u00e9 le Ballon d'Or 2024 apr\u00e8s une saison de domination absolue."},
-
-  {diff:'hard',type:'qcm',
-   q:"Dans quelle ville se d\u00e9roule le match d'ouverture de la CdM 2026 le 11 juin\u00a0?",
-   answers:["Guadalajara","Monterrey","Mexico City","Tijuana"],correct:2,
-   explain:"La CdM 2026 d\u00e9marre le 11 juin \u00e0 Mexico City, l'Azteca \u00e9tant l'un des stades ic\u00f4niques du tournoi."},
-
-  {diff:'hard',type:'qcm',
-   q:"Quel lat\u00e9ral canadien est la star du Bayern Munich\u00a0?",
-   answers:["Richie Laryea","Alistair Johnston","Alphonso Davies","Derek Cornelius"],correct:2,
-   explain:"Alphonso Davies est le lat\u00e9ral gauche du Bayern Munich et la star offensivede la s\u00e9lection canadienne."},
-
-  /* === HARD TF === */
-  {diff:'hard',type:'tf',
-   q:"Desire Dou\u00e9 (France) figure parmi les 10 meilleurs joueurs attendus \u00e0 la CdM 2026 selon NBC Sports.",
-   correct:true,
-   explain:"Oui\u00a0! Desire Dou\u00e9 est cit\u00e9 dans le top 10 de NBC Sports pour la CdM 2026."},
-
-  {diff:'hard',type:'tf',
-   q:"Vitinha (Portugal) joue au Real Madrid en 2026.",
-   correct:false,
-   explain:"Faux\u00a0! Vitinha joue au PSG, o\u00f9 il est l'un des meilleurs milieux du monde."},
-
-  {diff:'hard',type:'tf',
-   q:"La CdM 2026 se joue uniquement aux \u00c9tats-Unis.",
-   correct:false,
-   explain:"Faux\u00a0! La CdM 2026 est co-organis\u00e9e par 3 pays\u00a0: \u00c9tats-Unis, Canada et Mexique."},
-
-  /* === HARD FREE === */
-  {diff:'hard',type:'free',
-   q:"Pour quel club Vinicius Junior \u00e9volue-t-il en 2026\u00a0?",
-   correct:"Real Madrid",
-   aliases:["real madrid","real","realmadrid","le real"],
-   explain:"Vinicius est l'attaquant vedette du Real Madrid depuis 2018, l'un des meilleurs au monde."},
-
-  {diff:'hard',type:'free',
-   q:"Federico Valverde (Uruguay) joue pour quel club espagnol\u00a0?",
-   correct:"Real Madrid",
-   aliases:["real madrid","real","realmadrid","le real"],
-   explain:"Valverde est un milieu de terrain cl\u00e9 du Real Madrid et de l'Uruguay."},
-
-  {diff:'hard',type:'free',
-   q:"Vitinha (Portugal) joue pour quel club fran\u00e7ais\u00a0?",
-   correct:"PSG",
-   aliases:["psg","paris saint-germain","paris","paris sg","paris saint germain"],
-   explain:"Vitinha est un milieu de terrain du PSG, consid\u00e9r\u00e9 parmi les meilleurs du monde \u00e0 son poste."},
+// ============================================================
+// BANQUE DE QUESTIONS
+// type: 'qcm' | 'tf' | 'free'
+// QCM  : answers[], correct (int, index)
+// TF   : correct (boolean)
+// FREE : correct (string), aliases (string[])
+// ============================================================
+var BANK = [
+  // ---- EASY QCM ----
+  {diff:'easy',type:'qcm',q:"Lionel Messi représente quelle sélection à la CdM 2026 ?",answers:["Argentine","Espagne","Brésil","Italie"],correct:0,explain:"Messi (38 ans) dispute sa 6ème Coupe du Monde avec l'Argentine, championne en titre depuis 2022."},
+  {diff:'easy',type:'qcm',q:"Cristiano Ronaldo joue pour quelle nation en 2026 ?",answers:["Espagne","Portugal","Italie","France"],correct:1,explain:"CR7 dispute sa 6ème Coupe du Monde avec le Portugal — un record absolu."},
+  {diff:'easy',type:'qcm',q:"Kylian Mbappé est le capitaine de quelle équipe nationale ?",answers:["Belgique","Espagne","France","Sénégal"],correct:2,explain:"Mbappé est le capitaine de l'équipe de France, sacrée championne du monde en 2018."},
+  {diff:'easy',type:'qcm',q:"Erling Haaland représente quelle sélection pour sa première CdM ?",answers:["Danemark","Suède","Allemagne","Norvège"],correct:3,explain:"2026 est la toute première Coupe du Monde d'Haaland avec la Norvège."},
+  {diff:'easy',type:'qcm',q:"En 2026, Messi joue en club pour :",answers:["FC Barcelone","PSG","Inter Miami CF","Al-Nassr"],correct:2,explain:"Messi évolue à l'Inter Miami en MLS depuis 2023."},
+  {diff:'easy',type:'qcm',q:"Cristiano Ronaldo joue pour quel club depuis janvier 2023 ?",answers:["Al-Hilal","Al-Nassr","Al-Ahli","Manchester United"],correct:1,explain:"CR7 a signé à Al-Nassr en Arabie Saoudite en janvier 2023."},
+  {diff:'easy',type:'qcm',q:"Harry Kane est la star offensive de quelle nation ?",answers:["Irlande","Angleterre","Galles","Écosse"],correct:1,explain:"Harry Kane est l'attaquant vedette et buteur record des Three Lions anglais."},
+  {diff:'easy',type:'qcm',q:"Achraf Hakimi joue pour quelle nation africaine ?",answers:["Algérie","Tunisie","Maroc","Sénégal"],correct:2,explain:"Hakimi (PSG) est l'un des meilleurs latéraux du monde, il joue pour le Maroc."},
+  {diff:'easy',type:'qcm',q:"Kevin De Bruyne joue pour quel grand club anglais ?",answers:["Chelsea","Liverpool","Manchester City","Arsenal"],correct:2,explain:"De Bruyne est une légende de Manchester City."},
+  // ---- EASY TF ----
+  {diff:'easy',type:'tf',q:"Vinicius Junior joue pour le Brésil.",correct:true,explain:"Exact ! Vinicius Junior est l'attaquant principal du Brésil, également star du Real Madrid."},
+  {diff:'easy',type:'tf',q:"Lamine Yamal est français.",correct:false,explain:"Faux ! Lamine Yamal est espagnol, né en 2007. Il joue pour la Roja et le FC Barcelone."},
+  {diff:'easy',type:'tf',q:"Pedri est un milieu de terrain espagnol.",correct:true,explain:"Oui ! Pedri (FC Barcelone) est l'un des meilleurs milieux de la sélection espagnole."},
+  {diff:'easy',type:'tf',q:"La CdM 2026 est la première à réunir 48 équipes.",correct:true,explain:"Exact ! 2026 marque un record historique avec 48 équipes et 1 248 joueurs."},
+  // ---- MEDIUM QCM ----
+  {diff:'medium',type:'qcm',q:"En 2026, Kylian Mbappé joue pour quel club ?",answers:["PSG","Real Madrid","Bayern Munich","Manchester City"],correct:1,explain:"Mbappé a signé au Real Madrid en 2024 après des années au PSG."},
+  {diff:'medium',type:'qcm',q:"Combien de fois Messi a-t-il remporté le Ballon d'Or ?",answers:["6 fois","7 fois","8 fois","9 fois"],correct:2,explain:"Messi détient le record absolu avec 8 Ballons d'Or."},
+  {diff:'medium',type:'qcm',q:"Quel joueur a remporté le Ballon d'Or 2025 ?",answers:["Vinicius Junior","Kylian Mbappé","Ousmane Dembélé","Rodri"],correct:2,explain:"Ousmane Dembélé a remporté le Ballon d'Or 2025 après une saison remarquable avec le PSG."},
+  {diff:'medium',type:'qcm',q:"Christian Pulisic joue pour quel club en Serie A ?",answers:["Juventus","Inter Milan","AC Milan","Roma"],correct:2,explain:"Pulisic, capitaine des USA, joue à l'AC Milan depuis 2023."},
+  {diff:'medium',type:'qcm',q:"Lors de quelle Coupe du Monde Mbappé a-t-il remporté le titre ?",answers:["2014","2018","2022","2026"],correct:1,explain:"Mbappé était champion du monde en 2018 avec la France, en Russie."},
+  {diff:'medium',type:'qcm',q:"Raphinha (Brésil) joue pour quel club espagnol en 2026 ?",answers:["Real Madrid","Atlético Madrid","FC Barcelone","Séville FC"],correct:2,explain:"Raphinha joue au FC Barcelone depuis 2022."},
+  {diff:'medium',type:'qcm',q:"Combien de Ligues des Champions CR7 a-t-il remportées ?",answers:["3","4","5","6"],correct:2,explain:"CR7 a remporté 5 LDC : 1 avec Manchester United (2008) et 4 avec le Real Madrid."},
+  {diff:'medium',type:'qcm',q:"Combien d'équipes participent à la CdM 2026 ?",answers:["32","40","48","64"],correct:2,explain:"La CdM 2026 accueille 48 équipes pour la première fois de l'histoire."},
+  {diff:'medium',type:'qcm',q:"Combien de pays co-organisent la CdM 2026 ?",answers:["1","2","3","4"],correct:2,explain:"La CdM 2026 est co-organisée par les États-Unis, le Canada et le Mexique."},
+  {diff:'medium',type:'qcm',q:"Quelle sélection défend son titre de championne du monde en 2026 ?",answers:["France","Brésil","Argentine","Allemagne"],correct:2,explain:"L'Argentine a remporté la CdM 2022 au Qatar, battant la France en finale."},
+  {diff:'medium',type:'qcm',q:"Quelle sélection a remporté l'Euro 2024 ?",answers:["France","Angleterre","Espagne","Portugal"],correct:2,explain:"L'Espagne a remporté l'Euro 2024 en Allemagne, avec Lamine Yamal et Rodri."},
+  // ---- MEDIUM TF ----
+  {diff:'medium',type:'tf',q:"Bruno Fernandes et Cristiano Ronaldo jouent dans la même sélection nationale (Portugal).",correct:true,explain:"Correct ! Bruno Fernandes et CR7 jouent tous deux pour le Portugal à la CdM 2026."},
+  {diff:'medium',type:'tf',q:"Jude Bellingham joue pour l'équipe nationale d'Angleterre.",correct:true,explain:"Oui ! Bellingham (Real Madrid) est l'une des vedettes de la sélection anglaise."},
+  {diff:'medium',type:'tf',q:"Erling Haaland a déjà joué une Coupe du Monde avant 2026.",correct:false,explain:"Faux ! 2026 est la toute première Coupe du Monde d'Haaland. La Norvège ne s'était pas qualifiée en 2022."},
+  // ---- MEDIUM FREE ----
+  {diff:'medium',type:'free',q:"Rodri (Espagne) joue pour quel club anglais ?",correct:"Manchester City",aliases:["man city","mancity","manchester city","city"],explain:"Rodri est le milieu défensif de Manchester City, Ballon d'Or 2024."},
+  // ---- HARD QCM ----
+  {diff:'hard',type:'qcm',q:"Combien de buts Messi a-t-il marqués en Coupe du Monde ?",answers:["9","11","13","15"],correct:2,explain:"Messi détient le record partagé avec 13 buts en Coupes du Monde."},
+  {diff:'hard',type:'qcm',q:"Quel joueur marocain du PSG est parmi les meilleurs latéraux du monde ?",answers:["Hakim Ziyech","Sofiane Boufal","Achraf Hakimi","Noussair Mazraoui"],correct:2,explain:"Achraf Hakimi est le latéral droit du Maroc et du PSG."},
+  {diff:'hard',type:'qcm',q:"Erling Haaland évolue dans quel championnat en club ?",answers:["Bundesliga","Premier League","La Liga","Serie A"],correct:1,explain:"Haaland joue en Premier League avec Manchester City depuis 2022."},
+  {diff:'hard',type:'qcm',q:"João Neves (Portugal) joue pour quel club depuis 2024 ?",answers:["Sporting CP","Benfica","PSG","Manchester United"],correct:2,explain:"João Neves a rejoint le PSG en 2024."},
+  {diff:'hard',type:'qcm',q:"Quelle particularité partagent Messi, Ronaldo et le gardien Memo Ochoa à la CdM 2026 ?",answers:["Ils jouent au même club","C'est leur 6ème participation","Ils ont le même âge","Ils ont tous gagné la CdM"],correct:1,explain:"Messi, Ronaldo et Memo Ochoa (Mexique) disputent tous leur 6ème Coupe du Monde — un record absolu."},
+  {diff:'hard',type:'qcm',q:"Qui est le capitaine de la sélection américaine (USMNT) à la CdM 2026 ?",answers:["Tyler Adams","Gio Reyna","Christian Pulisic","Weston McKennie"],correct:2,explain:"Christian Pulisic (AC Milan) est le capitaine et visage de la sélection américaine."},
+  {diff:'hard',type:'qcm',q:"Quel attaquant brésilien, né en 2006, est une étoile montante à la CdM 2026 ?",answers:["Gabriel Jesus","Rodrygo","Endrick","Gabriel Martinelli"],correct:2,explain:"Endrick, né en 2006, est l'un des talents les plus prometteurs du Brésil."},
+  {diff:'hard',type:'qcm',q:"Combien de joueurs participent au total à la CdM 2026 ?",answers:["736","992","1248","1400"],correct:2,explain:"Avec 48 équipes de 26 joueurs chacune, on compte exactement 1 248 joueurs."},
+  {diff:'hard',type:'qcm',q:"Quel joueur espagnol a remporté le Ballon d'Or 2024 ?",answers:["Lamine Yamal","Pedri","Rodri","Dani Olmo"],correct:2,explain:"Rodri (Manchester City) a remporté le Ballon d'Or 2024."},
+  {diff:'hard',type:'qcm',q:"Dans quelle ville se déroule le match d'ouverture de la CdM 2026 le 11 juin ?",answers:["Guadalajara","Monterrey","Mexico City","Tijuana"],correct:2,explain:"La CdM 2026 démarre le 11 juin à Mexico City."},
+  {diff:'hard',type:'qcm',q:"Quel latéral canadien est la star du Bayern Munich ?",answers:["Richie Laryea","Alistair Johnston","Alphonso Davies","Derek Cornelius"],correct:2,explain:"Alphonso Davies est le latéral gauche du Bayern Munich et star du Canada."},
+  // ---- HARD TF ----
+  {diff:'hard',type:'tf',q:"Desire Doué (France) figure parmi les 10 meilleurs joueurs attendus à la CdM 2026 selon NBC Sports.",correct:true,explain:"Oui ! Desire Doué est cité dans le top 10 de NBC Sports pour la CdM 2026."},
+  {diff:'hard',type:'tf',q:"Vitinha (Portugal) joue au Real Madrid en 2026.",correct:false,explain:"Faux ! Vitinha joue au PSG, l'un des meilleurs milieux du monde."},
+  {diff:'hard',type:'tf',q:"La CdM 2026 se joue uniquement aux États-Unis.",correct:false,explain:"Faux ! 3 pays co-organisent : États-Unis, Canada et Mexique."},
+  // ---- HARD FREE ----
+  {diff:'hard',type:'free',q:"Pour quel club Vinicius Junior évolue-t-il en 2026 ?",correct:"Real Madrid",aliases:["real madrid","real","realmadrid","le real"],explain:"Vinicius est l'attaquant vedette du Real Madrid depuis 2018."},
+  {diff:'hard',type:'free',q:"Federico Valverde (Uruguay) joue pour quel club espagnol ?",correct:"Real Madrid",aliases:["real madrid","real","realmadrid","le real"],explain:"Valverde est un milieu clé du Real Madrid et de l'Uruguay."},
+  {diff:'hard',type:'free',q:"Vitinha (Portugal) joue pour quel club français ?",correct:"PSG",aliases:["psg","paris saint-germain","paris","paris sg","paris saint germain"],explain:"Vitinha est un milieu de terrain du PSG."}
 ];
 
-/* ===== STATE ===== */
-var mode='qcm', diff='medium', numQ=10;
-var questions=[], idx=0, score=0, nbCorrect=0, streak=0, maxStreak=0;
-var answered=false, history=[];
-/* stocker le correct boolean/string pour la question courante en mode TF converti */
-var currentCorrectTF = null;
-
-/* ===== MENU ===== */
-function selectMode(el){
-  document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');
-  mode=el.dataset.mode;
-}
-function selectDiff(el){
-  document.querySelectorAll('.diff-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected');
-  diff=el.dataset.diff;
-}
-
-function startQuiz(){
-  numQ=parseInt(document.getElementById('qty-range').value);
-
-  /* 1. filtrer par difficulte */
-  var pool;
-  if(diff==='easy') pool=ALL_Q.filter(function(q){return q.diff==='easy';});
-  else if(diff==='medium') pool=ALL_Q.filter(function(q){return q.diff!=='hard';});
-  else pool=ALL_Q.slice();
-
-  /* 2. adapter au mode : construire des questions RENDABLES */
-  var filtered;
-  if(mode==='qcm'){
-    /* QCM : on garde qcm natifs + on convertit tf en qcm fake (on retire free) */
-    filtered = pool.filter(function(q){return q.type==='qcm' || q.type==='tf';});
-    filtered = filtered.map(function(q){
-      if(q.type==='tf'){
-        /* Transformer en QCM Vrai/Faux explicite */
-        return Object.assign({},q,{
-          type:'qcm',
-          answers:['Vrai','Faux'],
-          correct: q.correct===true ? 0 : 1,
-          _origType:'tf'
-        });
-      }
-      return q;
-    });
-  } else if(mode==='truefalse'){
-    /* TF : on garde tf natifs + on convertit qcm en tf (on retire free) */
-    filtered = pool.filter(function(q){return q.type==='qcm' || q.type==='tf';});
-    filtered = filtered.map(function(q){
-      if(q.type==='qcm'){
-        /* Transformer en TF : proposer la bonne réponse ou une mauvaise, au hasard */
-        var wrongOptions = q.answers.filter(function(_,i){return i!==q.correct;});
-        var correctAns = q.answers[q.correct];
-        var wrongAns = wrongOptions[Math.floor(Math.random()*wrongOptions.length)];
-        var showCorrect = Math.random()>0.5;
-        return Object.assign({},q,{
-          type:'tf',
-          _tfText: q.q+'\n\u2192 "' + (showCorrect?correctAns:wrongAns) + '" \u2014 c\'est la bonne r\u00e9ponse\u00a0?',
-          correct: showCorrect,
-          _origType:'qcm'
-        });
-      }
-      return q;
-    });
-  } else if(mode==='blind'){
-    /* Saisie libre : on garde free natifs + on convertit qcm en free (tf non inclus) */
-    filtered = pool.filter(function(q){return q.type==='free' || q.type==='qcm';});
-    filtered = filtered.map(function(q){
-      if(q.type==='qcm'){
-        return Object.assign({},q,{
-          type:'free',
-          correct: q.answers[q.correct],
-          aliases: q.answers.map(function(a){return a.toLowerCase();}),
-          _origType:'qcm'
-        });
-      }
-      return q;
-    });
-  } else {
-    /* Mixte : tout sauf free qui necessite un traitement => on garde qcm et tf natifs + free natifs */
-    filtered = pool.filter(function(q){return q.type==='qcm'||q.type==='tf'||q.type==='free';});
+// ============================================================
+// UTILITAIRES
+// ============================================================
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
   }
+  return a;
+}
 
-  /* 3. Shuffle + slice */
-  filtered.sort(function(){return Math.random()-0.5;});
-  questions = filtered.slice(0, numQ);
+function showPage(id) {
+  ['page-menu','page-quiz','page-results'].forEach(function(p) {
+    document.getElementById(p).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
 
-  idx=0; score=0; nbCorrect=0; streak=0; maxStreak=0; history=[];
-  answered=false;
+function ptsPerQ() {
+  return G.diff === 'easy' ? 1 : G.diff === 'medium' ? 2 : 3;
+}
 
-  document.getElementById('menu').style.display='none';
-  document.getElementById('quiz').style.display='block';
-  updateScoreBar();
+// ============================================================
+// SÉLECTION MENU
+// ============================================================
+function selMode(el) {
+  document.querySelectorAll('.mode-card').forEach(function(c){ c.classList.remove('sel'); });
+  el.classList.add('sel');
+  G.mode = el.getAttribute('data-mode');
+}
+
+function selDiff(el) {
+  document.querySelectorAll('.diff-card').forEach(function(c){ c.classList.remove('sel'); });
+  el.classList.add('sel');
+  G.diff = el.getAttribute('data-d');
+}
+
+// ============================================================
+// DÉMARRAGE QUIZ
+// ============================================================
+function startQuiz() {
+  // 1. Filtrer par difficulté
+  var pool;
+  if (G.diff === 'easy')        pool = BANK.filter(function(q){ return q.diff === 'easy'; });
+  else if (G.diff === 'medium') pool = BANK.filter(function(q){ return q.diff !== 'hard'; });
+  else                          pool = BANK.slice();
+
+  // 2. Filtrer et adapter par mode
+  // Chaque question dans G.questions aura : type effectif + données nécessaires
+  var adapted = [];
+
+  pool.forEach(function(q) {
+    if (G.mode === 'qcm') {
+      if (q.type === 'qcm') {
+        adapted.push(q);
+      } else if (q.type === 'tf') {
+        // Convertir TF → QCM avec réponses Vrai/Faux
+        adapted.push({
+          diff: q.diff, type: 'qcm',
+          q: q.q,
+          answers: ['Vrai', 'Faux'],
+          correct: q.correct === true ? 0 : 1,
+          explain: q.explain
+        });
+      }
+      // free ignoré en mode QCM
+
+    } else if (G.mode === 'tf') {
+      if (q.type === 'tf') {
+        adapted.push(q);
+      } else if (q.type === 'qcm') {
+        // Convertir QCM → TF : proposer la bonne réponse, demander si c'est correct
+        var correctAns = q.answers[q.correct];
+        adapted.push({
+          diff: q.diff, type: 'tf',
+          q: q.q + '\n→ "' + correctAns + '" — c\'est la bonne réponse ?',
+          correct: true,
+          explain: q.explain
+        });
+      }
+      // free ignoré en mode TF
+
+    } else if (G.mode === 'free') {
+      if (q.type === 'free') {
+        adapted.push(q);
+      } else if (q.type === 'qcm') {
+        adapted.push({
+          diff: q.diff, type: 'free',
+          q: q.q,
+          correct: q.answers[q.correct],
+          aliases: q.answers.map(function(a){ return a.toLowerCase(); }),
+          explain: q.explain
+        });
+      }
+      // tf ignoré en mode libre
+
+    } else {
+      // Mixte : on prend tout tel quel
+      adapted.push(q);
+    }
+  });
+
+  // 3. Mélanger et prendre numQ questions
+  G.questions = shuffle(adapted).slice(0, G.numQ);
+  G.idx = 0;
+  G.score = 0;
+  G.correct = 0;
+  G.streak = 0;
+  G.history = [];
+  G.locked = false;
+
+  showPage('page-quiz');
   renderQuestion();
 }
 
-/* ===== RENDER ===== */
-function pts(){return diff==='easy'?1:diff==='medium'?2:3;}
+// ============================================================
+// AFFICHER UNE QUESTION
+// ============================================================
+function renderQuestion() {
+  G.locked = false;
+  var q = G.questions[G.idx];
+  var total = G.questions.length;
+  var p = ptsPerQ();
 
-function renderQuestion(){
-  answered=false;
-  currentCorrectTF=null;
-  var q=questions[idx];
-  var total=questions.length;
+  // Méta
+  document.getElementById('q-counter').textContent = 'Question ' + (G.idx + 1) + ' / ' + total;
+  document.getElementById('prog-fill').style.width = (G.idx / total * 100) + '%';
+  document.getElementById('sc-score').textContent = G.score;
+  document.getElementById('sc-correct').textContent = G.correct;
+  document.getElementById('sc-streak').textContent = G.streak;
 
-  document.getElementById('q-counter').textContent='Question '+(idx+1)+' / '+total;
-  document.getElementById('prog-fill').style.width=((idx/total)*100)+'%';
+  var diffLabel = {easy:'Débutant', medium:'Amateur', hard:'Expert'};
+  var diffEl = document.getElementById('q-diff');
+  diffEl.textContent = diffLabel[q.diff];
+  diffEl.className = 'qbadge ' + q.diff;
 
-  var diffLabels={easy:'D\u00e9butant',medium:'Amateur',hard:'Expert'};
-  var badge=document.getElementById('q-diff-badge');
-  badge.textContent=diffLabels[q.diff];
-  badge.className='q-badge '+q.diff;
+  var typeLabel = {qcm:'QCM', tf:'Vrai / Faux', free:'Saisie libre'};
+  document.getElementById('q-type').textContent = typeLabel[q.type];
+  document.getElementById('q-pts').textContent = p + ' pt' + (p > 1 ? 's' : '');
+  document.getElementById('q-text').textContent = q.q;
 
-  var typeLabel = q.type==='qcm'?'QCM':q.type==='tf'?'Vrai / Faux':'Saisie libre';
-  document.getElementById('q-type-badge').textContent=typeLabel;
+  // Cacher tout
+  document.getElementById('zone-qcm').style.display = 'none';
+  document.getElementById('zone-tf').style.display = 'none';
+  document.getElementById('zone-free').style.display = 'none';
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('combo').textContent = '';
 
-  var p=pts();
-  document.getElementById('q-pts-label').textContent=p+' pt'+(p>1?'s':'');
-
-  document.getElementById('question-text').textContent = q._tfText || q.q;
-
-  /* reset feedback/next */
-  var fb=document.getElementById('feedback-box');
-  fb.className='feedback-box';
-  fb.style.display='none';
-  fb.textContent='';
-  var nb=document.getElementById('next-btn');
-  nb.style.display='none';
-  nb.textContent='Question suivante \u2192';
-
-  /* reset zones */
-  document.getElementById('answers-zone').innerHTML='';
-  document.getElementById('tf-zone').style.display='none';
-  document.getElementById('input-zone').style.display='none';
-  document.getElementById('free-input').value='';
-  document.getElementById('free-input').disabled=false;
-  document.getElementById('submit-btn').disabled=false;
-
-  /* reset TF buttons */
-  var tf=document.getElementById('tf-true');
-  var ff=document.getElementById('tf-false');
-  tf.className='tf-btn'; ff.className='tf-btn';
-  tf.disabled=false; ff.disabled=false;
-
-  if(q.type==='tf') renderTF(q);
-  else if(q.type==='free') renderFree(q);
-  else renderQCM(q);
+  // Afficher la bonne zone
+  if (q.type === 'qcm') renderQCM(q);
+  else if (q.type === 'tf') renderTF(q);
+  else renderFree(q);
 }
 
-var LETTERS=['A','B','C','D'];
-function renderQCM(q){
-  var zone=document.getElementById('answers-zone');
-  var shuffled=q.answers.map(function(a,i){return{text:a,isCorrect:i===q.correct};}).sort(function(){return Math.random()-0.5;});
-  /* stocker la version shuffled sur la question pour pouvoir surligner */
-  q._shuffled=shuffled;
-  shuffled.forEach(function(ans,i){
-    var btn=document.createElement('button');
-    btn.className='answer-btn';
-    btn.dataset.correct=ans.isCorrect?'1':'0';
-    btn.innerHTML='<span class="ab-letter">'+LETTERS[i]+'</span> '+ans.text;
-    btn.onclick=function(){answerQCM(btn,ans.isCorrect,q);};
-    zone.appendChild(btn);
-  });
-}
+// ============================================================
+// RENDER QCM
+// ============================================================
+function renderQCM(q) {
+  var zone = document.getElementById('zone-qcm');
+  zone.innerHTML = '';
+  zone.style.display = 'flex';
 
-function renderTF(q){
-  document.getElementById('tf-zone').style.display='grid';
-  var tf=document.getElementById('tf-true');
-  var ff=document.getElementById('tf-false');
-  tf.onclick=function(){answerTF(true,q);};
-  ff.onclick=function(){answerTF(false,q);};
-}
-
-function renderFree(q){
-  document.getElementById('input-zone').style.display='flex';
-  var inp=document.getElementById('free-input');
-  var btn=document.getElementById('submit-btn');
-  inp.onkeydown=function(e){if(e.key==='Enter') submitFree(q);};
-  btn.onclick=function(){submitFree(q);};
-  setTimeout(function(){inp.focus();},100);
-}
-
-/* ===== HANDLERS ===== */
-function answerQCM(btn,isCorrect,q){
-  if(answered) return;
-  answered=true;
-  var btns=document.querySelectorAll('.answer-btn');
-  btns.forEach(function(b){b.disabled=true;});
-  btn.classList.add(isCorrect?'correct':'wrong');
-  if(!isCorrect){
-    btns.forEach(function(b){if(b.dataset.correct==='1') b.classList.add('correct');});
+  // Mélanger les réponses
+  var opts = [];
+  for (var i = 0; i < q.answers.length; i++) {
+    opts.push({ text: q.answers[i], isCorrect: (i === q.correct) });
   }
-  recordAnswer(isCorrect,q);
-  showFeedback(isCorrect,q);
-}
+  opts = shuffle(opts);
 
-function answerTF(userVal,q){
-  if(answered) return;
-  answered=true;
-  var isCorrect=(userVal===q.correct);
-  var tf=document.getElementById('tf-true');
-  var ff=document.getElementById('tf-false');
-  tf.disabled=true; ff.disabled=true;
-  if(userVal===true) tf.classList.add(isCorrect?'correct':'wrong');
-  else ff.classList.add(isCorrect?'correct':'wrong');
-  if(!isCorrect){
-    if(q.correct===true) tf.classList.add('correct');
-    else ff.classList.add('correct');
+  var letters = ['A','B','C','D'];
+  for (var j = 0; j < opts.length; j++) {
+    // Utiliser une IIFE pour capturer les bonnes valeurs
+    (function(opt, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'ans-btn';
+      btn.innerHTML = '<span class="ans-letter">' + letters[idx] + '</span> ' + opt.text;
+      btn.setAttribute('data-correct', opt.isCorrect ? '1' : '0');
+      btn.addEventListener('click', function() {
+        onQCMClick(btn, opt.isCorrect, q);
+      });
+      zone.appendChild(btn);
+    })(opts[j], j);
   }
-  recordAnswer(isCorrect,q);
-  showFeedback(isCorrect,q);
 }
 
-function submitFree(q){
-  if(answered) return;
-  var val=document.getElementById('free-input').value.trim().toLowerCase();
-  if(!val) return;
-  answered=true;
-  document.getElementById('free-input').disabled=true;
-  document.getElementById('submit-btn').disabled=true;
-  var cv=q.correct.toLowerCase();
-  var aliases=(q.aliases||[]).map(function(a){return a.toLowerCase();});
-  var isCorrect=val===cv||aliases.indexOf(val)>=0||cv.indexOf(val)>=0||(val.length>=3&&cv.indexOf(val)>=0);
-  recordAnswer(isCorrect,q);
-  showFeedback(isCorrect,q);
+function onQCMClick(clickedBtn, isCorrect, q) {
+  if (G.locked) return;
+  G.locked = true;
+
+  var allBtns = document.querySelectorAll('#zone-qcm .ans-btn');
+  for (var i = 0; i < allBtns.length; i++) {
+    allBtns[i].disabled = true;
+  }
+  clickedBtn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    for (var i = 0; i < allBtns.length; i++) {
+      if (allBtns[i].getAttribute('data-correct') === '1') {
+        allBtns[i].classList.add('correct');
+      }
+    }
+  }
+  afterAnswer(isCorrect, q);
 }
 
-function recordAnswer(isCorrect,q){
-  var correctLabel;
-  if(q.type==='tf') correctLabel=q.correct?'Vrai':'Faux';
-  else if(q.type==='free') correctLabel=q.correct;
-  else correctLabel=q.answers[q.correct];
+// ============================================================
+// RENDER TF
+// ============================================================
+function renderTF(q) {
+  var zone = document.getElementById('zone-tf');
+  zone.style.display = 'grid';
 
-  if(isCorrect){
-    var earned=pts();
-    if(streak>=5) earned+=2;
-    else if(streak>=3) earned+=1;
-    score+=earned;
-    nbCorrect++;
-    streak++;
-    if(streak>maxStreak) maxStreak=streak;
-    showCombo();
+  var btnV = document.getElementById('btn-vrai');
+  var btnF = document.getElementById('btn-faux');
+  btnV.className = 'tf-btn';
+  btnF.className = 'tf-btn';
+  btnV.disabled = false;
+  btnF.disabled = false;
+
+  // Remettre les handlers proprement
+  btnV.onclick = function() { onTFClick(true, q); };
+  btnF.onclick = function() { onTFClick(false, q); };
+}
+
+function onTFClick(userVal, q) {
+  if (G.locked) return;
+  G.locked = true;
+
+  var btnV = document.getElementById('btn-vrai');
+  var btnF = document.getElementById('btn-faux');
+  btnV.disabled = true;
+  btnF.disabled = true;
+
+  var isCorrect = (userVal === q.correct);
+
+  if (userVal === true) {
+    btnV.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) btnF.classList.add('correct');
   } else {
-    streak=0;
-    document.getElementById('combo-msg').textContent='';
+    btnF.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) btnV.classList.add('correct');
   }
-  history.push({q:q._tfText||q.q,isCorrect:isCorrect,correctAns:correctLabel,diff:q.diff});
-  updateScoreBar();
+
+  afterAnswer(isCorrect, q);
 }
 
-function showCombo(){
-  var el=document.getElementById('combo-msg');
-  if(streak>=5) el.textContent='&#128293; S\u00c9RIE x'+streak+' ! +2 pts bonus';
-  else if(streak>=3) el.textContent='\u26a1 S\u00e9rie x'+streak+' ! +1 pt bonus';
-  else el.textContent='';
+// ============================================================
+// RENDER FREE
+// ============================================================
+function renderFree(q) {
+  var zone = document.getElementById('zone-free');
+  zone.style.display = 'flex';
+
+  var inp = document.getElementById('free-inp');
+  var btn = document.getElementById('free-ok');
+  inp.value = '';
+  inp.disabled = false;
+  btn.disabled = false;
+
+  inp.onkeydown = function(e) { if (e.key === 'Enter') onFreeSubmit(q); };
+  btn.onclick = function() { onFreeSubmit(q); };
+
+  setTimeout(function() { inp.focus(); }, 150);
 }
 
-function showFeedback(isCorrect,q){
-  var fb=document.getElementById('feedback-box');
-  fb.className='feedback-box '+(isCorrect?'correct-fb':'wrong-fb');
-  fb.style.display='block';
-  fb.textContent=(isCorrect?'\u2705 Correct\u00a0! ':'\u274c Rat\u00e9. ')+q.explain;
-  var nb=document.getElementById('next-btn');
-  nb.style.display='block';
-  nb.textContent=idx<questions.length-1?'Question suivante \u2192':'Voir les r\u00e9sultats \u2192';
+function onFreeSubmit(q) {
+  if (G.locked) return;
+  var val = document.getElementById('free-inp').value.trim().toLowerCase();
+  if (!val) return;
+  G.locked = true;
+
+  document.getElementById('free-inp').disabled = true;
+  document.getElementById('free-ok').disabled = true;
+
+  var cv = q.correct.toLowerCase();
+  var aliases = (q.aliases || []).map(function(a) { return a.toLowerCase(); });
+
+  var isCorrect = (val === cv)
+    || (aliases.indexOf(val) >= 0)
+    || (cv.indexOf(val) >= 0 && val.length >= 3);
+
+  afterAnswer(isCorrect, q);
 }
 
-function updateScoreBar(){
-  document.getElementById('score-display').textContent=score;
-  document.getElementById('correct-display').textContent=nbCorrect;
-  document.getElementById('streak-display').textContent=streak;
+// ============================================================
+// APRÈS UNE RÉPONSE (commun QCM / TF / FREE)
+// ============================================================
+function afterAnswer(isCorrect, q) {
+  var p = ptsPerQ();
+  var earned = 0;
+
+  if (isCorrect) {
+    earned = p;
+    if (G.streak >= 5) earned += 2;
+    else if (G.streak >= 3) earned += 1;
+    G.score += earned;
+    G.correct++;
+    G.streak++;
+
+    var comboEl = document.getElementById('combo');
+    if (G.streak >= 5) comboEl.textContent = '🔥 SÉRIE x' + G.streak + ' ! +2 pts bonus';
+    else if (G.streak >= 3) comboEl.textContent = '⚡ Série x' + G.streak + ' ! +1 pt bonus';
+  } else {
+    G.streak = 0;
+  }
+
+  // Sauvegarder dans l'historique
+  var correctLabel;
+  if (q.type === 'tf') correctLabel = q.correct ? 'Vrai' : 'Faux';
+  else if (q.type === 'free') correctLabel = q.correct;
+  else correctLabel = q.answers[q.correct];
+
+  G.history.push({
+    q: q.q,
+    isCorrect: isCorrect,
+    correctAns: correctLabel,
+    pts: earned
+  });
+
+  // Mettre à jour score bar
+  document.getElementById('sc-score').textContent = G.score;
+  document.getElementById('sc-correct').textContent = G.correct;
+  document.getElementById('sc-streak').textContent = G.streak;
+
+  // Afficher feedback
+  var fb = document.getElementById('feedback');
+  fb.className = 'feedback ' + (isCorrect ? 'ok' : 'ko');
+  fb.textContent = (isCorrect ? '✅ Correct ! ' : '❌ Raté. ') + q.explain;
+  fb.style.display = 'block';
+
+  // Afficher bouton suivant
+  var nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = (G.idx < G.questions.length - 1) ? 'Question suivante →' : 'Voir les résultats →';
+  nextBtn.style.display = 'block';
 }
 
-function nextQuestion(){
-  idx++;
-  if(idx>=questions.length) showResults();
-  else renderQuestion();
+// ============================================================
+// QUESTION SUIVANTE
+// ============================================================
+function nextQ() {
+  G.idx++;
+  if (G.idx >= G.questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
 }
 
-/* ===== RESULTS ===== */
-function showResults(){
-  document.getElementById('quiz').style.display='none';
-  document.getElementById('results').style.display='block';
-  var total=questions.length;
-  var pct=Math.round((nbCorrect/total)*100);
-  document.getElementById('rs-score').textContent=score;
-  document.getElementById('rs-correct').textContent=nbCorrect+'/'+total;
-  document.getElementById('rs-pct').textContent=pct+'%';
+// ============================================================
+// RÉSULTATS
+// ============================================================
+function showResults() {
+  showPage('page-results');
 
-  var grade,trophy,title,sub;
-  if(pct>=90){grade='S';trophy='\ud83c\udfc6';title='L\u00e9gendaire\u00a0!';sub='Tu connais la CdM 2026 mieux que les commentateurs.';}
-  else if(pct>=75){grade='A';trophy='\ud83e\udd47';title='Expert confirm\u00e9\u00a0!';sub='Tu ma\u00eetrises les joueurs de cette Coupe du Monde.';}
-  else if(pct>=55){grade='B';trophy='\ud83e\udd48';title='Bon niveau\u00a0!';sub='Quelques d\u00e9tails t\'ont \u00e9chapp\u00e9, mais le fond y est.';}
-  else if(pct>=35){grade='C';trophy='\ud83e\udd49';title='En progression';sub='Continue d\'explorer les joueurs de la CdM 2026\u00a0!';}
-  else{grade='D';trophy='\u26bd';title='\u00c0 retravailler';sub='La CdM 2026 t\'attend pour mieux apprendre\u00a0!';}
+  var total = G.questions.length;
+  var pct = Math.round(G.correct / total * 100);
 
-  document.getElementById('res-trophy').innerHTML=trophy;
-  document.getElementById('res-title').textContent=title;
-  document.getElementById('res-sub').textContent=sub;
-  var ge=document.getElementById('res-grade');
-  ge.textContent='Grade '+grade;
-  ge.className='grade-badge grade-'+grade;
+  document.getElementById('r-score').textContent = G.score;
+  document.getElementById('r-correct').textContent = G.correct + '/' + total;
+  document.getElementById('r-pct').textContent = pct + '%';
 
-  var rl=document.getElementById('review-list');
-  rl.innerHTML='<div class="section-label" style="margin-bottom:0.75rem">D\u00e9tail des r\u00e9ponses</div>';
-  history.forEach(function(h){
-    var div=document.createElement('div');
-    div.className='review-item';
-    var ptsEarned=h.isCorrect?pts():0;
-    div.innerHTML='<div class="ri-top">'
-      +'<span class="ri-icon">'+(h.isCorrect?'\u2705':'\u274c')+'</span>'
-      +'<span class="ri-question">'+h.q+'</span>'
-      +'<span class="ri-pts '+(h.isCorrect?'got':'miss')+'">'+(h.isCorrect?'+'+ptsEarned:'0')+'</span>'
-      +'</div>'
-      +(!h.isCorrect?'<div class="ri-answer">Bonne r\u00e9ponse\u00a0: <span class="ri-correct-label">'+h.correctAns+'</span></div>':'');
-    rl.appendChild(div);
+  var grade, trophy, title, sub;
+  if (pct >= 90)      { grade='S'; trophy='🏆'; title='Légendaire !'; sub='Tu connais la CdM 2026 mieux que les commentateurs.'; }
+  else if (pct >= 75) { grade='A'; trophy='🥇'; title='Expert confirmé !'; sub='Tu maîtrises les joueurs de cette Coupe du Monde.'; }
+  else if (pct >= 55) { grade='B'; trophy='🥈'; title='Bon niveau !'; sub='Quelques détails t\'ont échappé, mais le fond y est.'; }
+  else if (pct >= 35) { grade='C'; trophy='🥉'; title='En progression'; sub='Continue d\'explorer les joueurs de la CdM 2026 !'; }
+  else                { grade='D'; trophy='⚽'; title='À retravailler'; sub='La CdM 2026 t\'attend pour mieux apprendre !'; }
+
+  document.getElementById('r-trophy').textContent = trophy;
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent = sub;
+
+  var gradeEl = document.getElementById('r-grade');
+  gradeEl.textContent = 'Grade ' + grade;
+  gradeEl.className = 'grade grade-' + grade;
+
+  var review = document.getElementById('r-review');
+  review.innerHTML = '';
+  var p = ptsPerQ();
+  G.history.forEach(function(h) {
+    var div = document.createElement('div');
+    div.className = 'review-item';
+    var ptsHtml = '<span class="ri-pts ' + (h.isCorrect ? 'got' : 'miss') + '">' + (h.isCorrect ? '+' + p : '0') + '</span>';
+    var ansHtml = h.isCorrect ? '' : '<div class="ri-ans">Bonne réponse : <span>' + h.correctAns + '</span></div>';
+    div.innerHTML = '<div class="ri-row"><span style="font-size:14px">' + (h.isCorrect ? '✅' : '❌') + '</span><span class="ri-q">' + h.q + '</span>' + ptsHtml + '</div>' + ansHtml;
+    review.appendChild(div);
   });
 }
 
-function restartSame(){
-  document.getElementById('results').style.display='none';
-  document.getElementById('combo-msg').textContent='';
+function replayQuiz() {
   startQuiz();
 }
-function goMenu(){
-  document.getElementById('results').style.display='none';
-  document.getElementById('quiz').style.display='none';
-  document.getElementById('menu').style.display='block';
-  document.getElementById('combo-msg').textContent='';
+
+function goMenu() {
+  showPage('page-menu');
 }
 </script>
 </body>
