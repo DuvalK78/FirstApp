@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinguaFun — Apprends les langues en jouant</title>
+<style>
+  :root {
+    --coral: #D85A30; --coral-light: #FAECE7; --coral-mid: #F0997B;
+    --teal: #1D9E75; --teal-light: #E1F5EE; --teal-mid: #5DCAA5;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-mid: #EF9F27;
+    --purple: #534AB7; --purple-light: #EEEDFE; --purple-mid: #AFA9EC;
+    --pink: #993556; --pink-light: #FBEAF0; --pink-mid: #ED93B1;
+    --blue: #185FA5; --blue-light: #E6F1FB; --blue-mid: #85B7EB;
+    --green: #3B6D11; --green-light: #EAF3DE; --green-mid: #97C459;
+    --gray-light: #F1EFE8; --gray-mid: #B4B2A9; --gray-dark: #444441;
+    --text: #2C2C2A; --text-muted: #5F5E5A;
+    --radius: 14px; --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #fffdf8; color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header { background: linear-gradient(135deg, #534AB7 0%, #1D9E75 100%); padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .logo { color: white; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: #FAC775; }
+  .header-score { background: rgba(255,255,255,0.2); color: white; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: 600; }
+
+  /* NAVIGATION ÉCRANS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ACCUEIL */
+  #screen-home { padding: 2rem; max-width: 900px; margin: 0 auto; }
+  .home-hero { text-align: center; padding: 2rem 1rem 1rem; }
+  .home-hero h1 { font-size: 2.2rem; font-weight: 800; color: var(--purple); margin-bottom: 0.5rem; }
+  .home-hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+  /* SÉLECTION LANGUE */
+  .section-title { font-size: 1rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; margin-top: 2rem; }
+  .lang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .lang-card { background: white; border: 2px solid transparent; border-radius: var(--radius); padding: 1.4rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow); }
+  .lang-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+  .lang-card.selected { border-color: var(--purple); background: var(--purple-light); }
+  .lang-flag { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .lang-name { font-size: 1rem; font-weight: 700; }
+  .lang-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  /* NIVEAUX */
+  .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .level-card { border-radius: var(--radius); padding: 1.2rem; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; position: relative; overflow: hidden; }
+  .level-card:hover { transform: translateY(-2px); }
+  .level-card.selected { border-width: 3px; }
+  .level-card.locked { opacity: 0.45; cursor: not-allowed; }
+  .level-card .lock-icon { position: absolute; top: 8px; right: 8px; font-size: 0.9rem; }
+  .level-card.lv1 { background: var(--teal-light); border-color: var(--teal-mid); }
+  .level-card.lv1.selected { border-color: var(--teal); }
+  .level-card.lv2 { background: var(--amber-light); border-color: var(--amber-mid); }
+  .level-card.lv2.selected { border-color: var(--amber); }
+  .level-card.lv3 { background: var(--coral-light); border-color: var(--coral-mid); }
+  .level-card.lv3.selected { border-color: var(--coral); }
+  .level-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+  .level-name { font-size: 1rem; font-weight: 700; }
+  .level-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.3rem; }
+  .level-stars { color: #EF9F27; font-size: 0.9rem; margin-top: 0.3rem; }
+
+  /* TYPE DE JEU */
+  .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .game-card { background: white; border-radius: var(--radius); padding: 1.2rem; cursor: pointer; border: 2px solid var(--gray-light); transition: all 0.2s; box-shadow: var(--shadow); display: flex; align-items: center; gap: 1rem; }
+  .game-card:hover { border-color: var(--purple-mid); transform: translateY(-2px); }
+  .game-card.selected { border-color: var(--purple); background: var(--purple-light); }
+  .game-icon-wrap { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+  .game-card-info { flex: 1; }
+  .game-card-title { font-weight: 700; font-size: 0.95rem; }
+  .game-card-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+  .btn-start { display: block; width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--purple) 0%, var(--teal) 100%); color: white; border: none; border-radius: var(--radius); font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: opacity 0.2s; margin-top: 1rem; letter-spacing: 0.3px; }
+  .btn-start:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-start:hover:not(:disabled) { opacity: 0.9; }
+
+  /* QUIZ */
+  #screen-quiz { padding: 1.5rem; max-width: 700px; margin: 0 auto; }
+  .quiz-topbar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .quiz-back { background: none; border: none; cursor: pointer; font-size: 1.4rem; color: var(--text-muted); padding: 0.2rem; }
+  .quiz-progress-wrap { flex: 1; }
+  .quiz-progress-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .quiz-progress-bar { background: var(--gray-light); border-radius: 10px; height: 10px; overflow: hidden; }
+  .quiz-progress-fill { background: linear-gradient(90deg, var(--purple), var(--teal)); height: 100%; border-radius: 10px; transition: width 0.4s; }
+  .quiz-streak { background: var(--amber-light); border-radius: 20px; padding: 0.3rem 0.8rem; font-size: 0.82rem; font-weight: 700; color: var(--amber); white-space: nowrap; }
+
+  .quiz-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 2rem; }
+  .quiz-type-badge { display: inline-block; padding: 0.25rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
+  .badge-qcm { background: var(--blue-light); color: var(--blue); }
+  .badge-vf { background: var(--green-light); color: var(--green); }
+  .badge-input { background: var(--amber-light); color: var(--amber); }
+  .badge-assoc { background: var(--pink-light); color: var(--pink); }
+
+  .quiz-question { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.4; }
+  .quiz-hint { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .quiz-word-display { font-size: 2rem; font-weight: 800; color: var(--purple); text-align: center; padding: 1rem; background: var(--purple-light); border-radius: 10px; margin-bottom: 1.5rem; }
+
+  /* QCM */
+  .qcm-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .qcm-btn { background: var(--gray-light); border: 2px solid transparent; border-radius: var(--radius-sm); padding: 0.9rem; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: left; }
+  .qcm-btn:hover:not(:disabled) { background: var(--purple-light); border-color: var(--purple-mid); }
+  .qcm-btn.correct { background: var(--teal-light); border-color: var(--teal); color: var(--teal); }
+  .qcm-btn.wrong { background: var(--coral-light); border-color: var(--coral); color: var(--coral); }
+  .qcm-btn.reveal { background: #d4efe8; border-color: var(--teal-mid); }
+
+  /* VRAI/FAUX */
+  .vf-options { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .vf-btn { padding: 1.5rem; border: 2px solid transparent; border-radius: var(--radius); font-size: 1.3rem; font-weight: 800; cursor: pointer; transition: all 0.15s; }
+  .vf-btn.vrai { background: var(--teal-light); color: var(--teal); border-color: var(--teal-mid); }
+  .vf-btn.faux { background: var(--coral-light); color: var(--coral); border-color: var(--coral-mid); }
+  .vf-btn.correct { border-width: 3px; box-shadow: 0 0 0 4px rgba(29,158,117,0.15); }
+  .vf-btn.wrong { border-width: 3px; box-shadow: 0 0 0 4px rgba(216,90,48,0.15); opacity: 0.5; }
+  .vf-statement { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 1rem 0; padding: 1rem; background: var(--gray-light); border-radius: 10px; }
+
+  /* SAISIE LIBRE */
+  .input-wrap { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+  .translation-input { flex: 1; padding: 0.9rem 1rem; border: 2px solid var(--gray-mid); border-radius: var(--radius-sm); font-size: 1rem; outline: none; transition: border-color 0.15s; }
+  .translation-input:focus { border-color: var(--purple); }
+  .translation-input.correct { border-color: var(--teal); background: var(--teal-light); }
+  .translation-input.wrong { border-color: var(--coral); background: var(--coral-light); }
+  .btn-check { padding: 0.9rem 1.5rem; background: var(--purple); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+  .btn-check:disabled { opacity: 0.5; }
+  .keyboard-hints { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
+  .key-btn { background: var(--gray-light); border: 1px solid var(--gray-mid); border-radius: 6px; padding: 0.25rem 0.6rem; font-size: 0.9rem; cursor: pointer; }
+  .key-btn:hover { background: var(--purple-light); }
+
+  /* ASSOCIATION */
+  .assoc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .assoc-col-title { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+  .assoc-item { padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 2px solid transparent; cursor: pointer; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 600; transition: all 0.15s; background: var(--gray-light); }
+  .assoc-item.selected { background: var(--purple-light); border-color: var(--purple); }
+  .assoc-item.matched { background: var(--teal-light); border-color: var(--teal); cursor: default; color: var(--teal); }
+  .assoc-item.wrong-flash { background: var(--coral-light); border-color: var(--coral); }
+
+  /* FEEDBACK */
+  .feedback-bar { border-radius: var(--radius-sm); padding: 0.8rem 1rem; margin-top: 1rem; font-size: 0.9rem; font-weight: 700; display: none; }
+  .feedback-bar.show { display: block; }
+  .feedback-bar.correct { background: var(--teal-light); color: var(--teal); }
+  .feedback-bar.wrong { background: var(--coral-light); color: var(--coral); }
+  .btn-next { display: block; width: 100%; margin-top: 1rem; padding: 0.9rem; background: var(--purple); color: white; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 1rem; cursor: pointer; display: none; }
+  .btn-next.show { display: block; }
+
+  /* RÉSULTATS */
+  #screen-result { padding: 2rem; max-width: 600px; margin: 0 auto; text-align: center; }
+  .result-emoji { font-size: 4rem; margin-bottom: 1rem; }
+  .result-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .result-score-big { font-size: 3.5rem; font-weight: 900; color: var(--purple); margin: 1rem 0; }
+  .result-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1.5rem 0; }
+  .result-detail-card { background: white; border-radius: var(--radius-sm); padding: 1rem; box-shadow: var(--shadow); }
+  .result-detail-val { font-size: 1.6rem; font-weight: 800; }
+  .result-detail-lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .result-badge { display: inline-block; padding: 0.4rem 1.2rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .result-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+  .btn-action { flex: 1; padding: 0.9rem; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem; cursor: pointer; border: none; }
+  .btn-retry { background: var(--purple-light); color: var(--purple); }
+  .btn-home { background: linear-gradient(135deg, var(--purple), var(--teal)); color: white; }
+
+  .unlock-notice { background: var(--amber-light); border: 2px solid var(--amber-mid); border-radius: var(--radius); padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; color: var(--amber); font-weight: 600; display: none; }
+  .unlock-notice.show { display: block; }
+
+  @media (max-width: 500px) {
+    .qcm-options { grid-template-columns: 1fr; }
+    .level-grid { grid-template-columns: 1fr; }
+    .game-grid { grid-template-columns: 1fr; }
+    .result-details { grid-template-columns: 1fr; }
+    .assoc-cols { grid-template-columns: 1fr; }
+    .vf-options { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Lingua<span>Fun</span> 🌍</div>
+  <div class="header-score" id="header-score">⭐ 0 pts</div>
+</header>
+
+<!-- ÉCRAN ACCUEIL -->
+<div id="screen-home" class="screen active">
+  <div id="screen-home-inner">
+    <div class="home-hero">
+      <h1>Apprends les langues en jouant !</h1>
+      <p>Choisis ta langue, ton niveau et plonge dans les quiz 🎮</p>
+    </div>
+
+    <div class="section-title">🗺️ Choisir une langue</div>
+    <div class="lang-grid" id="lang-grid">
+      <div class="lang-card" data-lang="en" onclick="selectLang(this)">
+        <div class="lang-flag">🇬🇧</div>
+        <div class="lang-name">Anglais</div>
+        <div class="lang-sub">English</div>
+      </div>
+      <div class="lang-card" data-lang="es" onclick="selectLang(this)">
+        <div class="lang-flag">🇪🇸</div>
+        <div class="lang-name">Espagnol</div>
+        <div class="lang-sub">Español</div>
+      </div>
+      <div class="lang-card" data-lang="jp" onclick="selectLang(this)">
+        <div class="lang-flag">🇯🇵</div>
+        <div class="lang-name">Japonais</div>
+        <div class="lang-sub">日本語</div>
+      </div>
+      <div class="lang-card" data-lang="de" onclick="selectLang(this)">
+        <div class="lang-flag">🇩🇪</div>
+        <div class="lang-name">Allemand</div>
+        <div class="lang-sub">Deutsch</div>
+      </div>
+    </div>
+
+    <div class="section-title">🎯 Choisir un niveau</div>
+    <div class="level-grid" id="level-grid">
+      <div class="level-card lv1" data-level="1" onclick="selectLevel(this)">
+        <div class="level-icon">🌱</div>
+        <div class="level-name">Débutant</div>
+        <div class="level-stars">★☆☆</div>
+        <div class="level-desc">Mots du quotidien</div>
+      </div>
+      <div class="level-card lv2 locked" data-level="2" id="lv2-card">
+        <div class="lock-icon">🔒</div>
+        <div class="level-icon">🌿</div>
+        <div class="level-name">Intermédiaire</div>
+        <div class="level-stars">★★☆</div>
+        <div class="level-desc">Score ≥ 60 pts pour débloquer</div>
+      </div>
+      <div class="level-card lv3 locked" data-level="3" id="lv3-card">
+        <div class="lock-icon">🔒</div>
+        <div class="level-icon">🌳</div>
+        <div class="level-name">Avancé</div>
+        <div class="level-stars">★★★</div>
+        <div class="level-desc">Score ≥ 150 pts pour débloquer</div>
+      </div>
+    </div>
+
+    <div class="section-title">🎮 Type de jeu</div>
+    <div class="game-grid" id="game-grid">
+      <div class="game-card" data-game="qcm" onclick="selectGame(this)">
+        <div class="game-icon-wrap" style="background:#E6F1FB">🔤</div>
+        <div class="game-card-info">
+          <div class="game-card-title">QCM</div>
+          <div class="game-card-desc">Choix multiples, 4 options</div>
+        </div>
+      </div>
+      <div class="game-card" data-game="vf" onclick="selectGame(this)">
+        <div class="game-icon-wrap" style="background:#EAF3DE">✅</div>
+        <div class="game-card-info">
+          <div class="game-card-title">Vrai / Faux</div>
+          <div class="game-card-desc">Bonne traduction ou non ?</div>
+        </div>
+      </div>
+      <div class="game-card" data-game="input" onclick="selectGame(this)">
+        <div class="game-icon-wrap" style="background:#FAEEDA">✍️</div>
+        <div class="game-card-info">
+          <div class="game-card-title">Traduction libre</div>
+          <div class="game-card-desc">Écris la traduction toi-même</div>
+        </div>
+      </div>
+      <div class="game-card" data-game="assoc" onclick="selectGame(this)">
+        <div class="game-icon-wrap" style="background:#FBEAF0">🔗</div>
+        <div class="game-card-info">
+          <div class="game-card-title">Association</div>
+          <div class="game-card-desc">Relie mots et traductions</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btn-start" onclick="startQuiz()" disabled>Commencer le jeu !</button>
+  </div>
+</div>
+
+<!-- ÉCRAN QUIZ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-topbar">
+    <button class="quiz-back" onclick="goHome()" title="Retour">←</button>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-label" id="quiz-progress-label">Question 1 / 10</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:10%"></div></div>
+    </div>
+    <div class="quiz-streak" id="quiz-streak">🔥 0</div>
+  </div>
+  <div class="quiz-card" id="quiz-card-inner"></div>
+</div>
+
+<!-- ÉCRAN RÉSULTATS -->
+<div id="screen-result" class="screen">
+  <div class="result-emoji" id="result-emoji">🎉</div>
+  <div class="result-title" id="result-title">Bravo !</div>
+  <div class="result-badge" id="result-badge"></div>
+  <div class="result-score-big" id="result-score-big">0</div>
+  <div style="font-size:0.9rem; color:var(--text-muted);">points gagnés cette session</div>
+  <div class="result-details">
+    <div class="result-detail-card">
+      <div class="result-detail-val" id="res-correct">0</div>
+      <div class="result-detail-lbl">✅ Bonnes rép.</div>
+    </div>
+    <div class="result-detail-card">
+      <div class="result-detail-val" id="res-wrong">0</div>
+      <div class="result-detail-lbl">❌ Mauvaises</div>
+    </div>
+    <div class="result-detail-card">
+      <div class="result-detail-val" id="res-streak">0</div>
+      <div class="result-detail-lbl">🔥 Meilleure série</div>
+    </div>
+  </div>
+  <div class="unlock-notice" id="unlock-notice">🔓 Niveau débloqué !</div>
+  <div class="result-actions">
+    <button class="btn-action btn-retry" onclick="retryQuiz()">🔄 Rejouer</button>
+    <button class="btn-action btn-home" onclick="goHome()">🏠 Accueil</button>
+  </div>
+</div>
+
+<script>
+const VOCAB = {
+  en: {
+    1: [
+      {fr:"chat",tr:"cat",fake:"dog"},
+      {fr:"maison",tr:"house",fake:"mouse"},
+      {fr:"eau",tr:"water",fake:"paper"},
+      {fr:"livre",tr:"book",fake:"cook"},
+      {fr:"rouge",tr:"red",fake:"read"},
+      {fr:"grand",tr:"big",fake:"pig"},
+      {fr:"manger",tr:"to eat",fake:"to beat"},
+      {fr:"chien",tr:"dog",fake:"hog"},
+      {fr:"soleil",tr:"sun",fake:"son"},
+      {fr:"ami",tr:"friend",fake:"fiend"},
+      {fr:"bleu",tr:"blue",fake:"clue"},
+      {fr:"nuit",tr:"night",fake:"light"},
+    ],
+    2: [
+      {fr:"fenêtre",tr:"window",fake:"widow"},
+      {fr:"travail",tr:"work",fake:"walk"},
+      {fr:"voyage",tr:"journey",fake:"tourney"},
+      {fr:"chanson",tr:"song",fake:"long"},
+      {fr:"comprendre",tr:"to understand",fake:"to overstand"},
+      {fr:"boulanger",tr:"baker",fake:"taker"},
+      {fr:"chaussure",tr:"shoe",fake:"shoo"},
+      {fr:"heureux",tr:"happy",fake:"nappy"},
+      {fr:"construire",tr:"to build",fake:"to guild"},
+      {fr:"voiture",tr:"car",fake:"far"},
+    ],
+    3: [
+      {fr:"s'épanouir",tr:"to flourish",fake:"to perish"},
+      {fr:"nuage",tr:"cloud",fake:"crowd"},
+      {fr:"tempête",tr:"storm",fake:"swarm"},
+      {fr:"parapluie",tr:"umbrella",fake:"capella"},
+      {fr:"ambiguïté",tr:"ambiguity",fake:"ambiguify"},
+      {fr:"développement",tr:"development",fake:"developpement"},
+      {fr:"gouvernement",tr:"government",fake:"governement"},
+      {fr:"éphémère",tr:"ephemeral",fake:"ephemerial"},
+    ]
+  },
+  es: {
+    1: [
+      {fr:"chat",tr:"gato",fake:"pato"},
+      {fr:"maison",tr:"casa",fake:"masa"},
+      {fr:"eau",tr:"agua",fake:"aguja"},
+      {fr:"livre",tr:"libro",fake:"tiro"},
+      {fr:"rouge",tr:"rojo",fake:"ojo"},
+      {fr:"grand",tr:"grande",fake:"granda"},
+      {fr:"manger",tr:"comer",fake:"correr"},
+      {fr:"chien",tr:"perro",fake:"cerro"},
+      {fr:"soleil",tr:"sol",fake:"col"},
+      {fr:"ami",tr:"amigo",fake:"amiga"},
+      {fr:"bleu",tr:"azul",fake:"azur"},
+      {fr:"nuit",tr:"noche",fake:"nache"},
+    ],
+    2: [
+      {fr:"fenêtre",tr:"ventana",fake:"manzana"},
+      {fr:"travail",tr:"trabajo",fake:"debajo"},
+      {fr:"voyage",tr:"viaje",fake:"traje"},
+      {fr:"chanson",tr:"canción",fake:"camión"},
+      {fr:"comprendre",tr:"entender",fake:"atender"},
+      {fr:"boulanger",tr:"panadero",fake:"caballero"},
+      {fr:"chaussure",tr:"zapato",fake:"pato"},
+      {fr:"heureux",tr:"feliz",fake:"nariz"},
+      {fr:"voiture",tr:"coche",fake:"boche"},
+      {fr:"construire",tr:"construir",fake:"destruir"},
+    ],
+    3: [
+      {fr:"ambiguïté",tr:"ambigüedad",fake:"amigüedad"},
+      {fr:"gouvernement",tr:"gobierno",fake:"govierno"},
+      {fr:"s'épanouir",tr:"florecer",fake:"floreser"},
+      {fr:"tempête",tr:"tormenta",fake:"tormente"},
+      {fr:"développement",tr:"desarrollo",fake:"desarollo"},
+    ]
+  },
+  jp: {
+    1: [
+      {fr:"chat",tr:"ねこ (neko)",fake:"いぬ (inu)"},
+      {fr:"eau",tr:"みず (mizu)",fake:"かぜ (kaze)"},
+      {fr:"maison",tr:"いえ (ie)",fake:"にわ (niwa)"},
+      {fr:"rouge",tr:"あか (aka)",fake:"あお (ao)"},
+      {fr:"grand",tr:"おおきい (ookii)",fake:"ちいさい (chiisai)"},
+      {fr:"manger",tr:"たべる (taberu)",fake:"のむ (nomu)"},
+      {fr:"chien",tr:"いぬ (inu)",fake:"うま (uma)"},
+      {fr:"soleil",tr:"たいよう (taiyou)",fake:"つき (tsuki)"},
+      {fr:"ami",tr:"ともだち (tomodachi)",fake:"かぞく (kazoku)"},
+      {fr:"nuit",tr:"よる (yoru)",fake:"ひる (hiru)"},
+    ],
+    2: [
+      {fr:"voiture",tr:"くるま (kuruma)",fake:"でんしゃ (densha)"},
+      {fr:"fenêtre",tr:"まど (mado)",fake:"ドア (doa)"},
+      {fr:"travail",tr:"しごと (shigoto)",fake:"がっこう (gakkou)"},
+      {fr:"chanson",tr:"うた (uta)",fake:"おと (oto)"},
+      {fr:"heureux",tr:"しあわせ (shiawase)",fake:"かなしい (kanashii)"},
+      {fr:"voyage",tr:"りょこう (ryokou)",fake:"でんわ (denwa)"},
+      {fr:"chaussure",tr:"くつ (kutsu)",fake:"ぼうし (boushi)"},
+    ],
+    3: [
+      {fr:"gouvernement",tr:"せいふ (seifu)",fake:"けいさつ (keisatsu)"},
+      {fr:"développement",tr:"かいはつ (kaihatsu)",fake:"かいそく (kaisoku)"},
+      {fr:"ambiguïté",tr:"あいまいさ (aimaisa)",fake:"めいかくさ (meikakusa)"},
+      {fr:"s'épanouir",tr:"さかえる (sakaeru)",fake:"しぼむ (shibomu)"},
+    ]
+  },
+  de: {
+    1: [
+      {fr:"chat",tr:"Katze",fake:"Ratte"},
+      {fr:"maison",tr:"Haus",fake:"Maus"},
+      {fr:"eau",tr:"Wasser",fake:"Messer"},
+      {fr:"livre",tr:"Buch",fake:"Tuch"},
+      {fr:"rouge",tr:"rot",fake:"tot"},
+      {fr:"grand",tr:"groß",fake:"grob"},
+      {fr:"manger",tr:"essen",fake:"lessen"},
+      {fr:"chien",tr:"Hund",fake:"Mund"},
+      {fr:"soleil",tr:"Sonne",fake:"Wonne"},
+      {fr:"ami",tr:"Freund",fake:"Feind"},
+      {fr:"nuit",tr:"Nacht",fake:"Macht"},
+      {fr:"bleu",tr:"blau",fake:"grau"},
+    ],
+    2: [
+      {fr:"fenêtre",tr:"Fenster",fake:"Meister"},
+      {fr:"travail",tr:"Arbeit",fake:"Freiheit"},
+      {fr:"voyage",tr:"Reise",fake:"Weise"},
+      {fr:"chanson",tr:"Lied",fake:"Ried"},
+      {fr:"comprendre",tr:"verstehen",fake:"entstehen"},
+      {fr:"voiture",tr:"Auto",fake:"Udo"},
+      {fr:"chaussure",tr:"Schuh",fake:"Buh"},
+      {fr:"heureux",tr:"glücklich",fake:"gütig"},
+    ],
+    3: [
+      {fr:"gouvernement",tr:"Regierung",fake:"Bewährung"},
+      {fr:"développement",tr:"Entwicklung",fake:"Entdeckung"},
+      {fr:"ambiguïté",tr:"Mehrdeutigkeit",fake:"Eindeutigkeit"},
+      {fr:"s'épanouir",tr:"aufblühen",fake:"aufweichen"},
+    ]
+  }
+};
+
+const LANG_NAMES = {en:"Anglais 🇬🇧", es:"Espagnol 🇪🇸", jp:"Japonais 🇯🇵", de:"Allemand 🇩🇪"};
+const EXTRA_CHARS = { jp: ["あ","い","う","え","お","か","き","く","け","こ","な","に","の","ね","は","ほ","ま","も","や","よ","ら","れ","ろ","わ","を","ん"], de: ["ä","ö","ü","ß"], es: ["á","é","í","ó","ú","ñ","ü","¡","¿"] };
+const TOTAL_Q = 10;
+
+let state = {
+  lang: null, level: 1, game: null,
+  questions: [], qIndex: 0,
+  sessionScore: 0, totalScore: 0,
+  correct: 0, wrong: 0,
+  streak: 0, bestStreak: 0,
+  assocLeft: null, assocRight: null, assocMatched: 0,
+  answered: false
+};
+
+function loadScore() {
+  try { state.totalScore = parseInt(localStorage.getItem('lf_score') || '0'); } catch(e){}
+  checkUnlocks();
+  updateHeaderScore();
+}
+function saveScore() {
+  try { localStorage.setItem('lf_score', state.totalScore); } catch(e){}
+}
+function updateHeaderScore() {
+  document.getElementById('header-score').textContent = '⭐ ' + state.totalScore + ' pts';
+}
+function checkUnlocks() {
+  const lv2 = document.getElementById('lv2-card');
+  const lv3 = document.getElementById('lv3-card');
+  if (state.totalScore >= 60) { lv2.classList.remove('locked'); lv2.querySelector('.lock-icon') && (lv2.querySelector('.lock-icon').remove()); lv2.querySelector('.level-desc').textContent = 'Phrases et contexte'; }
+  if (state.totalScore >= 150) { lv3.classList.remove('locked'); lv3.querySelector('.lock-icon') && (lv3.querySelector('.lock-icon').remove()); lv3.querySelector('.level-desc').textContent = 'Vocabulaire complexe'; }
+}
+
+function selectLang(el) {
+  document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.lang = el.dataset.lang;
+  checkStart();
+}
+function selectLevel(el) {
+  if (el.classList.contains('locked')) return;
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.level = parseInt(el.dataset.level);
+  checkStart();
+}
+function selectGame(el) {
+  document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.game = el.dataset.game;
+  checkStart();
+}
+function checkStart() {
+  document.getElementById('btn-start').disabled = !(state.lang && state.game);
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function buildQuestions() {
+  const pool = VOCAB[state.lang][state.level] || VOCAB[state.lang][1];
+  const shuffled = shuffle(pool).slice(0, TOTAL_Q);
+  if (state.game === 'assoc') return buildAssocBlocks(pool);
+  return shuffled.map(item => ({ item, type: state.game }));
+}
+
+function buildAssocBlocks(pool) {
+  const blocks = [];
+  const items = shuffle(pool);
+  for (let i = 0; i < items.length; i += 5) {
+    blocks.push({ type: 'assoc', items: items.slice(i, i+5) });
+  }
+  return blocks.slice(0, Math.ceil(TOTAL_Q / 5));
+}
+
+function startQuiz() {
+  if (!state.lang || !state.game) return;
+  state.questions = buildQuestions();
+  state.qIndex = 0; state.correct = 0; state.wrong = 0;
+  state.streak = 0; state.bestStreak = 0; state.sessionScore = 0;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function renderQuestion() {
+  const total = state.questions.length;
+  const idx = state.qIndex;
+  if (idx >= total) { showResult(); return; }
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('quiz-progress-label').textContent = 'Question ' + (idx+1) + ' / ' + total;
+  document.getElementById('quiz-progress-fill').style.width = Math.max(pct, 10) + '%';
+  document.getElementById('quiz-streak').textContent = '🔥 ' + state.streak;
+  const q = state.questions[idx];
+  state.answered = false;
+  const card = document.getElementById('quiz-card-inner');
+  if (q.type === 'qcm') card.innerHTML = renderQCM(q.item);
+  else if (q.type === 'vf') card.innerHTML = renderVF(q.item);
+  else if (q.type === 'input') card.innerHTML = renderInput(q.item);
+  else if (q.type === 'assoc') card.innerHTML = renderAssoc(q.items);
+}
+
+function badgeHTML(type) {
+  const map = {qcm:'badge-qcm QCM',vf:'badge-vf Vrai / Faux',input:'badge-input Traduction libre',assoc:'badge-assoc Association'};
+  const [cls, lbl] = map[type].split(' ').length > 2 ? [map[type].split(' ')[0], map[type].split(' ').slice(1).join(' ')] : map[type].split(' ');
+  return `<span class="quiz-type-badge ${cls}">${lbl}</span>`;
+}
+
+function renderQCM(item) {
+  const pool = VOCAB[state.lang][state.level] || VOCAB[state.lang][1];
+  let wrongs = shuffle(pool.filter(p => p.tr !== item.tr)).slice(0, 3).map(p => p.tr);
+  if (wrongs.length < 3) wrongs = [item.fake, item.tr+'?', item.tr+'!'].slice(0, 3 - wrongs.length).concat(wrongs);
+  const opts = shuffle([item.tr, ...wrongs.slice(0,3)]);
+  return `
+    <span class="quiz-type-badge badge-qcm">QCM</span>
+    <div class="quiz-question">Comment dit-on <strong>"${item.fr}"</strong> en ${LANG_NAMES[state.lang].split(' ')[0]} ?</div>
+    <div class="qcm-options" id="qcm-opts">
+      ${opts.map(o => `<button class="qcm-btn" onclick="answerQCM(this,'${o.replace(/'/g,"\\'")}','${item.tr.replace(/'/g,"\\'")}','${item.fr.replace(/'/g,"\\'")}'">${o}</button>`).join('')}
+    </div>
+    <div class="feedback-bar" id="feedback"></div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+  `;
+}
+
+function answerQCM(btn, chosen, correct, frWord) {
+  if (state.answered) return;
+  state.answered = true;
+  document.querySelectorAll('.qcm-btn').forEach(b => b.disabled = true);
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    markCorrect();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.qcm-btn').forEach(b => { if (b.textContent.trim() === correct) b.classList.add('reveal'); });
+    markWrong();
+  }
+  showFeedback(chosen === correct, correct, frWord);
+}
+
+function renderVF(item) {
+  const showFake = Math.random() > 0.5;
+  const displayed = showFake ? item.fake : item.tr;
+  const isTrue = !showFake;
+  return `
+    <span class="quiz-type-badge badge-vf">Vrai / Faux</span>
+    <div class="quiz-question">Cette traduction est-elle correcte ?</div>
+    <div class="quiz-hint">Mot en français :</div>
+    <div class="quiz-word-display">${item.fr}</div>
+    <div class="vf-statement">"${displayed}" <span style="color:var(--text-muted);font-size:0.8rem">(${LANG_NAMES[state.lang].split(' ')[0]})</span></div>
+    <div class="vf-options">
+      <button class="vf-btn vrai" onclick="answerVF(this,true,${isTrue},'${item.tr.replace(/'/g,"\\'")}','${item.fr.replace(/'/g,"\\'")}')">✅ VRAI</button>
+      <button class="vf-btn faux" onclick="answerVF(this,false,${isTrue},'${item.tr.replace(/'/g,"\\'")}','${item.fr.replace(/'/g,"\\'")}')">❌ FAUX</button>
+    </div>
+    <div class="feedback-bar" id="feedback"></div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+  `;
+}
+
+function answerVF(btn, answer, isTrue, correct, frWord) {
+  if (state.answered) return;
+  state.answered = true;
+  document.querySelectorAll('.vf-btn').forEach(b => b.disabled = true);
+  const ok = (answer === isTrue);
+  btn.classList.add(ok ? 'correct' : 'wrong');
+  if (ok) markCorrect(); else markWrong();
+  showFeedback(ok, correct, frWord);
+}
+
+function renderInput(item) {
+  const extras = EXTRA_CHARS[state.lang];
+  const keyHTML = extras ? `<div class="keyboard-hints">${extras.map(c=>`<button class="key-btn" onclick="insertChar('${c}')">${c}</button>`).join('')}</div>` : '';
+  return `
+    <span class="quiz-type-badge badge-input">Traduction libre</span>
+    <div class="quiz-question">Traduis en ${LANG_NAMES[state.lang].split(' ')[0]} :</div>
+    <div class="quiz-word-display">${item.fr}</div>
+    ${keyHTML}
+    <div class="input-wrap">
+      <input type="text" class="translation-input" id="trans-input" placeholder="Écris ta traduction..." autocomplete="off" onkeydown="if(event.key==='Enter')checkInput('${item.tr.replace(/'/g,"\\'")}','${item.fr.replace(/'/g,"\\'")}')">
+      <button class="btn-check" id="btn-check" onclick="checkInput('${item.tr.replace(/'/g,"\\'")}','${item.fr.replace(/'/g,"\\'")}')">Vérifier</button>
+    </div>
+    <div class="feedback-bar" id="feedback"></div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Question suivante →</button>
+  `;
+}
+
+function insertChar(c) {
+  const inp = document.getElementById('trans-input');
+  if (!inp) return;
+  const start = inp.selectionStart, end = inp.selectionEnd;
+  inp.value = inp.value.slice(0,start) + c + inp.value.slice(end);
+  inp.selectionStart = inp.selectionEnd = start + c.length;
+  inp.focus();
+}
+
+function normalize(str) {
+  return str.toLowerCase().trim().replace(/[()]/g,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+}
+
+function checkInput(correct, frWord) {
+  if (state.answered) return;
+  const inp = document.getElementById('trans-input');
+  const val = inp.value;
+  if (!val.trim()) return;
+  state.answered = true;
+  document.getElementById('btn-check').disabled = true;
+  inp.disabled = true;
+  const correctNorm = normalize(correct);
+  const userNorm = normalize(val);
+  const hiragana = correct.includes('(') ? correct.split('(')[1].replace(')','') : null;
+  const ok = userNorm === correctNorm || (hiragana && normalize(val) === normalize(hiragana));
+  inp.classList.add(ok ? 'correct' : 'wrong');
+  if (ok) markCorrect(); else markWrong();
+  showFeedback(ok, correct, frWord);
+}
+
+let assocSelectedSide = null;
+let assocSelectedEl = null;
+let assocSelectedVal = null;
+let assocMatchedCount = 0;
+let assocItems = [];
+
+function renderAssoc(items) {
+  assocItems = items;
+  assocMatchedCount = 0;
+  assocSelectedSide = null; assocSelectedEl = null; assocSelectedVal = null;
+  const lefts = shuffle(items.map(i => i.fr));
+  const rights = shuffle(items.map(i => ({tr:i.tr, fr:i.fr})));
+  return `
+    <span class="quiz-type-badge badge-assoc">Association</span>
+    <div class="quiz-question">Associe chaque mot à sa traduction</div>
+    <div class="assoc-cols">
+      <div>
+        <div class="assoc-col-title">Français</div>
+        ${lefts.map(w=>`<div class="assoc-item" data-side="left" data-val="${w.replace(/"/g,'&quot;')}" onclick="assocClick(this,'left','${w.replace(/'/g,"\\'")}')"> ${w}</div>`).join('')}
+      </div>
+      <div>
+        <div class="assoc-col-title">${LANG_NAMES[state.lang].split(' ')[0]}</div>
+        ${rights.map(r=>`<div class="assoc-item" data-side="right" data-val="${r.fr.replace(/"/g,'&quot;')}" onclick="assocClick(this,'right','${r.fr.replace(/'/g,"\\'")}')"> ${r.tr}</div>`).join('')}
+      </div>
+    </div>
+    <div class="feedback-bar" id="feedback"></div>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Continuer →</button>
+  `;
+}
+
+function assocClick(el, side, val) {
+  if (el.classList.contains('matched')) return;
+  if (assocSelectedSide === null) {
+    assocSelectedSide = side; assocSelectedVal = val; assocSelectedEl = el;
+    el.classList.add('selected');
+  } else if (side === assocSelectedSide) {
+    assocSelectedEl.classList.remove('selected');
+    assocSelectedSide = side; assocSelectedVal = val; assocSelectedEl = el;
+    el.classList.add('selected');
+  } else {
+    const leftVal = side === 'right' ? val : assocSelectedVal;
+    const rightVal = side === 'right' ? assocSelectedVal : val;
+    const match = assocItems.find(i => (side==='right' ? i.fr===val && assocSelectedVal===i.fr : i.fr===assocSelectedVal && val===i.fr));
+    const realMatch = assocItems.find(item => {
+      if (side === 'right') return item.fr === assocSelectedVal;
+      else return item.fr === val;
+    });
+    const ok = realMatch && (side === 'right' ? realMatch.fr === assocSelectedVal : realMatch.fr === val);
+    if (ok) {
+      el.classList.remove('selected'); el.classList.add('matched');
+      assocSelectedEl.classList.remove('selected'); assocSelectedEl.classList.add('matched');
+      assocMatchedCount++;
+      markCorrect();
+      if (assocMatchedCount >= assocItems.length) {
+        document.getElementById('feedback').textContent = '🎉 Toutes les paires trouvées !';
+        document.getElementById('feedback').className = 'feedback-bar show correct';
+        document.getElementById('btn-next').classList.add('show');
+      }
+    } else {
+      el.classList.add('wrong-flash'); assocSelectedEl.classList.add('wrong-flash');
+      markWrong();
+      setTimeout(() => { el.classList.remove('wrong-flash','selected'); assocSelectedEl.classList.remove('wrong-flash','selected'); }, 600);
+    }
+    assocSelectedSide = null; assocSelectedEl = null; assocSelectedVal = null;
+    return;
+  }
+}
+
+function markCorrect() {
+  state.correct++; state.streak++;
+  if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+  const pts = state.streak >= 3 ? 15 : 10;
+  state.sessionScore += pts; state.totalScore += pts;
+  document.getElementById('quiz-streak').textContent = '🔥 ' + state.streak;
+  updateHeaderScore(); saveScore();
+}
+
+function markWrong() {
+  state.wrong++; state.streak = 0;
+  document.getElementById('quiz-streak').textContent = '🔥 0';
+}
+
+function showFeedback(ok, correct, frWord) {
+  const fb = document.getElementById('feedback');
+  const next = document.getElementById('btn-next');
+  if (ok) {
+    fb.textContent = state.streak >= 3 ? `✅ Excellent ! +15 pts (série de ${state.streak} !)` : '✅ Bravo ! +10 pts';
+    fb.className = 'feedback-bar show correct';
+  } else {
+    fb.textContent = `❌ Raté ! "${frWord}" = "${correct}"`;
+    fb.className = 'feedback-bar show wrong';
+  }
+  if (next) next.classList.add('show');
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  renderQuestion();
+}
+
+function showResult() {
+  showScreen('result');
+  const pct = Math.round((state.correct / (state.correct + state.wrong || 1)) * 100);
+  let emoji = '😊', title = 'Pas mal !', badge = '', badgeStyle = '';
+  if (pct >= 90) { emoji='🏆'; title='Parfait !'; badge='Champion'; badgeStyle='background:var(--amber-light);color:var(--amber)'; }
+  else if (pct >= 70) { emoji='🎉'; title='Très bien !'; badge='Expert'; badgeStyle='background:var(--teal-light);color:var(--teal)'; }
+  else if (pct >= 50) { emoji='😊'; title='Bien joué !'; badge='En progrès'; badgeStyle='background:var(--blue-light);color:var(--blue)'; }
+  else { emoji='💪'; title='Continue !'; badge='Entraîne-toi'; badgeStyle='background:var(--coral-light);color:var(--coral)'; }
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-badge').textContent = badge;
+  document.getElementById('result-badge').style.cssText = badgeStyle + '; padding:0.4rem 1.2rem; border-radius:20px; font-weight:700; font-size:0.9rem;';
+  document.getElementById('result-score-big').textContent = '+' + state.sessionScore;
+  document.getElementById('res-correct').textContent = state.correct;
+  document.getElementById('res-wrong').textContent = state.wrong;
+  document.getElementById('res-streak').textContent = state.bestStreak;
+  const notice = document.getElementById('unlock-notice');
+  if (state.totalScore >= 150 && state.totalScore - state.sessionScore < 150) {
+    notice.textContent = '🔓 Niveau Avancé débloqué ! Retourne à l\'accueil pour y accéder.';
+    notice.classList.add('show');
+  } else if (state.totalScore >= 60 && state.totalScore - state.sessionScore < 60) {
+    notice.textContent = '🔓 Niveau Intermédiaire débloqué ! Retourne à l\'accueil.';
+    notice.classList.add('show');
+  } else { notice.classList.remove('show'); }
+  checkUnlocks();
+}
+
+function retryQuiz() { startQuiz(); }
+function goHome() {
+  checkUnlocks();
+  showScreen('home');
+}
+
+loadScore();
+</script>
+</body>
+</html>
