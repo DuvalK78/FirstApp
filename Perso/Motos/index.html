@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Garage Virtuel — Motos Passion</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- En-tête / Hero Section -->
+  <header class="hero">
+    <h1>Mon Garage Virtuel</h1>
+    <p>Une collection personnelle des modèles d'exception</p>
+  </header>
+
+  <!-- Filtres par catégorie -->
+  <nav class="filters">
+    <button class="filter-btn active" data-category="all">Toutes</button>
+    <button class="filter-btn" data-category="sportive">Sportives</button>
+    <button class="filter-btn" data-category="roadster">Roadsters</button>
+    <button class="filter-btn" data-category="adventure">Adventure / Trail</button>
+    <button class="filter-btn" data-category="custom">Custom / Vintage</button>
+  </nav>
+
+  <!-- Grille des motos -->
+  <main class="container">
+    <section class="grid" id="moto-grid">
+
+      <!-- Carte Moto 1 -->
+      <article class="card" data-category="sportive">
+        <div class="card-image">
+          <img src="https://via.placeholder.com/400x250" alt="Nom de la moto">
+          <span class="badge">Sportive</span>
+        </div>
+        <div class="card-content">
+          <h2>Nom du Modèle</h2>
+          <p class="brand">Marque — Année</p>
+          <ul class="specs">
+            <li><strong>Cylindrée :</strong> 000 cc</li>
+            <li><strong>Puissance :</strong> 000 ch</li>
+          </ul>
+          <p class="description">Courte description ou avis personnel sur la moto...</p>
+        </div>
+      </article>
+
+      <!-- Carte Moto 2 -->
+      <article class="card" data-category="roadster">
+        <div class="card-image">
+          <img src="https://via.placeholder.com/400x250" alt="Nom de la moto">
+          <span class="badge">Roadster</span>
+        </div>
+        <div class="card-content">
+          <h2>Nom du Modèle</h2>
+          <p class="brand">Marque — Année</p>
+          <ul class="specs">
+            <li><strong>Cylindrée :</strong> 000 cc</li>
+            <li><strong>Puissance :</strong> 000 ch</li>
+          </ul>
+          <p class="description">Courte description ou avis personnel sur la moto...</p>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <!-- Pied de page -->
+  <footer>
+    <p>Fan site créé par un passionné — Hébergé sur Vercel</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
