@@ -85,6 +85,22 @@ body {
 .stat-item strong {
   color: var(--accent-color);
 }
+.reset-btn {
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid #333;
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.reset-btn:hover {
+  color: var(--text-main);
+  border-color: var(--accent-color);
+  background-color: rgba(229, 57, 53, 0.1);
+}
 /* --- Filtres --- */
 .filters {
   display: flex;
