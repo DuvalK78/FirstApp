@@ -37,7 +37,54 @@ body {
   color: var(--text-muted);
   font-size: 1.1rem;
 }
+.controls-container {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
 
+.search-and-filters {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+#search-input, #brand-select {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+}
+
+#search-input {
+  min-width: 280px;
+}
+
+#brand-select {
+  cursor: pointer;
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  background-color: #1e1e1e;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid #2a2a2a;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.stat-item strong {
+  color: var(--accent-color);
+}
 /* --- Filtres --- */
 .filters {
   display: flex;
