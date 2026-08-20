@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('search-input');
   const brandSelect = document.getElementById('brand-select');
+  const resetBtn = document.getElementById('reset-filters-btn');
   const filterButtons = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.card');
 
@@ -26,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const brand = card.getAttribute('data-brand') || '';
       const cardText = card.textContent.toLowerCase();
 
-      // Vérification des conditions de filtre
       const matchesSearch = cardText.includes(searchTerm);
       const matchesCategory = (activeCategory === 'all' || category === activeCategory);
       const matchesBrand = (selectedBrand === 'all' || brand === selectedBrand);
@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         card.style.display = 'block';
         visibleTotal++;
 
-        // Incrémentation des compteurs spécifiques sur les éléments visibles
         if (category === 'sportive') visibleSportive++;
         if (category === 'roadster') visibleRoadster++;
         if (brand === 'yamaha') visibleYamaha++;
@@ -44,20 +43,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Mise à jour des compteurs dans l'interface
     countTotal.textContent = visibleTotal;
     countSportive.textContent = visibleSportive;
     countRoadster.textContent = visibleRoadster;
     countYamaha.textContent = visibleYamaha;
   }
 
-  // Événement : Recherche
+  // Fonction de réinitialisation complète
+  function resetAllFilters() {
+    searchInput.value = '';
+    brandSelect.value = 'all';
+    
+    activeCategory = 'all';
+    filterButtons.forEach(btn => {
+      if (btn.getAttribute('data-category') === 'all') {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    filterAndCount();
+  }
+
+  // Événements
   searchInput.addEventListener('input', filterAndCount);
-
-  // Événement : Sélection de la marque
   brandSelect.addEventListener('change', filterAndCount);
+  resetBtn.addEventListener('click', resetAllFilters);
 
-  // Événement : Clic sur les catégories
   filterButtons.forEach(button => {
     button.addEventListener('click', () => {
       filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -67,6 +80,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Calcul initial au chargement de la page
   filterAndCount();
 });
