@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const countTotal = document.getElementById('count-total');
   const countSportive = document.getElementById('count-sportive');
   const countRoadster = document.getElementById('count-roadster');
+  const countAprilia = document.getElementById('count-aprilia');
+  const countBMW = document.getElementById('count-bmw');
+  const countDucati = document.getElementById('count-ducati');
+  const countHonda = document.getElementById('count-honda');
+  const countKawasaki = document.getElementById('count-kawasaki');
+  const countSuzuki = document.getElementById('count-suzuki');
   const countYamaha = document.getElementById('count-yamaha');
 
   let activeCategory = 'all';
@@ -20,6 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let visibleTotal = 0;
     let visibleSportive = 0;
     let visibleRoadster = 0;
+    let visibleAprilia = 0;
+    let visibleBMW = 0;
+    let visibleDucati = 0;
+    let visibleHonda = 0;
+    let visibleKawasaki = 0;
+    let visibleSuzuki = 0;
     let visibleYamaha = 0;
 
     cards.forEach(card => {
@@ -37,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (category === 'sportive') visibleSportive++;
         if (category === 'roadster') visibleRoadster++;
+        if (brand === 'aprilia') visibleAprilia++;
+        if (brand === 'bmw') visibleBMW++;
+        if (brand === 'ducati') visibleDucati++;
+        if (brand === 'honda') visibleHonda++;
+        if (brand === 'kawasaki') visibleKawasaki++;
+        if (brand === 'suzuki') visibleSuzuki++;
         if (brand === 'yamaha') visibleYamaha++;
       } else {
         card.style.display = 'none';
@@ -46,6 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
     countTotal.textContent = visibleTotal;
     countSportive.textContent = visibleSportive;
     countRoadster.textContent = visibleRoadster;
+    countAprilia.textContent = visibleAprilia;
+    countBMW.textContent = visibleBMW;
+    countDucati.textContent = visibleDucati;
+    countHonda.textContent = visibleHonda;
+    countKawasaki.textContent = visibleKawasaki;
+    countSuzuki.textContent = visibleSuzuki;
     countYamaha.textContent = visibleYamaha;
   }
 
