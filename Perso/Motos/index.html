@@ -14,7 +14,24 @@
     <p>Une collection personnelle des modèles d'exception</p>
   </header>
 
-  <!-- Filtres par catégorie -->
+  <!-- Barre de recherche, filtres et compteurs -->
+<section class="controls-container">
+  
+  <!-- Recherche et filtres -->
+  <div class="search-and-filters">
+    <input type="text" id="search-input" placeholder="Rechercher un modèle ou une marque...">
+    
+    <select id="brand-select">
+      <option value="all">Toutes les marques</option>
+      <option value="yamaha">Yamaha</option>
+      <option value="honda">Honda</option>
+      <option value="kawasaki">Kawasaki</option>
+      <option value="bmw">BMW</option>
+      <option value="ducati">Ducati</option>
+    </select>
+  </div>
+
+  <!-- Boutons de catégories -->
   <nav class="filters">
     <button class="filter-btn active" data-category="all">Toutes</button>
     <button class="filter-btn" data-category="sportive">Sportives</button>
@@ -22,6 +39,16 @@
     <button class="filter-btn" data-category="adventure">Adventure / Trail</button>
     <button class="filter-btn" data-category="custom">Custom / Vintage</button>
   </nav>
+
+  <!-- Compteurs dynamiques -->
+  <div class="stats-bar">
+    <div class="stat-item">Motos affichées : <strong id="count-total">0</strong></div>
+    <div class="stat-item">Sportives : <strong id="count-sportive">0</strong></div>
+    <div class="stat-item">Roadsters : <strong id="count-roadster">0</strong></div>
+    <div class="stat-item">Yamaha : <strong id="count-yamaha">0</strong></div>
+  </div>
+
+</section>
 
   <!-- Grille des motos -->
   <main class="container">
