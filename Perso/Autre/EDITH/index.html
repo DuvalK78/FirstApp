@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Météo Mondiale</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <style>
+    /* ── VARIABLES & THEMES ── */
+    :root[data-theme="light"] {
+      --bg-main: #f4f6f8;
+      --bg-panel: #ffffff;
+      --text-main: #1c252e;
+      --text-sub: #637381;
+      --border-color: #f1f3f5;
+      --card-bg: #f8fafc;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --accent: #0072c6;
+      --bar-bg: #e2e8f0;
+      --bar-fill: #3b82f6;
+    }
+
+    :root[data-theme="dark"] {
+      --bg-main: #0f172a;
+      --bg-panel: #1e293b;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-color: #334155;
+      --card-bg: #0f172a;
+      --shadow: 0 10px 30px rgba(0,0,0,0.3);
+      --accent: #38b6f5;
+      --bar-bg: #334155;
+      --bar-fill: #38b6f5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* ── HEADER ── */
+    header {
+      height: 60px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
+    }
+    .logo { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+    .header-right { display: flex; align-items: center; gap: 15px; }
+    .header-hint { font-size: 0.85rem; color: var(--text-sub); }
+    
+    .theme-switch { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+    .switch-track { width: 40px; height: 22px; background: var(--border-color); border-radius: 20px; position: relative; transition: 0.3s; }
+    .switch-knob { width: 16px; height: 16px; background: var(--text-main); border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
+    [data-theme="dark"] .switch-knob { transform: translateX(18px); }
+
+    /* ── LAYOUT ── */
+    .main-layout { display: flex; flex: 1; position: relative; overflow: hidden; }
+    #map { flex: 1; height: 100%; z-index: 1; background: var(--bg-main); }
+
+    /* ── SIDE PANEL ── */
+    .side-panel {
+      width: 380px;
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+      box-shadow: var(--shadow);
+      overflow-y: auto;
+    }
+
+    .panel-idle { padding: 40px 20px; text-align: center; margin: auto; }
+    .idle-icon { font-size: 3rem; margin-bottom: 10px; }
+    .idle-title { font-weight: 600; margin-bottom: 6px; }
+    .idle-sub { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
+    .hidden { display: none !important; }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-overlay {
+      position: absolute; inset: 0; background: var(--bg-panel);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 10; opacity: 0; pointer-events: none; transition: 0.2s;
+    }
+    .loading-overlay.active { opacity: 1; pointer-events: auto; }
+    .loader-ring { width: 36px; height: 36px; border: 3px solid var(--border-color); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .loader-text { margin-top: 12px; font-size: 0.9rem; color: var(--text-sub); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── WEATHER CARD ── */
+    .weather-card { display: none; flex-direction: column; gap: 20px; padding: 20px; }
+    .weather-card.visible { display: flex; }
+
+    .card-header { display: flex; flex-direction: column; gap: 4px; }
+    .location-row { display: flex; align-items: center; gap: 8px; }
+    .location-flag { font-size: 1.4rem; }
+    .location-name { font-size: 1.3rem; font-weight: 700; }
+    .location-coords { font-size: 0.8rem; color: var(--text-sub); }
+    .local-time { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; }
+
+    .temp-hero { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px; border-radius: 12px; }
+    .temp-main { font-size: 3rem; font-weight: 800; line-height: 1; }
+    .temp-unit { font-size: 1.5rem; font-weight: 500; vertical-align: top; }
+    .temp-right { text-align: right; }
+    .weather-emoji { font-size: 2.2rem; line-height: 1; }
+    .temp-feels { font-size: 0.85rem; color: var(--text-sub); margin-top: 4px; }
+
+    /* ── STATS GRID ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-item { background: var(--card-bg); padding: 12px; border-radius: 10px; }
+    .stat-label { font-size: 0.75rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 1.2rem; font-weight: 700; margin-top: 2px; }
+    .stat-sub { font-size: 0.75rem; color: var(--text-sub); }
+
+    /* ── SUN & MOON ── */
+    .sun-moon-wrap { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px; border-radius: 10px; }
+    .sun-moon-item { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .sun-moon-icon { font-size: 1.2rem; }
+    .sun-moon-val { font-size: 0.85rem; font-weight: 600; }
+    .sun-moon-divider { width: 1px; height: 24px; background: var(--border-color); margin: 0 4px; }
+
+    /* ── WIND & COMPASS ── */
+    .wind-compass-wrap { display: flex; align-items: center; gap: 15px; background: var(--card-bg); padding: 12px 16px; border-radius: 10px; }
+    .compass { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--border-color); position: relative; flex-shrink: 0; }
+    .compass-labels { position: absolute; inset: 0; font-size: 0.55rem; font-weight: 700; color: var(--text-sub); }
+    .cn { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); }
+    .cs { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); }
+    .ce { position: absolute; right: 3px; top: 50%; transform: translateY(-50%); }
+    .co { position: absolute; left: 3px; top: 50%; transform: translateY(-50%); }
+    .compass-arrow {
+      width: 2px; height: 18px; background: #f44336; position: absolute;
+      top: 50%; left: 50%; transform-origin: bottom center; transition: transform 0.5s ease;
+    }
+    .compass-center { width: 6px; height: 6px; background: var(--text-main); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .wind-speed { font-size: 1.1rem; font-weight: 700; }
+    .wind-dir-text { font-size: 0.8rem; color: var(--text-sub); }
+
+    /* ── FORECAST ── */
+    .forecast-section { display: flex; flex-direction: column; gap: 10px; }
+    .forecast-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-sub); }
+    .forecast-list { display: flex; flex-direction: column; gap: 8px; }
+    .forecast-day { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; background: var(--card-bg); padding: 8px 12px; border-radius: 8px; }
+    .fc-day-name { width: 70px; font-weight: 600; }
+    .fc-emoji { font-size: 1.1rem; }
+    .fc-bar-wrap { flex: 1; height: 4px; background: var(--bar-bg); margin: 0 12px; border-radius: 2px; overflow: hidden; }
+    .fc-bar { height: 100%; background: var(--bar-fill); border-radius: 2px; }
+    .fc-temps { font-weight: 600; min-width: 60px; text-align: right; }
+    .fc-min { color: var(--text-sub); font-weight: 400; }
+
+    .update-time { font-size: 0.7rem; color: var(--text-sub); text-align: center; margin-top: 5px; }
+
+    /* ── PIN MAP ── */
+    .weather-pin { width: 14px; height: 14px; background: var(--accent); border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+
+    /* ── MOBILE TOGGLE ── */
+    .panel-toggle-btn { display: none; }
+
+    @media (max-width: 700px) {
+      .side-panel {
+        position: absolute; bottom: 0; left: 0; right: 0; width: 100%; height: 75%;
+        border-left: none; border-top: 1px solid var(--border-color);
+        transform: translateY(100%); transition: transform 0.3s ease;
+      }
+      .side-panel.mobile-open { transform: translateY(0); }
+      .panel-toggle-btn {
+        display: flex; align-items: center; justify-content: center;
+        position: absolute; bottom: 20px; right: 20px; z-index: 1000;
+        width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: white;
+        border: none; font-size: 1.4rem; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer;
+      }
+      .header-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Météo Mondiale
+  </div>
+  <div class="header-right">
+    <span class="header-hint">Cliquez n'importe où sur la carte</span>
+    <label class="theme-switch" id="themeSwitch" title="Changer le thème">
+      <span class="theme-switch-icon">☀️</span>
+      <div class="switch-track">
+        <div class="switch-knob"></div>
+      </div>
+      <span class="theme-switch-icon">🌙</span>
+    </label>
+  </div>
+</header>
+
+<div class="main-layout">
+  <div id="map"></div>
+
+  <div class="side-panel" id="sidePanel">
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loader-ring"></div>
+      <div class="loader-text">Récupération des données…</div>
+    </div>
+
+    <div class="panel-idle" id="panelIdle">
+      <div class="idle-icon">🌍</div>
+      <div class="idle-title">Météo mondiale en temps réel</div>
+      <div class="idle-sub">Cliquez sur n'importe quel point — continent, mer ou océan — pour afficher les conditions météo en temps réel.</div>
+    </div>
+
+    <div class="weather-card" id="weatherCard">
+      <div class="card-header">
+        <div class="location-row">
+          <span class="location-flag" id="locationFlag">🌍</span>
+          <div class="location-name" id="locationName">—</div>
+        </div>
+        <div class="location-coords" id="locationCoords">—</div>
+        <div class="local-time" id="localTime">—</div>
+      </div>
+
+      <div class="temp-hero">
+        <div>
+          <div class="temp-main" id="tempMain">—<span class="temp-unit">°C</span></div>
+        </div>
+        <div class="temp-right">
+          <div class="weather-emoji" id="weatherEmoji">—</div>
+          <div class="temp-feels">Ressenti <strong id="tempFeels">—</strong></div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Humidité</div>
+          <div class="stat-value" id="humidity">—</div>
+          <div class="stat-sub">%</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Max / Min</div>
+          <div class="stat-value" id="tempMaxMin">— / —</div>
+          <div class="stat-sub">°C aujourd'hui</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Pression</div>
+          <div class="stat-value" id="pressure">—</div>
+          <div class="stat-sub">hPa</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Précipitations</div>
+          <div class="stat-value" id="precip">—</div>
+          <div class="stat-sub">mm aujourd'hui</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Indice UV</div>
+          <div class="stat-value" id="uvIndex">—</div>
+          <div class="stat-sub" id="uvLabel">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Visibilité</div>
+          <div class="stat-value" id="visibility">—</div>
+          <div class="stat-sub">km</div>
+        </div>
+      </div>
+
+      <div class="sun-moon-wrap">
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon">🌅</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Lever</div>
+            <div class="sun-moon-val" id="sunrise">—</div>
+          </div>
+        </div>
+        <div class="sun-moon-divider"></div>
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon">🌇</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Coucher</div>
+            <div class="sun-moon-val" id="sunset">—</div>
+          </div>
+        </div>
+        <div class="sun-moon-divider"></div>
+        <div class="sun-moon-item">
+          <span class="sun-moon-icon" id="moonEmoji">🌕</span>
+          <div class="sun-moon-info">
+            <div class="stat-label">Lune</div>
+            <div class="sun-moon-val" id="moonPhase">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wind-compass-wrap">
+        <div class="compass">
+          <div class="compass-labels">
+            <span class="cn">N</span>
+            <span class="cs">S</span>
+            <span class="ce">E</span>
+            <span class="co">O</span>
+          </div>
+          <div class="compass-arrow" id="compassArrow"></div>
+          <div class="compass-center"></div>
+        </div>
+        <div class="wind-info">
+          <div class="stat-label">Vent</div>
+          <div class="wind-speed" id="windSpeed">— <span style="font-size:0.85rem;font-weight:400">km/h</span></div>
+          <div class="wind-dir-text" id="windDirText">—</div>
+        </div>
+      </div>
+
+      <div class="forecast-section">
+        <div class="forecast-title">Prévisions 7 jours</div>
+        <div class="forecast-list" id="forecastList">—</div>
+      </div>
+
+      <div class="update-time" id="updateTime">—</div>
+    </div>
+  </div>
+</div>
+
+<button class="panel-toggle-btn" id="panelToggleBtn" title="Voir la météo">🌤</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── THEME ──
+const html = document.documentElement;
+const themeSwitch = document.getElementById('themeSwitch');
+let isDark = false;
+
+function setTheme(dark) {
+  isDark = dark;
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  if (window.tileLayer) map.removeLayer(window.tileLayer);
+  window.tileLayer = L.tileLayer(
+    dark
+      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    { attribution: '© OpenStreetMap © CARTO', subdomains: 'abcd', maxZoom: 19 }
+  ).addTo(map);
+}
+
+themeSwitch.addEventListener('click', () => setTheme(!isDark));
+
+// ── MAP ──
+const map = L.map('map', {
+  center: [20, 10], zoom: 3,
+  zoomControl: true,
+  attributionControl: true
+});
+
+setTheme(false);
+
+// ── MOBILE PANEL ──
+const sidePanel = document.getElementById('sidePanel');
+const panelToggleBtn = document.getElementById('panelToggleBtn');
+let panelOpen = false;
+
+panelToggleBtn.addEventListener('click', () => {
+  panelOpen = !panelOpen;
+  sidePanel.classList.toggle('mobile-open', panelOpen);
+  panelToggleBtn.textContent = panelOpen ? '✕' : '🌤';
+});
+
+// ── HELPERS ──
+const windDirs = [
+  {min:0,   max:22.5,  label:'Nord'},
+  {min:22.5,max:67.5,  label:'Nord-Est'},
+  {min:67.5,max:112.5, label:'Est'},
+  {min:112.5,max:157.5,label:'Sud-Est'},
+  {min:157.5,max:202.5,label:'Sud'},
+  {min:202.5,max:247.5,label:'Sud-Ouest'},
+  {min:247.5,max:292.5,label:'Ouest'},
+  {min:292.5,max:337.5,label:'Nord-Ouest'},
+  {min:337.5,max:360,  label:'Nord'},
+];
+function getWindDir(deg) {
+  return windDirs.find(d => deg >= d.min && deg < d.max)?.label || '—';
+}
+
+function weatherEmoji(code) {
+  if (code === 0) return '☀️';
+  if (code <= 2)  return '⛅';
+  if (code === 3) return '☁️';
+  if (code <= 49) return '🌫️';
+  if (code <= 59) return '🌦️';
+  if (code <= 69) return '🌧️';
+  if (code <= 79) return '❄️';
+  if (code <= 84) return '🌨️';
+  if (code <= 94) return '⛈️';
+  return '🌩️';
+}
+
+function tempColor(t) {
+  if (t <= 0)  return '#38b6f5';
+  if (t <= 10) return isDark ? '#7ec8e8' : '#0072c6';
+  if (t <= 20) return isDark ? '#e8f4fd' : '#0a1f35';
+  if (t <= 30) return '#f5a638';
+  return '#f55c38';
+}
+
+const DAYS_FR = ['Dim.','Lun.','Mar.','Mer.','Jeu.','Ven.','Sam.'];
+
+function countryFlag(cc) {
+  if (!cc || cc.length !== 2) return '🌍';
+  return cc.toUpperCase().replace(/./g, c =>
+    String.fromCodePoint(127397 + c.charCodeAt(0))
+  );
+}
+
+// ── REVERSE GEOCODE ──
+async function getLocationInfo(lat, lon) {
+  try {
+    const r = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=fr`
+    );
+    const d = await r.json();
+    let name = 'Zone maritime';
+    let flag = '🌊';
+    if (d.address) {
+      const city = d.address.city || d.address.town || d.address.village
+                || d.address.county || d.address.state || '';
+      const country = d.address.country || '';
+      const cc = d.address.country_code?.toUpperCase() || '';
+      flag = countryFlag(cc);
+      if (city && country) name = `${city}, ${country}`;
+      else if (country)    name = country;
+    }
+    return { name, flag };
+  } catch {
+    return { name: 'Position inconnue', flag: '🌍' };
+  }
+}
+
+// ── FETCH WEATHER ──
+async function fetchWeather(lat, lon) {
+  document.getElementById('loadingOverlay').classList.add('active');
+  document.getElementById('panelIdle').classList.add('hidden');
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast`
+      + `?latitude=${lat}&longitude=${lon}`
+      + `&current=temperature_2m,apparent_temperature,relative_humidity_2m,`
+      + `wind_speed_10m,wind_direction_10m,weather_code,surface_pressure,precipitation`
+      + `&hourly=visibility`
+      + `&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum,`
+      + `sunrise,sunset,uv_index_max`
+      + `&timezone=auto&forecast_days=7`;
+
+    const [weatherRes, locInfo] = await Promise.all([
+      fetch(url),
+      getLocationInfo(lat, lon)
+    ]);
+
+    const data = await weatherRes.json();
+    if (data.error) throw new Error(`API Open-Meteo : ${data.reason || 'erreur inconnue'}`);
+
+    const c = data.current;
+    const d = data.daily;
+    const h = data.hourly;
+
+    document.getElementById('locationFlag').textContent = locInfo.flag;
+    document.getElementById('locationName').textContent = locInfo.name;
+    document.getElementById('locationCoords').textContent =
+      `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'} / ${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'O'}`;
+
+    const tz = data.timezone || 'UTC';
+    const localTime = new Date().toLocaleString('fr-FR', {
+      timeZone: tz,
+      weekday: 'long', hour: '2-digit', minute: '2-digit'
+    });
+    document.getElementById('localTime').textContent = `🕐 ${localTime} (heure locale)`;
+
+    const temp = Math.round(c.temperature_2m);
+    const tempEl = document.getElementById('tempMain');
+    tempEl.innerHTML = `${temp}<span class="temp-unit">°C</span>`;
+    tempEl.style.color = tempColor(temp);
+
+    document.getElementById('tempFeels').textContent   = `${Math.round(c.apparent_temperature)}°C`;
+    document.getElementById('weatherEmoji').textContent = weatherEmoji(c.weather_code);
+    document.getElementById('humidity').textContent   = c.relative_humidity_2m;
+    document.getElementById('pressure').textContent   = Math.round(c.surface_pressure);
+    document.getElementById('precip').textContent     = c.precipitation?.toFixed(1) ?? '0.0';
+
+    const uv = d.uv_index_max?.[0] ?? 0;
+    const uvRounded = Math.round(uv * 10) / 10;
+    document.getElementById('uvIndex').textContent = uvRounded;
+    const uvLabels = [
+      {max:3,  label:'Faible',    color:'#4caf50'},
+      {max:6,  label:'Modéré',    color:'#ffeb3b'},
+      {max:8,  label:'Élevé',     color:'#ff9800'},
+      {max:11, label:'Très élevé',color:'#f44336'},
+      {max:99, label:'Extrême',   color:'#9c27b0'},
+    ];
+    const uvInfo = uvLabels.find(l => uv < l.max) || uvLabels[uvLabels.length-1];
+    document.getElementById('uvLabel').textContent = uvInfo.label;
+    document.getElementById('uvLabel').style.color = uvInfo.color;
+
+    const currentHour = new Date().getHours();
+    const visRaw = h?.visibility?.[currentHour];
+    const visKm = visRaw != null ? (visRaw / 1000).toFixed(1) : '—';
+    document.getElementById('visibility').textContent = visKm;
+
+    function fmtTime(iso) {
+      if (!iso) return '—';
+      const parts = iso.split('T');
+      return parts[1] ? parts[1].substring(0, 5) : '—';
+    }
+    document.getElementById('sunrise').textContent = fmtTime(d.sunrise?.[0]);
+    document.getElementById('sunset').textContent  = fmtTime(d.sunset?.[0]);
+
+    function getMoonPhase(date) {
+      const known = new Date(2000, 0, 6);
+      const diff = (date - known) / (1000 * 60 * 60 * 24);
+      const cycle = 29.53058867;
+      const phase = ((diff % cycle) + cycle) % cycle;
+      const ratio = phase / cycle;
+      const moonPhases = [
+        {max:0.0625, emoji:'🌑', label:'Nouvelle lune'},
+        {max:0.1875, emoji:'🌒', label:'Croissant croissant'},
+        {max:0.3125, emoji:'🌓', label:'Premier quartier'},
+        {max:0.4375, emoji:'🌔', label:'Gibbeuse croissante'},
+        {max:0.5625, emoji:'🌕', label:'Pleine lune'},
+        {max:0.6875, emoji:'🌖', label:'Gibbeuse décroissante'},
+        {max:0.8125, emoji:'🌗', label:'Dernier quartier'},
+        {max:0.9375, emoji:'🌘', label:'Croissant décroissant'},
+        {max:1.0001, emoji:'🌑', label:'Nouvelle lune'},
+      ];
+      return moonPhases.find(m => ratio < m.max) || moonPhases[0];
+    }
+    const moon = getMoonPhase(new Date());
+    document.getElementById('moonEmoji').textContent = moon.emoji;
+    document.getElementById('moonPhase').textContent = moon.label;
+
+    const tmax = Math.round(d.temperature_2m_max[0]);
+    const tmin = Math.round(d.temperature_2m_min[0]);
+    document.getElementById('tempMaxMin').textContent = `${tmax} / ${tmin}`;
+
+    document.getElementById('windSpeed').innerHTML =
+      `${Math.round(c.wind_speed_10m)} <span style="font-size:0.85rem;font-weight:400">km/h</span>`;
+    document.getElementById('windDirText').textContent = getWindDir(c.wind_direction_10m);
+    document.getElementById('compassArrow').style.transform =
+      `translateX(-50%) translateY(-100%) rotate(${c.wind_direction_10m}deg)`;
+
+    const allMax = d.temperature_2m_max;
+    const globalMax = Math.max(...allMax);
+    const globalMin = Math.min(...d.temperature_2m_min);
+    const range = globalMax - globalMin || 1;
+
+    const forecastList = document.getElementById('forecastList');
+    forecastList.innerHTML = '';
+
+    d.temperature_2m_max.forEach((tmax, i) => {
+      const tmin = d.temperature_2m_min[i];
+      const date = new Date(d.time[i]);
+      const isToday = i === 0;
+      const dayName = isToday ? "Aujourd'hui" : DAYS_FR[date.getDay()];
+      const emoji  = weatherEmoji(d.weather_code[i]);
+      const barPct = Math.round(((tmax - globalMin) / range) * 100);
+
+      const row = document.createElement('div');
+      row.className = 'forecast-day';
+      row.innerHTML = `
+        <div class="fc-day-name">${dayName}</div>
+        <div class="fc-emoji">${emoji}</div>
+        <div class="fc-bar-wrap"><div class="fc-bar" style="width:${barPct}%"></div></div>
+        <div class="fc-temps">${Math.round(tmax)}° <span class="fc-min">/ ${Math.round(tmin)}°</span></div>
+      `;
+      forecastList.appendChild(row);
+    });
+
+    const now = new Date();
+    document.getElementById('updateTime').textContent =
+      `Mis à jour le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+
+    const weatherCard = document.getElementById('weatherCard');
+    weatherCard.classList.add('visible');
+    weatherCard.style.display = 'flex';
+
+    if (window.innerWidth <= 700) {
+      panelOpen = true;
+      sidePanel.classList.add('mobile-open');
+      panelToggleBtn.textContent = '✕';
+    }
+
+  } catch (e) {
+    console.error('Erreur météo :', e);
+    alert(`Impossible de récupérer les données météo.\n\nDétail : ${e.message}`);
+  } finally {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
+}
+
+// ── MAP CLICK ──
+let currentMarker = null;
+
+const pinIcon = L.divIcon({
+  className: '',
+  html: '<div class="weather-pin"></div>',
+  iconSize: [14,14], iconAnchor: [7,14]
+});
+
+map.on('click', function(e) {
+  const { lat, lng } = e.latlng;
+  if (currentMarker) map.removeLayer(currentMarker);
+  currentMarker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+  fetchWeather(lat.toFixed(6), lng.toFixed(6));
+});
+</script>
+</body>
+</html>
