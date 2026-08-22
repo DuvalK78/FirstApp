@@ -26,7 +26,7 @@ const teams = [
   // NFC East
   { id: "dal", name: "Dallas Cowboys", conf: "NFC", div: "East", city: "Arlington, TX", stadium: "AT&T Stadium", sb: "V (1971, 1977, 1992, 1993, 1995)", founder: "1960" },
   { id: "nyg", name: "New York Giants", conf: "NFC", div: "East", city: "East Rutherford, NJ", stadium: "MetLife Stadium", sb: "IV (1986, 1990, 2007, 2011)", founder: "1925" },
-  { id: "phi", name: "Philadelphia Eagles", conf: "NFC", div: "East", city: "Philadelphie, PA", stadium: "Lincoln Financial Field", sb: "I (2017)", founder: "1933" },
+  { id: "phi", name: "Philadelphia Eagles", conf: "NFC", div: "East", city: "Philadelphie, PA", stadium: "Lincoln Financial Field", sb: "II (2017, 2024)", founder: "1933" },
   { id: "wsh", name: "Washington Commanders", conf: "NFC", div: "East", city: "Landover, MD", stadium: "Northwest Stadium", sb: "III (1982, 1987, 1991)", founder: "1932" },
 
   // NFC North
@@ -45,7 +45,7 @@ const teams = [
   { id: "ari", name: "Arizona Cardinals", conf: "NFC", div: "West", city: "Glendale, AZ", stadium: "State Farm Stadium", sb: "0 (1 apparition)", founder: "1898" },
   { id: "lar", name: "Los Angeles Rams", conf: "NFC", div: "West", city: "Inglewood, CA", stadium: "SoFi Stadium", sb: "II (1999, 2021)", founder: "1936" },
   { id: "sf",  name: "San Francisco 49ers", conf: "NFC", div: "West", city: "Santa Clara, CA", stadium: "Levi's Stadium", sb: "V (1981, 1984, 1988, 1989, 1994)", founder: "1946" },
-  { id: "sea", name: "Seattle Seahawks", conf: "NFC", div: "West", city: "Seattle, WA", stadium: "Lumen Field", sb: "I (2013)", founder: "1976" }
+  { id: "sea", name: "Seattle Seahawks", conf: "NFC", div: "West", city: "Seattle, WA", stadium: "Lumen Field", sb: "II (2013, 2025)", founder: "1976" }
 ];
 
 function getLogoUrl(id) {
