@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HUD EDITH - Stark Industries</title>
+  <style>
+    :root {
+      --stark-blue: #6b7aff;
+      --stark-glow: #4d5dff;
+      --stark-cyan: #9eb5ff;
+      --stark-red: #ff2a55;
+      --bg-dark: #04060d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, monospace; user-select: none; }
+    
+    body {
+      background-color: var(--bg-dark);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end; /* Positionne le HUD en bas */
+      justify-content: center;
+      padding-bottom: 40px;
+      background-image: 
+        radial-gradient(circle at center 70%, rgba(107, 122, 255, 0.08) 0%, transparent 60%),
+        linear-gradient(rgba(107, 122, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(107, 122, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 15px 15px, 15px 15px;
+    }
+
+    /* CONTENEUR PRINCIPAL PLUS COMPACT ET BAS */
+    .hud-container {
+      position: relative;
+      width: 520px;
+      height: 250px;
+      filter: drop-shadow(0 0 10px rgba(107, 122, 255, 0.5));
+    }
+
+    /* FRAME AVEC COUPE TRAPÉZOÏDALE EXACTE */
+    .hud-frame {
+      position: absolute;
+      inset: 0;
+      border: 1.5px solid rgba(107, 122, 255, 0.4);
+      clip-path: polygon(
+        0% 20%, 8% 0%, 92% 0%, 100% 20%, 
+        100% 80%, 92% 100%, 8% 100%, 0% 80%
+      );
+      background: rgba(6, 10, 24, 0.7);
+      backdrop-filter: blur(5px);
+    }
+
+    .hud-frame::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border: 1px solid var(--stark-blue);
+      opacity: 0.7;
+      clip-path: polygon(
+        0% 20%, 8% 0%, 92% 0%, 100% 20%, 
+        100% 80%, 92% 100%, 8% 100%, 0% 80%
+      );
+    }
+
+    /* TITRE CENTRAL EDITH ET EN-TÊTES */
+    .edith-header {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: #ffffff;
+      text-shadow: 0 0 8px var(--stark-blue), 0 0 15px var(--stark-glow);
+      z-index: 10;
+    }
+
+    .stark-sub-top {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.45rem;
+      letter-spacing: 2px;
+      color: var(--stark-cyan);
+      opacity: 0.7;
+      z-index: 10;
+    }
+
+    .stark-tag-bottom {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.45rem;
+      letter-spacing: 2px;
+      color: var(--stark-cyan);
+      opacity: 0.6;
+      z-index: 10;
+    }
+
+    /* CANVA 3D RELIEF */
+    #terrain-canvas {
+      position: absolute;
+      width: 70%;
+      height: 75%;
+      top: 15%;
+      left: 15%;
+      z-index: 1;
+      mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 75%);
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 75%);
+    }
+
+    /* RÉTICULE ROUGE CENTRAL DENSE */
+    .target-ring {
+      position: absolute;
+      top: 52%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 70px;
+      border: 1px dashed var(--stark-red);
+      border-radius: 50%;
+      z-index: 2;
+      animation: rotateTarget 10s linear infinite;
+      box-shadow: 0 0 8px rgba(ff, 42, 85, 0.4), inset 0 0 8px rgba(ff, 42, 85, 0.4);
+    }
+
+    .target-dot {
+      position: absolute;
+      top: 52%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px; height: 4px;
+      background: var(--stark-red);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--stark-red);
+      z-index: 2;
+    }
+
+    /* MODULES DE DONNÉES EN TEMPS RÉEL (MÉTÉO & GPS) */
+    .panel-left, .panel-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 3;
+      font-size: 0.6rem;
+      color: var(--stark-cyan);
+      text-shadow: 0 0 4px rgba(107, 122, 255, 0.6);
+    }
+
+    .panel-left { left: 16px; align-items: flex-start; }
+    .panel-right { right: 16px; align-items: flex-end; text-align: right; }
+
+    .data-block {
+      background: rgba(107, 122, 255, 0.06);
+      border-left: 1.5px solid var(--stark-blue);
+      padding: 3px 6px;
+      min-width: 95px;
+    }
+
+    .panel-right .data-block {
+      border-left: none;
+      border-right: 1.5px solid var(--stark-blue);
+    }
+
+    .data-title { font-size: 0.45rem; color: rgba(158, 181, 255, 0.6); letter-spacing: 1px; }
+    .data-val { font-weight: bold; font-size: 0.65rem; color: #fff; }
+
+    /* BORDS HUD */
+    .corner { position: absolute; width: 10px; height: 10px; border: 1.5px solid var(--stark-blue); z-index: 4; }
+    .c-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+    .c-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+    .c-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+    .c-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+    @keyframes rotateTarget {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hud-container">
+    <div class="hud-frame"></div>
+
+    <div class="corner c-tl"></div>
+    <div class="corner c-tr"></div>
+    <div class="corner c-bl"></div>
+    <div class="corner c-br"></div>
+
+    <div class="edith-header">- E D I T H -</div>
+    <div class="stark-sub-top">STARK INDUSTRIES</div>
+    <div class="stark-tag-bottom">v5_7T // SYS_LOC_ACTIVE</div>
+
+    <canvas id="terrain-canvas"></canvas>
+
+    <div class="target-ring"></div>
+    <div class="target-dot"></div>
+
+    <!-- Données dynamiques Gauche (GPS + Température réelle) -->
+    <div class="panel-left">
+      <div class="data-block">
+        <div class="data-title">LATITUDE</div>
+        <div class="data-val" id="lat-val">SEARCH...</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">LONGITUDE</div>
+        <div class="data-val" id="lon-val">SEARCH...</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">TEMP_LOCAL</div>
+        <div class="data-val" id="temp-val">-- °C</div>
+      </div>
+    </div>
+
+    <!-- Données dynamiques Droite (Vent + Humidité réelle) -->
+    <div class="panel-right">
+      <div class="data-block">
+        <div class="data-title">WIND_SPEED</div>
+        <div class="data-val" id="wind-val">-- km/h</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">HUMIDITY</div>
+        <div class="data-val" id="hum-val">-- %</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">ATM_PRESSURE</div>
+        <div class="data-val" id="press-val">-- hPa</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ── SCÈNE 3D TERRAIN ──
+    const canvas = document.getElementById('terrain-canvas');
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    camera.position.set(0, -10, 8);
+    camera.lookAt(0, 1, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    const geometry = new THREE.PlaneGeometry(24, 24, 30, 30);
+    const pos = geometry.attributes.position;
+
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      const z = Math.sin(x * 0.4) * Math.cos(y * 0.4) * 1.5 + Math.sin(x * 0.9) * 0.5;
+      pos.setZ(i, z);
+    }
+    geometry.computeVertexNormals();
+
+    // Matériau Bleu Violacé Holographique
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x6b7aff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.65
+    });
+
+    const terrain = new THREE.Mesh(geometry, material);
+    scene.add(terrain);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      terrain.rotation.z += 0.0025;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // ── GÉOLOCALISATION & MÉTÉO EN DIRECT ──
+    async function getWeatherData(lat, lon) {
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m`);
+        const data = await res.json();
+        
+        document.getElementById('temp-val').textContent = `${Math.round(data.current.temperature_2m)} °C`;
+        document.getElementById('hum-val').textContent = `${data.current.relative_humidity_2m} %`;
+        document.getElementById('wind-val').textContent = `${Math.round(data.current.wind_speed_10m)} km/h`;
+        document.getElementById('press-val').textContent = `${Math.round(data.current.surface_pressure)} hPa`;
+      } catch (e) {
+        console.error("Erreur météo:", e);
+      }
+    }
+
+    // Récupération coordonnées utilisateur
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          document.getElementById('lat-val').textContent = lat.toFixed(4) + '°';
+          document.getElementById('lon-val').textContent = lon.toFixed(4) + '°';
+          
+          getWeatherData(lat, lon);
+        },
+        () => {
+          // Coordonnées par défaut (Paris) si refus/erreur
+          document.getElementById('lat-val').textContent = "48.8566° N";
+          document.getElementById('lon-val').textContent = "2.3522° E";
+          getWeatherData(48.8566, 2.3522);
+        }
+      );
+    } else {
+      document.getElementById('lat-val').textContent = "48.8566° N";
+      document.getElementById('lon-val').textContent = "2.3522° E";
+      getWeatherData(48.8566, 2.3522);
+    }
+  </script>
+</body>
+</html>
