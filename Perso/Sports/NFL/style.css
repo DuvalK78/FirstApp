@@ -57,7 +57,6 @@ main {
   margin-top: 1rem;
 }
 
-/* Style de la carte cliquable */
 .card-link {
   text-decoration: none;
   color: inherit;
@@ -108,7 +107,7 @@ main {
   color: #94a3b8;
 }
 
-/* Styles pour la page détaillée d'une équipe */
+/* Page d'équipe */
 .team-page {
   max-width: 800px;
   margin: 2rem auto;
@@ -138,6 +137,17 @@ main {
   color: var(--accent-color);
   text-decoration: none;
   font-weight: bold;
+}
+
+.team-page ul {
+  list-style: none;
+  padding: 0;
+}
+
+.team-page li {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #334155;
 }
 
 footer {
