@@ -2,7 +2,7 @@ const teams = [
   // Eastern Conference - Atlantic
   { id: "bos", name: "Boston Celtics", conf: "Eastern", div: "Atlantic", city: "Boston, MA", arena: "TD Garden", championships: "18 (dernier : 2024)", founder: "1946" },
   { id: "bkn", name: "Brooklyn Nets", conf: "Eastern", div: "Atlantic", city: "Brooklyn, NY", arena: "Barclays Center", championships: "0 (2 en ABA)", founder: "1967" },
-  { id: "ny",  name: "New York Knicks", conf: "Eastern", div: "Atlantic", city: "New York, NY", arena: "Madison Square Garden", championships: "2 (1970, 1973)", founder: "1946" },
+  { id: "ny",  name: "New York Knicks", conf: "Eastern", div: "Atlantic", city: "New York, NY", arena: "Madison Square Garden", championships: "3 (1970, 1973, 2026)", founder: "1946" },
   { id: "phi", name: "Philadelphia 76ers", conf: "Eastern", div: "Atlantic", city: "Philadelphie, PA", arena: "Wells Fargo Center", championships: "3 (1955, 1967, 1983)", founder: "1946" },
   { id: "tor", name: "Toronto Raptors", conf: "Eastern", div: "Atlantic", city: "Toronto, ON", arena: "Scotiabank Arena", championships: "1 (2019)", founder: "1995" },
 
@@ -23,7 +23,7 @@ const teams = [
   // Western Conference - Northwest
   { id: "den", name: "Denver Nuggets", conf: "Western", div: "Northwest", city: "Denver, CO", arena: "Ball Arena", championships: "1 (2023)", founder: "1967" },
   { id: "min", name: "Minnesota Timberwolves", conf: "Western", div: "Northwest", city: "Minneapolis, MN", arena: "Target Center", championships: "0", founder: "1989" },
-  { id: "okc", name: "Oklahoma City Thunder", conf: "Western", div: "Northwest", city: "Oklahoma City, OK", arena: "Paycom Center", championships: "1 (1979 - SuperSonics)", founder: "1967" },
+  { id: "okc", name: "Oklahoma City Thunder", conf: "Western", div: "Northwest", city: "Oklahoma City, OK", arena: "Paycom Center", championships: "2 (1979 - SuperSonics, 2025)", founder: "1967" },
   { id: "por", name: "Portland Trail Blazers", conf: "Western", div: "Northwest", city: "Portland, OR", arena: "Moda Center", championships: "1 (1977)", founder: "1970" },
   { id: "uta", name: "Utah Jazz", conf: "Western", div: "Northwest", city: "Salt Lake City, UT", arena: "Delta Center", championships: "0 (2 apparitions en Finale)", founder: "1974" },
 
