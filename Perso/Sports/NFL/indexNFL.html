@@ -1,1 +1,34 @@
-indexNFL.html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFL Zone - Les 32 Franchises & Organisation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🏈 NFL Zone</h1>
+    <p>Guide complet des 32 équipes de la National Football League</p>
+    <input type="text" id="search" placeholder="Rechercher une équipe ou une ville...">
+  </header>
+
+  <main>
+    <section class="conference">
+      <h2>American Football Conference (AFC)</h2>
+      <div class="grid" id="afc-container"></div>
+    </section>
+
+    <section class="conference">
+      <h2>National Football Conference (NFC)</h2>
+      <div class="grid" id="nfc-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Projet NFL - Hébergé sur GitHub & Vercel</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
