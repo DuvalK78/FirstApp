@@ -1,1 +1,344 @@
-c
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HUD EDITH - Stark Industries</title>
+  <style>
+    :root {
+      --cyan: #00f0ff;
+      --red: #ff2a6d;
+      --blue: #05d9e8;
+      --bg: #030813;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', monospace; user-select: none; }
+    
+    body {
+      background-color: var(--bg);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: 
+        radial-gradient(circle at center, rgba(5, 217, 232, 0.05) 0%, transparent 70%),
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 20px 20px, 20px 20px;
+    }
+
+    /* CONTENEUR PRINCIPAL HUD */
+    .hud-container {
+      position: relative;
+      width: 700px;
+      height: 420px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.4));
+    }
+
+    /* CADRE EXTERNE STYLE STARK */
+    .hud-frame {
+      position: absolute;
+      inset: 0;
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: 24px;
+      clip-path: polygon(
+        0% 15%, 10% 0%, 90% 0%, 100% 15%, 
+        100% 85%, 90% 100%, 10% 100%, 0% 85%
+      );
+      background: rgba(3, 12, 28, 0.65);
+      backdrop-filter: blur(4px);
+    }
+
+    .hud-frame::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border: 1px solid var(--cyan);
+      border-radius: 20px;
+      opacity: 0.6;
+      clip-path: polygon(
+        0% 15%, 10% 0%, 90% 0%, 100% 15%, 
+        100% 85%, 90% 100%, 10% 100%, 0% 85%
+      );
+    }
+
+    /* LABELS EN-TÊTE & PIED DE PAGE */
+    .stark-tag-top {
+      position: absolute;
+      top: 12px;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--cyan);
+      font-weight: bold;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .stark-tag-bottom {
+      position: absolute;
+      bottom: 12px;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--cyan);
+      opacity: 0.8;
+    }
+
+    /* RENDERER 3D (CANVAS TERRAIN) */
+    #terrain-canvas {
+      position: absolute;
+      width: 80%;
+      height: 70%;
+      z-index: 1;
+      mask-image: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+      -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
+    }
+
+    /* CIBLE DU MILIEU (ROUGE) */
+    .target-ring {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border: 1.5px dashed var(--red);
+      border-radius: 50%;
+      z-index: 2;
+      animation: rotateTarget 12s linear infinite;
+      box-shadow: 0 0 10px rgba(255, 42, 110, 0.3), inset 0 0 10px rgba(255, 42, 110, 0.3);
+    }
+
+    .target-crosshair {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      z-index: 2;
+    }
+
+    .target-crosshair::before, .target-crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--red);
+    }
+
+    .target-crosshair::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+    .target-crosshair::after { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+
+    /* PANNEAUX LATÉRAUX DE DONNÉES */
+    .panel-left, .panel-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 3;
+      font-size: 0.7rem;
+      color: var(--cyan);
+      text-shadow: 0 0 5px var(--cyan);
+    }
+
+    .panel-left { left: 25px; align-items: flex-start; }
+    .panel-right { right: 25px; align-items: flex-end; text-align: right; }
+
+    .data-block {
+      background: rgba(0, 240, 255, 0.05);
+      border-left: 2px solid var(--cyan);
+      padding: 4px 8px;
+      width: 110px;
+    }
+
+    .panel-right .data-block {
+      border-left: none;
+      border-right: 2px solid var(--cyan);
+    }
+
+    .data-title { font-size: 0.55rem; color: rgba(0, 240, 255, 0.6); }
+    .data-val { font-weight: bold; font-size: 0.8rem; }
+
+    /* LIGNES ET GRAPHIOUES DYNAMIQUES */
+    .graph-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 240, 255, 0.2);
+      margin-top: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .graph-fill {
+      height: 100%;
+      background: var(--cyan);
+      width: 60%;
+      animation: pulseBar 2s ease-in-out infinite alternate;
+    }
+
+    /* CORNERS FUTURISTES */
+    .corner {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--cyan);
+      z-index: 4;
+    }
+    .c-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+    .c-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+    .c-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+    .c-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+    /* ANIMATIONS */
+    @keyframes rotateTarget {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseBar {
+      0% { width: 30%; }
+      100% { width: 85%; }
+    }
+
+    /* SCANLINE OVERLAY */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.3)
+      );
+      background-size: 100% 4px;
+      border-radius: 24px;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hud-container">
+    <div class="hud-frame"></div>
+    <div class="scanlines"></div>
+
+    <!-- Coins de cadrage -->
+    <div class="corner c-tl"></div>
+    <div class="corner c-tr"></div>
+    <div class="corner c-bl"></div>
+    <div class="corner c-br"></div>
+
+    <!-- En-tête et Pied -->
+    <div class="stark-tag-top">Stark Industries // E.D.I.T.H.</div>
+    <div class="stark-tag-bottom">v5_7T // SYS_LOC_ON</div>
+
+    <!-- Canvas Terrain 3D -->
+    <canvas id="terrain-canvas"></canvas>
+
+    <!-- Cible Rouge Central -->
+    <div class="target-ring"></div>
+    <div class="target-crosshair"></div>
+
+    <!-- Panneau Gauche -->
+    <div class="panel-left">
+      <div class="data-block">
+        <div class="data-title">TARGET_ALT</div>
+        <div class="data-val" id="alt-val">B7 A</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">GRID_REF</div>
+        <div class="data-val">E.472 D.973</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">SIGNAL</div>
+        <div class="data-val">98.2%</div>
+        <div class="graph-bar"><div class="graph-fill"></div></div>
+      </div>
+    </div>
+
+    <!-- Panneau Droit -->
+    <div class="panel-right">
+      <div class="data-block">
+        <div class="data-title">SYS_VER</div>
+        <div class="data-val">v5_VB</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">SECTOR</div>
+        <div class="data-val">C76</div>
+      </div>
+      <div class="data-block">
+        <div class="data-title">LATENCY</div>
+        <div class="data-val" id="lat-val">12 ms</div>
+        <div class="graph-bar"><div class="graph-fill" style="animation-duration: 1.2s;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Intégration de Three.js pour le terrain 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ── SCÈNE THREE.JS POUR LE TERRAIN TOPOGRAPHIQUE 3D ──
+    const canvas = document.getElementById('terrain-canvas');
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    camera.position.set(0, -12, 10);
+    camera.lookAt(0, 2, 0);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    // CRÉATION DU MAILLAGE DU TERRAIN (PLANE GEOMETRY)
+    const width = 30;
+    const height = 30;
+    const segments = 35;
+    const geometry = new THREE.PlaneGeometry(width, height, segments, segments);
+
+    // Déformation des sommets pour simuler une montagne / un relief
+    const pos = geometry.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      // Équation de vagues/relief
+      const z = Math.sin(x * 0.3) * Math.cos(y * 0.3) * 2 + Math.sin(x * 0.8) * 0.8;
+      pos.setZ(i, z);
+    }
+    geometry.computeVertexNormals();
+
+    // MATÉRIAU FIL DE FER (WIREFRAME NEON)
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.55
+    });
+
+    const terrain = new THREE.Mesh(geometry, material);
+    scene.add(terrain);
+
+    // BOUCLE D'ANIMATION (ROTATION DU TERRAIN)
+    function animate() {
+      requestAnimationFrame(animate);
+      terrain.rotation.z += 0.003; // Rotation lente du relief
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Ajustement sur redimensionnement
+    window.addEventListener('resize', () => {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    });
+
+    // ── VALEURS DYNAMIQUES DU HUD ──
+    setInterval(() => {
+      document.getElementById('lat-val').textContent = (10 + Math.floor(Math.random() * 8)) + ' ms';
+    }, 1500);
+  </script>
+</body>
+</html>
