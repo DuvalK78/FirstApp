@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toyota — Modèles Sportifs & Fiches Techniques</title>
+  <style>
+    /* Thème Toyota Gazoo Racing Red & Performance Dark */
+    :root {
+      --bg-color: #090d16;
+      --card-bg: #111827;
+      --card-hover: #1f293d;
+      --text-color: #f8fafc;
+      --tgr-red: #dc2626;
+      --tgr-red-hover: #ef4444;
+      --tgr-black: #000000;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+    }
+
+    /* En-tête Toyota */
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid var(--tgr-red);
+      padding-bottom: 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--tgr-red-hover);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #ffffff, #ef4444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gr-badge {
+      background-color: var(--tgr-red);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Grille des cartes */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Carte Véhicule */
+    .car-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid rgba(255, 255, 255, 0.2);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(220, 38, 38, 0.25);
+      background-color: var(--card-hover);
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* Traitement visuel spécial pour déclinaisons Gazoo Racing & Supra */
+    .car-card.is-gr {
+      border-top: 3px solid var(--tgr-red);
+    }
+
+    .car-card.is-gr:hover {
+      box-shadow: 0 12px 24px -6px rgba(239, 68, 68, 0.4);
+    }
+
+    .car-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .car-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .car-years {
+      font-size: 0.85rem;
+      color: var(--tgr-red-hover);
+      font-weight: 700;
+      background: rgba(220, 38, 38, 0.15);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+    }
+
+    /* Spécifications */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+      font-size: 0.875rem;
+    }
+
+    .spec-item {
+      background-color: rgba(9, 13, 22, 0.6);
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .highlight-red {
+      color: #ef4444;
+      font-weight: 700;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="../index.html" class="back-link">← Retour à l'index</a>
+      <div class="brand-title-wrap">
+        <h1>Toyota</h1>
+        <span class="gr-badge">GR / GAZOO RACING</span>
+      </div>
+    </header>
+
+    <main class="cars-grid">
+
+      <!-- Corolla Levin (AE86) -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Corolla Levin (AE86)</h2>
+          <span class="car-years">1987</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. 1.6L (4A-GE)</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">160 ch @ 7400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">162 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1090 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">6.8 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">205 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">6.81 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4275 × 1695 × 1305 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Sprinter Trueno (AE86) -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Sprinter Trueno (AE86)</h2>
+          <span class="car-years">1987</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. 1.6L (4A-GE)</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">130 ch @ 6600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">149 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">940 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">7.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">200 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">7.23 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4205 × 1625 × 1335 mm</span></div>
+        </div>
+      </article>
+
+      <!-- MR2 2.0 GTI -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">MR2 2.0 GTI</h2>
+          <span class="car-years">1995 - 1999</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Central ar.</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">175 ch @ 7200 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">187 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1280 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">7.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">223 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">7.31 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4180 × 1700 × 1240 mm</span></div>
+        </div>
+      </article>
+
+      <!-- MR2 2.0 Turbo -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">MR2 2.0 Turbo</h2>
+          <span class="car-years">1993 - 1999</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Turbo Central</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">245 ch @ 6000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">304 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1330 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.4 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">240 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.43 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4180 × 1700 × 1240 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Supra Mk4 Atmosphérique -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Supra Mk4 (Atmosphérique)</h2>
+          <span class="car-years">1993 - 2002</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl. en ligne (2JZ)</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">220 ch @ 5600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">280 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1615 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">7.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">230 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">7.34 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5 / BVA 4</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4520 × 1810 × 1275 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Supra Mk4 Biturbo -->
+      <article class="car-card is-gr">
+        <div class="car-header">
+          <h2 class="car-title">Supra Mk4 (Biturbo)</h2>
+          <span class="car-years">1993 - 2002</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl. Biturbo (2JZ-GTE)</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">330 ch @ 5600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">440 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1615 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">4.9 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.89 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6 (Getrag)</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4520 × 1810 × 1275 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT 86 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT 86</h2>
+          <span class="car-years">2016 - 2021</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer 2.0L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">208 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">212 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1275 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">6.1 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">226 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">6.13 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4240 × 1770 × 1280 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GR 86 -->
+      <article class="car-card is-gr">
+        <div class="car-header">
+          <h2 class="car-title">GR 86</h2>
+          <span class="car-years">2021+</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer 2.4L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">235 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">250 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1351 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.7 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">226 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.75 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4265 × 1775 × 1310 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GR Supra 2.0 Turbo -->
+      <article class="car-card is-gr">
+        <div class="car-header">
+          <h2 class="car-title">GR Supra 2.0 Turbo</h2>
+          <span class="car-years">2019 - 2024</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Turbo 2.0L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">258 ch</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">400 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1443 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.59 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6 / BVA 8</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4379 × 1854 × 1292 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GR Supra 3.0 Turbo -->
+      <article class="car-card is-gr">
+        <div class="car-header">
+          <h2 class="car-title">GR Supra 3.0 Turbo</h2>
+          <span class="car-years">2019 - 2024</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl. en ligne Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">387 ch</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">500 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1542 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">4.1 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">3.98 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6 / BVA 8</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4379 × 1854 × 1292 mm</span></div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+</body>
+</html>
