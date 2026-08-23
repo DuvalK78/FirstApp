@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nissan — Modèles & Performance</title>
+  <style>
+    /* Thème Nissan / NISMO */
+    :root {
+      --bg-color: #0b0d12;
+      --card-bg: #161922;
+      --card-hover: #212634;
+      --text-color: #f1f5f9;
+      --accent-red: #c91414;
+      --accent-red-hover: #ff2a2a;
+      --nismo-gold: #f59e0b;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.07);
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+    }
+
+    /* Header Nissan */
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid var(--accent-red);
+      padding-bottom: 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-red-hover);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nismo-badge {
+      background-color: var(--accent-red);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Grille des cartes */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Carte Véhicule */
+    .car-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--accent-red);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(201, 20, 20, 0.25);
+      background-color: var(--card-hover);
+      border-color: rgba(201, 20, 20, 0.4);
+    }
+
+    /* Style spécial pour les versions NISMO */
+    .car-card.is-nismo {
+      border-top: 3px solid var(--nismo-gold);
+    }
+
+    .car-card.is-nismo:hover {
+      box-shadow: 0 12px 24px -6px rgba(245, 158, 11, 0.25);
+    }
+
+    .car-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .car-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .car-years {
+      font-size: 0.85rem;
+      color: var(--accent-red-hover);
+      font-weight: 700;
+      background: rgba(201, 20, 20, 0.15);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+    }
+
+    /* Spécifications */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+      font-size: 0.875rem;
+    }
+
+    .spec-item {
+      background-color: rgba(11, 13, 18, 0.6);
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .highlight-red {
+      color: var(--accent-red-hover);
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="../index.html" class="back-link">← Retour à l'index</a>
+      <div class="brand-title-wrap">
+        <h1>Nissan</h1>
+        <span class="nismo-badge">Nismo / Heritage</span>
+      </div>
+    </header>
+
+    <main class="cars-grid">
+
+      <!-- 180SX -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">180SX</h2>
+          <span class="car-years">1989 - 1998</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">205 ch @ 6400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">274 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1270 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">6.5 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">235 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">6.20 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4520 × 1620 × 1290 mm</span></div>
+        </div>
+      </article>
+
+      <!-- 240SX -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">240SX (S14)</h2>
+          <span class="car-years">1998</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">157 ch @ 5600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">217 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1298 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">8.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">205 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">8.27 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4500 × 1730 × 1295 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Silvia S13 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Silvia 200SX (S13)</h2>
+          <span class="car-years">1990 - 1994</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">171 ch @ 7100 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">229 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1265 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">7.5 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">226 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">7.40 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4540 × 1690 × 1290 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Silvia S14 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Silvia 200SX (S14)</h2>
+          <span class="car-years">1999</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">197 ch @ 6400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">265 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1260 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">6.4 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">236 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">6.40 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4500 × 1730 × 1295 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Silvia S15 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Silvia S15 Spec-R</h2>
+          <span class="car-years">1999 - 2002</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">250 ch @ 6400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">274 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1240 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.6 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">232 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.96 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4445 × 1695 × 1285 mm</span></div>
+        </div>
+      </article>
+
+      <!-- 350z I -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">350Z (280 ch)</h2>
+          <span class="car-years">2002 - 2006</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.5L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">280 ch @ 6600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">363 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1549 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.9 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.53 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4315 × 1815 × 1320 mm</span></div>
+        </div>
+      </article>
+
+      <!-- 350z II -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">350Z HR (313 ch)</h2>
+          <span class="car-years">2007 - 2009</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.5L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">313 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">358 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1615 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.7 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.16 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4315 × 1815 × 1315 mm</span></div>
+        </div>
+      </article>
+
+      <!-- 370z -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">370Z</h2>
+          <span class="car-years">2009 - 2020</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.7L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">331 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">367 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1467 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.43 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4245 × 1845 × 1316 mm</span></div>
+        </div>
+      </article>
+
+      <!-- 370z Nismo -->
+      <article class="car-card is-nismo">
+        <div class="car-header">
+          <h2 class="car-title">370Z Nismo</h2>
+          <span class="car-years">2013 - 2020</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.7L à 60°</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">350 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">375 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1537 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.39 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4331 × 1869 × 1316 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R32 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT-R (R32)</h2>
+          <span class="car-years">1989 - 1995</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">278 ch @ 8200 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">355 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1430 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.1 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.14 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4545 × 1755 × 1340 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R33 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT-R (R33)</h2>
+          <span class="car-years">1995 - 1998</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">305 ch @ 8000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">375 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1530 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">5.0 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.01 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4675 × 1780 × 1360 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R34 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT-R (R34)</h2>
+          <span class="car-years">1999 - 2002</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">320 ch @ 8000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">392 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1540 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">4.8 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.81 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4600 × 1785 × 1360 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R34 V-Spec II -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT-R R34 V-Spec II</h2>
+          <span class="car-years">2000 - 2002</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">6 cyl Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">341 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">469 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1560 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">4.5 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">265 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.57 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4600 × 1785 × 1360 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R35 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">GT-R (R35)</h2>
+          <span class="car-years">2008 - 2024</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.8L Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">570 ch @ 7100 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">637 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1752 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">2.8 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">315 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">3.07 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">DCT 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4710 × 1895 × 1370 mm</span></div>
+        </div>
+      </article>
+
+      <!-- GT-R R35 Nismo -->
+      <article class="car-card is-nismo">
+        <div class="car-header">
+          <h2 class="car-title">GT-R (R35) Nismo</h2>
+          <span class="car-years">2014 - 2016</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">V6 3.8L Biturbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">608 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">653 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1762 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-red">2.5 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">315 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">2.90 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">DCT 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4681 × 1895 × 1369 mm</span></div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+</body>
+</html>
