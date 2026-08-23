@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mitsubishi — Modèles & Fiches Techniques</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #334155;
+      --text-color: #f8fafc;
+      --accent-color: #38bdf8;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* En-tête */
+    header {
+      margin-bottom: 2.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Grid des voitures */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Style de la carte */
+    .car-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.4);
+      border-color: var(--accent-color);
+    }
+
+    .car-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .car-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .car-years {
+      font-size: 0.875rem;
+      color: var(--accent-color);
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+    }
+
+    /* Grille de métriques */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .spec-item {
+      background-color: rgba(15, 23, 42, 0.5);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="../index.html" class="back-link">← Retour à l'index</a>
+      <h1>Mitsubishi</h1>
+    </header>
+
+    <main class="cars-grid">
+
+      <!-- Eclipse GS -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Eclipse GS</h2>
+          <span class="car-years">1995 - 1999</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">145 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">177 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1370 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">9.4 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">204 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">9.45 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4385 × 1745 × 1295 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo I -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo I</h2>
+          <span class="car-years">1992 - 1994</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">244 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">309 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1238 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.1 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">228 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.07 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4310 × 1695 × 1395 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo II -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo II</h2>
+          <span class="car-years">1994 - 1995</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">252 ch @ 6500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">309 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1250 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.0 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">232 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.96 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4310 × 1695 × 1420 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo III -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo III</h2>
+          <span class="car-years">1995 - 1996</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">270 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">309 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1260 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">4.7 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">240 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.67 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4310 × 1695 × 1420 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo IV -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo IV</h2>
+          <span class="car-years">1996 - 1998</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">276 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">353 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1345 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">4.9 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">230 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.87 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4330 × 1690 × 1415 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo V -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo V</h2>
+          <span class="car-years">1998 - 1999</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">276 ch @ 7500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">373 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1360 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">4.9 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">246 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.93 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4350 × 1770 × 1415 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo VI -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo VI</h2>
+          <span class="car-years">1999 - 2001</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">276 ch @ 7800 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">373 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1360 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">4.9 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">240 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.93 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4350 × 1770 × 1415 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo VII -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo VII</h2>
+          <span class="car-years">2001 - 2003</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">276 ch @ 7600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">383 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1460 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">242 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.29 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4455 × 1770 × 1450 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo VIII -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo VIII</h2>
+          <span class="car-years">2003 - 2005</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">276 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">355 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1410 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.1 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">245 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.11 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4490 × 1770 × 1450 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo IX -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo IX</h2>
+          <span class="car-years">2005 - 2007</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">287 ch @ 7600 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">392 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1490 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">247 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.19 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4490 × 1770 × 1450 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Lancer Evo X -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Lancer Evo X</h2>
+          <span class="car-years">2007 - 2016</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl en ligne</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">291 ch @ 7700 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">407 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1600 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">5.5 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">252 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.50 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4495 × 1810 × 1480 mm</span></div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+</body>
+</html>
