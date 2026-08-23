@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subaru — Modèles & Fiches Techniques</title>
+  <style>
+    /* Thème Subaru / World Rally Blue & STI Gold */
+    :root {
+      --bg-color: #090d16;
+      --card-bg: #111827;
+      --card-hover: #1f293d;
+      --text-color: #f8fafc;
+      --wrb-blue: #2563eb;
+      --wrb-blue-hover: #3b82f6;
+      --sti-pink: #ec4899;
+      --rally-gold: #f59e0b;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: 0 auto;
+    }
+
+    /* En-tête Subaru */
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid var(--wrb-blue);
+      padding-bottom: 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--wrb-blue-hover);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #3b82f6, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sti-badge {
+      background-color: var(--sti-pink);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Grille des cartes */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Carte Véhicule */
+    .car-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--wrb-blue);
+      padding: 1.5rem;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -6px rgba(37, 99, 235, 0.3);
+      background-color: var(--card-hover);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Traitement visuel spécial pour déclinaisons STI */
+    .car-card.is-sti {
+      border-top: 3px solid var(--rally-gold);
+    }
+
+    .car-card.is-sti:hover {
+      box-shadow: 0 12px 24px -6px rgba(245, 158, 11, 0.3);
+    }
+
+    .car-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .car-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .car-years {
+      font-size: 0.85rem;
+      color: var(--wrb-blue-hover);
+      font-weight: 700;
+      background: rgba(37, 99, 235, 0.15);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+    }
+
+    .car-card.is-sti .car-years {
+      color: var(--rally-gold);
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    /* Spécifications */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+      font-size: 0.875rem;
+    }
+
+    .spec-item {
+      background-color: rgba(9, 13, 22, 0.6);
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .spec-label {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .spec-value {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .highlight-gold {
+      color: var(--rally-gold);
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="../index.html" class="back-link">← Retour à l'index</a>
+      <div class="brand-title-wrap">
+        <h1>Subaru</h1>
+        <span class="sti-badge">STI / Symmetrical AWD</span>
+      </div>
+    </header>
+
+    <main class="cars-grid">
+
+      <!-- Impreza I -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Impreza I</h2>
+          <span class="car-years">1992 - 2000</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">125 ch</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">184 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1125 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">9.4 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">181 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">9.00 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4300 × 1690 × 1415 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Impreza II 2.5 -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Impreza II 2.5</h2>
+          <span class="car-years">2005 - 2007</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer 2.5L</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">167 ch @ 6500 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">225 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1345 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">8.0 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">200 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">8.05 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4405 × 1730 × 1440 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Impreza WRX STI Spec-C -->
+      <article class="car-card is-sti">
+        <div class="car-header">
+          <h2 class="car-title">Impreza WRX STI Spec-C</h2>
+          <span class="car-years">2003 - 2005</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">340 ch @ 7650 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">380 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1455 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-gold">4.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.28 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4415 × 1740 × 1425 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Impreza II WRX STI -->
+      <article class="car-card is-sti">
+        <div class="car-header">
+          <h2 class="car-title">Impreza II WRX STI</h2>
+          <span class="car-years">2005 - 2007</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">280 ch @ 7000 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">392 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1505 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-gold">5.3 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">255 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.38 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4465 × 1740 × 1440 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Impreza III -->
+      <article class="car-card">
+        <div class="car-header">
+          <h2 class="car-title">Impreza III</h2>
+          <span class="car-years">2007 - 2012</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">110 ch @ 6400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">196 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1345 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value">12.2 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">193 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">12.23 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 5</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4415 × 1740 × 1475 mm</span></div>
+        </div>
+      </article>
+
+      <!-- Impreza III WRX STI -->
+      <article class="car-card is-sti">
+        <div class="car-header">
+          <h2 class="car-title">Impreza III WRX STI</h2>
+          <span class="car-years">2007 - 2014</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">308 ch @ 6400 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">422 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1480 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-gold">4.8 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">250 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">4.81 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4415 × 1795 × 1475 mm</span></div>
+        </div>
+      </article>
+
+      <!-- WRX 2.5 Flat 4 Turbo STI -->
+      <article class="car-card is-sti">
+        <div class="car-header">
+          <h2 class="car-title">WRX STI 2.5 Turbo</h2>
+          <span class="car-years">2018</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">301 ch</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">407 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1522 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-gold">5.0 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">255 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.05 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">BVM 6</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4600 × 1800 × 1480 mm</span></div>
+        </div>
+      </article>
+
+      <!-- WRX S4 STI Sport -->
+      <article class="car-card is-sti">
+        <div class="car-header">
+          <h2 class="car-title">WRX S4 STI Sport</h2>
+          <span class="car-years">2025</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item"><span class="spec-label">Moteur</span><span class="spec-value">4 cyl. Boxer Turbo</span></div>
+          <div class="spec-item"><span class="spec-label">Puissance</span><span class="spec-value">275 ch @ 4800 t/m</span></div>
+          <div class="spec-item"><span class="spec-label">Couple</span><span class="spec-value">375 Nm</span></div>
+          <div class="spec-item"><span class="spec-label">Poids</span><span class="spec-value">1560 kg</span></div>
+          <div class="spec-item"><span class="spec-label">0-100 km/h</span><span class="spec-value highlight-gold">5.6 s</span></div>
+          <div class="spec-item"><span class="spec-label">Vmax</span><span class="spec-value">235 km/h</span></div>
+          <div class="spec-item"><span class="spec-label">Poids / Ch</span><span class="spec-value">5.67 kg/ch</span></div>
+          <div class="spec-item"><span class="spec-label">Boîte</span><span class="spec-value">SPT (CVT) / BVM</span></div>
+          <div class="spec-item full-width"><span class="spec-label">Dimensions (L × l × h)</span><span class="spec-value">4670 × 1825 × 1465 mm</span></div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+</body>
+</html>
