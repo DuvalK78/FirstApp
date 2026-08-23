@@ -1,54 +1,201 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Index — Voitures</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index — Voitures</title>
+  <style>
+    /* 1. Variables globales pour le thème */
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-hover: #334155;
+      --text-color: #f8fafc;
+      --accent-color: #38bdf8;
+      --text-muted: #94a3b8;
+      --radius: 12px;
+      --transition: all 0.25s ease-in-out;
+    }
+
+    /* 2. Reset & Style de base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* 3. En-tête & Barre de recherche */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .search-bar {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.75rem 1.25rem;
+      border-radius: 9999px;
+      border: 1px solid var(--card-hover);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-bar:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    /* 4. Sections & Grilles */
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      border-bottom: 2px solid var(--card-hover);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* 5. Style des Cartes */
+    .card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .card:hover, .card:focus-visible {
+      background-color: var(--card-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      border-color: var(--accent-color);
+      outline: none;
+    }
+
+    .card.hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-<div class="section">
-<h2>Asie</h2>
-<div class="grid">
-<a class="card" href="Honda/index.html"><div class="card-title">Honda</div></a>
-<a class="card" href="Lexus/index.html"><div class="card-title">Lexus</div></a>
-<a class="card" href="Mazda/index.html"><div class="card-title">Mazda</div></a>
-<a class="card" href="Mitsubishi/index.html"><div class="card-title">Mitsubishi</div></a>
-<a class="card" href="Nissan/index.html"><div class="card-title">Nissan</div></a>
-<a class="card" href="Subaru/index.html"><div class="card-title">Subaru</div></a>
-<a class="card" href="Toyota/index.html"><div class="card-title">Toyota</div></a>
-<a class="card" href="WMotors/index.html"><div class="card-title">W Motors</div></a>
-</div>
-</div>
+  <div class="container">
+    <header>
+      <h1>Index des Marques</h1>
+      <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher une marque..." aria-label="Rechercher une marque">
+    </header>
 
-<div class="section">
-<h2>Europe</h2>
-<div class="grid">
-<a class="card" href="AstonMartin/index.html"><div class="card-title">Aston Martin</div></a>
-<a class="card" href="Audi/index.html"><div class="card-title">Audi</div></a>
-<a class="card" href="BMW/index.html"><div class="card-title">BMW</div></a>
-<a class="card" href="Bugatti/index.html"><div class="card-title">Bugatti</div></a>
-<a class="card" href="Ferrari/index.html"><div class="card-title">Ferrari</div></a>
-<a class="card" href="Jaguar/index.html"><div class="card-title">Jaguar</div></a>
-<a class="card" href="Koenigsegg/index.html"><div class="card-title">Koenigsegg</div></a>
-<a class="card" href="Lotus/index.html"><div class="card-title">Lotus</div></a>
-<a class="card" href="Lamborghini/index.html"><div class="card-title">Lamborghini</div></a>
-<a class="card" href="Maserati/index.html"><div class="card-title">Maserati</div></a>
-<a class="card" href="McLaren/index.html"><div class="card-title">McLaren</div></a>
-<a class="card" href="Mercedes/index.html"><div class="card-title">Mercedes</div></a>
-<a class="card" href="Pagani/index.html"><div class="card-title">Pagani</div></a>
-<a class="card" href="Porsche/index.html"><div class="card-title">Porsche</div></a>
-</div>
-</div>
+    <main>
+      <!-- ASIE -->
+      <section class="section">
+        <h2 class="section-title">Asie</h2>
+        <div class="grid">
+          <a class="card" href="Honda/index.html">Honda</a>
+          <a class="card" href="Lexus/index.html">Lexus</a>
+          <a class="card" href="Mazda/index.html">Mazda</a>
+          <a class="card" href="Mitsubishi/index.html">Mitsubishi</a>
+          <a class="card" href="Nissan/index.html">Nissan</a>
+          <a class="card" href="Subaru/index.html">Subaru</a>
+          <a class="card" href="Toyota/index.html">Toyota</a>
+          <a class="card" href="WMotors/index.html">W Motors</a>
+        </div>
+      </section>
 
-<div class="section">
-<h2>Amérique</h2>
-<div class="grid">
-<a class="card" href="Chevrolet/index.html"><div class="card-title">Chevrolet</div></a>
-<a class="card" href="Dodge/index.html"><div class="card-title">Dodge</div></a>
-<a class="card" href="Ford/index.html"><div class="card-title">Ford</div></a>
-</div>
-</div>
+      <!-- EUROPE -->
+      <section class="section">
+        <h2 class="section-title">Europe</h2>
+        <div class="grid">
+          <a class="card" href="AstonMartin/index.html">Aston Martin</a>
+          <a class="card" href="Audi/index.html">Audi</a>
+          <a class="card" href="BMW/index.html">BMW</a>
+          <a class="card" href="Bugatti/index.html">Bugatti</a>
+          <a class="card" href="Ferrari/index.html">Ferrari</a>
+          <a class="card" href="Jaguar/index.html">Jaguar</a>
+          <a class="card" href="Koenigsegg/index.html">Koenigsegg</a>
+          <a class="card" href="Lamborghini/index.html">Lamborghini</a>
+          <a class="card" href="Lotus/index.html">Lotus</a>
+          <a class="card" href="Maserati/index.html">Maserati</a>
+          <a class="card" href="McLaren/index.html">McLaren</a>
+          <a class="card" href="Mercedes/index.html">Mercedes</a>
+          <a class="card" href="Pagani/index.html">Pagani</a>
+          <a class="card" href="Porsche/index.html">Porsche</a>
+        </div>
+      </section>
 
+      <!-- AMÉRIQUE -->
+      <section class="section">
+        <h2 class="section-title">Amérique</h2>
+        <div class="grid">
+          <a class="card" href="Chevrolet/index.html">Chevrolet</a>
+          <a class="card" href="Dodge/index.html">Dodge</a>
+          <a class="card" href="Ford/index.html">Ford</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- JavaScript optionnel pour filtrer en direct -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.card');
+    const sections = document.querySelectorAll('.section');
+
+    searchInput.addEventListener('input', (e) => {
+      const value = e.target.value.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const isMatch = card.textContent.toLowerCase().includes(value);
+        card.classList.toggle('hidden', !isMatch);
+      });
+
+      // Cacher les sections vides lors d'une recherche
+      sections.forEach(section => {
+        const visibleCards = section.querySelectorAll('.card:not(.hidden)');
+        section.style.display = visibleCards.length === 0 ? 'none' : 'block';
+      });
+    });
+  </script>
 </body>
 </html>
