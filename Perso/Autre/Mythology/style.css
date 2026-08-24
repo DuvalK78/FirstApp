@@ -78,6 +78,61 @@ h1 {
   font-size: 0.9rem;
   color: #a09a8a;
 }
+/* Section Mythe du Mois */
+.featured-myth {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.featured-box {
+  background: #1a1712;
+  border: 1px solid #c5a059;
+  border-left: 4px solid #c5a059;
+  padding: 25px;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.featured-box h3 {
+  color: #c5a059;
+  margin-top: 0;
+}
+
+.btn-read {
+  display: inline-block;
+  margin-top: 15px;
+  color: #c5a059;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* Section Voies du Codex */
+.quick-access {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.features-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.feature-item {
+  background: #181818;
+  border: 1px dashed #444;
+  padding: 20px;
+  width: 250px;
+  border-radius: 6px;
+}
+
+.feature-item h3 {
+  margin-top: 0;
+  color: #e0d8c3;
+}
 
 footer {
   margin-top: 60px;
