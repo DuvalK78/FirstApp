@@ -1,119 +1,155 @@
-/* Style général - Ambiance sombre / Grimoire */
+/* Importation de polices antiques / grimoire */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
 body {
-  background-color: #121212;
-  color: #e0d8c3;
-  font-family: 'Georgia', serif;
+  background-color: #0f0f11;
+  color: #d4ceb8;
+  font-family: 'Lora', serif;
   margin: 0;
   padding: 0;
   text-align: center;
+  line-height: 1.6;
 }
 
+/* Navigation principale */
+nav {
+  background-color: #09090a;
+  border-bottom: 1px solid #8c6f3d;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+nav a {
+  color: #c5a059;
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #fff;
+}
+
+/* En-tête */
 header {
-  padding: 50px 20px 20px;
-  border-bottom: 1px solid #c5a059;
+  padding: 60px 20px 30px;
+  background: linear-gradient(180deg, #181512 0%, #0f0f11 100%);
+  border-bottom: 1px solid #8c6f3d;
+}
+
+h1, h2, h3 {
+  font-family: 'Cinzel', serif;
+  color: #c5a059;
+  letter-spacing: 2px;
 }
 
 h1 {
-  color: #c5a059;
-  font-size: 2.5rem;
-  letter-spacing: 3px;
+  font-size: 3rem;
   margin: 0;
+  text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
 }
 
 .subtitle {
   font-style: italic;
-  color: #a09a8a;
+  color: #9a9280;
   margin-top: 10px;
-}
-
-.intro {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 0 20px;
   font-size: 1.1rem;
-  line-height: 1.6;
 }
 
-/* Grille des cartes */
-.pantheons-grid {
-  max-width: 1000px;
+/* Sections */
+.intro {
+  max-width: 750px;
   margin: 40px auto;
+  padding: 0 20px;
+  font-size: 1.15rem;
+  color: #b8b09d;
+}
+
+.pantheons-grid, .featured-myth, .quick-access {
+  max-width: 1000px;
+  margin: 60px auto;
   padding: 0 20px;
 }
 
-.pantheons-grid h2 {
-  color: #c5a059;
-  margin-bottom: 30px;
-}
-
+/* Cartes des Panthéons */
 .cards-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
   justify-content: center;
 }
 
 .card {
-  background: #1e1e1e;
-  border: 1px solid #c5a059;
-  border-radius: 8px;
+  background: #161518;
+  border: 1px solid #8c6f3d;
+  border-radius: 4px;
   padding: 25px;
-  width: 220px;
+  width: 210px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  background-color: #2a251a;
+  transform: translateY(-6px);
+  border-color: #d4af37;
+  box-shadow: 0 6px 20px rgba(197, 160, 89, 0.25);
+  background-color: #1c1a1f;
 }
 
 .card h3 {
-  color: #c5a059;
   margin-top: 0;
+  font-size: 1.1rem;
 }
 
 .card p {
-  font-size: 0.9rem;
-  color: #a09a8a;
-}
-/* Section Mythe du Mois */
-.featured-myth {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 0 20px;
+  font-size: 0.85rem;
+  color: #9a9280;
 }
 
+/* Mythe du mois */
 .featured-box {
-  background: #1a1712;
-  border: 1px solid #c5a059;
-  border-left: 4px solid #c5a059;
-  padding: 25px;
+  background: #141316;
+  border: 1px solid #8c6f3d;
+  border-left: 5px solid #c5a059;
+  padding: 30px;
   border-radius: 4px;
   text-align: left;
-}
-
-.featured-box h3 {
-  color: #c5a059;
-  margin-top: 0;
 }
 
 .btn-read {
   display: inline-block;
   margin-top: 15px;
   color: #c5a059;
-  text-decoration: underline;
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
   font-weight: bold;
+  border: 1px solid #8c6f3d;
+  padding: 8px 16px;
+  border-radius: 3px;
+  transition: all 0.2s;
 }
 
-/* Section Voies du Codex */
-.quick-access {
-  max-width: 1000px;
-  margin: 50px auto;
-  padding: 0 20px;
+.btn-read:hover {
+  background: #c5a059;
+  color: #0f0f11;
 }
 
+/* Voies du Codex */
 .features-container {
   display: flex;
   gap: 20px;
@@ -122,22 +158,18 @@ h1 {
 }
 
 .feature-item {
-  background: #181818;
-  border: 1px dashed #444;
+  background: #141316;
+  border: 1px dashed #554830;
   padding: 20px;
-  width: 250px;
-  border-radius: 6px;
-}
-
-.feature-item h3 {
-  margin-top: 0;
-  color: #e0d8c3;
+  width: 260px;
+  border-radius: 4px;
 }
 
 footer {
-  margin-top: 60px;
-  padding: 20px;
-  border-top: 1px solid #333;
-  font-size: 0.8rem;
-  color: #666;
+  margin-top: 80px;
+  padding: 25px;
+  border-top: 1px solid #2a261f;
+  font-size: 0.85rem;
+  color: #555;
+  font-family: 'Cinzel', serif;
 }
