@@ -1,0 +1,384 @@
+/* ==========================================================================
+   LE CODEX DES MYTHES — feuille de style
+   Direction artistique : pierre runique, fer forgé, parchemin brûlé, or vieilli.
+   Polices : Cinzel (gravure monumentale) / EB Garamond (manuscrit) /
+             Noto Sans Runic (glyphes de décor, futhark ancien).
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+Runic&display=swap');
+
+:root{
+  --void:        #0b0a08;
+  --panel:       #17130f;
+  --panel-hi:    #221b13;
+  --iron:        #55504a;
+  --iron-light:  #8a8378;
+  --parchment:   #e9dcbf;
+  --parchment-2: #cabb95;
+  --gold:        #b3833f;
+  --gold-hi:     #e2b567;
+  --blood:       #7c2c1d;
+  --blood-hi:    #a5432c;
+  --frost:       #6f93a0;
+  --frost-hi:    #9dc0cb;
+
+  --font-display: 'Cinzel', serif;
+  --font-carved:  'Cinzel Decorative', serif;
+  --font-body:    'EB Garamond', serif;
+  --font-rune:    'Noto Sans Runic', serif;
+
+  --rule: 1px solid rgba(179,131,63,0.35);
+  --max: 920px;
+}
+
+/* -------------------------------------------------- reset / fondations -- */
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background-color: var(--void);
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(179,131,63,0.06), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(111,147,160,0.05), transparent 45%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  color: var(--parchment-2);
+  font-family: var(--font-body);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+h1,h2,h3{
+  font-family: var(--font-display);
+  color: var(--gold-hi);
+  margin: 0 0 .5em 0;
+  letter-spacing: .02em;
+}
+
+a{ color: var(--gold-hi); text-decoration:none; }
+a:hover{ color: var(--parchment); }
+
+img{ max-width:100%; display:block; }
+
+::selection{ background: var(--blood); color: var(--parchment); }
+
+/* focus visibility, gardée sobre mais visible */
+a:focus-visible, summary:focus-visible, button:focus-visible{
+  outline: 2px solid var(--frost-hi);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+}
+
+/* décor runique réutilisable ------------------------------------------- */
+.rune-divider{
+  text-align:center;
+  font-family: var(--font-rune);
+  color: var(--gold);
+  font-size: 1.4rem;
+  letter-spacing: .6em;
+  padding-left: .6em; /* compense le dernier letter-spacing */
+  opacity:.75;
+  margin: 3.2rem 0;
+  user-select:none;
+}
+.rune-divider::before,
+.rune-divider::after{
+  content:"";
+  display:block;
+  width:64px;
+  height:1px;
+  margin:0 auto .9rem auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ================================================================ NAV -- */
+nav{
+  position: sticky; top:0; z-index: 50;
+  background:
+    linear-gradient(var(--panel), var(--panel)) padding-box,
+    repeating-linear-gradient(180deg, rgba(0,0,0,0.35) 0 2px, transparent 2px 4px);
+  border-bottom: 2px solid var(--iron);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+}
+nav ul{
+  list-style:none;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap: 0;
+  margin:0; padding: .2rem .5rem;
+  max-width: var(--max);
+  margin-inline:auto;
+}
+nav li{ display:flex; align-items:center; }
+nav li + li::before{
+  content:"ᛝ";
+  font-family: var(--font-rune);
+  color: var(--iron-light);
+  margin: 0 .9rem;
+  font-size: .9rem;
+}
+nav a{
+  font-family: var(--font-display);
+  font-size: .82rem;
+  letter-spacing: .12em;
+  color: var(--parchment-2);
+  padding: 1rem 0;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover{ color: var(--gold-hi); border-bottom-color: var(--gold); }
+
+/* ============================================================= HEADER -- */
+header{
+  position:relative;
+  text-align:center;
+  padding: 6rem 1.5rem 4.5rem;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(179,131,63,0.14), transparent 60%),
+    linear-gradient(180deg, var(--void), var(--panel) 140%);
+  border-bottom: 1px solid rgba(179,131,63,0.25);
+  overflow:hidden;
+}
+header::before{
+  content:"ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
+  position:absolute; inset: auto 0 -10px 0;
+  text-align:center;
+  font-family: var(--font-rune);
+  font-size: 3.2rem;
+  letter-spacing: .35em;
+  padding-left:.35em;
+  color: rgba(179,131,63,0.07);
+  white-space:nowrap;
+  pointer-events:none;
+}
+header h1{
+  font-family: var(--font-carved);
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  font-weight:900;
+  letter-spacing:.06em;
+  color: var(--gold-hi);
+  text-shadow:
+    0 1px 0 rgba(255,231,180,0.25),
+    0 3px 2px rgba(0,0,0,0.6),
+    0 8px 24px rgba(0,0,0,0.55);
+  margin-bottom:.6rem;
+}
+header .subtitle{
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--parchment-2);
+  letter-spacing:.02em;
+}
+
+/* =============================================================== INTRO - */
+.intro{
+  max-width: var(--max);
+  margin: 4rem auto 0;
+  padding: 0 1.5rem;
+}
+.intro p{
+  font-size:1.2rem;
+  color: var(--parchment);
+}
+.intro p::first-letter{
+  font-family: var(--font-carved);
+  font-size: 3.6rem;
+  float:left;
+  line-height:.78;
+  padding: .05em .12em 0 0;
+  color: var(--gold-hi);
+  text-shadow: 0 2px 3px rgba(0,0,0,.6);
+}
+.intro strong{ color: var(--gold-hi); font-weight:600; }
+.intro em{ color: var(--frost-hi); font-style:italic; }
+
+/* ======================================================= SECTION SHELL - */
+section{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+section > h2{
+  text-align:center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  text-transform:none;
+  position:relative;
+  margin-bottom: .3rem;
+}
+section > .lede{
+  text-align:center;
+  max-width: 62ch;
+  margin: 0 auto 2.6rem;
+  color: var(--parchment-2);
+  font-style: italic;
+}
+
+/* ======================================================= LES 9 MONDES -- */
+.realms-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--iron);
+  border: 1px solid var(--iron);
+}
+.realm{
+  background: var(--panel);
+  padding: 1.6rem 1.4rem;
+}
+.realm h3{
+  font-size: 1rem;
+  letter-spacing:.05em;
+  display:flex;
+  align-items:baseline;
+  gap:.5rem;
+}
+.realm h3 .glyph{
+  font-family: var(--font-rune);
+  color: var(--gold);
+  font-size:1.15rem;
+}
+.realm p{ margin:.5rem 0 0; font-size:.98rem; color: var(--parchment-2); }
+
+/* ============================================================== CARDS -- */
+.cards-container, .features-container{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.8rem;
+}
+
+.card, .feature-item{
+  position:relative;
+  background: linear-gradient(180deg, var(--panel-hi), var(--panel));
+  border: 1px solid rgba(179,131,63,0.3);
+  border-radius: 60px 60px 6px 6px / 34px 34px 6px 6px;
+  padding: 2.1rem 1.5rem 1.6rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.5),
+    0 10px 22px rgba(0,0,0,0.35);
+}
+.card::before, .feature-item::before{
+  content: attr(data-rune);
+  position:absolute;
+  top: .55rem; left:0; right:0;
+  text-align:center;
+  font-family: var(--font-rune);
+  font-size: 1.15rem;
+  color: var(--gold);
+  opacity:.85;
+}
+.card h3, .feature-item h3{
+  font-size: 1.15rem;
+  text-align:center;
+  margin-bottom:.15rem;
+}
+.card .role{
+  display:block;
+  text-align:center;
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--frost-hi);
+  font-size:.92rem;
+  margin-bottom:.8rem;
+}
+.card p, .feature-item p{
+  font-size: .96rem;
+  color: var(--parchment-2);
+  margin:0;
+}
+
+/* variante pour la faune monstrueuse : ton plus "sang" */
+.feature-item{ border-color: rgba(124,44,29,0.45); }
+.feature-item::before{ color: var(--blood-hi); }
+
+/* sous-titres de sous-groupes (Ases / Vanes / Géants…) ------------------ */
+.subgroup-title{
+  text-align:center;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  letter-spacing:.28em;
+  color: var(--iron-light);
+  margin: 3rem 0 1.6rem;
+}
+.subgroup-title:first-of-type{ margin-top: 0; }
+
+/* ==================================================== NORNES/VALKYRIES - */
+.fate-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+  gap: 2rem;
+}
+.fate-card{
+  text-align:center;
+  padding: 1.6rem 1rem;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+}
+.fate-card h3{ font-size:1.05rem; }
+.fate-card p{ font-size:.94rem; color:var(--parchment-2); }
+
+/* =========================================================== RÉCITS ---- */
+.featured-myth details{
+  background: var(--panel);
+  border: 1px solid var(--iron);
+  border-left: 3px solid var(--gold);
+  padding: 1.2rem 1.6rem;
+  margin-bottom: 1.1rem;
+}
+.featured-myth details[open]{
+  border-left-color: var(--blood-hi);
+}
+.featured-myth summary{
+  cursor:pointer;
+  list-style:none;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--gold-hi);
+  display:flex;
+  align-items:center;
+  gap: .7rem;
+}
+.featured-myth summary::-webkit-details-marker{ display:none; }
+.featured-myth summary::before{
+  content:"ᛗ";
+  font-family: var(--font-rune);
+  display:inline-block;
+  transition: transform .25s ease;
+  color: var(--gold);
+}
+.featured-myth details[open] summary::before{ transform: rotate(90deg); color: var(--blood-hi); }
+.featured-myth .myth-preview{
+  margin-top: 1rem;
+  color: var(--parchment);
+  font-size: 1.05rem;
+}
+.featured-myth .myth-note{
+  font-style: italic;
+  color: var(--parchment-2);
+  margin-top: .9rem;
+  font-size: .95rem;
+}
+
+/* ============================================================== FOOTER - */
+footer{
+  text-align:center;
+  padding: 3rem 1.5rem 4rem;
+  border-top: 1px solid rgba(179,131,63,0.25);
+  background: linear-gradient(0deg, var(--void), transparent);
+}
+footer p{
+  font-family: var(--font-display);
+  font-size: .78rem;
+  letter-spacing:.15em;
+  color: var(--iron-light);
+}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width: 560px){
+  header{ padding: 4rem 1.2rem 3rem; }
+  section{ padding: 2.2rem 1.2rem; }
+  nav li + li::before{ margin: 0 .5rem; }
+}
