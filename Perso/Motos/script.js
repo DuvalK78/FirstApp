@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const countTotal = document.getElementById('count-total');
   const countSportive = document.getElementById('count-sportive');
   const countRoadster = document.getElementById('count-roadster');
+  const countAdventure = document.getElementById('count-adventure');
+  const countSportgt = document.getElementById('count-sportgt');
   const countAprilia = document.getElementById('count-aprilia');
   const countBMW = document.getElementById('count-bmw');
   const countDucati = document.getElementById('count-ducati');
@@ -26,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let visibleTotal = 0;
     let visibleSportive = 0;
     let visibleRoadster = 0;
+    let visibleAdventure = 0;
+    let visibleSportgt = 0;
     let visibleAprilia = 0;
     let visibleBMW = 0;
     let visibleDucati = 0;
@@ -49,6 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (category === 'sportive') visibleSportive++;
         if (category === 'roadster') visibleRoadster++;
+        if (category === 'adventure') visibleAdventure++;
+        if (category === 'sportgt') visibleSportgt++;
         if (brand === 'aprilia') visibleAprilia++;
         if (brand === 'bmw') visibleBMW++;
         if (brand === 'ducati') visibleDucati++;
@@ -64,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     countTotal.textContent = visibleTotal;
     countSportive.textContent = visibleSportive;
     countRoadster.textContent = visibleRoadster;
+    countAdventure.textContent = visibleAdventure;
+    countSportgt.textContent = visibleSportgt;
     countAprilia.textContent = visibleAprilia;
     countBMW.textContent = visibleBMW;
     countDucati.textContent = visibleDucati;
