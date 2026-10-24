@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VALORANT // PROTOCOL PROTOCOL COMMAND CENTER</title>
+    <title>VALORANT // PROTOCOL COMMAND CENTER v2</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Teko:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&family=Teko:wght@600;700&display=swap" rel="stylesheet">
     <!-- Chart.js for Stats Radar -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -22,12 +22,13 @@
                 extend: {
                     colors: {
                         valRed: '#FF4655',
-                        valDark: '#0F1923',
-                        valSlate: '#1F2326',
-                        valCard: '#171D22',
+                        valDark: '#0B1015',
+                        valSlate: '#111823',
+                        valCard: '#151F2C',
                         valCyan: '#00F0FF',
+                        valYellow: '#FFF500',
+                        valPurple: '#BD00FF',
                         valGold: '#ECE8E1',
-                        valYellow: '#FFD700',
                     },
                     fontFamily: {
                         valTitle: ['Teko', 'sans-serif'],
@@ -40,31 +41,27 @@
     </script>
 
     <style>
-        /* Custom Valorant Aesthetics & Dynamic Styling */
         body {
-            background-color: #0F1923;
+            background-color: #0B1015;
             color: #ECE8E1;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(255, 70, 85, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.04) 0%, transparent 40%),
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+                radial-gradient(circle at 10% 10%, rgba(255, 70, 85, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(0, 240, 255, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(189, 0, 255, 0.08) 0%, transparent 60%),
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 30px 30px, 30px 30px;
         }
 
         /* Cut-corners Valorant shape */
         .val-cut-corner {
-            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
         }
 
         .val-cut-btn {
-            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-        }
-
-        .val-cut-top-right {
-            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
         }
 
         /* Scanline Overlay */
@@ -73,268 +70,364 @@
                 to bottom,
                 rgba(255,255,255,0),
                 rgba(255,255,255,0) 50%,
-                rgba(0, 0, 0, 0.3) 50%,
-                rgba(0, 0, 0, 0.3)
+                rgba(0, 0, 0, 0.4) 50%,
+                rgba(0, 0, 0, 0.4)
             );
             background-size: 100% 4px;
         }
 
-        /* Animated Glitch Border Glow */
-        .val-glow-red {
-            box-shadow: 0 0 15px rgba(255, 70, 85, 0.4);
+        /* Intense Glow Effects */
+        .glow-red {
+            box-shadow: 0 0 20px rgba(255, 70, 85, 0.6);
         }
-        .val-glow-cyan {
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+        }
+        .glow-purple {
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.6);
+        }
+        .text-glow-red {
+            text-shadow: 0 0 12px rgba(255, 70, 85, 0.8);
+        }
+        .text-glow-cyan {
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0F1923;
+            background: #0B1015;
         }
         ::-webkit-scrollbar-thumb {
             background: #FF4655;
+            box-shadow: 0 0 10px #FF4655;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #00F0FF;
-        }
-
-        /* Pulse Animations */
-        @keyframes radar-sweep {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .animate-radar {
-            animation: radar-sweep 4s linear infinite;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col relative selection:bg-valRed selection:text-white">
 
-    <!-- Scanline effect overlay for retro-tactical feel -->
-    <div class="pointer-events-none fixed inset-0 z-50 scanline opacity-30"></div>
+    <!-- Scanline effect overlay -->
+    <div class="pointer-events-none fixed inset-0 z-50 scanline opacity-20"></div>
 
-    <!-- HUD Grid lines decoration -->
-    <div class="fixed inset-0 pointer-events-none z-0 border-[16px] border-white/5 flex justify-between p-4">
-        <div class="text-[10px] tracking-widest text-white/20 font-mono">SYS.VER.4.08 // VAL_HQ</div>
-        <div class="text-[10px] tracking-widest text-white/20 font-mono">LATENCY: 12MS // ONLINE</div>
+    <!-- HUD Grid border lines -->
+    <div class="fixed inset-0 pointer-events-none z-0 border-[12px] border-white/10 flex justify-between p-3">
+        <div class="text-[10px] tracking-widest text-valCyan/60 font-mono font-bold">VALORANT_API // LIVE_FEED</div>
+        <div class="text-[10px] tracking-widest text-valRed/60 font-mono font-bold">ENCRYPTION: PROTOCOL_V2</div>
     </div>
 
     <!-- Header / Navigation -->
-    <header class="sticky top-0 z-40 bg-valDark/90 backdrop-blur-md border-b border-white/10 px-4 lg:px-12 py-3 transition-all">
+    <header class="sticky top-0 z-40 bg-valDark/95 border-b-2 border-valRed/40 backdrop-blur-md px-4 lg:px-12 py-3">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
             
             <!-- Logo & Back Button -->
-            <div class="flex items-center gap-6">
-                <!-- Bouton Retour -->
-                <a href="https://playvalorant.com" id="btn-back" class="val-cut-btn group relative inline-flex items-center justify-center px-4 py-2 text-xs font-bold font-valHeader uppercase tracking-widest bg-white/5 border border-white/20 text-white hover:bg-valRed hover:border-valRed transition-all duration-300">
+            <div class="flex items-center gap-4">
+                <a href="https://playvalorant.com" id="btn-back" class="val-cut-btn group relative inline-flex items-center justify-center px-4 py-2 text-xs font-bold font-valHeader uppercase tracking-widest bg-valRed/20 border-2 border-valRed text-white hover:bg-valRed hover:shadow-[0_0_15px_#FF4655] transition-all duration-300">
                     <span class="flex items-center gap-2 relative z-10">
-                        <i class="fa-solid font-bold fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
-                        <span>Retour</span>
+                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                        <span>Quitter Protocol</span>
                     </span>
                 </a>
 
                 <div class="flex items-center gap-3">
-                    <svg class="w-8 h-8 text-valRed fill-current" viewBox="0 0 100 100">
+                    <svg class="w-8 h-8 text-valRed drop-shadow-[0_0_10px_#FF4655] fill-current" viewBox="0 0 100 100">
                         <path d="M 10 10 L 45 90 L 30 90 L 0 20 Z" />
                         <path d="M 55 10 L 90 90 L 100 90 L 100 10 Z" />
                     </svg>
-                    <span class="font-valTitle text-3xl font-bold tracking-wider text-white">VALORANT <span class="text-valRed">//</span> HUB</span>
+                    <span class="font-valTitle text-3xl font-bold tracking-wider text-white">VALORANT <span class="text-valRed text-glow-red">//</span> LIVE HQ</span>
                 </div>
             </div>
 
-            <!-- Nav Links -->
+            <!-- Navigation Links -->
             <nav class="hidden md:flex items-center space-x-1 font-valHeader tracking-wider text-sm uppercase">
-                <button onclick="switchTab('agents')" id="nav-agents" class="nav-link active text-valRed px-4 py-2 hover:text-valRed transition">Agents & Lore</button>
-                <button onclick="switchTab('stats')" id="nav-stats" class="nav-link text-white/70 px-4 py-2 hover:text-valRed transition">Mes Stats</button>
-                <button onclick="switchTab('crosshair')" id="nav-crosshair" class="nav-link text-white/70 px-4 py-2 hover:text-valRed transition">Viseur (Crosshair)</button>
-                <button onclick="switchTab('arsenal')" id="nav-arsenal" class="nav-link text-white/70 px-4 py-2 hover:text-valRed transition">Arsenal</button>
-                <button onclick="switchTab('maps')" id="nav-maps" class="nav-link text-white/70 px-4 py-2 hover:text-valRed transition">Cartes</button>
+                <button onclick="switchTab('agents')" id="nav-agents" class="nav-link text-valRed font-bold border-b-2 border-valRed px-4 py-2 transition">Agents</button>
+                <button onclick="switchTab('stats')" id="nav-stats" class="nav-link text-white/70 hover:text-valCyan px-4 py-2 transition">Mes Stats</button>
+                <button onclick="switchTab('arsenal')" id="nav-arsenal" class="nav-link text-white/70 hover:text-valYellow px-4 py-2 transition">Arsenal</button>
+                <button onclick="switchTab('maps')" id="nav-maps" class="nav-link text-white/70 hover:text-valPurple px-4 py-2 transition">Cartes</button>
+                <button onclick="switchTab('crosshair')" id="nav-crosshair" class="nav-link text-white/70 hover:text-valCyan px-4 py-2 transition">Viseur</button>
             </nav>
 
-            <!-- Audio & Action Toggle -->
-            <div class="flex items-center gap-3">
-                <button id="sfx-toggle" onclick="toggleAudio()" class="p-2.5 bg-white/5 border border-white/10 rounded hover:border-valCyan text-valCyan transition text-sm flex items-center gap-2" title="Effets Sonores Tactiques">
-                    <i id="sfx-icon" class="fa-solid fa-volume-high"></i>
-                    <span class="text-xs font-mono hidden sm:inline">SFX AUDIO</span>
-                </button>
-            </div>
+            <!-- SFX Toggle -->
+            <button id="sfx-toggle" onclick="toggleAudio()" class="p-2.5 bg-valCyan/10 border-2 border-valCyan/50 hover:border-valCyan text-valCyan hover:shadow-[0_0_15px_#00F0FF] transition text-xs font-mono flex items-center gap-2 val-cut-btn">
+                <i id="sfx-icon" class="fa-solid fa-volume-high"></i>
+                <span class="hidden sm:inline font-bold">AUDIO SFX</span>
+            </button>
         </div>
 
-        <!-- Mobile Navigation bar -->
-        <div class="flex md:hidden justify-around mt-3 pt-2 border-t border-white/10 font-valHeader text-xs tracking-wider uppercase text-white/70">
+        <!-- Mobile Navigation -->
+        <div class="flex md:hidden justify-around mt-3 pt-2 border-t border-white/10 font-valHeader text-xs uppercase text-white/80">
             <button onclick="switchTab('agents')" class="py-1 hover:text-valRed">Agents</button>
-            <button onclick="switchTab('stats')" class="py-1 hover:text-valRed">Stats</button>
-            <button onclick="switchTab('crosshair')" class="py-1 hover:text-valRed">Viseur</button>
-            <button onclick="switchTab('arsenal')" class="py-1 hover:text-valRed">Arsenal</button>
-            <button onclick="switchTab('maps')" class="py-1 hover:text-valRed">Cartes</button>
+            <button onclick="switchTab('stats')" class="py-1 hover:text-valCyan">Stats</button>
+            <button onclick="switchTab('arsenal')" class="py-1 hover:text-valYellow">Arsenal</button>
+            <button onclick="switchTab('maps')" class="py-1 hover:text-valPurple">Cartes</button>
+            <button onclick="switchTab('crosshair')" class="py-1 hover:text-valCyan">Viseur</button>
         </div>
     </header>
 
     <!-- Main Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 z-10">
 
-        <!-- ================= SECTION 1: AGENTS & LORE ================= -->
-        <section id="tab-agents" class="tab-content block space-y-8">
-            
-            <!-- Hero Title -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-4 gap-4">
+        <!-- Loading Overlay for API -->
+        <div id="api-loading" class="fixed inset-0 bg-valDark/90 backdrop-blur-md z-50 flex flex-col items-center justify-center space-y-4">
+            <div class="w-16 h-16 border-4 border-valRed border-t-valCyan rounded-full animate-spin glow-red"></div>
+            <div class="font-valTitle text-3xl uppercase tracking-widest text-white text-glow-red">CONNEXION À L'API RIOT EN COURS...</div>
+            <div class="text-xs font-mono text-valCyan">RÉCUPÉRATION DES AGENTS, WEAPONS ET MAPS DIRECTS</div>
+        </div>
+
+        <!-- ================= SECTION 1: AGENTS AUTOMATIQUES (RIOT API) ================= -->
+        <section id="tab-agents" class="tab-content block space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-valRed/30 pb-4 gap-4">
                 <div>
-                    <span class="text-valRed font-mono text-xs tracking-widest uppercase">// BASE DE DONNÉES PROTOCOLE</span>
-                    <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">DOSSIERS DES AGENTS</h1>
+                    <span class="text-valRed font-mono text-xs tracking-widest font-bold uppercase text-glow-red">// BASE DE DONNÉES EN TEMPS RÉEL</span>
+                    <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">PROTOCOLE AGENTS</h1>
                 </div>
-                
-                <!-- Role Filter Buttons -->
-                <div class="flex flex-wrap gap-2 font-valHeader text-xs uppercase">
-                    <button onclick="filterAgents('ALL')" class="role-btn active-role bg-valRed text-white px-3 py-1.5 val-cut-btn">Tous</button>
-                    <button onclick="filterAgents('Duelist')" class="role-btn bg-white/5 border border-white/10 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Duellistes</button>
-                    <button onclick="filterAgents('Initiator')" class="role-btn bg-white/5 border border-white/10 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Initiateurs</button>
-                    <button onclick="filterAgents('Controller')" class="role-btn bg-white/5 border border-white/10 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Contrôleurs</button>
-                    <button onclick="filterAgents('Sentinel')" class="role-btn bg-white/5 border border-white/10 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Sentinelles</button>
+
+                <!-- Filters & Search -->
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <input type="text" id="agent-search" oninput="filterAgents()" placeholder="Chercher un agent..." class="bg-valCard border-2 border-white/20 focus:border-valCyan p-2 text-xs font-mono text-white outline-none rounded flex-1 md:w-48">
+                    <div class="flex flex-wrap gap-1.5 font-valHeader text-xs uppercase" id="role-filters">
+                        <button onclick="setAgentRoleFilter('ALL')" class="role-btn active-role bg-valRed text-white px-3 py-1.5 val-cut-btn border border-valRed font-bold">Tous</button>
+                        <button onclick="setAgentRoleFilter('Duelist')" class="role-btn bg-valCard border border-white/20 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Duelliste</button>
+                        <button onclick="setAgentRoleFilter('Initiator')" class="role-btn bg-valCard border border-white/20 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Initiateur</button>
+                        <button onclick="setAgentRoleFilter('Controller')" class="role-btn bg-valCard border border-white/20 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Contrôleur</button>
+                        <button onclick="setAgentRoleFilter('Sentinel')" class="role-btn bg-valCard border border-white/20 hover:border-valRed text-white px-3 py-1.5 val-cut-btn">Sentinelle</button>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Agent Selector List (Left Column) -->
-                <div class="lg:col-span-4 space-y-3 max-h-[600px] overflow-y-auto pr-2" id="agent-list">
-                    <!-- Dynamic agent list generated by JS -->
-                </div>
-
-                <!-- Agent Details Display Card (Right Column) -->
-                <div class="lg:col-span-8 bg-valCard/80 border border-white/10 val-cut-corner p-6 md:p-8 relative min-h-[550px] flex flex-col justify-between" id="agent-detail-card">
-                    <!-- Rendered Agent Details via JS -->
-                </div>
+            <!-- Agents Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="agents-grid">
+                <!-- Injected via API JS -->
             </div>
         </section>
 
-        <!-- ================= SECTION 2: PLAYER STATS DASHBOARD ================= -->
-        <section id="tab-stats" class="tab-content hidden space-y-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-white/10 pb-4 gap-4">
-                <div>
-                    <span class="text-valCyan font-mono text-xs tracking-widest uppercase">// CARRIÈRE TACTIQUE ET PERFORMANCES</span>
-                    <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">MON PROFILE & DONNÉES DE JEU</h1>
+        <!-- AGENT DETAIL MODAL -->
+        <div id="agent-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-valCard border-2 border-valRed/80 max-w-4xl w-full max-h-[90vh] overflow-y-auto val-cut-corner p-6 md:p-8 relative shadow-[0_0_30px_rgba(255,70,85,0.4)]">
+                <button onclick="closeAgentModal()" class="absolute top-4 right-4 text-white/50 hover:text-valRed text-2xl"><i class="fa-solid fa-xmark"></i></button>
+                <div id="agent-modal-body" class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <!-- Dynamic modal content -->
                 </div>
-                <button onclick="openEditStatsModal()" class="val-cut-btn bg-valRed hover:bg-red-600 text-white font-valHeader tracking-wider uppercase px-5 py-2 text-sm flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square"></i> Modifier Mes Données
+            </div>
+        </div>
+
+        <!-- ================= SECTION 2: MES STATS (SÉCURISÉES PAR CODE PIN) ================= -->
+        <section id="tab-stats" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-valCyan/40 pb-4 gap-4">
+                <div>
+                    <span class="text-valCyan font-mono text-xs tracking-widest font-bold uppercase text-glow-cyan">// Espace Joueur Privé & Sécurisé</span>
+                    <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">MON DOSSIER COMPÉTITIF</h1>
+                </div>
+                <button id="btn-edit-stats" onclick="promptSecurityPin()" class="val-cut-btn bg-valCyan/20 border-2 border-valCyan hover:bg-valCyan hover:text-black hover:shadow-[0_0_20px_#00F0FF] text-valCyan font-valHeader tracking-wider uppercase px-5 py-2.5 text-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-lock" id="edit-lock-icon"></i> <span id="edit-btn-text">Déverrouiller Mode Édition</span>
                 </button>
             </div>
 
-            <!-- Stats Overview Cards -->
+            <!-- Main Player Info Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-valCard border border-white/10 p-5 val-cut-corner flex items-center justify-between">
+                <div class="bg-valCard border-2 border-valYellow/50 p-5 val-cut-corner flex items-center justify-between shadow-[0_0_15px_rgba(255,245,0,0.15)]">
                     <div>
-                        <div class="text-xs font-mono text-white/50 uppercase">Rang Actuel</div>
-                        <div id="disp-rank" class="text-2xl font-valHeader font-bold text-valYellow">Radiant</div>
-                        <div id="disp-rr" class="text-xs text-white/70">420 RR // Top 500</div>
+                        <div class="text-xs font-mono text-white/50 uppercase">RANG ACTUEL</div>
+                        <div id="disp-rank-name" class="text-3xl font-valHeader font-bold text-valYellow">Radiant</div>
+                        <div id="disp-rr" class="text-xs font-mono text-white/80">450 RR // TOP 500</div>
                     </div>
-                    <div id="rank-icon-container" class="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center border border-valYellow/40 text-valYellow text-2xl font-bold font-valHeader">
-                        <i class="fa-solid fa-crown"></i>
+                    <img id="disp-rank-icon" class="w-16 h-16 drop-shadow-[0_0_10px_#FFF500]" src="" alt="Rank Icon">
+                </div>
+
+                <div class="bg-valCard border-2 border-valCyan/50 p-5 val-cut-corner flex items-center justify-between shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+                    <div>
+                        <div class="text-xs font-mono text-white/50 uppercase">RATIO K/D</div>
+                        <div id="disp-kda" class="text-3xl font-valHeader font-bold text-valCyan">1.48</div>
+                        <div class="text-xs text-white/70">Kills / Deaths</div>
+                    </div>
+                    <div class="w-12 h-12 bg-valCyan/20 border border-valCyan rounded flex items-center justify-center text-valCyan text-2xl font-bold">
+                        <i class="fa-solid fa-crosshairs"></i>
                     </div>
                 </div>
 
-                <div class="bg-valCard border border-white/10 p-5 val-cut-corner flex items-center justify-between">
+                <div class="bg-valCard border-2 border-emerald-500/50 p-5 val-cut-corner flex items-center justify-between shadow-[0_0_15px_rgba(16,185,129,0.15)]">
                     <div>
-                        <div class="text-xs font-mono text-white/50 uppercase">Ratio KDA</div>
-                        <div id="disp-kda" class="text-2xl font-valHeader font-bold text-valCyan">1.42</div>
-                        <div class="text-xs text-white/70">Kills / Deaths / Assists</div>
+                        <div class="text-xs font-mono text-white/50 uppercase">TAUX DE VICTOIRE</div>
+                        <div id="disp-winrate" class="text-3xl font-valHeader font-bold text-emerald-400">62.0%</div>
+                        <div class="text-xs text-white/70">150 Matchs Joués</div>
                     </div>
-                    <div class="w-12 h-12 bg-valCyan/10 rounded border border-valCyan/30 flex items-center justify-center text-valCyan">
-                        <i class="fa-solid fa-crosshairs text-xl"></i>
+                    <div class="w-12 h-12 bg-emerald-500/20 border border-emerald-500 rounded flex items-center justify-center text-emerald-400 text-2xl font-bold">
+                        <i class="fa-solid fa-trophy"></i>
                     </div>
                 </div>
 
-                <div class="bg-valCard border border-white/10 p-5 val-cut-corner flex items-center justify-between">
+                <div class="bg-valCard border-2 border-valRed/50 p-5 val-cut-corner flex items-center justify-between shadow-[0_0_15px_rgba(255,70,85,0.15)]">
                     <div>
-                        <div class="text-xs font-mono text-white/50 uppercase">Taux de Win</div>
-                        <div id="disp-winrate" class="text-2xl font-valHeader font-bold text-emerald-400">58.5%</div>
-                        <div id="disp-matches" class="text-xs text-white/70">124 Matchs Joués</div>
+                        <div class="text-xs font-mono text-white/50 uppercase">% HEADSHOT</div>
+                        <div id="disp-hs" class="text-3xl font-valHeader font-bold text-valRed">29.5%</div>
+                        <div class="text-xs text-white/70">Précision Vandal/Phantom</div>
                     </div>
-                    <div class="w-12 h-12 bg-emerald-500/10 rounded border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-trophy text-xl"></i>
-                    </div>
-                </div>
-
-                <div class="bg-valCard border border-white/10 p-5 val-cut-corner flex items-center justify-between">
-                    <div>
-                        <div class="text-xs font-mono text-white/50 uppercase">% Headshot</div>
-                        <div id="disp-hs" class="text-2xl font-valHeader font-bold text-valRed">28.4%</div>
-                        <div class="text-xs text-white/70">Précision Critique</div>
-                    </div>
-                    <div class="w-12 h-12 bg-valRed/10 rounded border border-valRed/30 flex items-center justify-center text-valRed">
-                        <i class="fa-solid fa-bullseye text-xl"></i>
+                    <div class="w-12 h-12 bg-valRed/20 border border-valRed rounded flex items-center justify-center text-valRed text-2xl font-bold">
+                        <i class="fa-solid fa-bullseye"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- Detailed Grid: Radar Chart & Recent Matches -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Stat Analysis Chart -->
-                <div class="lg:col-span-5 bg-valCard border border-white/10 p-6 val-cut-corner flex flex-col justify-between">
+                <!-- Radar Chart -->
+                <div class="lg:col-span-5 bg-valCard border-2 border-white/10 p-6 val-cut-corner flex flex-col justify-between">
                     <div>
-                        <h3 class="font-valHeader text-xl text-white uppercase mb-1 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-valCyan"></i> Analyse de Style de Jeu
+                        <h3 class="font-valHeader text-2xl text-white uppercase mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-valCyan"></i> PROFIL TACTIQUE
                         </h3>
-                        <p class="text-xs text-white/60 mb-4">Évaluation tactique basée sur vos dernières performances.</p>
+                        <p class="text-xs text-white/60 mb-4">Radar mis à jour instantanément selon vos stats.</p>
                     </div>
-                    <div class="relative w-full aspect-square max-h-[320px] mx-auto flex items-center justify-center">
+                    <div class="relative w-full aspect-square max-h-[300px] mx-auto">
                         <canvas id="statsRadarChart"></canvas>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-xs font-mono text-white/60">
-                        <span>MAIN AGENT: <strong id="disp-main-agent" class="text-valRed">JETT</strong></span>
-                        <span>RIOT ID: <strong id="disp-riot-id" class="text-white">Player#EUW</strong></span>
+                    <div class="mt-4 pt-3 border-t border-white/10 flex justify-between text-xs font-mono text-white/70">
+                        <span>MAIN: <strong id="disp-main-agent" class="text-valRed font-bold">JETT</strong></span>
+                        <span>ARME FAVORITE: <strong id="disp-fav-weapon" class="text-valYellow font-bold">VANDAL</strong></span>
                     </div>
                 </div>
 
-                <!-- Match History -->
-                <div class="lg:col-span-7 bg-valCard border border-white/10 p-6 val-cut-corner">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-valHeader text-xl text-white uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-clock-rotate-left text-valRed"></i> Historique des Matchs Récents
-                        </h3>
-                        <span class="text-xs font-mono text-white/50">Dernières 5 Compétitives</span>
-                    </div>
-
-                    <div class="space-y-3" id="match-history-container">
-                        <!-- Matches injected via JS -->
+                <!-- Match History Mock -->
+                <div class="lg:col-span-7 bg-valCard border-2 border-white/10 p-6 val-cut-corner">
+                    <h3 class="font-valHeader text-2xl text-white uppercase mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-valRed"></i> DERNIÈRES COMPÉTITIVES
+                    </h3>
+                    <div class="space-y-3" id="match-history-list">
+                        <!-- Matches -->
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ================= SECTION 3: CROSSHAIR GENERATOR ================= -->
-        <section id="tab-crosshair" class="tab-content hidden space-y-8">
-            <div class="border-b border-white/10 pb-4">
-                <span class="text-valCyan font-mono text-xs tracking-widest uppercase">// SIMULATEUR DE VISEUR</span>
-                <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">GÉNÉRATEUR DE CROSSHAIR</h1>
+        <!-- MODAL SECURITY EDIT STATS -->
+        <div id="edit-stats-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-valCard border-2 border-valCyan p-6 md:p-8 max-w-lg w-full val-cut-corner space-y-4 relative shadow-[0_0_30px_rgba(0,240,255,0.4)]">
+                <button onclick="closeEditModal()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h2 class="font-valTitle text-4xl uppercase text-white tracking-wide text-glow-cyan">ÉDITION DU DOSSIER STATS</h2>
+                
+                <form id="stats-form" onsubmit="saveStats(event)" class="space-y-4 font-mono text-xs">
+                    <div>
+                        <label class="block text-white/80 mb-1">Sélectionner Votre Rang Officiel</label>
+                        <select id="input-rank" class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                            <!-- Injected ranks -->
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white/80 mb-1">Points RR / Classement</label>
+                            <input type="text" id="input-rr" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 mb-1">Ratio K/D</label>
+                            <input type="number" step="0.01" id="input-kda" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white/80 mb-1">Winrate %</label>
+                            <input type="number" step="0.1" id="input-winrate" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 mb-1">Headshot %</label>
+                            <input type="number" step="0.1" id="input-hs" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-white/80 mb-1">Agent Principal</label>
+                            <input type="text" id="input-main-agent" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-white/80 mb-1">Arme Préférée</label>
+                            <input type="text" id="input-fav-weapon" required class="w-full bg-black/80 border-2 border-white/20 p-2 text-white focus:border-valCyan outline-none">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-end gap-3">
+                        <button type="button" onclick="closeEditModal()" class="px-4 py-2 border border-white/20 text-white font-valHeader uppercase text-sm">Annuler</button>
+                        <button type="submit" class="val-cut-btn bg-valCyan text-black font-valHeader font-bold uppercase text-sm px-6 py-2 hover:shadow-[0_0_15px_#00F0FF]">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 3: ARSENAL AUTOMATIQUE (RIOT API) ================= -->
+        <section id="tab-arsenal" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-valYellow/40 pb-4 gap-4">
+                <div>
+                    <span class="text-valYellow font-mono text-xs tracking-widest font-bold uppercase text-glow-yellow">// ÉQUIPEMENT & ARMEMENT COMPLET</span>
+                    <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">ARSENAL D'ARMES API</h1>
+                </div>
+
+                <div class="flex flex-wrap gap-2 font-valHeader text-xs uppercase" id="weapon-category-filters">
+                    <button onclick="filterWeapons('ALL')" class="wpn-btn active-wpn bg-valYellow text-black font-bold px-3 py-1.5 val-cut-btn">Toutes</button>
+                    <button onclick="filterWeapons('EWeaponCategory::Heavy')" class="wpn-btn bg-valCard border border-white/20 hover:border-valYellow text-white px-3 py-1.5 val-cut-btn">Lourdes</button>
+                    <button onclick="filterWeapons('EWeaponCategory::Rifle')" class="wpn-btn bg-valCard border border-white/20 hover:border-valYellow text-white px-3 py-1.5 val-cut-btn">Fusils</button>
+                    <button onclick="filterWeapons('EWeaponCategory::Sniper')" class="wpn-btn bg-valCard border border-white/20 hover:border-valYellow text-white px-3 py-1.5 val-cut-btn">Snipers</button>
+                    <button onclick="filterWeapons('EWeaponCategory::Sidearm')" class="wpn-btn bg-valCard border border-white/20 hover:border-valYellow text-white px-3 py-1.5 val-cut-btn">Pistolets</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="weapons-grid">
+                <!-- Weapons injected via API JS -->
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: MAPS AUTOMATIQUES (RIOT API) ================= -->
+        <section id="tab-maps" class="tab-content hidden space-y-6">
+            <div class="border-b-2 border-valPurple/40 pb-4">
+                <span class="text-valPurple font-mono text-xs tracking-widest font-bold uppercase text-glow-purple">// RECONNAISSANCE DES TERRAINS</span>
+                <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">CARTES TACTIQUES API</h1>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Controls Panel -->
-                <div class="lg:col-span-6 bg-valCard border border-white/10 p-6 val-cut-corner space-y-5">
-                    <h3 class="font-valHeader text-lg uppercase text-white border-b border-white/10 pb-2">Paramètres du Viseur</h3>
+                <!-- Map List -->
+                <div class="lg:col-span-4 space-y-3 max-h-[600px] overflow-y-auto pr-2" id="maps-list">
+                    <!-- Map Items injected via JS -->
+                </div>
 
-                    <!-- Color Picker -->
+                <!-- Selected Map View -->
+                <div class="lg:col-span-8 bg-valCard border-2 border-valPurple/60 p-6 val-cut-corner flex flex-col justify-between min-h-[500px] relative overflow-hidden" id="map-detail-card">
+                    <!-- Map detail injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: CROSSHAIR SIMULATOR ================= -->
+        <section id="tab-crosshair" class="tab-content hidden space-y-6">
+            <div class="border-b-2 border-valCyan/40 pb-4">
+                <span class="text-valCyan font-mono text-xs tracking-widest font-bold uppercase text-glow-cyan">// OUTIL DE PRÉCISION</span>
+                <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">GÉNÉRATEUR DE VISEUR</h1>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-6 bg-valCard border-2 border-white/10 p-6 val-cut-corner space-y-5">
+                    <h3 class="font-valHeader text-xl uppercase text-white border-b border-white/10 pb-2">Configuration</h3>
                     <div>
-                        <label class="block text-xs font-mono text-white/70 mb-2">Couleur du Viseur</label>
+                        <label class="block text-xs font-mono text-white/70 mb-2">Couleur</label>
                         <div class="flex gap-3">
                             <button onclick="setCrosshairColor('#00F0FF')" class="w-8 h-8 rounded bg-[#00F0FF] border-2 border-white/20 hover:scale-110 transition"></button>
                             <button onclick="setCrosshairColor('#FF4655')" class="w-8 h-8 rounded bg-[#FF4655] border-2 border-white/20 hover:scale-110 transition"></button>
                             <button onclick="setCrosshairColor('#00FF00')" class="w-8 h-8 rounded bg-[#00FF00] border-2 border-white/20 hover:scale-110 transition"></button>
-                            <button onclick="setCrosshairColor('#FFFF00')" class="w-8 h-8 rounded bg-[#FFFF00] border-2 border-white/20 hover:scale-110 transition"></button>
+                            <button onclick="setCrosshairColor('#FFF500')" class="w-8 h-8 rounded bg-[#FFF500] border-2 border-white/20 hover:scale-110 transition"></button>
                             <button onclick="setCrosshairColor('#FFFFFF')" class="w-8 h-8 rounded bg-[#FFFFFF] border-2 border-white/20 hover:scale-110 transition"></button>
                         </div>
                     </div>
 
-                    <!-- Sliders -->
                     <div class="space-y-4 font-mono text-xs">
                         <div>
                             <div class="flex justify-between text-white/80 mb-1">
-                                <span>Taille des Lignes:</span>
+                                <span>Longueur Lignes:</span>
                                 <span id="val-ch-length">6px</span>
                             </div>
-                            <input type="range" id="ch-length" min="2" max="20" value="6" oninput="updateCrosshair()" class="w-full accent-valRed">
+                            <input type="range" id="ch-length" min="2" max="20" value="6" oninput="updateCrosshair()" class="w-full accent-valCyan">
                         </div>
 
                         <div>
@@ -342,170 +435,67 @@
                                 <span>Épaisseur:</span>
                                 <span id="val-ch-thickness">2px</span>
                             </div>
-                            <input type="range" id="ch-thickness" min="1" max="6" value="2" oninput="updateCrosshair()" class="w-full accent-valRed">
+                            <input type="range" id="ch-thickness" min="1" max="6" value="2" oninput="updateCrosshair()" class="w-full accent-valCyan">
                         </div>
 
                         <div>
                             <div class="flex justify-between text-white/80 mb-1">
-                                <span>Écartement (Offset):</span>
+                                <span>Écartement (Gap):</span>
                                 <span id="val-ch-gap">3px</span>
                             </div>
-                            <input type="range" id="ch-gap" min="0" max="15" value="3" oninput="updateCrosshair()" class="w-full accent-valRed">
+                            <input type="range" id="ch-gap" min="0" max="15" value="3" oninput="updateCrosshair()" class="w-full accent-valCyan">
                         </div>
 
                         <div class="flex items-center gap-3 pt-2">
-                            <input type="checkbox" id="ch-dot" onchange="updateCrosshair()" class="w-4 h-4 accent-valRed">
-                            <label for="ch-dot" class="text-white/80 cursor-pointer">Point Central (Center Dot)</label>
+                            <input type="checkbox" id="ch-dot" onchange="updateCrosshair()" class="w-4 h-4 accent-valCyan">
+                            <label for="ch-dot" class="text-white/80 cursor-pointer">Point Central</label>
                         </div>
                     </div>
 
-                    <!-- Code Export -->
                     <div class="pt-4 border-t border-white/10">
-                        <label class="block text-xs font-mono text-white/70 mb-1">Code Import/Export Valorant</label>
+                        <label class="block text-xs font-mono text-white/70 mb-1">Code Valorant</label>
                         <div class="flex gap-2">
-                            <input type="text" id="ch-code-input" readonly value="0;P;c;5;h;0;0l;6;0o;3;0a;1;0f;0" class="bg-black/50 border border-white/20 px-3 py-2 text-xs font-mono text-valCyan flex-1 rounded">
-                            <button onclick="copyCrosshairCode()" class="val-cut-btn bg-valCyan/20 border border-valCyan text-valCyan hover:bg-valCyan hover:text-black font-valHeader px-4 py-2 text-xs">Copier</button>
+                            <input type="text" id="ch-code-input" readonly value="0;P;c;5;h;0;0l;6;0o;3;0a;1" class="bg-black/80 border border-white/20 px-3 py-2 text-xs font-mono text-valCyan flex-1 rounded">
+                            <button onclick="copyCrosshairCode()" class="val-cut-btn bg-valCyan/20 border border-valCyan text-valCyan hover:bg-valCyan hover:text-black font-valHeader px-4 py-2 text-xs font-bold">Copier</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Preview Area -->
-                <div class="lg:col-span-6 bg-valCard border border-white/10 p-6 val-cut-corner flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center">
-                    <div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
-                    
+                <div class="lg:col-span-6 bg-valCard border-2 border-white/10 p-6 val-cut-corner flex flex-col items-center justify-center min-h-[350px] relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center">
+                    <div class="absolute inset-0 bg-black/70 backdrop-blur-[1px]"></div>
                     <div class="relative z-10 text-center">
-                        <div id="crosshair-preview-box" class="w-48 h-48 border border-white/20 bg-black/40 rounded flex items-center justify-center relative mx-auto shadow-2xl">
-                            <!-- SVG Crosshair rendered dynamically -->
-                            <svg id="crosshair-svg" class="w-full h-full" viewBox="0 0 100 100">
-                                <!-- Dynamic Crosshair Render -->
-                            </svg>
+                        <div id="crosshair-preview-box" class="w-52 h-52 border-2 border-valCyan/50 bg-black/60 rounded flex items-center justify-center relative mx-auto shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+                            <svg id="crosshair-svg" class="w-full h-full" viewBox="0 0 100 100"></svg>
                         </div>
-                        <p class="text-xs font-mono text-white/60 mt-4">Aperçu en Direct sur Fond de Jeu</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= SECTION 4: ARSENAL / ARMES ================= -->
-        <section id="tab-arsenal" class="tab-content hidden space-y-8">
-            <div class="border-b border-white/10 pb-4">
-                <span class="text-valYellow font-mono text-xs tracking-widest uppercase">// ÉQUIPEMENT TACTIQUE</span>
-                <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">ARSENAL D'ARMES</h1>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="weapons-grid">
-                <!-- Weapon cards injected via JS -->
-            </div>
-        </section>
-
-        <!-- ================= SECTION 5: MAPS STRATEGY ================= -->
-        <section id="tab-maps" class="tab-content hidden space-y-8">
-            <div class="border-b border-white/10 pb-4">
-                <span class="text-valRed font-mono text-xs tracking-widest uppercase">// CARTES ET STRATÉGIES</span>
-                <h1 class="text-4xl md:text-6xl font-valTitle uppercase font-bold tracking-tight text-white">RECONNAISSANCE DES CARTES</h1>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Map List Selector -->
-                <div class="lg:col-span-4 space-y-3" id="map-selector-list">
-                    <!-- Dynamic map buttons -->
-                </div>
-
-                <!-- Active Map Display -->
-                <div class="lg:col-span-8 bg-valCard border border-white/10 p-6 val-cut-corner space-y-4" id="map-details-card">
-                    <!-- Active Map Details -->
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Modal for Editing User Stats -->
-    <div id="edit-stats-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-valCard border border-valRed/50 p-6 md:p-8 max-w-lg w-full val-cut-corner space-y-4 relative">
-            <button onclick="closeEditStatsModal()" class="absolute top-4 right-4 text-white/50 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="font-valTitle text-3xl uppercase text-white tracking-wide">Modifier Vos Stats</h2>
-            
-            <form id="stats-form" onsubmit="saveStats(event)" class="space-y-4 font-mono text-xs">
-                <div>
-                    <label class="block text-white/70 mb-1">Riot ID (#TAG)</label>
-                    <input type="text" id="input-riot-id" required class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-white/70 mb-1">Rang</label>
-                        <select id="input-rank" class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                            <option value="Iron">Fer</option>
-                            <option value="Bronze">Bronze</option>
-                            <option value="Silver">Argent</option>
-                            <option value="Gold">Or</option>
-                            <option value="Platinum">Platine</option>
-                            <option value="Diamond">Diamant</option>
-                            <option value="Ascendant">Ascendant</option>
-                            <option value="Immortal">Immortel</option>
-                            <option value="Radiant">Radiant</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-white/70 mb-1">Points RR</label>
-                        <input type="text" id="input-rr" placeholder="ex: 250 RR" class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-white/70 mb-1">KDA Ratio</label>
-                        <input type="number" step="0.01" id="input-kda" required class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-white/70 mb-1">Win Rate %</label>
-                        <input type="number" step="0.1" id="input-winrate" required class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-white/70 mb-1">Headshot %</label>
-                        <input type="number" step="0.1" id="input-hs" required class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-white/70 mb-1">Agent Principal</label>
-                    <input type="text" id="input-main-agent" required class="w-full bg-black/60 border border-white/20 p-2 text-white focus:border-valRed outline-none">
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3">
-                    <button type="button" onclick="closeEditStatsModal()" class="px-4 py-2 border border-white/20 text-white font-valHeader uppercase text-sm">Annuler</button>
-                    <button type="submit" class="val-cut-btn bg-valRed text-white font-valHeader uppercase text-sm px-6 py-2">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Footer -->
-    <footer class="mt-auto border-t border-white/10 py-6 text-center text-xs text-white/40 font-mono">
+    <footer class="mt-auto border-t-2 border-white/10 py-6 bg-valDark text-center text-xs text-white/50 font-mono z-10">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-2">
-            <p>© 2026 VALORANT // PROTOCOL HQ. Inspiré par Riot Games.</p>
-            <p class="text-valRed">STATUT SYSTÈME: TACTICAL OPERATIONAL</p>
+            <p>© 2026 VALORANT // PROTOCOL COMMAND CENTER. Données fournies en direct par Valorant-API.com</p>
+            <p class="text-valRed font-bold">STATUS: ALL API SYSTEMS OPERATIONAL</p>
         </div>
     </footer>
 
-    <!-- JavaScript Data and Interactivity -->
+    <!-- JavaScript Data Logic & API Integration -->
     <script>
-        // Web Audio API Synthesizer for Tactical SFX
+        // Web Audio API Synthesizer
         let sfxEnabled = true;
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
+            if (!audioCtx) audioCtx = new AudioContext();
         }
 
         function playTacticalSound(type) {
             if (!sfxEnabled) return;
             initAudio();
-
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
@@ -513,245 +503,295 @@
 
             if (type === 'click') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.04);
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
+                osc.stop(audioCtx.currentTime + 0.04);
             } else if (type === 'tab') {
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.08);
+                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(700, audioCtx.currentTime + 0.08);
                 gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.08);
-            } else if (type === 'ult') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
             }
         }
 
         function toggleAudio() {
             sfxEnabled = !sfxEnabled;
             const icon = document.getElementById('sfx-icon');
-            if (sfxEnabled) {
-                icon.className = 'fa-solid fa-volume-high';
-                playTacticalSound('click');
-            } else {
-                icon.className = 'fa-solid fa-volume-xmark';
+            icon.className = sfxEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+        }
+
+        // Global API Data Storage
+        let apiAgents = [];
+        let apiWeapons = [];
+        let apiMaps = [];
+        let apiRanks = [];
+
+        let currentRoleFilter = 'ALL';
+        let currentWpnFilter = 'ALL';
+        let selectedAgentObj = null;
+
+        // User Stats
+        let userData = {
+            rankTier: 27, // Radiant ID in API
+            rankName: "Radiant",
+            rankIcon: "",
+            rr: "450 RR // TOP 500",
+            kda: 1.48,
+            winrate: 62.0,
+            headshot: 29.5,
+            mainAgent: "JETT",
+            favWeapon: "VANDAL"
+        };
+
+        // Security PIN logic for editing stats
+        const SECURITY_PIN = "1234"; // Code de sécurité par défaut
+        let isEditUnlocked = false;
+
+        function promptSecurityPin() {
+            playTacticalSound('click');
+            if(isEditUnlocked) {
+                openEditModal();
+                return;
+            }
+
+            const pin = prompt("DÉVERROUILLAGE SÉCURISÉ DES STATS\nSaisissez le code PIN d'autorisation (Par défaut : 1234) :");
+            if(pin === SECURITY_PIN) {
+                isEditUnlocked = true;
+                document.getElementById('edit-lock-icon').className = "fa-solid fa-lock-open text-valCyan";
+                document.getElementById('edit-btn-text').innerText = "Modifier Mes Stats";
+                alert("Autorisation accordée. Mode Édition actif.");
+                openEditModal();
+            } else if(pin !== null) {
+                alert("CODE PIN INCORRECT. ACCÈS REFUSÉ.");
             }
         }
 
-        // ================= AGENTS DATA =================
-        const agentsData = [
-            {
-                id: 'jett',
-                name: 'JETT',
-                role: 'Duelist',
-                origin: 'Corée du Sud',
-                tagline: 'Attrapez-moi si vous pouvez.',
-                description: 'Représentant sa Corée du Sud natale, le style de combat agile et d’esquive de Jett lui permet de prendre des risques qu’aucun autre ne peut se permettre. Elle tourne autour de chaque affrontement.',
-                abilities: [
-                    { name: 'Averse (C)', desc: 'Lance un projectile qui se déploie en un nuage de fumée bloquant la vision.' },
-                    { name: 'Courant Ascendant (Q)', desc: 'Propulse Jett rapidement dans les airs.' },
-                    { name: 'Vent Arrière (E)', desc: 'Propulse Jett dans la direction de son déplacement.' },
-                    { name: 'Tempête de Lames (X)', desc: 'S’équipe d’un ensemble de dagues volantes ultra-précises.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1000&q=80',
-                quote: "Regardez et apprenez !"
-            },
-            {
-                id: 'phoenix',
-                name: 'PHOENIX',
-                role: 'Duelist',
-                origin: 'Royaume-Uni',
-                tagline: 'Laissez-moi vous montrer comment on fait.',
-                description: 'Venant du Royaume-Uni, le pouvoir stellaire de Phoenix brille dans sa façon de combattre. Qu’il ait du soutien ou non, il s’élance dans le combat selon ses propres conditions.',
-                abilities: [
-                    { name: 'Brazier (C)', desc: 'Crée un mur de flammes qui bloque la vision et blesse quiconque le traverse.' },
-                    { name: 'Balle Courbe (Q)', desc: 'Lance une orbe enflammée qui aveugle les joueurs qui la regardent.' },
-                    { name: 'Mains Brûlantes (E)', desc: 'Lance une boule de feu qui explose après un court délai.' },
-                    { name: 'Renaissance (X)', desc: 'Marque votre position actuelle. Si vous mourez, vous ressuscitez à cet endroit.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1000&q=80',
-                quote: "C'est déjà reparti !"
-            },
-            {
-                id: 'reyna',
-                name: 'REYNA',
-                role: 'Duelist',
-                origin: 'Mexique',
-                tagline: 'L\'énergie de la vengeance.',
-                description: 'Forge au cœur du Mexique, Reyna domine les combats singuliers, s’épanouissant à chaque élimination qu’elle réalise.',
-                abilities: [
-                    { name: 'OEillade (C)', desc: 'Un œil éthéré qui aveugle tous les ennemis proches.' },
-                    { name: 'Dévoration (Q)', desc: 'Consomme l orbe d âme d un ennemi tué pour se soigner rapidement.' },
-                    { name: 'Mépris (E)', desc: 'Consomme une orbe pour devenir intangible pendant un court moment.' },
-                    { name: 'Impératrice (X)', desc: 'Entre dans une frénésie augmentant la vitesse de tir et de rechargement.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1000&q=80',
-                quote: "Elles vont souffrir !"
-            },
-            {
-                id: 'viper',
-                name: 'VIPER',
-                role: 'Controller',
-                origin: 'États-Unis',
-                tagline: 'Bienvenue dans mon domaine.',
-                description: 'La chimiste américaine Viper déploie un éventail d appareils toxiques pour contrôler le champ de bataille et paralyser la vision ennemie.',
-                abilities: [
-                    { name: 'Morsure du Serpent (C)', desc: 'Lance une capsule qui explose en créant une zone d acide.' },
-                    { name: 'Nuage Toxique (Q)', desc: 'Déploie un diffuseur de gaz qui crée un nuage de fumée toxique.' },
-                    { name: 'Écran de Fumée (E)', desc: 'Déploie une ligne de diffuseurs de gaz pour créer un haut mur toxique.' },
-                    { name: 'Nid de Serpents (X)', desc: 'Crée un nuage chimique géant dans toutes les directions.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
-                quote: "Personne ne sortira d'ici."
-            },
-            {
-                id: 'omen',
-                name: 'OMEN',
-                role: 'Controller',
-                origin: 'Inconnu',
-                tagline: 'Regardez dans l\'ombre.',
-                description: 'Omen chasse dans les ombres. Il aveugle ses ennemis, se téléporte à travers la carte et laisse la paranoïa s installer.',
-                abilities: [
-                    { name: 'Voile Sombre (E)', desc: 'Lance une orbe d ombre qui se déploie en une sphère occultante.' },
-                    { name: 'Paranoïa (Q)', desc: 'Lance une ombre en ligne droite qui réduit la vision de tous ceux qu elle touche.' },
-                    { name: 'Pas des Ombres (C)', desc: 'Se téléporte sur une courte distance.' },
-                    { name: 'Depuis les Ombres (X)', desc: 'Se téléporte n importe où sur la carte.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1000&q=80',
-                quote: "Sentez la peur."
-            },
-            {
-                id: 'chamber',
-                name: 'CHAMBER',
-                role: 'Sentinel',
-                origin: 'France',
-                tagline: 'Le sur-mesure de la précision.',
-                description: 'Bien habillé et bien armé, le concepteur d armes français Chamber repousse les agresseurs avec une précision mortelle.',
-                abilities: [
-                    { name: 'Marque (C)', desc: 'Place un piège qui déstabilise le terrain en repérant un ennemi.' },
-                    { name: 'Chasseur de Têtes (Q)', desc: 'S équipe d un pistolet lourd de haute précision.' },
-                    { name: 'Rendez-vous (E)', desc: 'Place une balise de téléportation rapide.' },
-                    { name: 'Tour de Force (X)', desc: 'Invoque un puissant fusil à lunette d un coup mortel.' }
-                ],
-                bgImage: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
-                quote: "Un travail d'une propreté chirurgicale."
+        // Fetch All Data from Official Public Valorant API
+        async function fetchValorantApiData() {
+            try {
+                // Fetch Agents
+                const agentsRes = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true&language=fr-FR');
+                const agentsJson = await agentsRes.json();
+                apiAgents = agentsJson.data;
+
+                // Fetch Weapons
+                const weaponsRes = await fetch('https://valorant-api.com/v1/weapons?language=fr-FR');
+                const weaponsJson = await weaponsRes.json();
+                apiWeapons = weaponsJson.data;
+
+                // Fetch Maps
+                const mapsRes = await fetch('https://valorant-api.com/v1/maps?language=fr-FR');
+                const mapsJson = await mapsRes.json();
+                apiMaps = mapsJson.data;
+
+                // Fetch Competitive Ranks Tier
+                const ranksRes = await fetch('https://valorant-api.com/v1/competitivetiers');
+                const ranksJson = await ranksRes.json();
+                const latestTier = ranksJson.data[ranksJson.data.length - 1];
+                apiRanks = latestTier.tiers.filter(t => t.tier > 2); // Exclude Unranked
+
+                // Hide Loading Screen
+                document.getElementById('api-loading').classList.add('hidden');
+
+                // Render UI
+                renderAgentsGrid();
+                renderWeaponsGrid();
+                renderMapsList();
+                populateRanksDropdown();
+                loadSavedStats();
+
+            } catch (err) {
+                console.error("Erreur de chargement API:", err);
+                alert("Erreur de chargement des données depuis l'API Valorant.");
             }
-        ];
+        }
 
-        let selectedAgent = agentsData[0];
+        // ================= AGENTS RENDERING =================
+        function renderAgentsGrid() {
+            const grid = document.getElementById('agents-grid');
+            const searchVal = document.getElementById('agent-search').value.toLowerCase();
 
-        function renderAgentList(agents) {
-            const listContainer = document.getElementById('agent-list');
-            listContainer.innerHTML = agents.map(agent => `
-                <div onclick="selectAgent('${agent.id}')" class="agent-card p-4 border transition cursor-pointer flex items-center justify-between ${selectedAgent.id === agent.id ? 'bg-valRed/20 border-valRed text-white' : 'bg-valCard border-white/10 text-white/70 hover:border-valRed/50'} val-cut-corner">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-white/5 font-valTitle text-xl font-bold flex items-center justify-center text-valRed border border-white/10">
-                            ${agent.name[0]}
-                        </div>
-                        <div>
-                            <h4 class="font-valHeader font-bold uppercase text-lg leading-none">${agent.name}</h4>
-                            <span class="text-xs font-mono text-white/50 uppercase">${agent.role} // ${agent.origin}</span>
-                        </div>
+            const filtered = apiAgents.filter(agent => {
+                const matchesRole = currentRoleFilter === 'ALL' || (agent.role && agent.role.developerName === currentRoleFilter);
+                const matchesSearch = agent.displayName.toLowerCase().includes(searchVal);
+                return matchesRole && matchesSearch;
+            });
+
+            grid.innerHTML = filtered.map(agent => `
+                <div onclick="openAgentModal('${agent.uuid}')" class="bg-valCard border-2 border-white/10 hover:border-valRed p-3 val-cut-corner cursor-pointer transition transform hover:-translate-y-1 hover:shadow-[0_0_15px_#FF4655] group relative overflow-hidden">
+                    <img src="${agent.displayIcon}" alt="${agent.displayName}" class="w-full aspect-square object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] group-hover:scale-105 transition">
+                    <div class="mt-2 text-center">
+                        <h4 class="font-valTitle text-2xl font-bold uppercase text-white leading-none">${agent.displayName}</h4>
+                        <span class="text-[10px] font-mono text-valCyan uppercase">${agent.role ? agent.role.displayName : 'AGENT'}</span>
                     </div>
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
                 </div>
             `).join('');
         }
 
-        function selectAgent(id) {
-            playTacticalSound('click');
-            selectedAgent = agentsData.find(a => a.id === id);
-            renderAgentList(agentsData);
-            renderAgentDetail();
+        function filterAgents() {
+            renderAgentsGrid();
         }
 
-        function renderAgentDetail() {
-            const card = document.getElementById('agent-detail-card');
-            card.innerHTML = `
-                <div class="space-y-6">
-                    <div class="flex flex-wrap justify-between items-start gap-4 border-b border-white/10 pb-4">
-                        <div>
-                            <span class="text-valRed font-mono text-xs tracking-widest">// ${selectedAgent.role.toUpperCase()}</span>
-                            <h2 class="text-5xl font-valTitle uppercase font-bold text-white tracking-wider">${selectedAgent.name}</h2>
-                            <p class="text-xs font-mono text-valCyan">ORIGINE: ${selectedAgent.origin.toUpperCase()}</p>
-                        </div>
-                        <button onclick="playTacticalSound('ult')" class="val-cut-btn bg-valRed/20 border border-valRed hover:bg-valRed text-valRed hover:text-white px-4 py-2 font-valHeader text-sm uppercase flex items-center gap-2 transition">
-                            <i class="fa-solid fa-volume-high"></i> Replique: "${selectedAgent.quote}"
-                        </button>
+        function setAgentRoleFilter(role) {
+            playTacticalSound('click');
+            currentRoleFilter = role;
+            document.querySelectorAll('#role-filters button').forEach(b => b.classList.remove('bg-valRed', 'text-white'));
+            event.target.classList.add('bg-valRed', 'text-white');
+            renderAgentsGrid();
+        }
+
+        function openAgentModal(uuid) {
+            playTacticalSound('click');
+            const agent = apiAgents.find(a => a.uuid === uuid);
+            if (!agent) return;
+
+            const modalBody = document.getElementById('agent-modal-body');
+            modalBody.innerHTML = `
+                <div class="md:col-span-5 flex flex-col items-center justify-center relative bg-valDark/80 p-4 border-2 border-white/10 rounded">
+                    <img src="${agent.fullPortrait || agent.displayIcon}" class="max-h-[380px] object-contain drop-shadow-[0_0_20px_#FF4655]">
+                </div>
+                <div class="md:col-span-7 space-y-4">
+                    <div class="border-b-2 border-valRed/50 pb-2">
+                        <span class="text-valCyan font-mono text-xs uppercase font-bold">// ${agent.role ? agent.role.displayName : 'ROLE'}</span>
+                        <h2 class="text-5xl font-valTitle uppercase font-bold text-white text-glow-red">${agent.displayName}</h2>
                     </div>
 
-                    <p class="text-sm text-white/80 leading-relaxed font-body">${selectedAgent.description}</p>
+                    <p class="text-sm text-white/80 leading-relaxed font-body">${agent.description}</p>
 
                     <div>
-                        <h3 class="font-valHeader text-lg uppercase text-white mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-bolt text-valYellow"></i> Capacités Tactiques
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            ${selectedAgent.abilities.map(ab => `
-                                <div class="bg-black/40 border border-white/10 p-3 rounded">
-                                    <h4 class="font-valHeader text-sm text-valCyan uppercase">${ab.name}</h4>
-                                    <p class="text-xs text-white/60 mt-1">${ab.desc}</p>
+                        <h4 class="font-valHeader text-lg uppercase text-valYellow mb-3">Capacités Tactiques</h4>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${agent.abilities.map(ab => `
+                                <div class="bg-black/50 border border-white/10 p-2.5 rounded flex items-center gap-3">
+                                    ${ab.displayIcon ? `<img src="${ab.displayIcon}" class="w-8 h-8 filter brightness-125">` : '<div class="w-8 h-8 bg-white/10 rounded"></div>'}
+                                    <div>
+                                        <h5 class="font-valHeader text-sm text-valCyan uppercase">${ab.displayName} (${ab.slot})</h5>
+                                        <p class="text-xs text-white/60">${ab.description}</p>
+                                    </div>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
                 </div>
             `;
+
+            document.getElementById('agent-modal').classList.remove('hidden');
         }
 
-        function filterAgents(role) {
+        function closeAgentModal() {
             playTacticalSound('click');
-            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('bg-valRed', 'text-white'));
-            event.target.classList.add('bg-valRed', 'text-white');
-
-            const filtered = role === 'ALL' ? agentsData : agentsData.filter(a => a.role === role);
-            if(filtered.length > 0) {
-                selectedAgent = filtered[0];
-            }
-            renderAgentList(filtered);
-            renderAgentDetail();
+            document.getElementById('agent-modal').classList.add('hidden');
         }
 
-        // ================= USER STATS & CHART =================
-        let userData = {
-            riotId: "RadiantPlayer#EUW",
-            rank: "Radiant",
-            rr: "520 RR // Rank #120",
-            kda: 1.58,
-            winrate: 62.4,
-            headshot: 31.2,
-            mainAgent: "JETT"
-        };
+        // ================= WEAPONS RENDERING =================
+        function renderWeaponsGrid() {
+            const grid = document.getElementById('weapons-grid');
+            const filtered = apiWeapons.filter(w => currentWpnFilter === 'ALL' || w.category === currentWpnFilter);
 
+            grid.innerHTML = filtered.map(w => {
+                const cost = w.shopData ? w.shopData.cost + ' CR' : 'Gratuit';
+                const fireRate = w.weaponStats ? w.weaponStats.fireRate + ' T/s' : 'N/A';
+                const magSize = w.weaponStats ? w.weaponStats.magazineSize : 'N/A';
+
+                return `
+                    <div class="bg-valCard border-2 border-white/10 p-5 val-cut-corner space-y-4 hover:border-valYellow hover:shadow-[0_0_15px_#FFF500] transition group">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                            <h3 class="font-valTitle text-3xl font-bold text-white uppercase">${w.displayName}</h3>
+                            <span class="text-valYellow font-mono font-bold text-sm bg-valYellow/10 px-2 py-0.5 rounded border border-valYellow/30">${cost}</span>
+                        </div>
+                        <div class="h-28 flex items-center justify-center p-2">
+                            <img src="${w.displayIcon}" class="max-h-full object-contain filter drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] group-hover:scale-105 transition">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-mono text-white/70 bg-black/40 p-2 rounded">
+                            <div>Cadence: <strong class="text-valCyan">${fireRate}</strong></div>
+                            <div>Chargeur: <strong class="text-valCyan">${magSize}</strong></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterWeapons(cat) {
+            playTacticalSound('click');
+            currentWpnFilter = cat;
+            document.querySelectorAll('#weapon-category-filters button').forEach(b => b.classList.remove('bg-valYellow', 'text-black'));
+            event.target.classList.add('bg-valYellow', 'text-black');
+            renderWeaponsGrid();
+        }
+
+        // ================= MAPS RENDERING =================
+        function renderMapsList() {
+            const list = document.getElementById('maps-list');
+            list.innerHTML = apiMaps.map((m, idx) => `
+                <div onclick="selectMap('${m.uuid}')" class="p-4 bg-valCard border-2 ${idx === 0 ? 'border-valPurple' : 'border-white/10'} hover:border-valPurple val-cut-corner cursor-pointer transition flex justify-between items-center group">
+                    <div>
+                        <h4 class="font-valHeader text-xl font-bold uppercase text-white group-hover:text-valPurple transition">${m.displayName}</h4>
+                        <span class="text-xs font-mono text-white/50">${m.coordinates || 'Coordonnées Inconnues'}</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-valPurple"></i>
+                </div>
+            `).join('');
+
+            if (apiMaps.length > 0) selectMap(apiMaps[0].uuid);
+        }
+
+        function selectMap(uuid) {
+            playTacticalSound('click');
+            const map = apiMaps.find(m => m.uuid === uuid);
+            if (!map) return;
+
+            const card = document.getElementById('map-detail-card');
+            card.style.backgroundImage = `linear-gradient(to top, rgba(11,16,21,0.95), rgba(11,16,21,0.4)), url('${map.splash}')`;
+            card.style.backgroundSize = 'cover';
+            card.style.backgroundPosition = 'center';
+
+            card.innerHTML = `
+                <div class="space-y-2">
+                    <span class="text-valPurple font-mono text-xs uppercase font-bold text-glow-purple">// COORDONNÉES: ${map.coordinates || 'N/A'}</span>
+                    <h2 class="text-6xl font-valTitle uppercase font-bold text-white text-glow-purple">${map.displayName}</h2>
+                </div>
+
+                ${map.displayIcon ? `
+                    <div class="my-6 flex justify-center">
+                        <img src="${map.displayIcon}" class="max-h-80 object-contain filter drop-shadow-[0_0_15px_#BD00FF]">
+                    </div>
+                ` : '<div class="h-48"></div>'}
+            `;
+        }
+
+        // ================= USER STATS & RADAR =================
         let radarChartInstance = null;
 
-        function loadStats() {
-            const saved = localStorage.getItem('val_user_stats');
-            if (saved) {
-                userData = JSON.parse(saved);
-            }
+        function populateRanksDropdown() {
+            const select = document.getElementById('input-rank');
+            select.innerHTML = apiRanks.map(r => `
+                <option value="${r.tier}">${r.tierName}</option>
+            `).join('');
+        }
+
+        function loadSavedStats() {
+            const saved = localStorage.getItem('val_v2_user_stats');
+            if (saved) userData = JSON.parse(saved);
             updateStatsUI();
         }
 
         function updateStatsUI() {
-            document.getElementById('disp-riot-id').innerText = userData.riotId;
-            document.getElementById('disp-rank').innerText = userData.rank;
+            const matchedRank = apiRanks.find(r => r.tier == userData.rankTier) || apiRanks[apiRanks.length - 1];
+            
+            document.getElementById('disp-rank-name').innerText = matchedRank.tierName;
+            document.getElementById('disp-rank-icon').src = matchedRank.largeIcon;
             document.getElementById('disp-rr').innerText = userData.rr;
             document.getElementById('disp-kda').innerText = userData.kda;
             document.getElementById('disp-winrate').innerText = userData.winrate + '%';
             document.getElementById('disp-hs').innerText = userData.headshot + '%';
             document.getElementById('disp-main-agent').innerText = userData.mainAgent.toUpperCase();
+            document.getElementById('disp-fav-weapon').innerText = userData.favWeapon.toUpperCase();
 
             initRadarChart();
             renderMatchHistory();
@@ -764,13 +804,12 @@
             radarChartInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['AIM / HS', 'SURVIE', 'IMPACT KILLS', 'UTILITAIRES', 'ENTRY / DUELS'],
+                    labels: ['AIM / HS', 'KDA RATIO', 'WINRATE', 'IMPACT', 'TACTIQUE'],
                     datasets: [{
-                        label: 'Stats du Joueur',
-                        data: [userData.headshot * 2.5, userData.kda * 40, userData.winrate, 75, 88],
-                        backgroundColor: 'rgba(255, 70, 85, 0.2)',
-                        borderColor: '#FF4655',
-                        pointBackgroundColor: '#00F0FF',
+                        data: [userData.headshot * 2.8, userData.kda * 35, userData.winrate, 85, 90],
+                        backgroundColor: 'rgba(0, 240, 255, 0.25)',
+                        borderColor: '#00F0FF',
+                        pointBackgroundColor: '#FF4655',
                         borderWidth: 2
                     }]
                 },
@@ -779,7 +818,7 @@
                         r: {
                             angleLines: { color: 'rgba(255,255,255,0.1)' },
                             grid: { color: 'rgba(255,255,255,0.1)' },
-                            pointLabels: { color: '#ECE8E1', font: { family: 'Rajdhani', size: 11 } },
+                            pointLabels: { color: '#ECE8E1', font: { family: 'Rajdhani', size: 11, weight: 'bold' } },
                             ticks: { display: false, max: 100 }
                         }
                     },
@@ -789,41 +828,39 @@
         }
 
         function renderMatchHistory() {
+            const container = document.getElementById('match-history-list');
             const matches = [
-                { map: 'ASCENT', result: 'VICTOIRE', score: '13 - 8', kda: '24 / 12 / 5', mvp: 'MATCH MVP', color: 'emerald' },
-                { map: 'BIND', result: 'VICTOIRE', score: '13 - 11', kda: '19 / 14 / 8', mvp: 'TEAM MVP', color: 'emerald' },
-                { map: 'HAVEN', result: 'DÉFAITE', score: '9 - 13', kda: '18 / 16 / 3', mvp: 'ACE', color: 'red' },
-                { map: 'SUNSET', result: 'VICTOIRE', score: '13 - 5', kda: '21 / 8 / 6', mvp: 'MATCH MVP', color: 'emerald' }
+                { map: 'ASCENT', result: 'VICTOIRE', score: '13 - 7', kda: '26 / 10 / 4', mvp: 'MATCH MVP', color: 'emerald' },
+                { map: 'BIND', result: 'VICTOIRE', score: '13 - 11', kda: '21 / 15 / 8', mvp: 'TEAM MVP', color: 'emerald' },
+                { map: 'SUNSET', result: 'DÉFAITE', score: '10 - 13', kda: '19 / 17 / 5', mvp: 'NONE', color: 'valRed' }
             ];
 
-            const container = document.getElementById('match-history-container');
             container.innerHTML = matches.map(m => `
-                <div class="bg-black/40 border-l-4 ${m.color === 'emerald' ? 'border-emerald-500' : 'border-valRed'} p-3 flex justify-between items-center rounded">
+                <div class="bg-black/60 border-l-4 ${m.color === 'emerald' ? 'border-emerald-500' : 'border-valRed'} p-3 flex justify-between items-center rounded">
                     <div>
                         <div class="flex items-center gap-2">
                             <span class="font-valHeader text-lg font-bold text-white">${m.map}</span>
-                            <span class="text-xs px-2 py-0.5 rounded font-mono ${m.color === 'emerald' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-valRed/20 text-valRed'}">${m.result}</span>
+                            <span class="text-xs font-mono font-bold ${m.color === 'emerald' ? 'text-emerald-400' : 'text-valRed'}">${m.result} (${m.score})</span>
                         </div>
-                        <div class="text-xs font-mono text-white/50">${m.score} // KDA: ${m.kda}</div>
+                        <div class="text-xs font-mono text-white/50">KDA: ${m.kda}</div>
                     </div>
                     <span class="text-xs font-valHeader font-bold bg-white/10 px-2 py-1 text-valYellow uppercase rounded">${m.mvp}</span>
                 </div>
             `).join('');
         }
 
-        function openEditStatsModal() {
-            playTacticalSound('click');
-            document.getElementById('input-riot-id').value = userData.riotId;
-            document.getElementById('input-rank').value = userData.rank;
+        function openEditModal() {
+            document.getElementById('input-rank').value = userData.rankTier;
             document.getElementById('input-rr').value = userData.rr;
             document.getElementById('input-kda').value = userData.kda;
             document.getElementById('input-winrate').value = userData.winrate;
             document.getElementById('input-hs').value = userData.headshot;
             document.getElementById('input-main-agent').value = userData.mainAgent;
+            document.getElementById('input-fav-weapon').value = userData.favWeapon;
             document.getElementById('edit-stats-modal').classList.remove('hidden');
         }
 
-        function closeEditStatsModal() {
+        function closeEditModal() {
             playTacticalSound('click');
             document.getElementById('edit-stats-modal').classList.add('hidden');
         }
@@ -832,20 +869,20 @@
             e.preventDefault();
             playTacticalSound('click');
             userData = {
-                riotId: document.getElementById('input-riot-id').value,
-                rank: document.getElementById('input-rank').value,
+                rankTier: document.getElementById('input-rank').value,
                 rr: document.getElementById('input-rr').value,
                 kda: parseFloat(document.getElementById('input-kda').value),
                 winrate: parseFloat(document.getElementById('input-winrate').value),
                 headshot: parseFloat(document.getElementById('input-hs').value),
-                mainAgent: document.getElementById('input-main-agent').value
+                mainAgent: document.getElementById('input-main-agent').value,
+                favWeapon: document.getElementById('input-fav-weapon').value
             };
-            localStorage.setItem('val_user_stats', JSON.stringify(userData));
+            localStorage.setItem('val_v2_user_stats', JSON.stringify(userData));
             updateStatsUI();
-            closeEditStatsModal();
+            closeEditModal();
         }
 
-        // ================= CROSSHAIR GENERATOR =================
+        // ================= CROSSHAIR =================
         let chState = { color: '#00F0FF', length: 6, thickness: 2, gap: 3, dot: false };
 
         function setCrosshairColor(hex) {
@@ -865,24 +902,15 @@
             document.getElementById('val-ch-gap').innerText = chState.gap + 'px';
 
             const svg = document.getElementById('crosshair-svg');
-            const center = 50;
-            const gap = chState.gap;
-            const len = chState.length;
-            const thick = chState.thickness;
+            const center = 50, gap = chState.gap, len = chState.length, thick = chState.thickness;
 
-            let html = '';
-            // Top
-            html += `<line x1="${center}" y1="${center - gap}" x2="${center}" y2="${center - gap - len}" stroke="${chState.color}" stroke-width="${thick}" />`;
-            // Bottom
-            html += `<line x1="${center}" y1="${center + gap}" x2="${center}" y2="${center + gap + len}" stroke="${chState.color}" stroke-width="${thick}" />`;
-            // Left
-            html += `<line x1="${center - gap}" y1="${center}" x2="${center - gap - len}" y2="${center}" stroke="${chState.color}" stroke-width="${thick}" />`;
-            // Right
-            html += `<line x1="${center + gap}" y1="${center}" x2="${center + gap + len}" y2="${center}" stroke="${chState.color}" stroke-width="${thick}" />`;
-
-            if (chState.dot) {
-                html += `<circle cx="${center}" cy="${center}" r="${thick}" fill="${chState.color}" />`;
-            }
+            let html = `
+                <line x1="${center}" y1="${center - gap}" x2="${center}" y2="${center - gap - len}" stroke="${chState.color}" stroke-width="${thick}" />
+                <line x1="${center}" y1="${center + gap}" x2="${center}" y2="${center + gap + len}" stroke="${chState.color}" stroke-width="${thick}" />
+                <line x1="${center - gap}" y1="${center}" x2="${center - gap - len}" y2="${center}" stroke="${chState.color}" stroke-width="${thick}" />
+                <line x1="${center + gap}" y1="${center}" x2="${center + gap + len}" y2="${center}" stroke="${chState.color}" stroke-width="${thick}" />
+            `;
+            if (chState.dot) html += `<circle cx="${center}" cy="${center}" r="${thick}" fill="${chState.color}" />`;
 
             svg.innerHTML = html;
             document.getElementById('ch-code-input').value = `0;P;c;5;h;0;0l;${chState.length};0o;${chState.gap};0a;1`;
@@ -893,89 +921,30 @@
             const input = document.getElementById('ch-code-input');
             input.select();
             document.execCommand('copy');
-            alert('Code Crosshair copié dans le presse-papier !');
+            alert('Code Crosshair copié !');
         }
 
-        // ================= WEAPONS DATA =================
-        const weapons = [
-            { name: 'VANDAL', type: 'Fusil d\'assaut', price: '2,900 CR', desc: 'Dégâts constants quelle que soit la distance. Un tir à la tête est toujours mortel.', icon: 'fa-crosshairs' },
-            { name: 'PHANTOM', type: 'Fusil d\'assaut', price: '2,900 CR', desc: 'Silencieux avec une cadence de tir élevée. Idéal pour tirer à travers les fumigènes.', icon: 'fa-shield-halved' },
-            { name: 'OPERATOR', type: 'Fusil à lunette', price: '4,700 CR', desc: 'Le fusil de précision ultime. Un coup dans le corps suffit à éliminer l\'adversaire.', icon: 'fa-eye' }
-        ];
-
-        function renderWeapons() {
-            const grid = document.getElementById('weapons-grid');
-            grid.innerHTML = weapons.map(w => `
-                <div class="bg-valCard border border-white/10 p-6 val-cut-corner space-y-4 hover:border-valRed transition">
-                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
-                        <h3 class="font-valTitle text-3xl font-bold text-white uppercase">${w.name}</h3>
-                        <span class="text-valYellow font-mono text-sm">${w.price}</span>
-                    </div>
-                    <p class="text-xs text-white/70">${w.desc}</p>
-                    <div class="text-xs font-mono text-valCyan uppercase">${w.type}</div>
-                </div>
-            `).join('');
-        }
-
-        // ================= MAPS DATA =================
-        const mapsData = [
-            { id: 'ascent', name: 'ASCENT', location: 'Italie', desc: 'Deux sites principaux séparés par une zone centrale ouverte qui favorise les duels à longue distance.' },
-            { id: 'bind', name: 'BIND', location: 'Maroc', desc: 'Carte à deux sites sans zone centrale mais dotée de téléporteurs unidirectionnels.' },
-            { id: 'haven', name: 'HAVEN', location: 'Bhoutan', desc: 'Carte unique à 3 sites de bombe nécessitant une gestion rigoureuse des ressources.' }
-        ];
-
-        let activeMap = mapsData[0];
-
-        function renderMaps() {
-            const list = document.getElementById('map-selector-list');
-            list.innerHTML = mapsData.map(m => `
-                <button onclick="selectMap('${m.id}')" class="w-full text-left p-4 bg-valCard border ${activeMap.id === m.id ? 'border-valRed text-white bg-valRed/10' : 'border-white/10 text-white/70'} val-cut-corner font-valHeader text-lg uppercase flex justify-between items-center">
-                    <span>${m.name}</span>
-                    <span class="text-xs font-mono text-white/40">${m.location}</span>
-                </button>
-            `).join('');
-
-            const details = document.getElementById('map-details-card');
-            details.innerHTML = `
-                <h2 class="text-4xl font-valTitle text-white uppercase font-bold">${activeMap.name} // <span class="text-valRed">${activeMap.location}</span></h2>
-                <p class="text-sm text-white/80 font-body">${activeMap.desc}</p>
-                <div class="h-64 bg-black/50 border border-white/10 rounded flex items-center justify-center font-mono text-white/40">
-                    [ Tactical Map Radar Preview Overlay ]
-                </div>
-            `;
-        }
-
-        function selectMap(id) {
-            playTacticalSound('click');
-            activeMap = mapsData.find(m => m.id === id);
-            renderMaps();
-        }
-
-        // Navigation Tab Switcher
+        // Navigation
         function switchTab(tabId) {
             playTacticalSound('tab');
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('text-valRed');
+                link.classList.remove('text-valRed', 'border-b-2', 'border-valRed', 'font-bold');
                 link.classList.add('text-white/70');
             });
 
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) {
-                activeNav.classList.add('text-valRed');
+                activeNav.classList.add('text-valRed', 'border-b-2', 'border-valRed', 'font-bold');
                 activeNav.classList.remove('text-white/70');
             }
         }
 
-        // Initialize Application
+        // Initialize App
         window.onload = function() {
-            renderAgentList(agentsData);
-            renderAgentDetail();
-            loadStats();
+            fetchValorantApiData();
             updateCrosshair();
-            renderWeapons();
-            renderMaps();
         };
     </script>
 </body>
